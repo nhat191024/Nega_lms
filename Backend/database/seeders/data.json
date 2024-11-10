@@ -1,0 +1,234 @@
+{
+    "role": [
+        {
+            "name": "admin"
+        },
+        {
+            "name": "teacher"
+        },
+        {
+            "name": "student"
+        }
+    ],
+    "class": [
+        {
+            "class_name": "A",
+            "class_description": "Class A",
+            "teacher_id": 2
+        },
+        {
+            "class_name": "B",
+            "class_description": "Class B",
+            "teacher_id": 2
+        },
+        {
+            "class_name": "C",
+            "class_description": "Class C",
+            "teacher_id": 3
+        }
+    ],
+    "enrollment": [
+        {
+            "student_id": 6,
+            "class_id": 1
+        },
+        {
+            "student_id": 7,
+            "class_id": 1
+        },
+        {
+            "student_id": 8,
+            "class_id": 2
+        },
+        {
+            "student_id": 9,
+            "class_id": 2
+        },
+        {
+            "student_id": 10,
+            "class_id": 3
+        },
+        {
+            "student_id": 11,
+            "class_id": 3
+        }
+    ],
+    "assignment": [
+        {
+            "class_id": 1,
+            "title": "Assignment 1",
+            "description": "Assignment 1",
+            "due_date": "2024-12-31 23:59:59"
+        },
+        {
+            "class_id": 1,
+            "title": "Assignment 2",
+            "description": "Assignment 2",
+            "due_date": "2024-12-31 23:59:59"
+        },
+        {
+            "class_id": 2,
+            "title": "Assignment 3",
+            "description": "Assignment 3",
+            "due_date": "2024-12-31 23:59:59"
+        },
+        {
+            "class_id": 2,
+            "title": "Assignment 4",
+            "description": "Assignment 4",
+            "due_date": "2024-12-31 23:59:59"
+        },
+        {
+            "class_id": 3,
+            "title": "Assignment 5",
+            "description": "Assignment 5",
+            "due_date": "2024-12-31 23:59:59"
+        },
+        {
+            "class_id": 3,
+            "title": "Assignment 6",
+            "description": "Assignment 6",
+            "due_date": "2024-12-31 23:59:59"
+        }
+    ],
+    "question": [
+        {
+            "assignment_id": 1,
+            "title": "Question 1",
+            "description": "Question 1",
+            "choices": [
+                {
+                    "choice": "Choice 1",
+                    "is_correct": true
+                },
+                {
+                    "choice": "Choice 2",
+                    "is_correct": false
+                },
+                {
+                    "choice": "Choice 3",
+                    "is_correct": false
+                },
+                {
+                    "choice": "Choice 4",
+                    "is_correct": false
+                }
+            ]
+        },
+        {
+            "assignment_id": 1,
+            "title": "Question 2",
+            "description": "Question 2",
+            "choices": [
+                {
+                    "choice": "Choice 1",
+                    "is_correct": false
+                },
+                {
+                    "choice": "Choice 2",
+                    "is_correct": true
+                },
+                {
+                    "choice": "Choice 3",
+                    "is_correct": false
+                },
+                {
+                    "choice": "Choice 4",
+                    "is_correct": false
+                }
+            ]
+        },
+        {
+            "assignment_id": 2,
+            "title": "Question 3",
+            "description": "Question 3",
+            "choices": [
+                {
+                    "choice": "Choice 1",
+                    "is_correct": true
+                },
+                {
+                    "choice": "Choice 2",
+                    "is_correct": false
+                },
+                {
+                    "choice": "Choice 3",
+                    "is_correct": false
+                },
+                {
+                    "choice": "Choice 4",
+                    "is_correct": false
+                }
+            ]
+        },
+        {
+            "assignment_id": 2,
+            "title": "Question 4",
+            "description": "Question 4",
+            "choices": [
+                {
+                    "choice": "Choice 1",
+                    "is_correct": false
+                },
+                {
+                    "choice": "Choice 2",
+                    "is_correct": true
+                },
+                {
+                    "choice": "Choice 3",
+                    "is_correct": false
+                },
+                {
+                    "choice": "Choice 4",
+                    "is_correct": false
+                }
+            ]
+        },
+        {
+            "assignment_id": 3,
+            "title": "Question 5",
+            "description": "Question 5",
+            "choices": [
+                {
+                    "choice": "Choice 1",
+                    "is_correct": true
+                },
+                {
+                    "choice": "Choice 2",
+                    "is_correct": false
+                },
+                {
+                    "choice": "Choice 3",
+                    "is_correct": false
+                },
+                {
+                    "choice": "Choice 4",
+                    "is_correct": false
+                }
+            ]
+        },
+        {
+            "assignment_id": 3,
+            "title": "Question 6",
+            "description": "Question 6",
+            "choices": [
+                {
+                    "choice": "Choice 1",
+                    "is_correct": false
+                },
+                {
+                    "choice": "Choice 2",
+                    "is_correct": true
+                },
+                {
+                    "choice": "Choice 3",
+                    "is_correct": false
+                },
+                {
+                    "choice": "Choice 4",
+                    "is_correct": false
+                }
+            ]
+        }
+    ]
+}
