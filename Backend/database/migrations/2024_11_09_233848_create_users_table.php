@@ -15,10 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
-            // $table->timestamp('email_verified_at')->nullable();
             $table->string('username')->unique();
             $table->string('password');
-            $table->unsignedBigInteger('role_id')->default(3);
+            $table->enum('role_id', [1, 2, 3]); // 1 = admin, 2 = teacher, 3 = user
             $table->rememberToken();
             $table->timestamps();
         });
