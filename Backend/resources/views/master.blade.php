@@ -146,6 +146,8 @@
         </ul>
         <!-- End of Sidebar -->
 
+        @yield('content')
+
         <!-- Content Wrapper -->
 
         <!-- End of Content Wrapper -->
