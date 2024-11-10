@@ -8,6 +8,7 @@ use App\Models\Classes;
 use App\Models\Enrollment;
 use App\Models\Question;
 use App\Models\Choice;
+use App\Models\Assignment;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -35,6 +36,10 @@ class DatabaseSeeder extends Seeder
 
         foreach ($data['enrollment'] as $row) {
             Enrollment::create($row);
+        }
+
+        foreach ($data['assignment'] as $row) {
+            Assignment::create($row);
         }
 
         foreach ($data['question'] as $row) {
