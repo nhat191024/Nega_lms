@@ -1,6 +1,5 @@
 <?php
 
-use Faker\Calculator\Inn;
 use Illuminate\Support\Str;
 
 return [
