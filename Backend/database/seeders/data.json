@@ -58,37 +58,43 @@
             "class_id": 1,
             "title": "Assignment 1",
             "description": "Assignment 1",
-            "due_date": "2024-12-31 23:59:59"
+            "due_date": "2024-12-31 23:59:59",
+            "auto_grade": true
         },
         {
             "class_id": 1,
             "title": "Assignment 2",
             "description": "Assignment 2",
-            "due_date": "2024-12-31 23:59:59"
+            "due_date": "2024-12-31 23:59:59",
+            "auto_grade": true
         },
         {
             "class_id": 2,
             "title": "Assignment 3",
             "description": "Assignment 3",
-            "due_date": "2024-12-31 23:59:59"
+            "due_date": "2024-12-31 23:59:59",
+            "auto_grade": true
         },
         {
             "class_id": 2,
             "title": "Assignment 4",
             "description": "Assignment 4",
-            "due_date": "2024-12-31 23:59:59"
+            "due_date": "2024-12-31 23:59:59",
+            "auto_grade": true
         },
         {
             "class_id": 3,
             "title": "Assignment 5",
             "description": "Assignment 5",
-            "due_date": "2024-12-31 23:59:59"
+            "due_date": "2024-12-31 23:59:59",
+            "auto_grade": true
         },
         {
             "class_id": 3,
             "title": "Assignment 6",
             "description": "Assignment 6",
-            "due_date": "2024-12-31 23:59:59"
+            "due_date": "2024-12-31 23:59:59",
+            "auto_grade": true
         }
     ],
     "question": [
