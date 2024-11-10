@@ -8,7 +8,8 @@ class Question extends Model
 {
     protected $fillable = [
         'assignment_id',
-        'question',
+        'title',
+        'description',
     ];
 
     public function assignment()
