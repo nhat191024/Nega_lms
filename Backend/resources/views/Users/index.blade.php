@@ -17,6 +17,13 @@
                     <!-- Page Heading -->
                     <h1 class="h3 mb-2 text-gray-800">Tables Users</h1>
 
+                    <button class="btn btn-success btn-icon-split">
+                        <span class="icon text-white-50">
+                          <i class="fas fa-plus"></i>
+                        </span>
+                        <a href={{route('users.create')}}><span class="text">Create</span></a>
+                      </button>
+                    
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
@@ -31,6 +38,7 @@
                                             <th>Email</th>
                                             <th>Username</th>
                                             <th>Role</th>
+                                            <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -40,6 +48,7 @@
                                             <td>{{ $user->email }}</td>
                                             <td>{{ $user->username }}</td>
                                             <td>{{ $user->role_id }}</td>
+                                            <td><a href="{{ $user->id }}" class="btn btn-warning btn-sm">Sửa</a></td>
                                         </tr>
                                         @endforeach
                                     </tbody>
