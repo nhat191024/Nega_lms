@@ -13,4 +13,6 @@ Route::prefix('users')->group(function(){
     Route::post('/store', [UserController::class, 'store'])->name('users.store');
     Route::get('/edit/{id}',[UserController::class,'edit'])->name('users.edit');
     Route::put('/update/{id}',[UserController::class, 'update'])->name('users.update');
+    Route::get('/status/{id}', [UserController::class, 'status'])->name('users.status');
+
 });

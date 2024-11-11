@@ -38,6 +38,7 @@
                                             <th>Email</th>
                                             <th>Username</th>
                                             <th>Role</th>
+                                            <th>Status</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -47,8 +48,20 @@
                                             <td>{{ $user->name }}</td>
                                             <td>{{ $user->email }}</td>
                                             <td>{{ $user->username }}</td>
-                                            <td>{{ $user->role_id }}</td>
-                                            <td><a href="{{route('users.edit', ['id' => $user->id])}}" class="btn btn-warning btn-sm">Sửa</a></td>
+                                            <td>{{ $roles[$user->role_id] ?? 'Unknown' }}</td>
+                                            <td>{{ $user->status ? 'Hiển thị' : 'Ẩn' }}</td>
+                                            <td>
+                                                <a href="{{route('users.edit', ['id' => $user->id])}}" class="btn btn-warning btn-sm">Sửa</a>
+                                                <a href="{{ route('users.status', ['id' => $user->id]) }}" class="btn 
+                                                    {{ $user->status ? 'btn-danger' : 'btn-success' }} btn-sm">
+                                                    {{-- Thay đổi nội dung nút theo trạng thái --}}
+                                                    @if ($user->status) 
+                                                        Ẩn
+                                                    @else 
+                                                        Hiển thị
+                                                    @endif
+                                                </a>
+                                            </td>
                                         </tr>
                                         @endforeach
                                     </tbody>

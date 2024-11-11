@@ -15,7 +15,12 @@ class UserController extends Controller
     public function index()
     {
         $users = User::all();
-        return view('users.index', compact('users'));
+        $roles = [
+            1 => 'Admin',
+            2 => 'Teacher',
+            3 => 'User',
+        ];
+        return view('users.index', compact('users','roles'));
     }
 
     /**
@@ -86,10 +91,6 @@ class UserController extends Controller
             'role_id' => 'required|in:1,2,3',
         ]);
 
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 400);
-        }
-
         $data = [
             'name' => $request->input('name'),
             'email' => $request->input('email'),
@@ -98,7 +99,16 @@ class UserController extends Controller
         ];
 
         $users->update($data);
-        return redirect()->route('users.index');
+        return redirect()->route('users.index')->with('success', 'Thông tin người dùng đã được cập nhật thành công!');
+    }
+
+    public function status($id)
+    {
+    $users = User::findOrFail($id);
+    $users->status = !$users->status;
+    $users->save();
+
+    return redirect()->route('users.index')->with('success', 'Trạng thái người dùng đã được cập nhật!');
     }
 
     /**
