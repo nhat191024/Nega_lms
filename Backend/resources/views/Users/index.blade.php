@@ -48,7 +48,7 @@
                                             <td>{{ $user->email }}</td>
                                             <td>{{ $user->username }}</td>
                                             <td>{{ $user->role_id }}</td>
-                                            <td><a href="{{ $user->id }}" class="btn btn-warning btn-sm">Sửa</a></td>
+                                            <td><a href="{{route('users.edit', ['id' => $user->id])}}" class="btn btn-warning btn-sm">Sửa</a></td>
                                         </tr>
                                         @endforeach
                                     </tbody>
