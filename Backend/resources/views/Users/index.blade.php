@@ -1,7 +1,7 @@
 @extends('master')
 
 @section('title')
-<title>Admin - Users</title>
+<title>Quản trị người dùng</title>
 @endsection
 
 @section('content')
@@ -15,33 +15,33 @@
                 <div class="container-fluid">
 
                     <!-- Page Heading -->
-                    <h1 class="h3 mb-2 text-gray-800">Tables Users</h1>
+                    <h1 class="h3 mb-2 text-gray-800">Bảng người dùng</h1>
 
                     <button class="btn btn-success btn-icon-split mb-4">
                         <span class="icon text-white-50">
                             <i class="fas fa-plus"></i>
                         </span>
                         <a href={{ route('users.create') }} class="text-white">
-                            <span class="text">Create</span>
+                            <span class="text">Tạo người dùng</span>
                         </a>
                     </button>
                     
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">Data Tables</h6>
+                            <h6 class="m-0 font-weight-bold text-primary">Bảng Dữ Liệu Người Dùng</h6>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                     <thead>
                                         <tr>
-                                            <th>Name</th>
+                                            <th>Tên</th>
                                             <th>Email</th>
-                                            <th>Username</th>
-                                            <th>Role</th>
-                                            <th>Status</th>
-                                            <th>Action</th>
+                                            <th>Tên người dùng</th>
+                                            <th>Vai trò</th>
+                                            <th>Trạng thái</th>
+                                            <th>Hành động</th>
                                         </tr>
                                     </thead>
                                     <tbody>

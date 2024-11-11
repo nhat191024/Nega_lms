@@ -1,12 +1,12 @@
 @extends('master')
 
 @section('title')
-<title>Create User</title>
+<title>Tạo người dùng</title>
 @endsection
 
 @section('content')
 <div class="container">
-    <h2 class="my-4">Create New User</h2>
+    <h2 class="my-4">Tạo người dùng mới</h2>
 
     <!-- Hiển thị thông báo lỗi nếu có lỗi tổng quan -->
     @if ($errors->any())
@@ -25,7 +25,7 @@
 
         <!-- Tên -->
         <div class="form-group">
-            <label for="name">Name</label>
+            <label for="name">Tên</label>
             <input type="text" name="name" id="name" class="form-control" value="{{ old('name') }}">
             @error('name')
                 <div class="text-danger">{{ $message }}</div>
@@ -43,7 +43,7 @@
 
         <!-- Username -->
         <div class="form-group">
-            <label for="username">Username</label>
+            <label for="username">Tên người dùng</label>
             <input type="text" name="username" id="username" class="form-control" value="{{ old('username') }}">
             @error('username')
                 <div class="text-danger">{{ $message }}</div>
@@ -52,7 +52,7 @@
 
         <!-- Password -->
         <div class="form-group">
-            <label for="password">Password</label>
+            <label for="password">Mật khẩu</label>
             <input type="password" name="password" id="password" class="form-control">
             @error('password')
                 <div class="text-danger">{{ $message }}</div>
@@ -61,17 +61,17 @@
 
         <!-- Confirm Password -->
         <div class="form-group">
-            <label for="password_confirmation">Confirm Password</label>
+            <label for="password_confirmation">Xác nhận mật khẩu</label>
             <input type="password" name="password_confirmation" id="password_confirmation" class="form-control">
         </div>
 
         <!-- Role -->
         <div class="form-group">
-            <label for="role_id">Role</label>
+            <label for="role_id">Vai trò</label>
             <select name="role_id" id="role_id" class="form-control">
-                <option value="1" {{ old('role_id') == 1 ? 'selected' : '' }}>Admin</option>
-                <option value="2" {{ old('role_id') == 2 ? 'selected' : '' }}>Teacher</option>
-                <option value="3" {{ old('role_id') == 3 ? 'selected' : '' }}>User</option>
+                <option value="1" {{ old('role_id') == 1 ? 'selected' : '' }}>Quản trị</option>
+                <option value="2" {{ old('role_id') == 2 ? 'selected' : '' }}>Giảng viên</option>
+                <option value="3" {{ old('role_id') == 3 ? 'selected' : '' }}>Sinh viên</option>
             </select>
             @error('role_id')
                 <div class="text-danger">{{ $message }}</div>
@@ -79,7 +79,7 @@
         </div>
 
         <!-- Submit Button -->
-        <button type="submit" class="btn btn-primary">Create User</button>
+        <button type="submit" class="btn btn-primary">Tạo</button>
     </form>
 </div>
 @endsection

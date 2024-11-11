@@ -1,7 +1,7 @@
 @extends('master')
 
 @section('title')
-    <title>Admin - Users/Update</title>
+    <title>Cập Nhật Người Dùng</title>
 @endsection
 
 @section('content')
@@ -34,7 +34,7 @@
 
                                             <!-- Tên người dùng -->
                                             <div class="mb-3">
-                                                <label for="name" class="form-label">Tên người dùng</label>
+                                                <label for="name" class="form-label">Tên</label>
                                                 <input type="text" class="form-control" id="name" name="name" value="{{ old('name', $users->name) }}">
                                                 @error('name')
                                                     <div class="text-danger">{{ $message }}</div>
@@ -52,7 +52,7 @@
 
                                             <!-- Username -->
                                             <div class="mb-3">
-                                                <label for="username" class="form-label">Username</label>
+                                                <label for="username" class="form-label">Tên người dùng</label>
                                                 <input type="text" class="form-control" id="username" name="username" value="{{ old('username', $users->username) }}">
                                                 @error('username')
                                                     <div class="text-danger">{{ $message }}</div>
@@ -63,9 +63,9 @@
                                             <div class="mb-3">
                                                 <label for="role_id" class="form-label">Vai trò</label>
                                                 <select class="form-control" id="role_id" name="role_id">
-                                                    <option value="1" {{ old('role_id', $users->role_id) == 1 ? 'selected' : '' }}>Admin</option>
-                                                    <option value="2" {{ old('role_id', $users->role_id) == 2 ? 'selected' : '' }}>Teacher</option>
-                                                    <option value="3" {{ old('role_id', $users->role_id) == 3 ? 'selected' : '' }}>User</option>
+                                                    <option value="1" {{ old('role_id', $users->role_id) == 1 ? 'selected' : '' }}>Quản trị</option>
+                                                    <option value="2" {{ old('role_id', $users->role_id) == 2 ? 'selected' : '' }}>Giảng viên</option>
+                                                    <option value="3" {{ old('role_id', $users->role_id) == 3 ? 'selected' : '' }}>Sinh viên</option>
                                                 </select>
                                                 @error('role_id')
                                                     <div class="text-danger">{{ $message }}</div>
