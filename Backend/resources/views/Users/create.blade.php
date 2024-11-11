@@ -43,7 +43,7 @@
                                                 <div class="mb-3">
                                                     <label for="name" class="form-label">Tên người dùng</label>
                                                     <input type="text" class="form-control" id="name" name="name"
-                                                        value="{{ old('name') }}" required>
+                                                        value="{{ old('name') }}">
                                                     @error('name')
                                                         <div class="text-danger">{{ $message }}</div>
                                                     @enderror
@@ -53,7 +53,7 @@
                                                 <div class="mb-3">
                                                     <label for="email" class="form-label">Email</label>
                                                     <input type="email" class="form-control" id="email" name="email"
-                                                        value="{{ old('email') }}" required>
+                                                        value="{{ old('email') }}">
                                                     @error('email')
                                                         <div class="text-danger">{{ $message }}</div>
                                                     @enderror
@@ -63,7 +63,7 @@
                                                 <div class="mb-3">
                                                     <label for="username" class="form-label">Username</label>
                                                     <input type="text" class="form-control" id="username"
-                                                        name="username" value="{{ old('username') }}" required>
+                                                        name="username" value="{{ old('username') }}">
                                                     @error('username')
                                                         <div class="text-danger">{{ $message }}</div>
                                                     @enderror
@@ -74,7 +74,7 @@
                                                     <label for="password" class="form-label">Mật khẩu (Yêu cầu tối thiểu 8
                                                         ký tự)</label>
                                                     <input type="password" class="form-control" id="password"
-                                                        name="password" required>
+                                                        name="password">
                                                     @error('password')
                                                         <div class="text-danger">{{ $message }}</div>
                                                     @enderror
@@ -85,7 +85,7 @@
                                                     <label for="password_confirmation" class="form-label">Xác nhận Mật
                                                         khẩu</label>
                                                     <input type="password" class="form-control" id="password_confirmation"
-                                                        name="password_confirmation" required>
+                                                        name="password_confirmation">
                                                     @error('password_confirmation')
                                                         <div class="text-danger">{{ $message }}</div>
                                                     @enderror
@@ -94,7 +94,7 @@
                                                 <!-- Vai trò người dùng -->
                                                 <div class="mb-3">
                                                     <label for="role_id" class="form-label">Vai trò</label>
-                                                    <select class="form-control" id="role_id" name="role_id" required>
+                                                    <select class="form-control" id="role_id" name="role_id">
                                                         <option value="">Chọn vai trò</option>
                                                         <option value="1" {{ old('role_id') == 1 ? 'selected' : '' }}>
                                                             Admin</option>

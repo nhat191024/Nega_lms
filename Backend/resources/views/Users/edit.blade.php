@@ -43,7 +43,7 @@
                                                 <div class="mb-3">
                                                     <label for="name" class="form-label">Tên người dùng</label>
                                                     <input type="text" class="form-control" id="name" name="name"
-                                                        value="{{ old('name',$users->name) }}" required>
+                                                        value="{{ old('name',$users->name) }}">
                                                     @error('name')
                                                         <div class="text-danger">{{ $message }}</div>
                                                     @enderror
@@ -53,7 +53,7 @@
                                                 <div class="mb-3">
                                                     <label for="email" class="form-label">Email</label>
                                                     <input type="email" class="form-control" id="email" name="email"
-                                                        value="{{ old('email',$users->email) }}" required>
+                                                        value="{{ old('email',$users->email) }}">
                                                     @error('email')
                                                         <div class="text-danger">{{ $message }}</div>
                                                     @enderror
@@ -63,7 +63,7 @@
                                                 <div class="mb-3">
                                                     <label for="username" class="form-label">Username</label>
                                                     <input type="text" class="form-control" id="username"
-                                                        name="username" value="{{ old('username',$users->username) }}" required>
+                                                        name="username" value="{{ old('username',$users->username) }}">
                                                     @error('username')
                                                         <div class="text-danger">{{ $message }}</div>
                                                     @enderror
@@ -72,7 +72,7 @@
                                                 <!-- Vai trò người dùng -->
                                                 <div class="mb-3">
                                                     <label for="role_id" class="form-label">Vai trò</label>
-                                                    <select class="form-control" id="role_id" name="role_id" required>
+                                                    <select class="form-control" id="role_id" name="role_id">
                                                         <option value="">Chọn vai trò</option>
                                                         <option value="1" {{ old('role_id', $users->role_id) == 1 ? 'selected' : '' }}>Admin</option>
                                                         <option value="2" {{ old('role_id', $users->role_id) == 2 ? 'selected' : '' }}>Teacher</option>
