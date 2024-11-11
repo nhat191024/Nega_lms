@@ -17,12 +17,14 @@
                     <!-- Page Heading -->
                     <h1 class="h3 mb-2 text-gray-800">Tables Users</h1>
 
-                    <button class="btn btn-success btn-icon-split">
+                    <button class="btn btn-success btn-icon-split mb-4">
                         <span class="icon text-white-50">
-                          <i class="fas fa-plus"></i>
+                            <i class="fas fa-plus"></i>
                         </span>
-                        <a href={{route('users.create')}}><span class="text">Create</span></a>
-                      </button>
+                        <a href={{ route('users.create') }} class="text-white">
+                            <span class="text">Create</span>
+                        </a>
+                    </button>
                     
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
@@ -54,7 +56,6 @@
                                                 <a href="{{route('users.edit', ['id' => $user->id])}}" class="btn btn-warning btn-sm">Sửa</a>
                                                 <a href="{{ route('users.status', ['id' => $user->id]) }}" class="btn 
                                                     {{ $user->status ? 'btn-danger' : 'btn-success' }} btn-sm">
-                                                    {{-- Thay đổi nội dung nút theo trạng thái --}}
                                                     @if ($user->status) 
                                                         Ẩn
                                                     @else 
