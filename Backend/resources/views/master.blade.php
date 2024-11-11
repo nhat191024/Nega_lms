@@ -138,6 +138,13 @@
             <!-- Divider -->
             <hr class="sidebar-divider d-none d-md-block">
 
+            <li class="nav-item">
+                <a class="nav-link" href="{{route('users.index')}}">
+                    <i class="fas fa-fw fa-chart-area"></i>
+                    <span>Users</span></a>
+                </a>
+            </li>
+
             <!-- Sidebar Toggler (Sidebar) -->
             <div class="text-center d-none d-md-inline">
                 <button class="rounded-circle border-0" id="sidebarToggle"></button>
