@@ -34,7 +34,7 @@
 
                                             <!-- Tên người dùng -->
                                             <div class="mb-3">
-                                                <label for="name" class="form-label">Tên</label>
+                                                <label for="name" class="form-label">Tên người dùng</label>
                                                 <input type="text" class="form-control" id="name" name="name" value="{{ old('name', $users->name) }}">
                                                 @error('name')
                                                     <div class="text-danger">{{ $message }}</div>
@@ -52,7 +52,7 @@
 
                                             <!-- Username -->
                                             <div class="mb-3">
-                                                <label for="username" class="form-label">Tên người dùng</label>
+                                                <label for="username" class="form-label">Tên đăng nhập</label>
                                                 <input type="text" class="form-control" id="username" name="username" value="{{ old('username', $users->username) }}">
                                                 @error('username')
                                                     <div class="text-danger">{{ $message }}</div>

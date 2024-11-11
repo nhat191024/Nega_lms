@@ -17,9 +17,9 @@ class UserController extends Controller
     {
         $users = User::all();
         $roles = [
-            1 => 'Admin',
-            2 => 'Teacher',
-            3 => 'User',
+            1 => 'Quản trị',
+            2 => 'Giảng viên',
+            3 => 'Sinh viên',
         ];
         return view('users.index', compact('users', 'roles'));
     }
@@ -62,7 +62,7 @@ class UserController extends Controller
                 ->withErrors($validator)
                 ->withInput();
         }
-        
+
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
@@ -71,7 +71,7 @@ class UserController extends Controller
             'role_id' => $request->role_id,
         ]);
 
-        return redirect()->route('users.create')->with('success', 'Người dùng đã được tạo thành công!');
+        return redirect()->route('users.index')->with('success', 'Người dùng đã được tạo thành công!');
     }
 
     /**
