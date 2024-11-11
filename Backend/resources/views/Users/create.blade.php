@@ -30,69 +30,84 @@
                                     <div class="card w-50">
                                         <div class="card-body">
                                             <h2 class="card-title">Create New</h2>
-                                            <br>
-                                            <form action="{{ route('users.store') }}" method="POST" enctype="multipart/form-data">
+                                            @if (session('success'))
+                                                <div class="alert alert-success">
+                                                    {{ session('success') }}
+                                                </div>
+                                            @endif
+                                            <form action="{{ route('users.store') }}" method="POST"
+                                                enctype="multipart/form-data">
                                                 @csrf
-                                        
+
                                                 <!-- Tên người dùng -->
                                                 <div class="mb-3">
                                                     <label for="name" class="form-label">Tên người dùng</label>
-                                                    <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}" required>
+                                                    <input type="text" class="form-control" id="name" name="name"
+                                                        value="{{ old('name') }}" required>
                                                     @error('name')
                                                         <div class="text-danger">{{ $message }}</div>
                                                     @enderror
                                                 </div>
-                                        
+
                                                 <!-- Email -->
                                                 <div class="mb-3">
                                                     <label for="email" class="form-label">Email</label>
-                                                    <input type="email" class="form-control" id="email" name="email" value="{{ old('email') }}" required>
+                                                    <input type="email" class="form-control" id="email" name="email"
+                                                        value="{{ old('email') }}" required>
                                                     @error('email')
                                                         <div class="text-danger">{{ $message }}</div>
                                                     @enderror
                                                 </div>
-                                        
+
                                                 <!-- Username -->
                                                 <div class="mb-3">
                                                     <label for="username" class="form-label">Username</label>
-                                                    <input type="text" class="form-control" id="username" name="username" value="{{ old('username') }}" required>
+                                                    <input type="text" class="form-control" id="username"
+                                                        name="username" value="{{ old('username') }}" required>
                                                     @error('username')
                                                         <div class="text-danger">{{ $message }}</div>
                                                     @enderror
                                                 </div>
-                                        
+
                                                 <!-- Mật khẩu -->
                                                 <div class="mb-3">
-                                                    <label for="password" class="form-label">Mật khẩu (Yêu cầu tối thiểu 8 ký tự)</label>
-                                                    <input type="password" class="form-control" id="password" name="password" required>
+                                                    <label for="password" class="form-label">Mật khẩu (Yêu cầu tối thiểu 8
+                                                        ký tự)</label>
+                                                    <input type="password" class="form-control" id="password"
+                                                        name="password" required>
                                                     @error('password')
                                                         <div class="text-danger">{{ $message }}</div>
                                                     @enderror
                                                 </div>
-                                        
+
                                                 <!-- Xác nhận mật khẩu -->
                                                 <div class="mb-3">
-                                                    <label for="password_confirmation" class="form-label">Xác nhận Mật khẩu</label>
-                                                    <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" required>
+                                                    <label for="password_confirmation" class="form-label">Xác nhận Mật
+                                                        khẩu</label>
+                                                    <input type="password" class="form-control" id="password_confirmation"
+                                                        name="password_confirmation" required>
                                                     @error('password_confirmation')
                                                         <div class="text-danger">{{ $message }}</div>
                                                     @enderror
                                                 </div>
-                                        
+
                                                 <!-- Vai trò người dùng -->
                                                 <div class="mb-3">
                                                     <label for="role_id" class="form-label">Vai trò</label>
                                                     <select class="form-control" id="role_id" name="role_id" required>
                                                         <option value="">Chọn vai trò</option>
-                                                        <option value="1" {{ old('role_id') == 1 ? 'selected' : '' }}>Admin</option>
-                                                        <option value="2" {{ old('role_id') == 2 ? 'selected' : '' }}>Teacher</option>
-                                                        <option value="3" {{ old('role_id') == 3 ? 'selected' : '' }}>User</option>
+                                                        <option value="1" {{ old('role_id') == 1 ? 'selected' : '' }}>
+                                                            Admin</option>
+                                                        <option value="2" {{ old('role_id') == 2 ? 'selected' : '' }}>
+                                                            Teacher</option>
+                                                        <option value="3" {{ old('role_id') == 3 ? 'selected' : '' }}>
+                                                            User</option>
                                                     </select>
                                                     @error('role_id')
                                                         <div class="text-danger">{{ $message }}</div>
                                                     @enderror
                                                 </div>
-                                        
+
                                                 <!-- Nút tạo mới -->
                                                 <button type="submit" class="btn btn-primary">Tạo mới</button>
                                             </form>

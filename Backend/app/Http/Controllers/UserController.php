@@ -44,20 +44,15 @@ class UserController extends Controller
             return response()->json(['errors' => $validator->errors()], 400);
         }
 
-        // Tạo người dùng mới
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'username' => $request->username,
-            'password' => Hash::make($request->password), // Mã hóa mật khẩu trước khi lưu
+            'password' => Hash::make($request->password),
             'role_id' => $request->role_id,
         ]);
 
-        // Trả về dữ liệu người dùng mới được tạo
-        return response()->json([
-            'message' => 'User created successfully!',
-            'user' => $user
-        ], 201);
+        return redirect()->route('users.create')->with('success', 'Người dùng đã được tạo thành công!');
     }
 
     /**
@@ -73,7 +68,8 @@ class UserController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $users = User::findOrFail($id);
+        return view('users.edit',compact('users'));
     }
 
     /**
@@ -81,7 +77,28 @@ class UserController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $users = User::findOrFail($id);
+        
+        $validator = Validator::make($request->all(),[
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'username' => 'required|string|unique:users,username|max:255',
+            'role_id' => 'required|in:1,2,3',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 400);
+        }
+
+        $data = [
+            'name' => $request->input('name'),
+            'email' => $request->input('email'),
+            'username' => $request->input('username'),
+            'role_id' => $request->input('role_id'),
+        ];
+
+        $users->update($data);
+        return redirect()->route('users.index');
     }
 
     /**
