@@ -8,6 +8,10 @@
 <div class="container">
     <h2 class="my-4">Tạo người dùng mới</h2>
 
+    <a href="{{ route('users.index') }}" class="btn btn-secondary mb-4">
+        <i class="fas fa-arrow-left"></i> Quay lại
+    </a>
+
     <!-- Hiển thị thông báo lỗi nếu có lỗi tổng quan -->
     @if ($errors->any())
         <div class="alert alert-danger">
