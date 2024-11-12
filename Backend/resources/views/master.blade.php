@@ -9,9 +9,11 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Nega - Admin</title>
+    <title>@yield('title')</title>
 
     <!-- Custom fonts for this template-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link href="{{ asset('vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">
     <link
         href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
@@ -19,8 +21,11 @@
 
     <!-- Custom styles for this template-->
     <link href="{{ asset('css/sb-admin-2.css') }}" rel="stylesheet">
-    <link href="{{ url('') . '/' }}vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.0/css/jquery.dataTables.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.15.2/css/selectize.default.min.css"
+        integrity="sha512-pTaEn+6gF1IeWv3W1+7X7eM60TFu/agjgoHmYhAfLEU8Phuf6JKiiE8YmsNC0aCgQv4192s4Vai8YZ6VNM6vyQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 
 <body id="page-top">
@@ -33,8 +38,8 @@
 
             <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="#">
-                <div class="" >
-                    <img src="{{ asset('img/logo-no-bg.png') }}"  width="40%" alt="">
+                <div class="">
+                    <img src="{{ asset('img/logo-no-bg.png') }}" width="40%" alt="">
                 </div>
                 <div class="sidebar-brand-text mx-3 text-xl">Nega <sup>LMS</sup></div>
             </a>
@@ -181,29 +186,46 @@
     </div>
 
     <!-- Bootstrap core JavaScript-->
-    <script src="{{ asset('vendor/jquery/jquery.min.js') }}"></script>
-    <script src="{{ asset('vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 
     <!-- Core plugin JavaScript-->
     <script src="{{ asset('vendor/jquery-easing/jquery.easing.min.js') }}"></script>
-    <script src="{{ asset('vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-
-    <!-- Custom scripts for all pages-->
-    <script src="{{ asset('vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-
-    <!-- Page level plugins -->
-    <script src="{{ asset('vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-
-    <!-- Page level custom scripts -->
-    <script src="{{ asset('vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-    <script src="{{ asset('vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script src="{{ asset('vendor/chart.js/chart.js') }}"></script>
     <script src="{{ url('') . '/' }}js/sb-admin-2.min.js"></script>
 
-    <script src="{{ url('') . '/' }}vendor/datatables/jquery.dataTables.min.js"></script>
-    <script src="{{ url('') . '/' }}vendor/datatables/dataTables.bootstrap4.min.js"></script>
+    {{-- <script src="{{ url('') . '/' }}vendor/datatables/jquery.dataTables.min.js"></script> --}}
+    <script src="https://cdn.datatables.net/1.13.0/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.15.2/js/selectize.min.js"
+        integrity="sha512-IOebNkvA/HZjMM7MxL0NYeLYEalloZ8ckak+NDtOViP7oiYzG5vn6WVXyrJDiJPhl4yRdmNAG49iuLmhkUdVsQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="{{ asset('js/demo/datatables-demo.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="{{ asset('js/demo/select2.js') }}"></script>
 
+    <script type="text/javascript" async>
+        @if(Session::has('error'))
+            Swal.fire({
+                title: "Thông báo!",
+                text: "{{ Session::get('error') }}",
+                icon: "error",
+                showConfirmButton: false,
+                timer: 2000
+            })
+        @elseif(Session::has('success'))
+            Swal.fire({
+                title: "Thông báo!",
+                text: "{{ Session::get('success') }}",
+                icon: "success",
+                showConfirmButton: false,
+                timer: 2000
+            })
+        @else()
+            
+        @endif
+    </script>
 </body>
 
 </html>

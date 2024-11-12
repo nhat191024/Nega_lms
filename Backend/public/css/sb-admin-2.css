@@ -11279,3 +11279,12 @@ footer.sticky-footer .copyright {
 body.sidebar-toggled footer.sticky-footer {
   width: 100%;
 }
+/* Đảm bảo rằng select2 không bị chặn bởi các phần tử khác */
+.select2-container {
+    z-index: 9999 !important;  /* Đặt z-index cao để nó luôn hiển thị phía trên */
+}
+
+/* Đảm bảo không có pointer-events bị tắt */
+.select2-search__field {
+    pointer-events: auto;
+}
