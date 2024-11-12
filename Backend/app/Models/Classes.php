@@ -19,7 +19,12 @@ class Classes extends Model
 
     public function students()
     {
-        return $this->belongsToMany(User::class, 'enrollments', 'class_id', 'user_id');
+        return $this->belongsToMany(User::class, 'enrollments', 'class_id', 'student_id');
+    }
+
+    public function enrollments()
+    {
+        return $this->hasMany(Enrollment::class, 'class_id');
     }
 
     public function assignments()
