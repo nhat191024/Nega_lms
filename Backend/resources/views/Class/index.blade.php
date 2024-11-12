@@ -45,8 +45,17 @@
                                             <td>{{ $class->class_name }}</td>
                                             <td>{{ $class->class_description }}</td>
                                             <td>{{ $class->teacher_id }}</td>
+                                            <td>{{ $class->status ? 'Hiển thị' : 'Ẩn' }}</td>
                                             <td>
                                             <a href="{{route('classes.edit', ['id' => $class->id])}}" class="btn btn-warning btn-sm">Edit</a>
+                                            <a href="{{ route('classes.status', ['id' => $class->id]) }}"
+                                                class="btn
+                                                {{ $class->status ? 'btn-danger' : 'btn-success' }} btn-sm">
+                                                @if ($class->status)
+                                                    Ẩn
+                                                @else
+                                                    Hiển thị
+                                                @endif
                                             </td>
                                         </tr>
                                         @endforeach
