@@ -42,12 +42,8 @@ class EnrollmentController extends Controller
     {
         $enrollment = Enrollment::where('class_id', $class_id)->where('student_id', $student_id)->first();
 
-        // Kiểm tra nếu tìm thấy Enrollment
         if ($enrollment) {
-            // Xóa bản ghi Enrollment
             $enrollment->delete();
-
-            // Trả về thông báo thành công
             return redirect()->back()->with('success', 'Học sinh đã được xóa khỏi lớp.');
         }
         return redirect()->back()->with('error', 'Không tìm thấy học sinh này trong lớp.');
