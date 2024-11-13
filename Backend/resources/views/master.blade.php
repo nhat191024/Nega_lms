@@ -391,46 +391,44 @@
             </div>
         </div>
     </div>
-
-    <!-- Bootstrap core JavaScript-->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-
-    <!-- Core plugin JavaScript-->
-    <script src="{{ asset('vendor/jquery-easing/jquery.easing.min.js') }}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-    <script src="{{ asset('vendor/chart.js/chart.js') }}"></script>
-    <script src="{{ url('') . '/' }}js/sb-admin-2.min.js"></script>
-
-    {{-- <script src="{{ url('') . '/' }}vendor/datatables/jquery.dataTables.min.js"></script> --}}
-    <script src="https://cdn.datatables.net/1.13.0/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.15.2/js/selectize.min.js"
-        integrity="sha512-IOebNkvA/HZjMM7MxL0NYeLYEalloZ8ckak+NDtOViP7oiYzG5vn6WVXyrJDiJPhl4yRdmNAG49iuLmhkUdVsQ=="
-        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="{{ asset('js/demo/datatables-demo.js') }}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="{{ asset('js/demo/select2.js') }}"></script>
-
-    <script type="text/javascript" async>
-        @if (Session::has('error'))
-            Swal.fire({
-                title: "Thông báo!",
-                text: "{{ Session::get('error') }}",
-                icon: "error",
-                showConfirmButton: false,
-                timer: 2000
-            })
-        @elseif (Session::has('success'))
-            Swal.fire({
-                title: "Thông báo!",
-                text: "{{ Session::get('success') }}",
-                icon: "success",
-                showConfirmButton: false,
-                timer: 2000
-            })
-        @endif
-    </script>
 </body>
 
+<!-- Bootstrap core JavaScript-->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Core plugin JavaScript-->
+<script src="{{ asset('vendor/jquery-easing/jquery.easing.min.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script src="{{ asset('vendor/chart.js/chart.js') }}"></script>
+<script src="{{ url('') . '/' }}js/sb-admin-2.min.js"></script>
+
+{{-- <script src="{{ url('') . '/' }}vendor/datatables/jquery.dataTables.min.js"></script> --}}
+<script src="https://cdn.datatables.net/1.13.0/js/jquery.dataTables.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.15.2/js/selectize.min.js"
+    integrity="sha512-IOebNkvA/HZjMM7MxL0NYeLYEalloZ8ckak+NDtOViP7oiYzG5vn6WVXyrJDiJPhl4yRdmNAG49iuLmhkUdVsQ=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="{{ asset('js/demo/datatables-demo.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="{{ asset('js/demo/select2.js') }}"></script>
+
+<script type="text/javascript" async>
+    @if (Session::has('error'))
+        Swal.fire({
+            title: "Thông báo!",
+            text: "{{ Session::get('error') }}",
+            icon: "error",
+            showConfirmButton: false,
+            timer: 2000
+        })
+    @elseif (Session::has('success'))
+        Swal.fire({
+            title: "Thông báo!",
+            text: "{{ Session::get('success') }}",
+            icon: "success",
+            showConfirmButton: false,
+            timer: 2000
+        })
+    @endif
+</script>
 </html>
