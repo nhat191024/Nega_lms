@@ -12,20 +12,17 @@
     <title>@yield('title')</title>
 
     <!-- Custom fonts for this template-->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link href="{{ asset('vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">
     <link
         href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
         rel="stylesheet">
 
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
     <!-- Custom styles for this template-->
     <link href="{{ asset('css/sb-admin-2.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.0/css/jquery.dataTables.min.css">
-    <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.15.2/css/selectize.default.min.css"
-        integrity="sha512-pTaEn+6gF1IeWv3W1+7X7eM60TFu/agjgoHmYhAfLEU8Phuf6JKiiE8YmsNC0aCgQv4192s4Vai8YZ6VNM6vyQ=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 
 <body id="page-top">
@@ -393,24 +390,14 @@
     </div>
 </body>
 
-<!-- Bootstrap core JavaScript-->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
 <!-- Core plugin JavaScript-->
-<script src="{{ asset('vendor/jquery-easing/jquery.easing.min.js') }}"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-<script src="{{ asset('vendor/chart.js/chart.js') }}"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="{{ url('') . '/' }}js/sb-admin-2.min.js"></script>
-
-{{-- <script src="{{ url('') . '/' }}vendor/datatables/jquery.dataTables.min.js"></script> --}}
+<script src=" https://cdn.jsdelivr.net/npm/jquery.easing@1.4.1/jquery.easing.min.js "></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src=" https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js "></script>
 <script src="https://cdn.datatables.net/1.13.0/js/jquery.dataTables.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.15.2/js/selectize.min.js"
-    integrity="sha512-IOebNkvA/HZjMM7MxL0NYeLYEalloZ8ckak+NDtOViP7oiYzG5vn6WVXyrJDiJPhl4yRdmNAG49iuLmhkUdVsQ=="
-    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="{{ asset('js/demo/datatables-demo.js') }}"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="{{ asset('js/demo/select2.js') }}"></script>
 
 <script type="text/javascript" async>
     @if (Session::has('error'))
@@ -430,5 +417,16 @@
             timer: 2000
         })
     @endif
+
+    (function($) {
+        "use strict";
+        $(document).ready(function() {
+            $('.class-table').each(function() {
+                let tableId = $(this).data('class-table');
+                let table = new DataTable('#' + tableId);
+            });
+        });
+    })(jQuery);
 </script>
+
 </html>
