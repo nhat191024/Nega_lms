@@ -394,6 +394,7 @@
 <!-- Core plugin JavaScript-->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="{{ url('') . '/' }}js/sb-admin-2.min.js"></script>
+<script src="{{ url('') . '/' }}js/datatable.js"></script>
 <script src=" https://cdn.jsdelivr.net/npm/jquery.easing@1.4.1/jquery.easing.min.js "></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src=" https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js "></script>
@@ -419,16 +420,6 @@
             timer: 2000
         })
     @endif
-
-    (function($) {
-        "use strict";
-        $(document).ready(function() {
-            $('.class-table').each(function() {
-                let tableId = $(this).data('class-table');
-                let table = new DataTable('#' + tableId);
-            });
-        });
-    })(jQuery);
 </script>
 
 </html>
