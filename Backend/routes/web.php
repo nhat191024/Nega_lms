@@ -1,15 +1,14 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\EnrollmentController;
+use App\Http\Controllers\ClassController;
 
 Route::get('/', function () {
     return view('master');
 });
 
-Route::prefix(('/enrollment'))->group(function() {
-    Route::get('/', [EnrollmentController::class, 'index'])->name('enrollment.index');
-    Route::post('/create', [EnrollmentController::class, 'create'])->name('enrollment.create');
-    Route::post('/update', [EnrollmentController::class, 'update'])->name('enrollment.update');
-    Route::delete('/enrollment/{class_id}/{student_id}', [EnrollmentController::class, 'destroy'])->name('enrollment.destroy');
+Route::prefix(('/class'))->name('classes.')->group(function () {
+    Route::get('/', [ClassController::class, 'index'])->name('index');
+    Route::post('/add-student', [ClassController::class, 'addStudentToClass'])->name('addStudent');
+    Route::delete('/remove-student/{class_id}/{student_id}', [ClassController::class, 'removeStudentFormAClass'])->name('removeStudent');
 });
