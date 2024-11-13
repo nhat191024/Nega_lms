@@ -31,12 +31,10 @@
                                         </div>
                                         <input type="hidden" name="class_id" value="{{ $class->id }}">
                                         <div class="modal-body">
-                                            <select name="student_id" class="form-select"
-                                                data-student-select="student-select-class-{{ Str::slug($class->class_name) }}"
-                                                id="student-select-class-{{ Str::slug($class->class_name) }}"
-                                                style="width: 100%">
+                                            <select name="student_id" class="selectpicker" data-live-search="true"
+                                                data-width="100%" title="Chọn học sinh..." >
                                                 @foreach ($studentsNotInClass($class->id) as $student)
-                                                    <option value="{{ $student->id }}">
+                                                    <option value="{{ $student->id }}" data-tokens="{{ $student->name }}">
                                                         {{ $student->name }}
                                                     </option>
                                                 @endforeach
