@@ -1,5 +1,5 @@
 @extends('master')
-@section('title', 'Admin - Enrollment')
+@section('title', 'Lớp học')
 @section('content')
     <div id="content">
         <!-- Begin Page Content -->
@@ -8,9 +8,12 @@
             <h1 class="h3 mb-2 text-gray-800">Quản lý lớp học</h1>
             <!-- DataTales Example -->
             @foreach ($classes as $class)
-                <div class="card shadow mb-4">
+                <div class="card shadow my-4">
                     <div class="card-header py-3 d-flex justify-content-between">
-                        <h6 class="m-0 font-weight-bold text-primary">Lớp - {{ $class->class_name }}</h6>
+                        <div class="d-flex">
+                            <h6 class="m-0 font-weight-bold text-primary">Lớp - {{ $class->class_name }}</h6>
+                            <h6 class="m-0 font-weight-bold text-primary mx-4">Giảng viên - {{ $class->teacher->name }}</h6>
+                        </div>
                         <button type="button" class="btn btn-info" data-bs-toggle="modal"
                             data-bs-target="#add-student-to-class-{{ Str::slug($class->class_name) }}">
                             Thêm học sinh
@@ -19,7 +22,7 @@
                         <div class="modal fade" id="add-student-to-class-{{ Str::slug($class->class_name) }}" tabindex="-1"
                             aria-labelledby="modal-title-{{ Str::slug($class->class_name) }}" aria-hidden="true">
                             <div class="modal-dialog">
-                                <form action="{{ route('enrollment.create') }}" method="post">
+                                <form action="{{ route('classes.addStudent') }}" method="post">
                                     @csrf
                                     <div class="modal-content">
                                         <div class="modal-header">
@@ -32,7 +35,7 @@
                                         <input type="hidden" name="class_id" value="{{ $class->id }}">
                                         <div class="modal-body">
                                             <select name="student_id" class="selectpicker" data-live-search="true"
-                                                data-width="100%" title="Chọn học sinh..." >
+                                                data-width="100%" title="Chọn học sinh...">
                                                 @foreach ($studentsNotInClass($class->id) as $student)
                                                     <option value="{{ $student->id }}" data-tokens="{{ $student->name }}">
                                                         {{ $student->name }}
@@ -58,25 +61,21 @@
                                     id="table-{{ Str::slug($class->class_name) }}" width="100%" cellspacing="0">
                                     <thead>
                                         <tr>
-                                            <th>STT</th>
-                                            <th>Tên học sinh</th>
-                                            <th>Email</th>
-                                            <th>Tên giáo viên</th>
-                                            <th>Tên lớp</th>
-                                            <th>Tác vụ</th>
+                                            <th class="text-center">STT</th>
+                                            <th class="text-center">Tên học sinh</th>
+                                            <th class="text-center">Email</th>
+                                            <th class="text-center">Tác vụ</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @foreach ($class->students as $student)
                                             <tr>
-                                                <td>{{ $loop->iteration }}</td>
-                                                <td>{{ $student->name }}</td>
-                                                <td>{{ $student->email }}</td>
-                                                <td>{{ $class->teacher->name }}</td>
-                                                <td>{{ $class->class_name }}</td>
-                                                <th>
+                                                <td class="text-center">{{ $loop->iteration }}</td>
+                                                <td class="text-center">{{ $student->name }}</td>
+                                                <td class="text-center">{{ $student->email }}</td>
+                                                <th class="text-center">
                                                     <form id="delete-form-{{ $class->id }}-{{ $student->id }}"
-                                                        action="{{ route('enrollment.destroy', ['class_id' => $class->id, 'student_id' => $student->id]) }}"
+                                                        action="{{ route('classes.removeStudent', ['class_id' => $class->id, 'student_id' => $student->id]) }}"
                                                         method="POST">
                                                         @csrf
                                                         @method('DELETE')
@@ -91,12 +90,10 @@
                                     </tbody>
                                     <tfoot>
                                         <tr>
-                                            <th>STT</th>
-                                            <th>Tên học sinh</th>
-                                            <th>Email</th>
-                                            <th>Tên giáo viên</th>
-                                            <th>Tên lớp</th>
-                                            <th>Tác vụ</th>
+                                            <th class="text-center">STT</th>
+                                            <th class="text-center">Tên học sinh</th>
+                                            <th class="text-center">Email</th>
+                                            <th class="text-center">Tác vụ</th>
                                         </tr>
                                     </tfoot>
                                 </table>
