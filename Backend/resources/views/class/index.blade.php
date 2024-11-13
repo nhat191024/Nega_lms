@@ -27,7 +27,7 @@
                                     <div class="modal-content">
                                         <div class="modal-header">
                                             <h1 class="modal-title fs-5"
-                                                id="modal-title-{{ Str::slug($class->class_name) }}">Thêm học sinh vào
+                                                id="modal-title-{{ Str::slug($class->class_name) }}">Thêm học sinh vào Lớp
                                                 {{ $class->class_name }}</h1>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                 aria-label="Close"></button>
