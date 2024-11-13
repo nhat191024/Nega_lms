@@ -31,7 +31,7 @@
                                         </div>
                                         <input type="hidden" name="class_id" value="{{ $class->id }}">
                                         <div class="modal-body">
-                                            <select name="student_id" class="student-select"
+                                            <select name="student_id" class="form-select"
                                                 data-student-select="student-select-class-{{ Str::slug($class->class_name) }}"
                                                 id="student-select-class-{{ Str::slug($class->class_name) }}"
                                                 style="width: 100%">
