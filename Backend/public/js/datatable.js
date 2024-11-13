@@ -1,6 +1,15 @@
 (function ($) {
     "use strict";
 
+    function initializeSelectPicker() {
+        $('.selectpicker').selectpicker({
+            liveSearch: true,
+            size: 10,
+            width: '100%',
+            noneResultsText: 'Không tìm thấy kết quả {0}'
+        });
+    }
+
     function initializeDataTables() {
         $('.class-table').each(function () {
             let tableId = $(this).attr('id');
@@ -28,12 +37,14 @@
 
     $(document).ready(function () {
         initializeDataTables();
+        initializeSelectPicker();
     });
 
     // Re-initialize tables after form submission
     $('form').on('submit', function () {
         setTimeout(function () {
             initializeDataTables();
+            initializeSelectPicker();
         }, 500);
     });
 })(jQuery);
