@@ -10,6 +10,7 @@ class Classes extends Model
         'class_name',
         'class_description',
         'teacher_id',
+        'status',
     ];
 
     public function teacher()

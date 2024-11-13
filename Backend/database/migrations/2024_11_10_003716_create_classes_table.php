@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('class_name');
             $table->text('class_description');
             $table->unsignedBigInteger('teacher_id');
+            $table->tinyInteger('status')->default(1);
             $table->timestamps();
         });
     }
