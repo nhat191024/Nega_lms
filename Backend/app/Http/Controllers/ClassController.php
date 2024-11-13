@@ -7,7 +7,7 @@ use App\Models\Enrollment;
 use App\Models\User;
 use Illuminate\Http\Request;
 
-class EnrollmentController extends Controller
+class ClassController extends Controller
 {
     public function index()
     {
@@ -18,10 +18,10 @@ class EnrollmentController extends Controller
             })->get();
         };
 
-        return view('enrollment.index', compact('classes', 'studentsNotInClass'));
+        return view('class.index', compact('classes', 'studentsNotInClass'));
     }
 
-    public function create(Request $request)
+    public function addStudentToClass(Request $request)
     {
         $studentID = $request->student_id;
         $classID = $request->class_id;
@@ -31,14 +31,14 @@ class EnrollmentController extends Controller
         ]);
 
         if ($enrollment) {
-            return redirect()->route('enrollment.index')->with('success', 'Thêm học sinh thành công');
+            return redirect()->back()->with('success', 'Thêm học sinh thành công');
         } else {
-            return redirect()->route('enrollment.index')->with('error', 'Thêm học sinh thất bại');
+            return redirect()->back()->with('error', 'Thêm học sinh thất bại');
         }
     }
 
 
-    public function destroy($class_id, $student_id)
+    public function removeStudentFormAClass($class_id, $student_id)
     {
         $enrollment = Enrollment::where('class_id', $class_id)->where('student_id', $student_id)->first();
 
