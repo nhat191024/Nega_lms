@@ -57,10 +57,12 @@ class ClassController extends Controller
             'status' => $status,
         ]);
 
-        if ($updateStatus) {
+        if ($updateStatus->status === 1) {
+            return redirect()->back()->with('success', 'Đã hiển thị lớp');
+        } elseif ($updateStatus->status === 0) {
             return redirect()->back()->with('success', 'Đã ẩn lớp');
         } else {
-            return redirect()->back()->with('error', 'Không thể ẩn lớp');
+            return redirect()->back()->with('error', 'Vui lòng thử lại');
         }
     }
 }

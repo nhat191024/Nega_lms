@@ -17,7 +17,7 @@
 
                         <div class="d-flex justify-between">
                             @if ($class->status === 1)
-                                <button type="button" class="btn btn-info text-white mx-3" data-bs-toggle="modal"
+                                <button type="button" class="btn btn-info text-white" data-bs-toggle="modal"
                                     data-bs-target="#add-student-to-class-{{ Str::slug($class->class_name) }}">
                                     Thêm học sinh
                                 </button>
