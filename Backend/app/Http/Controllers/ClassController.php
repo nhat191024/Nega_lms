@@ -48,4 +48,19 @@ class ClassController extends Controller
         }
         return redirect()->back()->with('error', 'Không tìm thấy học sinh này trong lớp.');
     }
+
+    public function hideClassFormWebsite(Request $request) {
+        $class_id = $request->class_id;
+        $updateStatus = Classes::find($class_id);
+        $status = $updateStatus->status === 0 ? 1 : 0;
+        $updateStatus->update([
+            'status' => $status,
+        ]);
+
+        if ($updateStatus) {
+            return redirect()->back()->with('success', 'Đã ẩn lớp');
+        } else {
+            return redirect()->back()->with('error', 'Không thể ẩn lớp');
+        }
+    }
 }
