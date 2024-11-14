@@ -6,7 +6,6 @@
         <div class="container-fluid">
             <!-- Page Heading -->
             <h1 class="h3 mb-2 text-gray-800">Quản lý lớp học</h1>
-            <!-- DataTales Example -->
             @foreach ($classes as $class)
                 <div class="card shadow my-4">
                     <div class="card-header py-3 d-flex justify-content-between">
