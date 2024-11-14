@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('username')->unique();
             $table->string('password');
             $table->enum('role_id', [1, 2, 3]); // 1 = admin, 2 = teacher, 3 = user
+            $table->tinyInteger('status')->default(1); // 1 là hiển thị, 0 là ẩn
             $table->rememberToken();
             $table->timestamps();
         });
