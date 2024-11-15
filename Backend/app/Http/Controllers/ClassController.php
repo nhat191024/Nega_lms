@@ -13,12 +13,13 @@ class ClassController extends Controller
     {
         $classes = Classes::all();
         $studentsNotInClass = function ($classID) {
-            return User::whereDoesntHave('enrollments', function ($query) use ($classID) {
+            return User::where('role_id', 3)->whereDoesntHave('enrollments', function ($query) use ($classID) {
                 $query->where('class_id', $classID);
             })->get();
         };
+        $teachersNotInClass =  User::where('role_id', 2)->get();
 
-        return view('class.index', compact('classes', 'studentsNotInClass'));
+        return view('class.index', compact('classes', 'studentsNotInClass', 'teachersNotInClass'));
     }
 
     public function addStudentToClass(Request $request)
@@ -49,18 +50,51 @@ class ClassController extends Controller
         return redirect()->back()->with('error', 'Không tìm thấy học sinh này trong lớp.');
     }
 
-    public function hideClassFormWebsite(Request $request) {
+    public function addNewClass(Request $request) {
+        $request->validate([
+            'className' => 'required|string|max:255',
+            'classDescription' => 'required|string|max:500',
+            'teacherID' => 'required|integer|exists:users,id',
+        ], [
+            'className.required' => 'Vui lòng nhập tên lớp!',
+            'classDescription.required' => 'Vui lòng nhập mô tả lớp!',
+            'classDescription.string' => 'Mô tả phải là 1 chuỗi!',
+            'classDescription.max' => 'Không nhập quá 500 ký tự!',
+            'teacherID.required' => 'Vui lòng chọn giảng viên!',
+            'teacherID.exists' => 'Giảng viên không tồn tại!'
+        ]);
+
+        $className = $request->className;
+        $classDescription = $request->classDescription;
+        $teacherID = $request->teacherID;
+
+        $classes = Classes::create([
+            'class_name' => $className,
+            'class_description' => $classDescription,
+            'teacher_id' => $teacherID,
+        ]);
+
+        if ($classes) {
+            return redirect()->route('classes.index')->with('success', 'Thêm lớp học thành công');
+        } else {
+            return redirect()->back()->with('error', 'Thêm lớp học thất bại');
+        }
+    }
+    public function hideClassFormWebsite(Request $request, $status = 0) {
         $class_id = $request->class_id;
         $updateStatus = Classes::find($class_id);
-        $status = $updateStatus->status === 0 ? 1 : 0;
+        if(!$updateStatus) {
+            return redirect()->back()->with('error', 'Lớp không tồn tại');
+        }
+        if ($updateStatus->status === 0) {
+            return redirect()->back()->with('error', 'Lớp đã được xóa');
+        }
         $updateStatus->update([
             'status' => $status,
         ]);
 
-        if ($updateStatus->status === 1) {
-            return redirect()->back()->with('success', 'Đã hiển thị lớp');
-        } elseif ($updateStatus->status === 0) {
-            return redirect()->back()->with('success', 'Đã ẩn lớp');
+        if ($updateStatus) {
+            return redirect()->back()->with('success', 'Đã xóa lớp học!');
         } else {
             return redirect()->back()->with('error', 'Vui lòng thử lại');
         }
