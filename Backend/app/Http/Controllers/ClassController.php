@@ -13,11 +13,13 @@ class ClassController extends Controller
     {
         $classes = Classes::all();
         $studentsNotInClass = function ($classID) {
-            return User::where('role_id', 3)->whereDoesntHave('enrollments', function ($query) use ($classID) {
-                $query->where('class_id', $classID);
-            })->get();
+            return User::where('role_id', 3)
+                ->whereDoesntHave('enrollments', function ($query) use ($classID) {
+                    $query->where('class_id', $classID);
+                })
+                ->get();
         };
-        $teachersNotInClass =  User::where('role_id', 2)->get();
+        $teachersNotInClass = User::where('role_id', 2)->get();
 
         return view('class.index', compact('classes', 'studentsNotInClass', 'teachersNotInClass'));
     }
@@ -38,7 +40,6 @@ class ClassController extends Controller
         }
     }
 
-
     public function removeStudentFormAClass($class_id, $student_id)
     {
         $enrollment = Enrollment::where('class_id', $class_id)->where('student_id', $student_id)->first();
@@ -50,19 +51,23 @@ class ClassController extends Controller
         return redirect()->back()->with('error', 'Không tìm thấy học sinh này trong lớp.');
     }
 
-    public function addNewClass(Request $request) {
-        $request->validate([
-            'className' => 'required|string|max:255',
-            'classDescription' => 'required|string|max:500',
-            'teacherID' => 'required|integer|exists:users,id',
-        ], [
-            'className.required' => 'Vui lòng nhập tên lớp!',
-            'classDescription.required' => 'Vui lòng nhập mô tả lớp!',
-            'classDescription.string' => 'Mô tả phải là 1 chuỗi!',
-            'classDescription.max' => 'Không nhập quá 500 ký tự!',
-            'teacherID.required' => 'Vui lòng chọn giảng viên!',
-            'teacherID.exists' => 'Giảng viên không tồn tại!'
-        ]);
+    public function addNewClass(Request $request)
+    {
+        $request->validate(
+            [
+                'className' => 'required|string|max:255',
+                'classDescription' => 'required|string|max:500',
+                'teacherID' => 'required|integer|exists:users,id',
+            ],
+            [
+                'className.required' => 'Vui lòng nhập tên lớp!',
+                'classDescription.required' => 'Vui lòng nhập mô tả lớp!',
+                'classDescription.string' => 'Mô tả phải là 1 chuỗi!',
+                'classDescription.max' => 'Không nhập quá 500 ký tự!',
+                'teacherID.required' => 'Vui lòng chọn giảng viên!',
+                'teacherID.exists' => 'Giảng viên không tồn tại!',
+            ],
+        );
 
         $className = $request->className;
         $classDescription = $request->classDescription;
@@ -80,23 +85,19 @@ class ClassController extends Controller
             return redirect()->back()->with('error', 'Thêm lớp học thất bại');
         }
     }
-    public function hideClassFormWebsite(Request $request, $status = 0) {
+    public function hideClassFormWebsite(Request $request)
+    {
         $class_id = $request->class_id;
         $updateStatus = Classes::find($class_id);
-        if(!$updateStatus) {
+
+        if (!$updateStatus) {
             return redirect()->back()->with('error', 'Lớp không tồn tại');
         }
-        if ($updateStatus->status === 0) {
-            return redirect()->back()->with('error', 'Lớp đã được xóa');
-        }
-        $updateStatus->update([
-            'status' => $status,
-        ]);
 
-        if ($updateStatus) {
-            return redirect()->back()->with('success', 'Đã xóa lớp học!');
-        } else {
-            return redirect()->back()->with('error', 'Vui lòng thử lại');
-        }
+        $newStatus = $updateStatus->status ? 0 : 1;
+        $updateStatus->update(['status' => $newStatus]);
+
+        $message = $newStatus === 0 ? 'Đã ẩn lớp học!' : 'Đã hiển thị lớp học!';
+        return redirect()->back()->with('success', $message);
     }
 }
