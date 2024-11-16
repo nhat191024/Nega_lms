@@ -1,5 +1,5 @@
 <?php
-
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ClassController;
@@ -8,9 +8,12 @@ use App\Http\Controllers\AdminAuthController;
 Route::get('/', [AdminAuthController::class, 'showLoginForm'])->name('admin.login');
 Route::post('admin/login', [AdminAuthController::class, 'login'])->name('admin.login.submit');
 
-// Trang quản trị chính (được bảo vệ bởi auth middleware)
-Route::middleware(['auth', 'is_admin'])->get('master', function () {
-    return view('master');  // Trang giao diện chính admin
+Route::get('master', function () {
+    if (Auth::check() && Auth::user()->role_id === 1) {
+        return view('master');
+    } else {
+        return redirect()->route('admin.login');
+    }
 })->name('master');
 
 Route::prefix('users')->name('users.')->group(function () {
