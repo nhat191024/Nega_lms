@@ -38,7 +38,7 @@
                             <div class="col-lg-6">
                                 <div class="p-5">
                                     <div class="text-center">
-                                        <h1 class="h4 text-gray-900 mb-4">Welcome Nega LMS!</h1>
+                                        <h1 class="h4 text-gray-900 mb-4">Chào mừng bạn tới Nega LMS!</h1>
                                     </div>
 
                                     <!-- Đăng nhập form -->
@@ -48,11 +48,9 @@
                                         <!-- Hiển thị lỗi nếu có -->
                                         @if ($errors->any())
                                             <div class="alert alert-danger">
-                                                <ul>
                                                     @foreach ($errors->all() as $error)
-                                                        <li>{{ $error }}</li>
+                                                        {{ $error }}
                                                     @endforeach
-                                                </ul>
                                             </div>
                                         @endif
 
@@ -60,16 +58,15 @@
                                         <div class="form-group">
                                             <input type="text"
                                                 class="form-control form-control-user @error('login') is-invalid @enderror"
-                                                id="exampleInputEmail" aria-describedby="emailHelp"
-                                                placeholder="Enter Email or Username..." name="login"
-                                                value="{{ old('login') }}" required>
+                                                id="login" placeholder="Enter Email or Username..." name="login"
+                                                value="{{ old('login') }}" required autofocus>
                                         </div>
 
                                         <!-- Input Password -->
                                         <div class="form-group">
                                             <input type="password"
                                                 class="form-control form-control-user @error('password') is-invalid @enderror"
-                                                id="exampleInputPassword" placeholder="Password" name="password"
+                                                id="password" placeholder="Password" name="password"
                                                 required>
                                         </div>
 
@@ -78,8 +75,7 @@
                                             <div class="custom-control custom-checkbox small">
                                                 <input type="checkbox" class="custom-control-input" id="customCheck"
                                                     name="remember">
-                                                <label class="custom-control-label" for="customCheck">Remember
-                                                    Me</label>
+                                                <label class="custom-control-label" for="customCheck">Lưu tài khoản</label>
                                             </div>
                                         </div>
 

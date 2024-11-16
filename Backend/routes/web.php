@@ -8,13 +8,8 @@ use App\Http\Controllers\AdminAuthController;
 Route::get('/', [AdminAuthController::class, 'showLoginForm'])->name('admin.login');
 Route::post('admin/login', [AdminAuthController::class, 'login'])->name('admin.login.submit');
 
-Route::get('master', function () {
-    if (Auth::check() && Auth::user()->role_id === 1) {
-        return view('master');
-    } else {
-        return redirect()->route('admin.login');
-    }
-})->name('master');
+// Kiểm tra quyền admin trong controller
+Route::get('master', [AdminAuthController::class, 'showMaster'])->name('master');
 
 Route::prefix('users')->name('users.')->group(function () {
     Route::get('/', [UserController::class, 'index'])->name('index');

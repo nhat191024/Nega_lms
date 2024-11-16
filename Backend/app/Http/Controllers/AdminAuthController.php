@@ -13,25 +13,43 @@ class AdminAuthController extends Controller
         return view('admin.login');
     }
 
-    public function login(Request $request)
-{
-    $request->validate([
-        'login' => 'required|string',
-        'password' => 'required|string',
-    ]);
-
-    $user = User::where('email', $request->login)
-                ->orWhere('username', $request->login)
-                ->first();
-
-    if ($user && Auth::attempt(['email' => $request->login, 'password' => $request->password]) || 
-        ($user && Auth::attempt(['username' => $request->login, 'password' => $request->password]))) {
-
-        return redirect()->intended('master');
-
-    } else {
-        return back()->withErrors(['login' => 'Thông tin không hợp lệ hãy thử lại'])->withInput();
-    }
-}
-
+        public function login(Request $request)
+        {
+            $request->validate([
+                'login' => 'required|string',
+                'password' => 'required|string',
+            ]);
+    
+            $user = User::where('email', $request->login)
+                        ->orWhere('username', $request->login)
+                        ->first();
+    
+            if ($user) {
+                if (Auth::attempt(['email' => $request->login, 'password' => $request->password]) || 
+                    Auth::attempt(['username' => $request->login, 'password' => $request->password])) {
+    
+                    if (Auth::user()->role_id == 1) {
+                        return redirect()->route('master');
+                    } else {
+                        Auth::logout();
+                        return back()->withErrors(['login' => 'Bạn không có quyền truy cập quản trị viên'])->withInput();
+                    }
+                } else {
+                    return back()->withErrors(['login' => 'Thông tin không hợp lệ, vui lòng nhập lại'])->withInput();
+                }
+            } else {
+                return back()->withErrors(['login' => 'Người dùng không tìm thấy'])->withInput();
+            }
+        }
+    
+        public function showMaster()
+        {
+            if (!Auth::check()) {
+                return redirect()->route('admin.login');
+            }
+            if (Auth::user()->role_id != 1) {
+                return redirect()->route('admin.login')->withErrors(['login' => 'You do not have admin access.']);
+            }
+            return view('master');
+        }
 }
