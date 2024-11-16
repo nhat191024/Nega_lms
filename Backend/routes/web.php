@@ -5,14 +5,13 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ClassController;
 use App\Http\Controllers\AdminAuthController;
 
-
-Route::get('/', function () {
-    return view('master');
-});
-
-Route::get('admin/login', [AdminAuthController::class, 'showLoginForm'])->name('admin.login');
+Route::get('/', [AdminAuthController::class, 'showLoginForm'])->name('admin.login');
 Route::post('admin/login', [AdminAuthController::class, 'login'])->name('admin.login.submit');
 
+// Trang quản trị chính (được bảo vệ bởi auth middleware)
+Route::middleware(['auth', 'is_admin'])->get('master', function () {
+    return view('master');  // Trang giao diện chính admin
+})->name('master');
 
 Route::prefix('users')->name('users.')->group(function () {
     Route::get('/', [UserController::class, 'index'])->name('index');
