@@ -47,29 +47,27 @@
                                     <form action="{{ route('admin.login.submit') }}" method="POST" class="user">
                                         @csrf
 
-                                        <!-- Hiển thị lỗi nếu có -->
-                                        @if ($errors->any())
-                                            <div class="alert alert-danger">
-                                                    @foreach ($errors->all() as $error)
-                                                        {{ $error }}
-                                                    @endforeach
-                                            </div>
-                                        @endif
-
                                         <!-- Input Email hoặc Username -->
                                         <div class="form-group">
                                             <input type="text"
                                                 class="form-control form-control-user @error('login') is-invalid @enderror"
                                                 id="login" placeholder="Enter Email or Username..." name="login"
-                                                value="{{ old('login') }}" required autofocus>
+                                                value="{{ old('login') }}" autofocus>
+
+                                            @error('login')
+                                                <span class="text-danger">{{ $message }}</span>
+                                            @enderror
                                         </div>
 
                                         <!-- Input Password -->
                                         <div class="form-group">
                                             <input type="password"
                                                 class="form-control form-control-user @error('password') is-invalid @enderror"
-                                                id="password" placeholder="Password" name="password"
-                                                required>
+                                                id="password" placeholder="Password" name="password" autofocus>
+
+                                            @error('password')
+                                                <span class="text-danger">{{ $message }}</span>
+                                            @enderror
                                         </div>
 
                                         <!-- Remember Me -->
@@ -77,7 +75,8 @@
                                             <div class="custom-control custom-checkbox small">
                                                 <input type="checkbox" class="custom-control-input" id="customCheck"
                                                     name="remember">
-                                                <label class="custom-control-label" for="customCheck">Lưu tài khoản</label>
+                                                <label class="custom-control-label" for="customCheck">Lưu tài
+                                                    khoản</label>
                                             </div>
                                         </div>
 
