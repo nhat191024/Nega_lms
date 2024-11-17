@@ -34,7 +34,6 @@ class AdminAuthController extends Controller
             Auth::logout();
             return back()->withErrors(['login' => 'Bạn không có quyền truy cập quản trị viên.'])->withInput();
         }
-
         return redirect()->route('master');
     }
 

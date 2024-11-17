@@ -8,7 +8,6 @@ use App\Http\Controllers\AdminAuthController;
 Route::get('/', [AdminAuthController::class, 'showLoginForm'])->name('admin.login');
 Route::post('admin/login', [AdminAuthController::class, 'login'])->name('admin.login.submit');
 
-// Kiểm tra quyền admin trong controller
 Route::get('master', [AdminAuthController::class, 'showMaster'])->name('master');
 
 Route::prefix('users')->name('users.')->group(function () {
