@@ -40,7 +40,7 @@ class ClassController extends Controller
         }
     }
 
-    public function removeStudentFormAClass($class_id, $student_id)
+    public function removeStudentFromAClass($class_id, $student_id)
     {
         $enrollment = Enrollment::where('class_id', $class_id)->where('student_id', $student_id)->first();
 
@@ -85,7 +85,8 @@ class ClassController extends Controller
             return redirect()->back()->with('error', 'Thêm lớp học thất bại');
         }
     }
-    public function hideClassFormWebsite(Request $request)
+
+    public function hideClass(Request $request)
     {
         $class_id = $request->class_id;
         $updateStatus = Classes::find($class_id);
