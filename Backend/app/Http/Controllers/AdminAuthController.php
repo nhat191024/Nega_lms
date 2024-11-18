@@ -27,13 +27,17 @@ class AdminAuthController extends Controller
         $loginType = filter_var($request->login, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
 
         if (!Auth::attempt([$loginType => $request->login, 'password' => $request->password])) {
-            return back()->withErrors(['login' => 'Tên đăng nhập hoặc mật khẩu không đúng.'])->withInput();
+            return back()->withErrors([
+                'login' => 'Tên đăng nhập hoặc mật khẩu không đúng.',
+                'password' => 'Tên đăng nhập hoặc mật khẩu không đúng.'
+            ])->withInput();
         }
-
+    
         if (Auth::user()->role_id != 1) {
             Auth::logout();
             return back()->withErrors(['login' => 'Bạn không có quyền truy cập quản trị viên.'])->withInput();
         }
+
         return redirect()->route('master');
     }
 

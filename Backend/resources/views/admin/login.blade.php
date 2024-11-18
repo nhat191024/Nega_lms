@@ -7,94 +7,54 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="{{ asset('css/login.css') }}" rel="stylesheet">
 
     <title>Admin Login</title>
-
-    <!-- Custom fonts for this template-->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"
-        type="text/css">
-    <link
-        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-        rel="stylesheet">
-
-    <!-- Custom styles for this template-->
-    <link href="{{ asset('css/sb-admin-2.min.css') }}" rel="stylesheet">
 </head>
 
-<body class="bg-gradient-primary">
+<body>
+    <div class="container" id="container">
+        <div class="form-container sign-in">
+            <form action="{{ route('admin.login.submit') }}" method="POST" class="user">
+                @csrf
 
-    <div class="container">
+                <h1>Đăng nhập</h1>
 
-        <!-- Outer Row -->
-        <div class="row justify-content-center">
+                <input type="text" class="form-control form-control-user @error('login') is-invalid @enderror"
+                    id="login" placeholder="Email hoặc Tên người dùng..." name="login" value="{{ old('login') }}"
+                    autofocus>
 
-            <div class="col-xl-10 col-lg-12 col-md-9">
+                @error('login')
+                    <span class="text-danger">{{ $message }}</span>
+                @enderror
 
-                <div class="card o-hidden border-0 shadow-lg my-5">
-                    <div class="card-body p-0">
-                        <!-- Nested Row within Card Body -->
-                        <div class="row">
-                            <div class="col-lg-6 d-none d-lg-block bg-login-image">
-                                <img src="{{ asset('img/logo-no-bg.png') }}" width="100%" alt="">
-                            </div>
-                            <div class="col-lg-6">
-                                <div class="p-5">
-                                    <div class="text-center">
-                                        <h1 class="h4 text-gray-900 mb-4">Chào mừng bạn tới Nega LMS!</h1>
-                                    </div>
+                <input type="password" class="form-control form-control-user @error('password') is-invalid @enderror"
+                    id="password" placeholder="Mật khẩu" name="password" value="{{ old('password') }}" autofocus>
 
-                                    <!-- Đăng nhập form -->
-                                    <form action="{{ route('admin.login.submit') }}" method="POST" class="user">
-                                        @csrf
+                @error('password')
+                    <span class="text-danger">{{ $message }}</span>
+                @enderror
 
-                                        <!-- Input Email hoặc Username -->
-                                        <div class="form-group">
-                                            <input type="text"
-                                                class="form-control form-control-user @error('login') is-invalid @enderror"
-                                                id="login" placeholder="Enter Email or Username..." name="login"
-                                                value="{{ old('login') }}" autofocus>
 
-                                            @error('login')
-                                                <span class="text-danger">{{ $message }}</span>
-                                            @enderror
-                                        </div>
-
-                                        <!-- Input Password -->
-                                        <div class="form-group">
-                                            <input type="password"
-                                                class="form-control form-control-user @error('password') is-invalid @enderror"
-                                                id="password" placeholder="Password" name="password" autofocus>
-
-                                            @error('password')
-                                                <span class="text-danger">{{ $message }}</span>
-                                            @enderror
-                                        </div>
-
-                                        <!-- Remember Me -->
-                                        <div class="form-group">
-                                            <div class="custom-control custom-checkbox small">
-                                                <input type="checkbox" class="custom-control-input" id="customCheck"
-                                                    name="remember">
-                                                <label class="custom-control-label" for="customCheck">Lưu tài
-                                                    khoản</label>
-                                            </div>
-                                        </div>
-
-                                        <!-- Submit Button -->
-                                        <button type="submit" class="btn btn-primary btn-user btn-block">
-                                            Login
-                                        </button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
+                <div class="form-group">
+                    <div class="custom-control custom-checkbox small">
+                        <input type="checkbox" class="custom-control-input" id="customCheck" name="remember">
+                        <label class="custom-control-label" for="customCheck">Lưu tài khoản</label>
                     </div>
                 </div>
 
-            </div>
-
+                <button>Đăng nhập</button>
+            </form>
         </div>
-
+        <div class="toggle-container">
+            <div class="toggle">
+                <div class="toggle-panel toggle-right">
+                    <h2>Chào mừng bạn đến với Nega LMS Admin</h2>
+                    <p>Đăng nhập để quản lý và khai thác tối đa các tính năng học tập trên Nega LMS</p>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Bootstrap core JavaScript-->
