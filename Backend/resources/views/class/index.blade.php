@@ -88,22 +88,17 @@
                             </h6>
                         </div>
 
-                        <form class="mx-3" id="hide-class-{{ $class->id }}" action="{{ route('classes.hideClass') }}"
-                            method="post">
-                            @csrf
-                            <input type="hidden" name="class_id" value="{{ $class->id }}">
+                        <div>
                             @if ($class->status === 1)
-                                <button class="btn btn-success"
-                                    onclick="if(confirm('Bạn có chắc chắn muốn ẩn lớp {{ $class->class_name }} không?')) { document.getElementById('hide-class-{{ $class->id }}').submit(); }"
-                                    type="submit">Ẩn lớp</button>
+                                <a class="btn btn-danger"
+                                    onclick="event.preventDefault(); if (confirm('Bạn chắc chắn muốn ẩn lớp {{ $class->name }} chứ?')) { window.location.href = '{{ route('classes.hideClass', ['class_id' => $class->id]) }}'; }"
+                                    type="submit">Ẩn lớp</a>
                             @else
                                 <button class="btn btn-secondary"
-                                    onclick="if(confirm('Bạn có chắc chắn muốn hiển thị lớp {{ $class->class_name }} không?')) { document.getElementById('hide-class-{{ $class->id }}').submit(); }"
-                                    type="submit">Lớp đã ẩn</button>
+                                    onclick="event.preventDefault(); if (confirm('Bạn chắc chắn muốn hiện Lớp {{ $class->name }} chứ?')) { window.location.href = '{{ route('classes.hideClass', ['class_id' => $class->id]) }}'; }"
+                                    type="submit">Hiển thị</button>
                             @endif
-                        </form>
 
-                        <div class="d-flex justify-between">
                             <button type="button" class="btn btn-info text-white" data-bs-toggle="modal"
                                 data-bs-target="#add-student-to-class-{{ Str::slug($class->class_name) }}">
                                 Thêm học sinh
