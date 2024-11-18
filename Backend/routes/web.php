@@ -8,7 +8,7 @@ Route::get('/', function () {
     return view('master');
 });
 
-Route::prefix('users')->name('users.')->group(function () {
+Route::prefix('/users')->name('users.')->group(function () {
     Route::get('/', [UserController::class, 'index'])->name('index');
     Route::get('/create', [UserController::class, 'create'])->name('create');
     Route::post('/store', [UserController::class, 'store'])->name('store');
