@@ -1,10 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
-use App\Models\User;
 
 class AdminAuthController extends Controller
 {
@@ -32,7 +30,7 @@ class AdminAuthController extends Controller
                 'password' => 'Tên đăng nhập hoặc mật khẩu không đúng.'
             ])->withInput();
         }
-    
+
         if (Auth::user()->role_id != 1) {
             Auth::logout();
             return back()->withErrors(['login' => 'Bạn không có quyền truy cập quản trị viên.'])->withInput();
