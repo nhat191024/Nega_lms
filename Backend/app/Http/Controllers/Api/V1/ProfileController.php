@@ -5,51 +5,55 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
+use Symfony\Component\HttpFoundation\Response;
 
 class ProfileController extends Controller
 {
     // API SHOW Profile
-    public function showProfile($id)
+    public function showProfile()
     {
-        $user = User::find($id);
-        if (!$user) {
-            return response()->json(['message' => 'Không tìm thấy người dùng'], 404);
-        }
-
-        return response()->json(['data' => $user]);
+        $user = Auth::user();
+        return response()->json(['data' => $user], Response::HTTP_OK);
     }
 
-    public function updateProfile(Request $request, $id)
+    public function updateProfile(Request $request)
     {
-        // Kiểm tra dữ liệu đầu vào (debugging)
-        Log::info('Data received: ', $request->all());
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email,' . $id, // Kiểm tra tính duy nhất trừ chính người dùng hiện tại
-            'phone' => 'required',
-            'gender' => 'required',
-            'birthday' => 'required|date|before:today',
-        ]);
+        $user = Auth::user();
+        $rules = [
+            'name' => 'sometimes|string|max:255',
+            'email' => 'sometimes|string|email|max:255|unique:users,email,' . $user->id,
+            'phone' => 'sometimes|string',
+            'gender' => 'sometimes|string',
+            'birthday' => 'sometimes|date|before:today',
+        ];
 
-        $user = User::find($id);
+        $messages = [
+            'name.string' => 'Tên phải là chuỗi.',
+            'name.max' => 'Tên không được vượt quá 255 ký tự.',
+            'email.string' => 'Email phải là chuỗi.',
+            'email.email' => 'Email không đúng định dạng.',
+            'email.max' => 'Email không được vượt quá 255 ký tự.',
+            'email.unique' => 'Email đã tồn tại.',
+            'phone.string' => 'Số điện thoại phải là chuỗi.',
+            'gender.string' => 'Giới tính phải là chuỗi.',
+            'birthday.date' => 'Ngày sinh phải là ngày.',
+            'birthday.before' => 'Ngày sinh không được lớn hơn ngày hiện tại.',
+        ];
 
-        if (!$user) {
-            return response()->json(['message' => 'Người dùng không tồn tại'], 404);
+        $validator = Validator::make($request->all(), $rules, $messages);
+
+        if ($validator->fails()) {
+            return response()->json(["errors" => $validator->errors()], Response::HTTP_BAD_REQUEST);
         }
 
-        $updated = $user->update($validated);
+        $user = User::find($user->id);
+        $user->update($request->only(['name', 'email', 'phone', 'gender', 'birthday']));
 
-        if (!$updated) {
-            return response()->json(['message' => 'Cập nhật thông tin thất bại'], 500);
-        } else {
-            return response()->json(
-                [
-                    'message' => 'Cập nhật thông tin thành công',
-                    'data' => $user,
-                ],
-                200,
-            );
-        }
+        return response()->json([
+            'message' => 'Cập nhật thông tin thành công',
+            'data' => $user,
+        ], Response::HTTP_OK);
     }
 }
