@@ -25,7 +25,7 @@ Route::prefix(('/class'))->name('classes.')->group(function () {
 });
 
 Route::prefix('assignment')->name('assignments.')->group(function () {
-    Route::get('/', [AssignmentController::class, 'index'])->name('index');
+    Route::get('/{id}', [AssignmentController::class, 'index'])->name('index');
     Route::get('/create', [AssignmentController::class, 'create'])->name('create');
     Route::post('/store', [AssignmentController::class, 'store'])->name('store');
     Route::get('/edit/{id}', [AssignmentController::class, 'edit'])->name('edit');
@@ -33,5 +33,4 @@ Route::prefix('assignment')->name('assignments.')->group(function () {
     Route::delete('/delete/{id}', [AssignmentController::class, 'destroy'])->name('destroy');
 });
 
-// Route::get('/assignments/{id}/show', [AssignmentController::class, 'showAssignment'])->name('assignments.show');
-// Route::get('/assignments/{id}/hide', [AssignmentController::class, 'hideAssignment'])->name('assignments.hide');
+

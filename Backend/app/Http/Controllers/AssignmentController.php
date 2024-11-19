@@ -9,13 +9,14 @@ use PhpParser\Node\Expr\Assign;
 
 class AssignmentController extends Controller
 {
-public function index()
-{
-    $assignments = Assignment::all();
+    public function index()
+    {
+        // Lấy tất cả bài tập từ cơ sở dữ liệu
+        $assignments = Assignment::with('class')->get();
 
-    return view('Assignments.index', compact('assignments'));
-}
-
+        // Trả về view với dữ liệu bài tập
+        return view('assignments.index', compact('assignments'));
+    }
 
 public function create() {
     $assignments = Assignment::all();
