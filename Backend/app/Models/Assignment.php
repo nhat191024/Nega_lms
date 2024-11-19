@@ -8,8 +8,16 @@ class Assignment extends Model
 {
     protected $fillable = [
         'class_id',
-        'title',
+        'name',
         'description',
+        'status',
+        'level',
+        'duration',
+        'totalScore',
+        'specialized',
+        'subject',
+        'topic',
+        'start_date',
         'due_date',
         'auto_grade',
     ];
