@@ -12,10 +12,15 @@ class AssignmentController extends Controller
     public function index()
     {
         // Lấy tất cả bài tập từ cơ sở dữ liệu
-        $assignments = Assignment::with('class')->get();
-
+        $assignmentsGroupBy = Assignment::with('class')->get()->groupBy('class_id');
         // Trả về view với dữ liệu bài tập
-        return view('assignments.index', compact('assignments'));
+        return view('assignments.index', compact('assignmentsGroupBy'));
+    }
+
+    public function getAssignments($id) {
+        $assignmentsGroupBy = Assignment::where('class_id', $id)->with('class')->get()->groupBy('class_id');
+        // Trả về view với dữ liệu bài tập
+        return view('assignments.index', compact('assignmentsGroupBy'));
     }
 
 public function create() {
