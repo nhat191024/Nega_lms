@@ -1,4 +1,5 @@
 <?php
+
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
@@ -6,7 +7,7 @@ use App\Http\Controllers\ClassController;
 use App\Http\Controllers\AdminAuthController;
 
 Route::get('/', [AdminAuthController::class, 'showLoginForm'])->name('admin.login');
-Route::post('admin/login', [AdminAuthController::class, 'login'])->name('admin.login.submit');
+Route::post('/login', [AdminAuthController::class, 'login'])->name('admin.login.submit');
 
 Route::get('master', [AdminAuthController::class, 'showMaster'])->name('master');
 
