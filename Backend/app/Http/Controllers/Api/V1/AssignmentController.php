@@ -3,11 +3,14 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Validator;
+use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Http\Request;
+
+//model
 use App\Models\Assignment;
 use App\Models\Choice;
 use App\Models\Question;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Http\Request;
 
 class AssignmentController extends Controller
 {
@@ -17,9 +20,9 @@ class AssignmentController extends Controller
             'class_id' => 'required|integer',
             'name' => 'required|string',
             'description' => 'nullable|string',
-            'status' => 'required|in:closed,published,private,draft', // sửa lỗi chính tả
+            'status' => 'required|in:closed,published,private,draft',
             'level' => 'required|string',
-            'duration' => 'required|date_format:H:i:s', // duration: H:i:s format
+            'duration' => 'required|date_format:H:i:s',
             'totalScore' => 'required|integer',
             'specialized' => 'required|string',
             'subject' => 'required|string',
@@ -80,12 +83,9 @@ class AssignmentController extends Controller
 
         $validated = Validator::make($request->all(), $rules, $messages);
         if ($validated->fails()) {
-            return response()->json(
-                [
-                    'error' => $validated->errors(),
-                ],
-                422,
-            );
+            return response()->json([
+                'error' => $validated->errors(),
+            ], Response::HTTP_BAD_REQUEST);
         }
 
         $assignment = Assignment::create([
@@ -104,7 +104,6 @@ class AssignmentController extends Controller
             'auto_grade' => $request->input('auto_grade'),
         ]);
 
-        // Lưu câu hỏi và lựa chọn
         foreach ($request->input('questions') as $questionData) {
             $question = Question::create([
                 'assignment_id' => $assignment->id,
@@ -122,12 +121,9 @@ class AssignmentController extends Controller
             }
         }
 
-        return response()->json(
-            [
-                'message' => 'Tạo đề thi thành công',
-                'data' => $assignment,
-            ],
-            201,
-        );
+        return response()->json([
+            'message' => 'Tạo đề thi thành công',
+            'data' => $assignment,
+        ], Response::HTTP_CREATED);
     }
 }
