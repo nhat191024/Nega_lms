@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\V1\AssignmentController;
 use App\Http\Controllers\Api\V1\ProfileController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -28,4 +29,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/user', [ProfileController::class, 'showProfile'])->name('user.profile.show');
     Route::post('/user/update', [ProfileController::class, 'updateProfile'])->name('user.profile.update');
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+});
+
+Route::group([], function () {
+    Route::post('/assignment/create', [AssignmentController::class, 'CreateAssignment'])->name('user.assignment.create');
 });
