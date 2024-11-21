@@ -16,7 +16,7 @@ class HomeScreen extends GetView<HomeController> {
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.fromLTRB(100, 60, 100, 0),
+              padding: const EdgeInsets.fromLTRB(100, 60, 200, 0),
               child: Row(
                 children: [
                   SizedBox(
@@ -130,7 +130,7 @@ class HomeScreen extends GetView<HomeController> {
                   const Spacer(),
                   Image.asset(
                     Images.homeBanner1,
-                    width: Get.width * 0.3,
+                    width: Get.width * 0.4,
                   ),
                 ],
               ),
@@ -141,3 +141,4 @@ class HomeScreen extends GetView<HomeController> {
     );
   }
 }
+    
