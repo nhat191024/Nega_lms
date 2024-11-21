@@ -1,7 +1,7 @@
 <?php
 
+use App\Http\Controllers\Api\V1\AssignmentController;
 use App\Http\Controllers\Api\V1\ProfileController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\V1\LoginController;
 
@@ -9,7 +9,7 @@ use App\Http\Controllers\Api\V1\LoginController;
 Route::post('/login', [LoginController::class, 'login']);
 
 // Admin routes
-Route::group(['middleware' => ['auth:sanctum', 'ability:admin']], function () {
+Route::middleware(['auth:sanctum', 'ability:admin'])->group(function () {
     // Add admin-specific routes here
 });
 
@@ -21,6 +21,10 @@ Route::group(['middleware' => ['auth:sanctum', 'ability:teacher']], function () 
 // Student routes
 Route::group(['middleware' => ['auth:sanctum', 'ability:student']], function () {
     // Add student-specific routes here
+});
+
+Route::prefix('assignment')->middleware(['auth:sanctum', 'ability:admin, teacher'])->group(function () {
+    Route::post('/create', [AssignmentController::class, 'CreateAssignment'])->name('create');
 });
 
 // Authenticated routes (no specific ability required)

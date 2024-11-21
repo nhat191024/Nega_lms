@@ -11,7 +11,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ProfileController extends Controller
 {
-    // API SHOW Profile
     public function showProfile()
     {
         $user = Auth::user();
