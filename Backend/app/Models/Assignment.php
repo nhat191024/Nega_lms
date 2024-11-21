@@ -8,6 +8,7 @@ class Assignment extends Model
 {
     protected $fillable = [
         'class_id',
+        'creator_id',
         'name',
         'description',
         'status',
@@ -25,6 +26,11 @@ class Assignment extends Model
     public function class()
     {
         return $this->belongsTo(Classes::class, 'class_id');
+    }
+
+    public function creator()
+    {
+        return $this->belongsTo(User::class, 'creator_id');
     }
 
     public function submissions()

@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('assignments', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('class_id');
+            $table->unsignedBigInteger('creator_id');
             $table->string('name');
             $table->text('description')->nullable();
             $table->enum('status', ['closed', 'published', 'private', 'draft']);
