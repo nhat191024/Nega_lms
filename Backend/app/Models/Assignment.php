@@ -28,7 +28,10 @@ class Assignment extends Model
         return $this->belongsTo(Classes::class, 'class_id');
     }
 
-
+    public function creator()
+    {
+        return $this->belongsTo(User::class, 'creator_id');
+    }
 
     public function submissions()
     {
