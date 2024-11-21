@@ -18,6 +18,7 @@ class AssignmentController extends Controller
     {
         $rules = [
             'class_id' => 'required|integer',
+            'creator_id' => 'required|integer',
             'name' => 'required|string',
             'description' => 'nullable|string',
             'status' => 'required|in:closed,published,private,draft',
@@ -42,6 +43,8 @@ class AssignmentController extends Controller
         $messages = [
             'class_id.required' => 'Trường class_id là bắt buộc.',
             'class_id.integer' => 'Trường class_id phải là một số nguyên.',
+            'creator_id.required' => 'Trường creator_id là bắt buộc.',
+            'creator_id.integer' => 'Trường creator_id phải là một số nguyên.',
             'name.required' => 'Trường tên là bắt buộc.',
             'name.string' => 'Trường tên phải là chuỗi ký tự.',
             'description.string' => 'Trường mô tả phải là chuỗi ký tự.',
@@ -90,6 +93,7 @@ class AssignmentController extends Controller
 
         $assignment = Assignment::create([
             'class_id' => $request->input('class_id'),
+            'creator_id' => $request->input('creator_id'),
             'name' => $request->input('name'),
             'description' => $request->input('description'),
             'status' => $request->input('status'),
