@@ -42,28 +42,4 @@ class ClassController extends Controller
             'teachersNotInClass' => $teachersNotInClass
         ]);
     }
-
-    public function getStudentsNotInClass($classID)
-    {
-        // Lấy học sinh chưa có lớp cụ thể
-        $studentsNotInClass = User::where('role_id', 3)
-            ->whereDoesntHave('enrollments', function ($query) use ($classID) {
-                $query->where('class_id', $classID);
-            })
-            ->get();
-
-        return response()->json([
-            'studentsNotInClass' => $studentsNotInClass
-        ]);
-    }
-
-    public function getTeachersNotInClass()
-    {
-        // Lấy tất cả giáo viên chưa có lớp
-        $teachersNotInClass = User::where('role_id', 2)->get();
-
-        return response()->json([
-            'teachersNotInClass' => $teachersNotInClass
-        ]);
-    }
-}
+};
