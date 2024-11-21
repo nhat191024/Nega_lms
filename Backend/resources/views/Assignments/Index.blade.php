@@ -9,7 +9,7 @@
                 @foreach ($assignmentsGroupBy as $classId => $assignments)
                     <div class="card shadow my-4">
                         <div class="card-header py-3 d-flex justify-content-between align-items-center">
-                            <h6 class="m-0 font-weight-bold text-primary">Lớp: {{ $assignments->first()->class->class_name }}</h6>
+                            <h6 class="m-0 font-weight-bold text-primary">Bài tập: {{ $assignments->first()->class->class_name }}</h6>
                             <a href="{{ route('assignments.create') }}" class="btn btn-primary">Tạo bài tập</a>
                         </div>
                         <div class="card-body">
@@ -22,6 +22,7 @@
                                             <th class="text-center">Tiêu đề</th>
                                             <th class="text-center">Mô tả</th>
                                             <th class="text-center">Ngày hết hạn</th>
+                                            <th class="text-center">tự động chấm điểm</th>
                                             <th class="text-center">Tác vụ</th>
                                         </tr>
                                     </thead>
@@ -33,6 +34,7 @@
                                                 <td class="text-center">{{ $assignment->title }}</td>
                                                 <td class="text-center">{{ $assignment->description }}</td>
                                                 <td class="text-center">{{ $assignment->due_date }}</td>
+                                                <td class="text-center">{{ $assignment->auto_grade }}</td>
                                                 <td class="text-center">
                                                     <a href="{{ route('assignments.edit', $assignment->id) }}" class="btn btn-warning btn-sm">Sửa</a>
                                                     <form action="{{ route('assignments.destroy', $assignment->id) }}" method="POST" style="display:inline;">
