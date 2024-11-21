@@ -25,6 +25,7 @@ Route::group(['middleware' => ['auth:sanctum', 'ability:student']], function () 
 
 Route::prefix('assignment')->middleware(['auth:sanctum', 'ability:admin, teacher'])->group(function () {
     Route::post('/create', [AssignmentController::class, 'CreateAssignment'])->name('create');
+    Route::get('/{id}', [AssignmentController::class, 'getAssignment'])->name('get');
 });
 
 // Authenticated routes (no specific ability required)
