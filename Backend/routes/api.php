@@ -9,13 +9,15 @@ use App\Http\Controllers\Api\V1\LoginController;
 Route::post('/login', [LoginController::class, 'login']);
 
 // Admin routes
-Route::group(['middleware' => ['auth:sanctum', 'ability:admin']], function () {
-    // Add admin-specific routes here
+Route::middleware(['auth:sanctum', 'ability:admin'])->group(function () {
+    Route::group(['prefix' => '/assignment'], function () {
+        Route::post('/create', [AssignmentController::class, 'CreateAssignment']);
+    });
 });
 
 // Teacher routes
 Route::group(['middleware' => ['auth:sanctum', 'ability:teacher']], function () {
-    Route::post('/assignment/create', [AssignmentController::class, 'CreateAssignment'])->name('user.assignment.create');
+    // Add teacher-specific routes here
 });
 
 // Student routes
