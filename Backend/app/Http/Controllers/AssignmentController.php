@@ -14,7 +14,7 @@ class AssignmentController extends Controller
         // Lấy tất cả bài tập từ cơ sở dữ liệu
         $assignmentsGroupBy = Assignment::with('class')->get()->groupBy('class_id');
         // Trả về view với dữ liệu bài tập
-        return view('assignments.index', compact('assignmentsGroupBy'));
+        return view('assignments.index', compact('assignmentsGroupBy',));
     }
 
     public function getAssignments($id) {
@@ -35,6 +35,7 @@ public function store(Request $request)
     $request->validate([
         'title' => 'required|string|max:255',
         'description' => 'required|string',
+
         'due_date' => 'required|date',
         'auto_grade' => 'required|boolean',
         'class_id' => 'required|exists:classes,id',  
@@ -44,6 +45,7 @@ public function store(Request $request)
     $classes = Assignment::create([
         'title' => $request->title,
         'description' => $request->description,
+
         'due_date' => $request->due_date,
         'auto_grade' => $request->auto_grade,
         'class_id' => $request->class_id,  
