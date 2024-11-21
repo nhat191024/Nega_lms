@@ -42,16 +42,18 @@ class DatabaseSeeder extends Seeder
             Assignment::create($row);
         }
 
-        foreach ($data['question'] as $row) {
+        foreach ($data['questions'] as $row) {
             $question = Question::create([
                 'assignment_id' => $row['assignment_id'],
-                'title' => $row['title'],
-                'description' => $row['description'],
+                'question' => $row['question'],
+                'duration' => $row['duration'],
+                'score' => $row['score'],
             ]);
             foreach ($row['choices'] as $choice) {
                 Choice::create([
                     'question_id' => $question->id,
                     'choice' => $choice['choice'],
+                    'is_correct' => $choice['is_correct'],
                 ]);
             }
         }
