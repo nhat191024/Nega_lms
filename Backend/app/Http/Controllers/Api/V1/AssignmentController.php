@@ -153,5 +153,10 @@ class AssignmentController extends Controller
             'start_date' => $assignment->start_date,
             'due_date' => $assignment->due_date,
         ];
+
+        return response()->json([
+            'message' => 'Lấy dữ liệu thành công',
+            'data' => $response,
+        ], Response::HTTP_OK);
     }
 }
