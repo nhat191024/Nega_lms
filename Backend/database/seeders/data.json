@@ -56,6 +56,7 @@
     "assignment": [
         {
             "class_id": 1,
+            "creator_id": 1,
             "name": "Lập trình php",
             "description": null,
             "status": "published",
@@ -71,6 +72,7 @@
         },
         {
             "class_id": 1,
+            "creator_id": 1,
             "name": "Lập trình php 2",
             "description": null,
             "status": "published",
@@ -86,6 +88,7 @@
         },
         {
             "class_id": 2,
+            "creator_id": 1,
             "name": "Lập trình Java",
             "description": null,
             "status": "published",
@@ -101,6 +104,7 @@
         },
         {
             "class_id": 2,
+            "creator_id": 1,
             "name": "Lập trình Java 2",
             "description": null,
             "status": "published",
@@ -116,6 +120,7 @@
         },
         {
             "class_id": 3,
+            "creator_id": 1,
             "name": "Lập trình C#",
             "description": null,
             "status": "published",
@@ -131,6 +136,7 @@
         },
         {
             "class_id": 3,
+            "creator_id": 1,
             "name": "Lập trình C# 2",
             "description": null,
             "status": "published",
