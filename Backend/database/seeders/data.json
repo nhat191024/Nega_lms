@@ -12,18 +12,18 @@
     ],
     "class": [
         {
-            "class_name": "A",
-            "class_description": "Class A",
+            "class_name": "Php",
+            "class_description": "Php class",
             "teacher_id": 2
         },
         {
-            "class_name": "B",
-            "class_description": "Class B",
+            "class_name": "Java",
+            "class_description": "Java class",
             "teacher_id": 2
         },
         {
-            "class_name": "C",
-            "class_description": "Class C",
+            "class_name": "C#",
+            "class_description": "C# class",
             "teacher_id": 3
         }
     ],
@@ -56,182 +56,356 @@
     "assignment": [
         {
             "class_id": 1,
-            "title": "Assignment 1",
-            "description": "Assignment 1",
-            "due_date": "2024-12-31 23:59:59",
+            "name": "Lập trình php",
+            "description": null,
+            "status": "published",
+            "level": "Cao đẳng",
+            "duration": "00:15:00",
+            "totalScore": 1,
+            "specialized": "Web",
+            "subject": "php cơ bản",
+            "topic": "php",
+            "start_date": "2024-11-20 00:00:00",
+            "due_date": "2024-11-21 00:00:00",
             "auto_grade": true
         },
         {
             "class_id": 1,
-            "title": "Assignment 2",
-            "description": "Assignment 2",
-            "due_date": "2024-12-31 23:59:59",
+            "name": "Lập trình php 2",
+            "description": null,
+            "status": "published",
+            "level": "Cao đẳng",
+            "duration": "00:15:00",
+            "totalScore": 1,
+            "specialized": "Web",
+            "subject": "php nâng cao",
+            "topic": "php",
+            "start_date": "2024-11-20 00:00:00",
+            "due_date": "2024-11-21 00:00:00",
             "auto_grade": true
         },
         {
             "class_id": 2,
-            "title": "Assignment 3",
-            "description": "Assignment 3",
-            "due_date": "2024-12-31 23:59:59",
+            "name": "Lập trình Java",
+            "description": null,
+            "status": "published",
+            "level": "Cao đẳng",
+            "duration": "00:15:00",
+            "totalScore": 1,
+            "specialized": "App",
+            "subject": "Java cơ bản",
+            "topic": "Java",
+            "start_date": "2024-11-20 00:00:00",
+            "due_date": "2024-11-21 00:00:00",
             "auto_grade": true
         },
         {
             "class_id": 2,
-            "title": "Assignment 4",
-            "description": "Assignment 4",
-            "due_date": "2024-12-31 23:59:59",
+            "name": "Lập trình Java 2",
+            "description": null,
+            "status": "published",
+            "level": "Cao đẳng",
+            "duration": "00:15:00",
+            "totalScore": 1,
+            "specialized": "App",
+            "subject": "Java nâng cao",
+            "topic": "Java",
+            "start_date": "2024-11-20 00:00:00",
+            "due_date": "2024-11-21 00:00:00",
             "auto_grade": true
         },
         {
             "class_id": 3,
-            "title": "Assignment 5",
-            "description": "Assignment 5",
-            "due_date": "2024-12-31 23:59:59",
+            "name": "Lập trình C#",
+            "description": null,
+            "status": "published",
+            "level": "Cao đẳng",
+            "duration": "00:15:00",
+            "totalScore": 1,
+            "specialized": "App",
+            "subject": "C# cơ bản",
+            "topic": "C#",
+            "start_date": "2024-11-20 00:00:00",
+            "due_date": "2024-11-21 00:00:00",
             "auto_grade": true
         },
         {
             "class_id": 3,
-            "title": "Assignment 6",
-            "description": "Assignment 6",
-            "due_date": "2024-12-31 23:59:59",
+            "name": "Lập trình C# 2",
+            "description": null,
+            "status": "published",
+            "level": "Cao đẳng",
+            "duration": "00:15:00",
+            "totalScore": 1,
+            "specialized": "App",
+            "subject": "C# nâng cao",
+            "topic": "C#",
+            "start_date": "2024-11-20 00:00:00",
+            "due_date": "2024-11-21 00:00:00",
             "auto_grade": true
         }
     ],
-    "question": [
+    "questions": [
         {
             "assignment_id": 1,
-            "title": "Question 1",
-            "description": "Question 1",
+            "question": "Làm thế nào để kết nối đến một cơ sở dữ liệu MySQL bằng PHP?",
+            "duration": "00:00:30",
+            "score": 1,
             "choices": [
                 {
-                    "choice": "Choice 1",
+                    "choice": "connect(\"localhost\", \"username\", \"password\", \"database_name\");",
+                    "is_correct": false
+                },
+                {
+                    "choice": "db_connect(\"localhost\", \"username\", \"password\", \"database_name\");",
+                    "is_correct": false
+                },
+                {
+                    "choice": "mysqli_connect(\"localhost\", \"username\", \"password\", \"database_name\");",
                     "is_correct": true
                 },
                 {
-                    "choice": "Choice 2",
-                    "is_correct": false
-                },
-                {
-                    "choice": "Choice 3",
-                    "is_correct": false
-                },
-                {
-                    "choice": "Choice 4",
+                    "choice": "database_connect(\"localhost\", \"username\", \"password\", \"database_name\");",
                     "is_correct": false
                 }
             ]
         },
         {
             "assignment_id": 1,
-            "title": "Question 2",
-            "description": "Question 2",
+            "question": "Làm thế nào để lấy dữ liệu từ một bảng trong MySQL bằng PHP?",
+            "duration": "00:00:30",
+            "score": 1,
             "choices": [
                 {
-                    "choice": "Choice 1",
-                    "is_correct": false
-                },
-                {
-                    "choice": "Choice 2",
+                    "choice": "$result = mysqli_query($con, \"SELECT * FROM table\");",
                     "is_correct": true
                 },
                 {
-                    "choice": "Choice 3",
+                    "choice": "$result = mysqli_query(\"SELECT * FROM table\");",
                     "is_correct": false
                 },
                 {
-                    "choice": "Choice 4",
+                    "choice": "$result = mysqli_query($con, \"SELECT * FROM table\") or die(mysqli_error($con));",
+                    "is_correct": false
+                },
+                {
+                    "choice": "$result = mysqli_query(\"SELECT * FROM table\") or die(mysqli_error());",
                     "is_correct": false
                 }
             ]
         },
         {
             "assignment_id": 2,
-            "title": "Question 3",
-            "description": "Question 3",
+            "question": "Làm thế nào để lấy số hàng trong một bảng trong MySQL bằng PHP?",
+            "duration": "00:00:30",
+            "score": 1,
             "choices": [
                 {
-                    "choice": "Choice 1",
+                    "choice": "$result = mysqli_query($con, \"SELECT * FROM table\");",
+                    "is_correct": false
+                },
+                {
+                    "choice": "$result = mysqli_query($con, \"SELECT * FROM table\") or die(mysqli_error($con));",
+                    "is_correct": false
+                },
+                {
+                    "choice": "$result = mysqli_query(\"SELECT * FROM table\") or die(mysqli_error());",
+                    "is_correct": false
+                },
+                {
+                    "choice": "$result = mysqli_query($con, \"SELECT * FROM table\"); $row = mysqli_num_rows($result);",
                     "is_correct": true
-                },
-                {
-                    "choice": "Choice 2",
-                    "is_correct": false
-                },
-                {
-                    "choice": "Choice 3",
-                    "is_correct": false
-                },
-                {
-                    "choice": "Choice 4",
-                    "is_correct": false
                 }
             ]
         },
         {
             "assignment_id": 2,
-            "title": "Question 4",
-            "description": "Question 4",
+            "question": "Làm thế nào để lấy số cột trong một bảng trong MySQL bằng PHP?",
+            "duration": "00:00:30",
+            "score": 1,
             "choices": [
                 {
-                    "choice": "Choice 1",
+                    "choice": "$result = mysqli_query($con, \"SELECT * FROM table\");",
                     "is_correct": false
                 },
                 {
-                    "choice": "Choice 2",
+                    "choice": "$result = mysqli_query($con, \"SELECT * FROM table\") or die(mysqli_error($con));",
+                    "is_correct": false
+                },
+                {
+                    "choice": "$result = mysqli_query(\"SELECT * FROM table\") or die(mysqli_error());",
+                    "is_correct": false
+                },
+                {
+                    "choice": "$result = mysqli_query($con, \"SELECT * FROM table\"); $col = mysqli_num_fields($result);",
+                    "is_correct": true
+                }
+            ]
+        },
+        {
+            "assignment_id": 3,
+            "question": "Làm thế nào để khai báo một biến trong Java?",
+            "duration": "00:00:30",
+            "score": 1,
+            "choices": [
+                {
+                    "choice": "String name;",
                     "is_correct": true
                 },
                 {
-                    "choice": "Choice 3",
+                    "choice": "name String;",
                     "is_correct": false
                 },
                 {
-                    "choice": "Choice 4",
+                    "choice": "name = String;",
+                    "is_correct": false
+                },
+                {
+                    "choice": "String name = new String();",
                     "is_correct": false
                 }
             ]
         },
         {
             "assignment_id": 3,
-            "title": "Question 5",
-            "description": "Question 5",
+            "question": "Làm thế nào để khai báo một hằng số trong Java?",
+            "duration": "00:00:30",
+            "score": 1,
             "choices": [
                 {
-                    "choice": "Choice 1",
+                    "choice": "final int PI = 3.14;",
                     "is_correct": true
                 },
                 {
-                    "choice": "Choice 2",
+                    "choice": "int final PI = 3.14;",
                     "is_correct": false
                 },
                 {
-                    "choice": "Choice 3",
+                    "choice": "int PI = 3.14;",
                     "is_correct": false
                 },
                 {
-                    "choice": "Choice 4",
+                    "choice": "final PI = 3.14;",
                     "is_correct": false
                 }
             ]
         },
         {
-            "assignment_id": 3,
-            "title": "Question 6",
-            "description": "Question 6",
+            "assignment_id": 4,
+            "question": "Làm thế nào để khai báo một mảng trong Java?",
+            "duration": "00:00:30",
+            "score": 1,
             "choices": [
                 {
-                    "choice": "Choice 1",
-                    "is_correct": false
-                },
-                {
-                    "choice": "Choice 2",
+                    "choice": "int[] arr;",
                     "is_correct": true
                 },
                 {
-                    "choice": "Choice 3",
+                    "choice": "arr[] int;",
                     "is_correct": false
                 },
                 {
-                    "choice": "Choice 4",
+                    "choice": "arr int[];",
+                    "is_correct": false
+                },
+                {
+                    "choice": "int arr[];",
+                    "is_correct": false
+                }
+            ]
+        },
+        {
+            "assignment_id": 4,
+            "question": "Làm thế nào để khai báo một mảng 2 chiều trong Java?",
+            "duration": "00:00:30",
+            "score": 1,
+            "choices": [
+                {
+                    "choice": "int[][] arr;",
+                    "is_correct": true
+                },
+                {
+                    "choice": "arr[][] int;",
+                    "is_correct": false
+                },
+                {
+                    "choice": "arr int[][];",
+                    "is_correct": false
+                },
+                {
+                    "choice": "int arr[][];",
+                    "is_correct": false
+                }
+            ]
+        },
+        {
+            "assignment_id": 5,
+            "question": "Làm thế nào để khai báo một biến trong C#?",
+            "duration": "00:00:30",
+            "score": 1,
+            "choices": [
+                {
+                    "choice": "int name;",
+                    "is_correct": true
+                },
+                {
+                    "choice": "name int;",
+                    "is_correct": false
+                },
+                {
+                    "choice": "name = int;",
+                    "is_correct": false
+                },
+                {
+                    "choice": "int name = new int();",
+                    "is_correct": false
+                }
+            ]
+        },
+        {
+            "assignment_id": 5,
+            "question": "Làm thế nào để khai báo một hằng số trong C#?",
+            "duration": "00:00:30",
+            "score": 1,
+            "choices": [
+                {
+                    "choice": "const int PI = 3.14;",
+                    "is_correct": true
+                },
+                {
+                    "choice": "int const PI = 3.14;",
+                    "is_correct": false
+                },
+                {
+                    "choice": "int PI = 3.14;",
+                    "is_correct": false
+                },
+                {
+                    "choice": "const PI = 3.14;",
+                    "is_correct": false
+                }
+            ]
+        },
+        {
+            "assignment_id": 6,
+            "question": "Làm thế nào để khai báo một mảng trong C#?",
+            "duration": "00:00:30",
+            "score": 1,
+            "choices": [
+                {
+                    "choice": "int[] arr;",
+                    "is_correct": true
+                },
+                {
+                    "choice": "arr[] int;",
+                    "is_correct": false
+                },
+                {
+                    "choice": "arr int[];",
+                    "is_correct": false
+                },
+                {
+                    "choice": "int arr[];",
                     "is_correct": false
                 }
             ]
