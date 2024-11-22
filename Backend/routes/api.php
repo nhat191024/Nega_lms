@@ -1,4 +1,5 @@
 <?php
+namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Api\V1\AssignmentController;
 use App\Http\Controllers\Api\V1\ProfileController;
@@ -29,7 +30,10 @@ Route::prefix('assignment')->middleware(['auth:sanctum', 'ability:admin, teacher
     Route::get('/{id}', [AssignmentController::class, 'getAssignment'])->name('get');
 });
 
-Route::get('classes', [ClassController::class, 'index']);
+Route::prefix('classes')->group(function () {
+    Route::get('/', [ClassController::class, 'index']);
+    Route::get('/student/{student_id}', [ClassController::class, 'getStudentClasses']);
+});
 
 // Authenticated routes (no specific ability required)
 Route::group(['middleware' => ['auth:sanctum']], function () {

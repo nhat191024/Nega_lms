@@ -23,13 +23,15 @@ class Classes extends Model
         return $this->belongsToMany(User::class, 'enrollments', 'class_id', 'student_id');
     }
 
-    public function enrollments()
-    {
-        return $this->hasMany(Enrollment::class, 'class_id');
-    }
-
     public function assignments()
     {
         return $this->hasMany(Assignment::class);
     }
+
+    public function enrollments()
+{
+    return $this->hasMany(Enrollment::class, 'student_id');
+}
+
+
 }
