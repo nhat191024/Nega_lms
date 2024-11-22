@@ -133,9 +133,7 @@ class AssignmentController extends Controller
 
     public function getAssignment($id)
     {
-        $assignment = Assignment::with('creator')
-        -> where('id',$id)
-        ->first();
+        $assignment = Assignment::with(['creator','questions.choices'])->find($id);
 
         if (!$assignment) {
             return response()->json([
@@ -152,6 +150,14 @@ class AssignmentController extends Controller
             'duration' => $assignment->duration,
             'start_date' => $assignment->start_date,
             'due_date' => $assignment->due_date,
+            'questions' => $assignment->questions->map(function($question){
+                return [
+                    'question'=>$question->question,
+                    'duration'=>$question->duration,
+                    'score'=>$question->score,
+                     
+                ];
+            }),
         ];
 
         return response()->json([
