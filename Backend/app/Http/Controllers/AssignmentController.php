@@ -35,7 +35,6 @@ public function store(Request $request)
     $request->validate([
         'title' => 'required|string|max:255',
         'description' => 'required|string',
-
         'due_date' => 'required|date',
         'auto_grade' => 'required|boolean',
         'class_id' => 'required|exists:classes,id',  

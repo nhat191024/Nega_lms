@@ -22,6 +22,7 @@
                                         <tr>
                                             <th class="text-center">STT</th>
                                             <th class="text-center">Tên lớp</th>
+                                            <th class="text-center">Tạo bởi</th>
                                             <th class="text-center">Tiêu đề</th>
                                             <th class="text-center">Mô tả</th>
                                             <th class="text-center">status</th>
@@ -42,11 +43,19 @@
                                             <tr>
                                                 <td class="text-center">{{ $index + 1 }}</td>
                                                 <td class="text-center">{{ $assignment->class->class_name }}</td>
-                                                <td class="text-center">{{ $assignment->title }}</td>
+                                                <td class="text-center">{{ $assignment->creator->name ?? 'Không xác định' }}</td>
+                                                <td class="text-center">{{ $assignment->name}}</td>
                                                 <td class="text-center">{{ $assignment->description }}</td>
-                                                td class="text-center">{{ $assignment->status }}</td>
+                                                <td class="text-center">{{ $assignment->status }}</td>
+                                                <td class="text-center">{{ $assignment->level }}</td>
+                                                <td class="text-center">{{ $assignment->duration }}</td>
+                                                <td class="text-center">{{ $assignment->totalScore }}</td>
+                                                <td class="text-center">{{ $assignment->specialized }}</td>
+                                                <td class="text-center">{{ $assignment->subject }}</td>
+                                                <td class="text-center">{{ $assignment->topic }}</td>
+                                                <td class="text-center">{{ $assignment->start_date }}</td>
                                                 <td class="text-center">{{ $assignment->due_date }}</td>
-                                                <td class="text-center">{{ $assignment->auto_grade }}</td>
+                                                <td class="text-center">{{ $assignment->auto_grade ? 'True' : 'False' }}</td>
                                                 <td class="text-center">
                                                     <a href="{{ route('assignments.edit', $assignment->id) }}" class="btn btn-warning btn-sm">Sửa</a>
                                                     <form action="{{ route('assignments.destroy', $assignment->id) }}" method="POST" style="display:inline;">
@@ -60,8 +69,9 @@
                                     </tbody>
                                     <tfoot>
                                         <tr>
-                                            <th class="text-center">STT</th>
+                                        <th class="text-center">STT</th>
                                             <th class="text-center">Tên lớp</th>
+                                            <th class="text-center">Tạo bởi</th>
                                             <th class="text-center">Tiêu đề</th>
                                             <th class="text-center">Mô tả</th>
                                             <th class="text-center">status</th>
