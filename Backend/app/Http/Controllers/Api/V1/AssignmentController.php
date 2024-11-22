@@ -130,4 +130,33 @@ class AssignmentController extends Controller
             'data' => $assignment,
         ], Response::HTTP_CREATED);
     }
+
+    public function getAssignment($id)
+    {
+        $assignment = Assignment::with('creator')
+        -> where('id',$id)
+        ->first();
+
+        if (!$assignment) {
+            return response()->json([
+                'message' => 'Không tìm thấy đề thi.',
+            ],
+            Response::HTTP_NOT_FOUND);
+        }
+
+        $response = [
+            'class_id' => $assignment->class_id,
+            'creator_name' => $assignment->creator ? $assignment->creator->name:null,
+            'name' => $assignment->name,
+            'description' => $assignment->description,
+            'duration' => $assignment->duration,
+            'start_date' => $assignment->start_date,
+            'due_date' => $assignment->due_date,
+        ];
+
+        return response()->json([
+            'message' => 'Lấy dữ liệu thành công',
+            'data' => $response,
+        ], Response::HTTP_OK);
+    }
 }
