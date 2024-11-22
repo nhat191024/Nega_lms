@@ -29,7 +29,7 @@ Route::prefix(('/class'))->name('classes.')->group(function () {
     Route::get('/hide-class/{class_id}', [ClassController::class, 'hideClass'])->name('hideClass');
 });
 
-Route::prefix('assignment')->name('assignments.')->group(function () {
+Route::prefix('/assignment')->name('assignments.')->group(function () {
     Route::get('/', [AssignmentController::class, 'index'])->name('index');
     Route::get('/get/{id}', [AssignmentController::class, 'getAssignments'])->name('get');
     Route::get('/create', [AssignmentController::class, 'create'])->name('create');
