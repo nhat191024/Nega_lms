@@ -14,8 +14,17 @@ return new class extends Migration
         Schema::create('assignments', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('class_id');
-            $table->string('title');
-            $table->text('description');
+            $table->unsignedBigInteger('creator_id');
+            $table->string('name');
+            $table->text('description')->nullable();
+            $table->enum('status', ['closed', 'published', 'private', 'draft']);
+            $table->string('level');
+            $table->time('duration');
+            $table->float('totalScore');
+            $table->string('specialized');
+            $table->string('subject');
+            $table->string('topic');
+            $table->dateTime('start_date');
             $table->dateTime('due_date');
             $table->boolean('auto_grade');
             $table->timestamps();
