@@ -7,3 +7,4 @@ use App\Http\Controllers\Api\v1\ClassController;
 
 Route::get('classes', [ClassController::class, 'index']);
 
+

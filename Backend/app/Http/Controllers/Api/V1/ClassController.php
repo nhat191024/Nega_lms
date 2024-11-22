@@ -11,35 +11,23 @@ class ClassController extends Controller
     public function index()
     {
         // Lấy tất cả các lớp học và eager load thông tin giáo viên
-        $classes = Classes::with('teacher')->get();  // Lấy tất cả lớp với thông tin giáo viên
+        $classes = Classes::with('teacher')->get();
 
-        // Chuyển đổi thành mảng để thay thế teacher_id bằng tên giáo viên và xóa teacher_id
+        // Chuyển đổi thành mảng để thay thế teacher_id bằng tên giáo viên
         $classes = $classes->map(function ($class) {
-            // Thêm tên giáo viên và loại bỏ teacher_id
-            $class->teacher_name = $class->teacher ? $class->teacher->name : 'Chưa có giáo viên';  // Thêm tên giáo viên
-            unset($class->teacher_id);  // **Xóa teacher_id**
-            unset($class->teacher);    // **Xóa relationship teacher (nếu có)**
-
-            return $class;
+            // Thêm teacher_name và xóa teacher_id
+            return [
+                'id' => $class->id,
+                'class_name' => $class->class_name,
+                'class_description' => $class->class_description,
+                'teacher_name' => $class->teacher ? $class->teacher->name : 'Chưa có giáo viên',
+                'created_at' => $class->created_at,
+                'updated_at' => $class->updated_at,
+            ];
         });
 
-        // Lấy học sinh chưa có lớp
-        $studentsNotInClass = function ($classID) {
-            return User::where('role_id', 3)
-                ->whereDoesntHave('enrollments', function ($query) use ($classID) {
-                    $query->where('class_id', $classID);
-                })
-                ->get();
-        };
-
-        // Lấy tất cả các giáo viên
-        $teachersNotInClass = User::where('role_id', 2)->get();
-
-        // Trả về dữ liệu dưới dạng JSON
         return response()->json([
             'classes' => $classes,
-            'studentsNotInClass' => $studentsNotInClass,
-            'teachersNotInClass' => $teachersNotInClass
         ]);
     }
 };
