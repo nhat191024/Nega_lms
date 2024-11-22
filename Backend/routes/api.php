@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\V1\AssignmentController;
 use App\Http\Controllers\Api\V1\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\V1\LoginController;
+use App\Http\Controllers\Api\v1\ClassController;
 
 // Public routes
 Route::post('/login', [LoginController::class, 'login']);
@@ -27,6 +28,8 @@ Route::prefix('assignment')->middleware(['auth:sanctum', 'ability:admin, teacher
     Route::post('/create', [AssignmentController::class, 'CreateAssignment'])->name('create');
     Route::get('/{id}', [AssignmentController::class, 'getAssignment'])->name('get');
 });
+
+Route::get('classes', [ClassController::class, 'index']);
 
 // Authenticated routes (no specific ability required)
 Route::group(['middleware' => ['auth:sanctum']], function () {
