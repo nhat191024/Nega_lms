@@ -13,22 +13,23 @@ return new class extends Migration
     {
         Schema::create('assignments', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('class_id');
-            $table->unsignedBigInteger('creator_id');
-            $table->string('name');
-            $table->text('description')->nullable();
+            $table->foreignId('class_id')->constrained()->onDelete('cascade');
+            $table->foreignId('creator_id')->constrained()->onDelete('cascade');
+            $table->string('title');
+            $table->text('description');
             $table->enum('status', ['closed', 'published', 'private', 'draft']);
             $table->string('level');
-            $table->time('duration');
-            $table->float('totalScore');
+            $table->integer('duration');
+            $table->integer('totalScore');
             $table->string('specialized');
             $table->string('subject');
             $table->string('topic');
-            $table->dateTime('start_date');
-            $table->dateTime('due_date');
+            $table->date('start_date');
+            $table->date('due_date');
             $table->boolean('auto_grade');
             $table->timestamps();
         });
+        
     }
 
     /**

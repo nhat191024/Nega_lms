@@ -56,43 +56,111 @@
                         @method('PUT')
 
                         <!-- Select Class -->
-                        <div class="form-group">
-                            <label for="class_id">Class name</label>
-                            <select name="class_id" id="class_id" class="form-control" required>
-                                @foreach($classes as $class)
-                                    <option value="{{ $class->id }}" {{ ($class->id === $assignment->class_id) ? 'selected' : '' }}>
-                                        {{ $class->class_name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
+                       <!-- Class ID -->
+<div class="form-group">
+    <label for="class_id">Class Name</label>
+    <select name="class_id" id="class_id" class="form-control" required>
+        @foreach($classes as $class)
+            <option value="{{ $class->id }}" {{ ($class->id === $assignment->class_id) ? 'selected' : '' }}>
+                {{ $class->class_name }}
+            </option>
+        @endforeach
+    </select>
+</div>
 
-                        <!-- Title -->
-                        <div class="form-group">
-                            <label for="title">Title</label>
-                            <input type="text" name="title" id="title" class="form-control" value="{{ $assignment->title }}" required>
-                        </div>
+<!-- Creator ID -->
+<div class="form-group">
+    <label for="creator_id">Creator</label>
+    <select name="creator_id" id="creator_id" class="form-control" required>
+        @foreach($users as $user)
+            <option value="{{ $user->id }}" {{ ($user->id === $assignment->creator_id) ? 'selected' : '' }}>
+                {{ $user->name }}
+            </option>
+        @endforeach
+    </select>
+</div>
 
-                        <!-- Description -->
-                        <div class="form-group">
-                            <label for="description">Description</label>
-                            <textarea name="description" id="description" class="form-control" rows="3" required>{{ $assignment->description }}</textarea>
-                        </div>
+<!-- Name -->
+<div class="form-group">
+    <label for="name">Name</label>
+    <input type="text" name="name" id="name" class="form-control" value="{{ $assignment->name }}" required>
+</div>
 
-                        <!-- Due Date -->
-                        <div class="form-group">
-                            <label for="due_date">Due Date</label>
-                            <input type="date" name="due_date" id="due_date" class="form-control" value="{{ $assignment->due_date }}" required>
-                        </div>
+<!-- Description -->
+<div class="form-group">
+    <label for="description">Description</label>
+    <textarea name="description" id="description" class="form-control" rows="3" required>{{ $assignment->description }}</textarea>
+</div>
 
-                        <!-- Auto Grade -->
-                        <div class="form-group">
-                            <label for="auto_grade">Auto Grade</label>
-                            <select name="auto_grade" id="auto_grade" class="form-control" required>
-                                <option value="1" {{ $assignment->auto_grade == 1 ? 'selected' : '' }}>Yes</option>
-                                <option value="0" {{ $assignment->auto_grade == 0 ? 'selected' : '' }}>No</option>
-                            </select>
-                        </div>
+<!-- Status -->
+<div class="form-group">
+    <label for="status">Status</label>
+    <select name="status" id="status" class="form-control" required>
+        <option value="published" {{ $assignment->status == 'published' ? 'selected' : '' }}>Published</option>
+        <option value="ongoing" {{ $assignment->status == 'ongoing' ? 'selected' : '' }}>Ongoing</option>
+    </select>
+</div>
+
+<!-- Level -->
+<div class="form-group">
+    <label for="level">Level</label>
+    <select name="level" id="level" class="form-control" required>
+        <option value="college" {{ $assignment->level == 'college' ? 'selected' : '' }}>Cao đẳng</option>
+        <option value="university" {{ $assignment->level == 'university' ? 'selected' : '' }}>Đại học</option>
+    </select>
+</div>
+
+<!-- Duration -->
+<div class="form-group">
+    <label for="duration">Duration (in minutes)</label>
+    <input type="number" name="duration" id="duration" class="form-control" value="{{ $assignment->duration }}" min="1" required>
+</div>
+
+<!-- Total Score -->
+<div class="form-group">
+    <label for="totalScore">Total Score</label>
+    <input type="number" name="totalScore" id="totalScore" class="form-control" value="{{ $assignment->totalScore }}" min="0" required>
+</div>
+
+<!-- Specialized -->
+<div class="form-group">
+    <label for="specialized">Specialized</label>
+    <input type="text" name="specialized" id="specialized" class="form-control" value="{{ $assignment->specialized }}" required>
+</div>
+
+<!-- Subject -->
+<div class="form-group">
+    <label for="subject">Subject</label>
+    <input type="text" name="subject" id="subject" class="form-control" value="{{ $assignment->subject }}" required>
+</div>
+
+<!-- Topic -->
+<div class="form-group">
+    <label for="topic">Topic</label>
+    <input type="text" name="topic" id="topic" class="form-control" value="{{ $assignment->topic }}" required>
+</div>
+
+<!-- Start Date -->
+<div class="form-group">
+    <label for="start_date">Start Date</label>
+    <input type="date" name="start_date" id="start_date" class="form-control" value="{{ $assignment->start_date }}" required>
+</div>
+
+<!-- Due Date -->
+<div class="form-group">
+    <label for="due_date">Due Date</label>
+    <input type="date" name="due_date" id="due_date" class="form-control" value="{{ $assignment->due_date }}" required>
+</div>
+
+<!-- Auto Grade -->
+<div class="form-group">
+    <label for="auto_grade">Auto Grade</label>
+    <select name="auto_grade" id="auto_grade" class="form-control" required>
+        <option value="1" {{ $assignment->auto_grade == 1 ? 'selected' : '' }}>True</option>
+        <option value="0" {{ $assignment->auto_grade == 0 ? 'selected' : '' }}>False</option>
+    </select>
+</div>
+
                         <a href="{{ route('assignments.index') }}" class="btn btn-secondary">Cancel</a>
                         <!-- Submit Button -->
                         <button type="submit" class="btn btn-primary">Update Assignment</button>
