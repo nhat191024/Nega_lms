@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Http\Controllers\Api\v1;
+
 use App\Http\Controllers\Api\V1\AssignmentController;
 use App\Http\Controllers\Api\V1\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -21,19 +23,14 @@ Route::group(['middleware' => ['auth:sanctum', 'ability:teacher']], function () 
 
 // Student routes
 Route::group(['middleware' => ['auth:sanctum', 'ability:student']], function () {
-    // Add student-specific routes here
+    Route::get('/classes', [ClassController::class, 'index']);
+    Route::get('/student-class', [ClassController::class, 'getStudentClasses']);
+    Route::get('/user', [ProfileController::class, 'showProfile'])->name('user.profile.show');
+    Route::post('/user/update', [ProfileController::class, 'updateProfile'])->name('user.profile.update');
+    Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 });
 
 Route::prefix('assignment')->middleware(['auth:sanctum', 'ability:admin, teacher'])->group(function () {
     Route::post('/create', [AssignmentController::class, 'CreateAssignment'])->name('create');
     Route::get('/{id}', [AssignmentController::class, 'getAssignment'])->name('get');
-});
-
-Route::get('classes', [ClassController::class, 'index']);
-
-// Authenticated routes (no specific ability required)
-Route::group(['middleware' => ['auth:sanctum']], function () {
-    Route::get('/user', [ProfileController::class, 'showProfile'])->name('user.profile.show');
-    Route::post('/user/update', [ProfileController::class, 'updateProfile'])->name('user.profile.update');
-    Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 });
