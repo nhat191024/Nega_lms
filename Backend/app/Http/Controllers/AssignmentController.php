@@ -148,16 +148,11 @@ public function destroy($id)
 }
 public function getAssignmentsByClass($class_id)
 {
-    // Lấy bài tập theo class_id
-    $assignments = Assignment::where('class_id', $class_id)->get();
+    // Lấy danh sách bài tập theo class_id và nhóm theo class_id
+    $assignments = Assignment::where('class_id', $class_id)->with(['class', 'creator'])->get();
+    $assignmentsGroupBy = $assignments->groupBy('class_id');
 
-    // Kiểm tra nếu không có bài tập
-    if ($assignments->isEmpty()) {
-        return redirect()->back()->with('error', 'Không có bài tập nào cho lớp học này.');
-    }
-
-    // Trả về view hiển thị bài tập
-    return view('assignments.index', compact('assignments'));
+    return view('assignments.index', compact('assignmentsGroupBy'));
 }
 
 }
