@@ -6,6 +6,7 @@ use App\Models\Classes;
 use App\Models\Enrollment;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class ClassController extends Controller
 {
@@ -30,14 +31,15 @@ class ClassController extends Controller
         ], 200);
     }
 
-    public function getStudentClasses($student_id)
+    public function getStudentClasses()
     {
-        // Lấy danh sách lớp học mà học sinh tham gia
-        $enrollments = Enrollment::with('class.teacher')
-            ->where('student_id', $student_id)
-            ->get();
+        $user = Auth::user();
+        $enrollments = $user->enrollments;
 
-        // Định dạng dữ liệu trả về
+        if ($enrollments->isEmpty()) {
+            return response()->json(['message' => 'Học sinh này chưa tham gia lớp học nào.'], 404);
+        }
+
         $classes = $enrollments->map(function ($enrollment) {
             return [
                 'class_id' => $enrollment->class->id,
@@ -47,11 +49,6 @@ class ClassController extends Controller
             ];
         });
 
-        // Kiểm tra nếu học sinh không tham gia lớp nào
-        if ($classes->isEmpty()) {
-            return response()->json(['message' => 'Học sinh này chưa tham gia lớp học nào.'], 404);
-        }
-
-        return response()->json(['student_id' => $student_id, 'classes' => $classes], 200);
+        return response()->json($classes, 200);
     }
 }
