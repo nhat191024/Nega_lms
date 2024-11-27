@@ -85,6 +85,8 @@
                         <div class="d-flex">
                             <h6 class="m-0 font-weight-bold text-primary">Lớp - {{ $class->class_name }}</h6>
                             <h6 class="m-0 font-weight-bold text-primary mx-4">Giảng viên - {{ $class->teacher->name }}
+                                <a href="{{ route('classes.assignments.byClass', ['class_id' => $class->id]) }}" class="btn btn-info">Bài tập</a>
+
                             </h6>
                         </div>
 

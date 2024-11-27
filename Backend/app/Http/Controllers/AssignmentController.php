@@ -26,6 +26,7 @@ class AssignmentController extends Controller
         return view('assignments.index', compact('assignmentsGroupBy'));
     }
 
+
 public function create() {
     $assignments = Assignment::all();
     $classes = Classes::all();
@@ -59,7 +60,7 @@ public function store(Request $request)
         }
 
     // Lưu vào database
-    
+
     try {
         Assignment::create([
             'class_id' => $request->class_id,
@@ -82,7 +83,7 @@ public function store(Request $request)
         return redirect()->back()->with('error', 'Failed to create assignment.');
     }
 
-    
+
 }
 
 
@@ -113,7 +114,7 @@ public function update(Request $request, $id)
         'start_date' => 'required|date',
         'due_date' => 'required|date',
         'auto_grade' => 'required|boolean',
-       
+
     ]);
 
     $assignment = Assignment::findOrFail($id);
@@ -145,6 +146,18 @@ public function destroy($id)
 
     return redirect()->route('assignments.index')->with('success', 'Assignment deleted successfully.');
 }
+public function getAssignmentsByClass($class_id)
+{
+    // Lấy bài tập theo class_id
+    $assignments = Assignment::where('class_id', $class_id)->get();
 
+    // Kiểm tra nếu không có bài tập
+    if ($assignments->isEmpty()) {
+        return redirect()->back()->with('error', 'Không có bài tập nào cho lớp học này.');
+    }
+
+    // Trả về view hiển thị bài tập
+    return view('assignments.index', compact('assignments'));
+}
 
 }
