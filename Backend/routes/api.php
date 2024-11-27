@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Api\V1\AssignmentController;
@@ -30,13 +31,12 @@ Route::prefix('assignment')->middleware(['auth:sanctum', 'ability:admin, teacher
     Route::get('/{id}', [AssignmentController::class, 'getAssignment'])->name('get');
 });
 
-Route::prefix('classes')->group(function () {
-    Route::get('/', [ClassController::class, 'index']);
-    Route::get('/student/{student_id}', [ClassController::class, 'getStudentClasses']);
-});
+
 
 // Authenticated routes (no specific ability required)
 Route::group(['middleware' => ['auth:sanctum']], function () {
+    Route::get('/classes', [ClassController::class, 'index']);
+    Route::get('/student-class', [ClassController::class, 'getStudentClasses']);
     Route::get('/user', [ProfileController::class, 'showProfile'])->name('user.profile.show');
     Route::post('/user/update', [ProfileController::class, 'updateProfile'])->name('user.profile.update');
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
