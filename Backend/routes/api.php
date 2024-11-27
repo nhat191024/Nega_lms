@@ -23,21 +23,14 @@ Route::group(['middleware' => ['auth:sanctum', 'ability:teacher']], function () 
 
 // Student routes
 Route::group(['middleware' => ['auth:sanctum', 'ability:student']], function () {
-    // Add student-specific routes here
-});
-
-Route::prefix('assignment')->middleware(['auth:sanctum', 'ability:admin, teacher'])->group(function () {
-    Route::post('/create', [AssignmentController::class, 'CreateAssignment'])->name('create');
-    Route::get('/{id}', [AssignmentController::class, 'getAssignment'])->name('get');
-});
-
-
-
-// Authenticated routes (no specific ability required)
-Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/classes', [ClassController::class, 'index']);
     Route::get('/student-class', [ClassController::class, 'getStudentClasses']);
     Route::get('/user', [ProfileController::class, 'showProfile'])->name('user.profile.show');
     Route::post('/user/update', [ProfileController::class, 'updateProfile'])->name('user.profile.update');
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+});
+
+Route::prefix('assignment')->middleware(['auth:sanctum', 'ability:admin, teacher'])->group(function () {
+    Route::post('/create', [AssignmentController::class, 'CreateAssignment'])->name('create');
+    Route::get('/{id}', [AssignmentController::class, 'getAssignment'])->name('get');
 });
