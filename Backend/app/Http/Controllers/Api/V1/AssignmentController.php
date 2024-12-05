@@ -6,11 +6,13 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 //model
 use App\Models\Assignment;
 use App\Models\Choice;
 use App\Models\Question;
+use App\Models\Answer;
 
 class AssignmentController extends Controller
 {
@@ -21,7 +23,7 @@ class AssignmentController extends Controller
         $assignments = $assignments->map(function ($assignment) {
             return [
                 'id' => $assignment->id,
-                'name' => $assignment->name,
+                'name' => $assignment->title,
                 'description' => $assignment->description,
                 'level' => $assignment->level,
                 'duration' => $assignment->duration,
@@ -34,7 +36,7 @@ class AssignmentController extends Controller
         });
 
         return response()->json([
-            'data' => $assignments,
+            'assignments' => $assignments,
         ], Response::HTTP_OK);
     }
 
@@ -155,6 +157,29 @@ class AssignmentController extends Controller
         ], Response::HTTP_CREATED);
     }
 
+    public function SubmitAssignment(Request $request)
+    {
+        return response()->json([
+            'message' => 'Nộp bài thi thành công',
+        ], Response::HTTP_OK);
+        // $user = Auth::user();
+        // $assignment = Assignment::find($request->assignment_id);
+        // $questions = $assignment->questions;
+        // $answers = Answer::new();
+        // $answers->question_id = $questions->id;
+        // $answers->user_id = $user->id;
+        // foreach ($questions as $question) {
+        //     $choice =  $question->choices;
+        // }
+        // return response()->json([
+        //     $request->
+        // ], Response::HTTP_OK);
+        // return response()->json([
+        //     'message' => 'Nộp bài thi thành công',
+        //     'data' => $answers,
+        // ], Response::HTTP_OK);
+    }
+
     public function getAssignment($id)
     {
         $assignment = Assignment::with(['creator', 'questions.choices'])->find($id);
@@ -169,26 +194,31 @@ class AssignmentController extends Controller
         }
 
         $response = [
-            'classId' => $assignment->class_id,
-            'creator_name' => $assignment->creator ? $assignment->creator->name : null,
+            'id' => $assignment->id,
+            'creatorName' => $assignment->creator ? $assignment->creator->name : null,
             'name' => $assignment->title,
             'description' => $assignment->description,
             'duration' => $assignment->duration,
-            'start_date' => $assignment->start_date,
-            'due_date' => $assignment->due_date,
+            'startDate' => $assignment->start_date,
+            'dueDate' => $assignment->due_date,
             'questions' => $assignment->questions->map(function ($question) {
                 return [
+                    'id' => $question->id,
                     'question' => $question->question,
                     'duration' => $question->duration,
                     'score' => $question->score,
-
+                    "choices" => $question->choices->map(function ($choice) {
+                        return [
+                            'id' => $choice->id,
+                            'choice' => $choice->choice,
+                        ];
+                    }),
                 ];
             }),
         ];
 
         return response()->json([
-            'message' => 'Lấy dữ liệu thành công',
-            'data' => $response,
+            'assignment' => $response,
         ], Response::HTTP_OK);
     }
 }
