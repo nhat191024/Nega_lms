@@ -28,8 +28,11 @@ class LoginController extends Controller
         }
 
         /** @var \App\Models\User $user **/  $user = Auth::user();
-        // dd($user->role->name);
-        $token = $user->createToken('authToken', [$user->role->name], now()->addDay())->plainTextToken;
+        if ($user->role_id == 1) {
+            $token = $user->createToken('authToken', ["*"], now()->addDay())->plainTextToken;
+        } else {
+            $token = $user->createToken('authToken', [$user->role->name], now()->addDay())->plainTextToken;
+        }
 
         return response()->json([
             'message' => 'Đăng nhập thành công.',
@@ -39,7 +42,7 @@ class LoginController extends Controller
 
     public function logout()
     {
-       /** @var \App\Models\User $user **/  $user = Auth::user();
+        /** @var \App\Models\User $user **/  $user = Auth::user();
         $user->tokens()->delete();
 
         return response()->json([
