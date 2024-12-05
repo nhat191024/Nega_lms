@@ -59,7 +59,7 @@ class AssignmentController extends Controller
             'auto_grade' => 'required',
         ]);
         if ($valid->fails()) {
-            return redirect()->back()->withErrors($valid)->withInput();
+            return redirect()->route('assignments.index')->withErrors($valid)->withInput();
         }
 
         // Lưu vào database
@@ -81,9 +81,9 @@ class AssignmentController extends Controller
                 'due_date' => $request->due_date,
                 'auto_grade' => $request->auto_grade,
             ]);
-            return redirect()->back()->with('success', 'Assignment created successfully.');
+            return redirect()->route('assignments.index')->with('success','them thanh cong');
         } catch (\Throwable $th) {
-            return redirect()->back()->with('error', 'Failed to create assignment.');
+            return redirect()->route('assignments.index')->with('error','them that bai');
         }
     }
 
