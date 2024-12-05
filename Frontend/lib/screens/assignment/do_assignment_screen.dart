@@ -93,7 +93,7 @@ class DoAssignmentScreen extends GetView<AssignmentController> {
                                       CustomButton(
                                         width: 100,
                                         onTap: () {
-                                          controller.submitAssignment();
+                                          controller.submitAssignment("1");
                                         },
                                         btnText: "Kết thúc bài thi",
                                       ),
@@ -141,17 +141,15 @@ class DoAssignmentScreen extends GetView<AssignmentController> {
                                     ...controller.questionList[controller.currentQuestion.value].choices!.map(
                                       (choice) => Row(
                                         children: [
-                                          Obx(
-                                            () => Radio(
-                                              value: choice.id,
-                                              groupValue: controller.answerList[controller.currentQuestion.value].choiceId,
-                                              onChanged: (value) {
-                                                if (value != null) {
-                                                  controller.saveSelection(controller.questionList[controller.currentQuestion.value].id!, value);
-                                                }
-                                              },
-                                              activeColor: CustomColors.primary,
-                                            ),
+                                          Radio(
+                                            value: choice.id,
+                                            groupValue: controller.answerList[controller.currentQuestion.value].choiceId,
+                                            onChanged: (value) {
+                                              if (value != null) {
+                                                controller.saveSelection(controller.questionList[controller.currentQuestion.value].id!, value);
+                                              }
+                                            },
+                                            activeColor: CustomColors.primary,
                                           ),
                                           Text(
                                             choice.choice!,
