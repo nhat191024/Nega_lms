@@ -12,17 +12,15 @@ class ClassController extends Controller
 {
     public function index()
     {
-        // Lấy danh sách tất cả các lớp học và thông tin giáo viên
         $classes = Classes::with('teacher')->get();
 
-        // Định dạng lại dữ liệu trước khi trả về
         $classes = $classes->map(function ($class) {
             return [
                 'id' => $class->id,
-                'class_name' => $class->class_name,
-                'class_description' => $class->class_description,
-                'teacher_name' => $class->teacher ? $class->teacher->name : 'Chưa có giáo viên',
-                'created_at' => $class->created_at,
+                'name' => $class->class_name,
+                'description' => $class->class_description,
+                'teacherName' => $class->teacher ? $class->teacher->name : 'Chưa có giáo viên',
+                'createdAt' => $class->created_at,
             ];
         });
 
