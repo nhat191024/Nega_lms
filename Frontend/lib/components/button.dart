@@ -27,6 +27,7 @@ class CustomButton extends StatelessWidget {
   final double? prefixSvgImageWidth;
   final double? prefixSvgImageHeight;
   final Color? prefixSvgImageColor;
+  final double? prefixTextGap;
   final IconData? suffixIcon;
   final Color? suffixIconColor;
   final double? suffixIconSize;
@@ -67,6 +68,7 @@ class CustomButton extends StatelessWidget {
     this.prefixSvgImageWidth = 24,
     this.prefixSvgImageHeight = 24,
     this.prefixSvgImageColor,
+    this.prefixTextGap = 8,
     this.suffixIcon,
     this.suffixIconColor = CustomColors.white,
     this.suffixIconSize,
@@ -82,18 +84,19 @@ class CustomButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: height ?? 48,
-      width: width ?? Get.width * 0.2,
-      margin: EdgeInsets.fromLTRB(leftPadding, topPadding, rightPadding, bottomPadding),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(borderRadius),
-        color: isDisabled ? CustomColors.disable : btnColor,
-        border: Border.all(color: borderColor, width: 1),
-      ),
-      alignment: Alignment.center,
-      child: InkWell(
-        onTap: isDisabled ? null : onTap,
+    return Padding(
+      padding: EdgeInsets.fromLTRB(leftPadding, topPadding, rightPadding, bottomPadding),
+      child: ElevatedButton(
+        onPressed: isDisabled ? null : onTap,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: isDisabled ? CustomColors.disable : btnColor,
+          minimumSize: Size(width ?? Get.width * 0.2, height ?? 48),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(borderRadius),
+            side: BorderSide(color: borderColor, width: 1),
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+        ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
@@ -104,7 +107,7 @@ class CustomButton extends StatelessWidget {
                 color: prefixIconColor,
                 size: prefixIconSize,
               ),
-              const SizedBox(width: 8),
+              SizedBox(width: prefixTextGap),
             ],
             if (prefixImage != null) ...[
               Image(
@@ -112,7 +115,7 @@ class CustomButton extends StatelessWidget {
                 height: prefixImageWidth,
                 width: prefixImageHeight,
               ),
-              const SizedBox(width: 8),
+              SizedBox(width: prefixTextGap),
             ],
             if (prefixSvgImage != null) ...[
               SvgPicture.asset(
@@ -120,9 +123,9 @@ class CustomButton extends StatelessWidget {
                 width: prefixSvgImageWidth,
                 height: prefixSvgImageHeight,
                 fit: BoxFit.fill,
-                colorFilter: ColorFilter.mode(prefixSvgImageColor ?? CustomColors.white, BlendMode.srcIn),
+                colorFilter: prefixSvgImageColor != null ? ColorFilter.mode(prefixSvgImageColor!, BlendMode.srcIn) : null,
               ),
-              const SizedBox(width: 8),
+              SizedBox(width: prefixTextGap),
             ],
             Text(
               btnText,
