@@ -169,9 +169,9 @@ class AssignmentController extends Controller
         }
 
         $response = [
-            'class_id' => $assignment->class_id,
+            'classId' => $assignment->class_id,
             'creator_name' => $assignment->creator ? $assignment->creator->name : null,
-            'name' => $assignment->name,
+            'name' => $assignment->title,
             'description' => $assignment->description,
             'duration' => $assignment->duration,
             'start_date' => $assignment->start_date,
