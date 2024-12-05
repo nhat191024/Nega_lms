@@ -15,10 +15,9 @@ class ClassController extends GetxController {
     try {
       isLoading.value = true;
       String url = "${Api.server}classes";
-      String token = "1|6U8SJLyqdph9xxCu8abxA0l4KEQYLsLOWwGx8jd97791ae46";
       var response = await get(Uri.parse(url), headers: {
-        'Authorization': 'Bearer $token',
-      }).timeout(const Duration(seconds: 10));
+        'Authorization': 'Bearer ${Api.testToken}',
+      }).timeout(const Duration(seconds: Api.apiTimeOut));
 
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
