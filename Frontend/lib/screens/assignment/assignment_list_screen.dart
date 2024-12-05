@@ -44,9 +44,13 @@ class AssignmentListScreen extends GetView<AssignmentController> {
                           ],
                         ),
                       ),
-                      const Text(
-                        '1 Kết quả',
-                        style: const TextStyle(fontSize: 14, color: CustomColors.primary, fontFamily: FontStyleTextStrings.medium),
+                      Text(
+                        '${controller.assignmentList.length} Kết quả',
+                        style: const TextStyle(
+                          fontSize: 14,
+                          color: CustomColors.primary,
+                          fontFamily: FontStyleTextStrings.medium,
+                        ),
                       ),
                     ],
                   ),
@@ -99,18 +103,17 @@ class AssignmentListScreen extends GetView<AssignmentController> {
                                       : ListView.builder(
                                           shrinkWrap: true,
                                           physics: const AlwaysScrollableScrollPhysics(),
-                                          // itemCount: controller.classList.length,
+                                          itemCount: controller.assignmentList.length,
                                           itemBuilder: (context, index) {
                                             return classCardBuilder(
-                                                // controller.classList[index].name ?? '',
-                                                // controller.classList[index].description ?? '',
-                                                "Lập trình cơ bản",
-                                                "Học lập trình cơ bản với ngôn ngữ Python",
-                                                ["Lập trình"],
-                                                10,
-                                                false
-                                                // index == controller.classList.length - 1,
-                                                );
+                                              controller.assignmentList[index].name ?? '',
+                                              controller.assignmentList[index].description ?? '',
+                                              ["Lập trình"],
+                                              10,
+                                              index == controller.assignmentList.length - 1,
+                                              // controller.assignmentList[index].id.toString(),
+                                              '1',
+                                            );
                                           },
                                         ),
                                 )),
@@ -130,7 +133,7 @@ class AssignmentListScreen extends GetView<AssignmentController> {
   }
 
   //class card builder
-  Widget classCardBuilder(String title, String description, List<String> tags, double verticalPadding, bool isLast) {
+  Widget classCardBuilder(String title, String description, List<String> tags, double verticalPadding, bool isLast, String id) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: verticalPadding),
       child: Column(
@@ -187,8 +190,10 @@ class AssignmentListScreen extends GetView<AssignmentController> {
               ),
               const SizedBox(width: 20),
               CustomButton(
-                onTap: () {},
-                btnText: 'Tham gia',
+                onTap: () {
+                  controller.loadAssignment(id);
+                },
+                btnText: 'Làm bài tập',
                 btnColor: CustomColors.primary,
                 width: 140,
               ),
