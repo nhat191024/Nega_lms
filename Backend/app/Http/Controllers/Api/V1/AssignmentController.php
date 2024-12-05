@@ -14,6 +14,30 @@ use App\Models\Question;
 
 class AssignmentController extends Controller
 {
+    public function GetAssignmentByClassId($class_id)
+    {
+        $assignments = Assignment::where('class_id', $class_id)->where('status', 'published')->get();
+
+        $assignments = $assignments->map(function ($assignment) {
+            return [
+                'id' => $assignment->id,
+                'name' => $assignment->name,
+                'description' => $assignment->description,
+                'level' => $assignment->level,
+                'duration' => $assignment->duration,
+                'totalScore' => $assignment->totalScore,
+                'specialized' => $assignment->specialized,
+                'subject' => $assignment->subject,
+                'topic' => $assignment->topic,
+                'dueDate' => $assignment->due_date,
+            ];
+        });
+
+        return response()->json([
+            'data' => $assignments,
+        ], Response::HTTP_OK);
+    }
+
     public function CreateAssignment(Request $request)
     {
         $rules = [
@@ -133,29 +157,31 @@ class AssignmentController extends Controller
 
     public function getAssignment($id)
     {
-        $assignment = Assignment::with(['creator','questions.choices'])->find($id);
+        $assignment = Assignment::with(['creator', 'questions.choices'])->find($id);
 
         if (!$assignment) {
-            return response()->json([
-                'message' => 'Không tìm thấy đề thi.',
-            ],
-            Response::HTTP_NOT_FOUND);
+            return response()->json(
+                [
+                    'message' => 'Không tìm thấy đề thi.',
+                ],
+                Response::HTTP_NOT_FOUND
+            );
         }
 
         $response = [
             'class_id' => $assignment->class_id,
-            'creator_name' => $assignment->creator ? $assignment->creator->name:null,
+            'creator_name' => $assignment->creator ? $assignment->creator->name : null,
             'name' => $assignment->name,
             'description' => $assignment->description,
             'duration' => $assignment->duration,
             'start_date' => $assignment->start_date,
             'due_date' => $assignment->due_date,
-            'questions' => $assignment->questions->map(function($question){
+            'questions' => $assignment->questions->map(function ($question) {
                 return [
-                    'question'=>$question->question,
-                    'duration'=>$question->duration,
-                    'score'=>$question->score,
-                     
+                    'question' => $question->question,
+                    'duration' => $question->duration,
+                    'score' => $question->score,
+
                 ];
             }),
         ];
