@@ -5,7 +5,7 @@ part 'routes.dart';
 class Pages {
   Pages._();
 
-  static const initialRoute = Routes.doAssignmentScreen;
+  static const initialRoute = Routes.assignmentListPage;
 
   static final routes = [
     GetPage(
