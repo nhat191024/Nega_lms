@@ -13,14 +13,14 @@ return new class extends Migration
     {
         Schema::create('assignments', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('class_id')->constrained()->onDelete('cascade');
-            $table->foreignId('creator_id')->constrained()->onDelete('cascade');
+            $table->unsignedBigInteger('class_id');
+            $table->unsignedBigInteger('creator_id');
             $table->string('title');
             $table->text('description');
             $table->enum('status', ['closed', 'published', 'private', 'draft']);
             $table->string('level');
             $table->integer('duration');
-            $table->integer('totalScore');
+            $table->integer('totalScore');  
             $table->string('specialized');
             $table->string('subject');
             $table->string('topic');
@@ -29,7 +29,7 @@ return new class extends Migration
             $table->boolean('auto_grade');
             $table->timestamps();
         });
-        
+
     }
 
     /**
