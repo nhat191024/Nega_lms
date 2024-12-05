@@ -26,7 +26,6 @@ Route::group(['middleware' => ['auth:sanctum', 'ability:teacher']], function () 
 Route::group(['middleware' => ['auth:sanctum', 'ability:student']], function () {
     Route::get('/classes', [ClassController::class, 'index']);
     Route::get('/student-class', [ClassController::class, 'getStudentClasses']);
-    Route::get('/assignment/{class_id}', [AssignmentController::class, 'GetAssignmentByClassId']);
 
     Route::get('/user', [ProfileController::class, 'showProfile'])->name('user.profile.show');
     Route::post('/user/update', [ProfileController::class, 'updateProfile'])->name('user.profile.update');
@@ -38,6 +37,7 @@ Route::prefix('assignment')->group(function () {
         Route::post('/create', [AssignmentController::class, 'CreateAssignment'])->name('create');
     });
     Route::middleware(['auth:sanctum', 'ability:student'])->group(function () {
+        Route::get('{class_id}', [AssignmentController::class, 'GetAssignmentByClassId']);
         Route::get('detail/{id}', [AssignmentController::class, 'getAssignment'])->name('get');
         Route::post('submit', [AssignmentController::class, 'submitAssignment'])->name('submit');
     });
