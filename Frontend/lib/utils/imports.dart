@@ -39,6 +39,9 @@ export 'package:nega_lms/components/field.dart';
 
 //model imports
 export 'package:nega_lms/models/class_model.dart';
+export 'package:nega_lms/models/assignment_model.dart';
+export 'package:nega_lms/models/question_model.dart';
+export 'package:nega_lms/models/answer_model.dart';
 
 //package imports
 export 'package:get/get.dart' hide Response, FormData, MultipartFile, HeaderValue;
