@@ -82,12 +82,12 @@
             @foreach ($classes as $class)
                 <div class="card shadow my-4">
                     <div class="card-header py-3 d-flex justify-content-between">
-                        <div class="d-flex">
+                        <div class="d-flex align    ">
                             <h6 class="m-0 font-weight-bold text-primary">Lớp - {{ $class->class_name }}</h6>
                             <h6 class="m-0 font-weight-bold text-primary mx-4">Giảng viên - {{ $class->teacher->name }}
-                                <a href="{{ route('classes.assignments.byClass', ['class_id' => $class->id]) }}" class="btn btn-info">Bài tập</a>
-
                             </h6>
+                            <a href="{{ route('classes.assignments.byClass', ['class_id' => $class->id]) }}"
+                                class="btn btn-info">Bài tập</a>
                         </div>
 
                         <div>
