@@ -4,8 +4,12 @@ abstract class Routes {
   Routes._();
 
   static const homePage = _Paths.homePage;
+  static const loginPage = _Paths.loginPage;
+  static const classListPage = _Paths.classListPage;
 }
 
 abstract class _Paths {
-  static const homePage = '/home-page';
+  static const homePage = '/';
+  static const loginPage = '/login';
+  static const classListPage = '/class-list';
 }
