@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 class Assignment extends Model
 {
     protected $fillable = [
-        'class_id',
         'creator_id',
         'name',
         'description',
@@ -23,9 +22,9 @@ class Assignment extends Model
         'auto_grade',
     ];
 
-    public function class()
+    public function homeworks()
     {
-        return $this->belongsTo(Classes::class, 'class_id');
+        return $this->hasMany(Homework::class);
     }
 
     public function creator()
