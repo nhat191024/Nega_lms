@@ -18,14 +18,10 @@ return new class extends Migration
             $table->text('description');
             $table->enum('status', ['closed', 'published', 'private', 'draft']);
             $table->string('level');
-            $table->integer('duration');
             $table->integer('totalScore');
             $table->string('specialized');
             $table->string('subject');
             $table->string('topic');
-            $table->date('start_date');
-            $table->date('due_date');
-            $table->boolean('auto_grade');
             $table->timestamps();
         });
 

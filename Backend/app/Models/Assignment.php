@@ -12,13 +12,10 @@ class Assignment extends Model
         'description',
         'status',
         'level',
-        'duration',
         'totalScore',
         'specialized',
         'subject',
         'topic',
-        'start_date',
-        'due_date',
         'auto_grade',
     ];
 
