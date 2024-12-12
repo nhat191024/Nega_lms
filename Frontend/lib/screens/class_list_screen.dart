@@ -1,7 +1,13 @@
 import 'package:nega_lms/utils/imports.dart';
 
 class ClassListScreen extends GetView<ClassController> {
-  const ClassListScreen({super.key});
+  ClassListScreen({super.key}) {
+    controller.searchController.addListener(() {
+      if (controller.searchController.text.isNotEmpty) {
+        controller.classFilter(controller.searchController.text);
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,9 +50,15 @@ class ClassListScreen extends GetView<ClassController> {
                           ],
                         ),
                       ),
-                      Text(
-                        '${controller.classList.length} Kết quả',
-                        style: const TextStyle(fontSize: 14, color: CustomColors.primary, fontFamily: FontStyleTextStrings.medium),
+                      Obx(
+                        () => Text(
+                          '${controller.classList.length} Kết quả',
+                          style: const TextStyle(
+                            fontSize: 14,
+                            color: CustomColors.primary,
+                            fontFamily: FontStyleTextStrings.medium,
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -91,26 +103,26 @@ class ClassListScreen extends GetView<ClassController> {
                         child: Column(
                           children: [
                             Obx(() => SizedBox(
-                              height: Get.height * 0.7,
-                              child: controller.isLoading.value
-                                ? const Center(
-                                    child: CircularProgressIndicator(),
-                                  )
-                                : ListView.builder(
-                                    shrinkWrap: true,
-                                    physics: const AlwaysScrollableScrollPhysics(),
-                                    itemCount: controller.classList.length,
-                                    itemBuilder: (context, index) {
-                                      return classCardBuilder(
-                                        controller.classList[index].name ?? '',
-                                        controller.classList[index].description ?? '',
-                                        ["Lập trình"],
-                                        10,
-                                        index == controller.classList.length - 1,
-                                      );
-                                    },
-                                  ),
-                            )),
+                                  height: Get.height * 0.7,
+                                  child: controller.isLoading.value
+                                      ? const Center(
+                                          child: CircularProgressIndicator(),
+                                        )
+                                      : ListView.builder(
+                                          shrinkWrap: true,
+                                          physics: const AlwaysScrollableScrollPhysics(),
+                                          itemCount: controller.classList.length,
+                                          itemBuilder: (context, index) {
+                                            return classCardBuilder(
+                                              controller.classList[index].name ?? '',
+                                              controller.classList[index].description ?? '',
+                                              ["Lập trình"],
+                                              10,
+                                              index == controller.classList.length - 1,
+                                            );
+                                          },
+                                        ),
+                                )),
                           ],
                         ),
                       ),
