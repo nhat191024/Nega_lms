@@ -10,6 +10,11 @@ class Homework extends Model
         'class_id',
         'type',
         'assignment_id',
+        'link',
+        'start_datetime',
+        'due_datetime',
+        'duration',
+        'auto_grade',
         'status',
     ];
 
