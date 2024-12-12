@@ -8,6 +8,7 @@ class Classes extends Model
 {
     protected $fillable = [
         'class_name',
+        'class_code',
         'class_description',
         'teacher_id',
         'status',
