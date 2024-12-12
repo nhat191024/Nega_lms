@@ -44,12 +44,14 @@ class AssignmentListScreen extends GetView<AssignmentController> {
                           ],
                         ),
                       ),
-                      Text(
-                        '${controller.assignmentList.length} Kết quả',
-                        style: const TextStyle(
-                          fontSize: 14,
-                          color: CustomColors.primary,
-                          fontFamily: FontStyleTextStrings.medium,
+                      Obx(
+                        () => Text(
+                          '${controller.assignmentList.length} Kết quả',
+                          style: const TextStyle(
+                            fontSize: 14,
+                            color: CustomColors.primary,
+                            fontFamily: FontStyleTextStrings.medium,
+                          ),
                         ),
                       ),
                     ],
