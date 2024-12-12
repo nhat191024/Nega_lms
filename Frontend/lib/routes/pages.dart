@@ -20,7 +20,7 @@ class Pages {
     ),
     GetPage(
       name: _Paths.classListPage,
-      page: () => const ClassListScreen(),
+      page: () => ClassListScreen(),
       binding: ClassBinding(),
     ),
     GetPage(
