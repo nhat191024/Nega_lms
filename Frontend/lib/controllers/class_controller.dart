@@ -27,4 +27,8 @@ class ClassController extends GetxController {
       isLoading.value = false;
     }
   }
+
+  classFilter(String query) {
+    return classList.where((element) => element.name!.toLowerCase().contains(query.toLowerCase())).toList();
+  }
 }
