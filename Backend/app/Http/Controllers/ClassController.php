@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Support\Str;
 use App\Models\Classes;
 use App\Models\Enrollment;
 use App\Models\User;
@@ -62,29 +62,39 @@ class ClassController extends Controller
             [
                 'className.required' => 'Vui lòng nhập tên lớp!',
                 'classDescription.required' => 'Vui lòng nhập mô tả lớp!',
-                'classDescription.string' => 'Mô tả phải là 1 chuỗi!',
-                'classDescription.max' => 'Không nhập quá 500 ký tự!',
                 'teacherID.required' => 'Vui lòng chọn giảng viên!',
                 'teacherID.exists' => 'Giảng viên không tồn tại!',
-            ],
+            ]
         );
 
         $className = $request->className;
         $classDescription = $request->classDescription;
         $teacherID = $request->teacherID;
 
-        $classes = Classes::create([
+        // Kiểm tra lớp học đã tồn tại chưa
+        $existingClass = Classes::where('class_code', $className)->first();
+        if ($existingClass) {
+            return redirect()->back()->with('error', 'Lớp học đã tồn tại!');
+        }
+
+        $class = Classes::create([
+            'class_code' => Str::upper(Str::random(5)), // Mã lớp học tự động tạo
             'class_name' => $className,
             'class_description' => $classDescription,
             'teacher_id' => $teacherID,
         ]);
 
-        if ($classes) {
+        if ($class) {
             return redirect()->route('classes.index')->with('success', 'Thêm lớp học thành công');
         } else {
             return redirect()->back()->with('error', 'Thêm lớp học thất bại');
         }
     }
+
+    public function editClass(Request $request){
+        
+    }
+
 
     public function hideClass(Request $request)
     {

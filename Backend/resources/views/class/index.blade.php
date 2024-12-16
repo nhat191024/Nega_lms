@@ -26,50 +26,42 @@
                                 <div class="modal-body">
                                     <form class="row g-3 needs-validation" novalidate>
                                         <div class="col-md-12">
-                                            <label for="validationCustom01" class="form-label">Nhập tên lớp</label>
-                                            <input name="className" type="text"
-                                                class="form-control @error('className') is-invalid @enderror"
-                                                id="validationCustom01" placeholder="Vd: Lớp bá đạo"
-                                                value="{{ old('className') }}">
+                                            <label for="className" class="form-label">Nhập tên lớp</label>
+                                            <input name="className" type="text" class="form-control @error('className') is-invalid @enderror" 
+                                                id="className" placeholder="Vd: Lớp bá đạo" value="{{ old('className') }}">
                                             <p class="fs-6 text-danger">
-                                                @error('className')
-                                                    {{ $message }}
-                                                @enderror
+                                                @error('className') {{ $message }} @enderror
                                             </p>
                                         </div>
+                                
                                         <div class="col-md-12">
-                                            <label for="validationCustom01" class="form-label">Nhập mô tả</label>
-                                            <input name="classDescription" type="text"
-                                                class="form-control @error('classDescription') is-invalid @enderror"
-                                                id="validationCustom01" placeholder="Vd: Hơn 30 học sinh giỏi"
-                                                value="{{ old('classDescription') }}">
+                                            <label for="classDescription" class="form-label">Nhập mô tả</label>
+                                            <input name="classDescription" type="text" class="form-control @error('classDescription') is-invalid @enderror" 
+                                                id="classDescription" placeholder="Vd: Hơn 30 học sinh giỏi" value="{{ old('classDescription') }}">
                                             <p class="fs-6 text-danger">
-                                                @error('classDescription')
-                                                    {{ $message }}
-                                                @enderror
+                                                @error('classDescription') {{ $message }} @enderror
                                             </p>
                                         </div>
+                                
                                         <div class="col-md-12">
-                                            <label for="validationCustom04" class="form-label">Thêm giảng viên</label>
-                                            <select name="teacherID"
-                                                class="form-select @error('teacherID') is-invalid @enderror"
-                                                id="validationCustom04">
+                                            <label for="teacherID" class="form-label">Thêm giảng viên</label>
+                                            <select name="teacherID" class="form-select @error('teacherID') is-invalid @enderror" id="teacherID">
                                                 <option selected disabled value="">Chọn giảng viên</option>
                                                 @foreach ($teachersNotInClass as $teacher)
                                                     <option value="{{ $teacher->id }}">{{ $teacher->name }}</option>
                                                 @endforeach
                                             </select>
                                             <p class="fs-6 text-danger">
-                                                @error('teacherID')
-                                                    {{ $message }}
-                                                @enderror
+                                                @error('teacherID') {{ $message }} @enderror
                                             </p>
                                         </div>
+                                
                                         <div class="col-12">
                                             <button class="btn btn-primary" type="submit">Tạo</button>
                                         </div>
                                     </form>
                                 </div>
+                                
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
                                 </div>
@@ -82,12 +74,10 @@
             @foreach ($classes as $class)
                 <div class="card shadow my-4">
                     <div class="card-header py-3 d-flex justify-content-between">
-                        <div class="d-flex align    ">
+                        <div class="d-flex align-items-center">
                             <h6 class="m-0 font-weight-bold text-primary">Lớp - {{ $class->class_name }}</h6>
-                            <h6 class="m-0 font-weight-bold text-primary mx-4">Giảng viên - {{ $class->teacher->name }}
-                            </h6>
-                            <a href="{{ route('classes.assignments.byClass', ['class_id' => $class->id]) }}"
-                                class="btn btn-info">Bài tập</a>
+                            <h6 class="m-0 font-weight-bold text-primary mx-4">Mã lớp - {{ $class->class_code }}</h6> <!-- Hiển thị mã lớp -->
+                            <h6 class="m-0 font-weight-bold text-primary mx-4">Giảng viên - {{ $class->teacher->name }}</h6>
                         </div>
 
                         <div>
