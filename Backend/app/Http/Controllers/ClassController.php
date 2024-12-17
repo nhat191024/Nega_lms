@@ -110,7 +110,12 @@ class ClassController extends Controller
             'className' => 'required|string|max:255',
             'classDescription' => 'required|string|max:500',
             'teacherID' => 'required|integer|exists:users,id',
-        ]);
+        ],[
+                'className.required' => 'Vui lòng nhập tên lớp!',
+                'classDescription.required' => 'Vui lòng nhập mô tả lớp!',
+                'teacherID.required' => 'Vui lòng chọn giảng viên!',
+                'teacherID.exists' => 'Giảng viên không tồn tại!',
+            ]);
 
         $class = Classes::find($class_id);
 

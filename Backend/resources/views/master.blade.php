@@ -330,11 +330,20 @@
 </script>
 
 <script>
-    @if ($errors->any())
+    // Kiểm tra nếu có lỗi từ form thêm lớp
+    @if ($errors->hasBag('default') && !$errors->hasBag('update_class'))
         var addClassModal = new bootstrap.Modal(document.getElementById('add-class-modal'), {});
         addClassModal.show();
     @endif
+
+    // Kiểm tra nếu có lỗi từ form sửa lớp
+    @if ($errors->hasBag('update_class'))
+        var editClassModal = new bootstrap.Modal(document.getElementById('edit-class-modal-{{ old('class_id') }}'), {});
+        editClassModal.show();
+    @endif
 </script>
+
+
 
 
 </html>

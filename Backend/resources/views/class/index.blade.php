@@ -22,40 +22,37 @@
                                     <button type="button" class="btn-close" data-bs-dismiss="modal"
                                         aria-label="Close"></button>
                                 </div>
-                                {{-- <input type="hidden" name="class_id" value="{{ $class->id }}"> --}}
                                 <div class="modal-body">
                                     <form class="row g-3 needs-validation" novalidate>
                                         <div class="col-md-12">
                                             <label for="className" class="form-label">Nhập tên lớp</label>
-                                            <input name="className" type="text" 
-                                                   class="form-control @error('className') is-invalid @enderror" 
-                                                   id="className" placeholder="Vd: Lớp bá đạo" 
-                                                   value="{{ old('className') }}">
+                                            <input name="className" type="text"
+                                                class="form-control @error('className') is-invalid @enderror" id="className"
+                                                placeholder="Vd: Lớp bá đạo" value="{{ old('className') }}">
                                             @error('className')
                                                 <span class="text-danger">{{ $message }}</span>
                                             @enderror
                                         </div>
-                                        
+
                                         <div class="col-md-12">
                                             <label for="classDescription" class="form-label">Nhập mô tả lớp</label>
-                                            <input name="classDescription" type="text" 
-                                                   class="form-control @error('classDescription') is-invalid @enderror" 
-                                                   id="classDescription" placeholder="Vd: Hơn 30 học sinh giỏi" 
-                                                   value="{{ old('classDescription') }}">
+                                            <input name="classDescription" type="text"
+                                                class="form-control @error('classDescription') is-invalid @enderror"
+                                                id="classDescription" placeholder="Vd: Hơn 30 học sinh giỏi"
+                                                value="{{ old('classDescription') }}">
                                             @error('classDescription')
                                                 <span class="text-danger">{{ $message }}</span>
                                             @enderror
                                         </div>
-                                        
+
                                         <div class="col-md-12">
                                             <label for="teacherID" class="form-label">Thêm giảng viên</label>
-                                            <select name="teacherID" 
-                                                    class="form-select @error('teacherID') is-invalid @enderror" 
-                                                    id="teacherID">
+                                            <select name="teacherID"
+                                                class="form-select @error('teacherID') is-invalid @enderror" id="teacherID">
                                                 <option selected disabled value="">Chọn giảng viên</option>
                                                 @foreach ($teachersNotInClass as $teacher)
-                                                    <option value="{{ $teacher->id }}" 
-                                                            {{ old('teacherID') == $teacher->id ? 'selected' : '' }}>
+                                                    <option value="{{ $teacher->id }}"
+                                                        {{ old('teacherID') == $teacher->id ? 'selected' : '' }}>
                                                         {{ $teacher->name }}
                                                     </option>
                                                 @endforeach
@@ -64,7 +61,7 @@
                                                 <span class="text-danger">{{ $message }}</span>
                                             @enderror
                                         </div>
-                                        
+
                                         <br>
                                         <div class="col-12">
                                             <button class="btn btn-primary" type="submit">Tạo</button>
@@ -114,6 +111,49 @@
                             </button>
                         </div>
 
+                        <!-- Modal Thêm lớp học -->
+                        <div class="modal fade" id="add-class-modal" tabindex="-1" aria-labelledby="modal-new-class"
+                            aria-hidden="true">
+                            <div class="modal-dialog">
+                                <form action="{{ route('classes.addClass') }}" method="POST">
+                                    @csrf
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h1 class="modal-title fs-5" id="modal-new-class">Thêm lớp học mới</h1>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="mb-3">
+                                                <label for="className" class="form-label">Tên lớp</label>
+                                                <input type="text" name="className" class="form-control"
+                                                    placeholder="Tên lớp...">
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="classDescription" class="form-label">Mô tả</label>
+                                                <input type="text" name="classDescription" class="form-control"
+                                                    placeholder="Mô tả lớp...">
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="teacherID" class="form-label">Giảng viên</label>
+                                                <select name="teacherID" class="form-select">
+                                                    @foreach ($teachersNotInClass as $teacher)
+                                                        <option value="{{ $teacher->id }}">{{ $teacher->name }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary"
+                                                data-bs-dismiss="modal">Hủy</button>
+                                            <button type="submit" class="btn btn-primary">Tạo</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+
                         <!-- Modal sửa lớp học -->
                         <div class="modal fade" id="edit-class-{{ $class->id }}" tabindex="-1"
                             aria-labelledby="edit-class-modal-label-{{ $class->id }}" aria-hidden="true">
@@ -135,11 +175,17 @@
                                                 <input type="text" name="className"
                                                     id="className-{{ $class->id }}" class="form-control"
                                                     value="{{ $class->class_name }}">
+                                                @error('className')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
                                             </div>
                                             <div class="mb-3">
                                                 <label for="classDescription-{{ $class->id }}" class="form-label">Mô
                                                     tả</label>
                                                 <textarea name="classDescription" id="classDescription-{{ $class->id }}" class="form-control">{{ $class->class_description }}</textarea>
+                                                @error('classDescription')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
                                             </div>
                                             <div class="mb-3">
                                                 <label for="teacherID-{{ $class->id }}" class="form-label">Giảng
@@ -154,45 +200,10 @@
                                                         </option>
                                                     @endforeach
                                                 </select>
+                                                @error('teacherID')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
                                             </div>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary"
-                                                data-bs-dismiss="modal">Hủy</button>
-                                            <button type="submit" class="btn btn-primary">Lưu</button>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-
-                        <!-- Modal thêm học sinh -->
-                        <div class="modal fade" id="add-student-to-class-{{ Str::slug($class->class_name) }}"
-                            tabindex="-1" aria-labelledby="modal-title-{{ Str::slug($class->class_name) }}"
-                            aria-hidden="true">
-                            <div class="modal-dialog">
-                                <form action="{{ route('classes.addStudent') }}" method="post">
-                                    @csrf
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h1 class="modal-title fs-5"
-                                                id="modal-title-{{ Str::slug($class->class_name) }}">Thêm học sinh vào
-                                                Lớp
-                                                {{ $class->class_name }}</h1>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                aria-label="Close"></button>
-                                        </div>
-                                        <input type="hidden" name="class_id" value="{{ $class->id }}">
-                                        <div class="modal-body">
-                                            <select name="student_id" class="selectpicker" data-live-search="true"
-                                                data-width="100%" title="Chọn học sinh...">
-                                                @foreach ($studentsNotInClass($class->id) as $student)
-                                                    <option value="{{ $student->id }}"
-                                                        data-tokens="{{ $student->name }}">
-                                                        {{ $student->name }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary"
@@ -260,5 +271,3 @@
         <!-- /.container-fluid -->
     </div>
 @endsection
-
-
