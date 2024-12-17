@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Support\Str;
 use App\Models\Classes;
 use App\Models\Enrollment;
@@ -91,8 +92,39 @@ class ClassController extends Controller
         }
     }
 
-    public function editClass(Request $request){
-        
+    public function editClass($class_id)
+    {
+        $class = Classes::find($class_id);
+
+        if (!$class) {
+            return redirect()->route('class.index')->with('error', 'Lớp học không tồn tại');
+        }
+        $teachersNotInClass = User::where('role_id', 2)->get();
+
+        return view('class.edit', compact('class', 'teachersNotInClass'));
+    }
+
+    public function updateClass(Request $request, $class_id)
+    {
+        $request->validate([
+            'className' => 'required|string|max:255',
+            'classDescription' => 'required|string|max:500',
+            'teacherID' => 'required|integer|exists:users,id',
+        ]);
+
+        $class = Classes::find($class_id);
+
+        if (!$class) {
+            return redirect()->route('classes.index')->with('error', 'Lớp học không tồn tại!');
+        }
+
+        $class->update([
+            'class_name' => $request->className,
+            'class_description' => $request->classDescription,
+            'teacher_id' => $request->teacherID,
+        ]);
+
+        return redirect()->route('classes.index')->with('success', 'Cập nhật lớp học thành công');
     }
 
 
