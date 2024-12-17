@@ -73,9 +73,9 @@ class ClassController extends Controller
         $teacherID = $request->teacherID;
 
         // Kiểm tra lớp học đã tồn tại chưa
-        $existingClass = Classes::where('class_code', $className)->first();
+        $existingClass = Classes::where('class_name', $className)->first();
         if ($existingClass) {
-            return redirect()->back()->with('error', 'Lớp học đã tồn tại!');
+            return redirect()->back()->withInput()->with('error', 'Lớp học đã tồn tại!');
         }
 
         $class = Classes::create([

@@ -27,45 +27,45 @@
                                     <form class="row g-3 needs-validation" novalidate>
                                         <div class="col-md-12">
                                             <label for="className" class="form-label">Nhập tên lớp</label>
-                                            <input name="className" type="text"
-                                                class="form-control @error('className') is-invalid @enderror" id="className"
-                                                placeholder="Vd: Lớp bá đạo" value="{{ old('className') }}">
-                                            <p class="fs-6 text-danger">
-                                                @error('className')
-                                                    {{ $message }}
-                                                @enderror
-                                            </p>
+                                            <input name="className" type="text" 
+                                                   class="form-control @error('className') is-invalid @enderror" 
+                                                   id="className" placeholder="Vd: Lớp bá đạo" 
+                                                   value="{{ old('className') }}">
+                                            @error('className')
+                                                <span class="text-danger">{{ $message }}</span>
+                                            @enderror
                                         </div>
-
+                                        
                                         <div class="col-md-12">
-                                            <label for="classDescription" class="form-label">Nhập mô tả</label>
-                                            <input name="classDescription" type="text"
-                                                class="form-control @error('classDescription') is-invalid @enderror"
-                                                id="classDescription" placeholder="Vd: Hơn 30 học sinh giỏi"
-                                                value="{{ old('classDescription') }}">
-                                            <p class="fs-6 text-danger">
-                                                @error('classDescription')
-                                                    {{ $message }}
-                                                @enderror
-                                            </p>
+                                            <label for="classDescription" class="form-label">Nhập mô tả lớp</label>
+                                            <input name="classDescription" type="text" 
+                                                   class="form-control @error('classDescription') is-invalid @enderror" 
+                                                   id="classDescription" placeholder="Vd: Hơn 30 học sinh giỏi" 
+                                                   value="{{ old('classDescription') }}">
+                                            @error('classDescription')
+                                                <span class="text-danger">{{ $message }}</span>
+                                            @enderror
                                         </div>
-
+                                        
                                         <div class="col-md-12">
                                             <label for="teacherID" class="form-label">Thêm giảng viên</label>
-                                            <select name="teacherID"
-                                                class="form-select @error('teacherID') is-invalid @enderror" id="teacherID">
+                                            <select name="teacherID" 
+                                                    class="form-select @error('teacherID') is-invalid @enderror" 
+                                                    id="teacherID">
                                                 <option selected disabled value="">Chọn giảng viên</option>
                                                 @foreach ($teachersNotInClass as $teacher)
-                                                    <option value="{{ $teacher->id }}">{{ $teacher->name }}</option>
+                                                    <option value="{{ $teacher->id }}" 
+                                                            {{ old('teacherID') == $teacher->id ? 'selected' : '' }}>
+                                                        {{ $teacher->name }}
+                                                    </option>
                                                 @endforeach
                                             </select>
-                                            <p class="fs-6 text-danger">
-                                                @error('teacherID')
-                                                    {{ $message }}
-                                                @enderror
-                                            </p>
+                                            @error('teacherID')
+                                                <span class="text-danger">{{ $message }}</span>
+                                            @enderror
                                         </div>
-
+                                        
+                                        <br>
                                         <div class="col-12">
                                             <button class="btn btn-primary" type="submit">Tạo</button>
                                         </div>
@@ -134,12 +134,12 @@
                                                     lớp</label>
                                                 <input type="text" name="className"
                                                     id="className-{{ $class->id }}" class="form-control"
-                                                    value="{{ $class->class_name }}" required>
+                                                    value="{{ $class->class_name }}">
                                             </div>
                                             <div class="mb-3">
                                                 <label for="classDescription-{{ $class->id }}" class="form-label">Mô
                                                     tả</label>
-                                                <textarea name="classDescription" id="classDescription-{{ $class->id }}" class="form-control" required>{{ $class->class_description }}</textarea>
+                                                <textarea name="classDescription" id="classDescription-{{ $class->id }}" class="form-control">{{ $class->class_description }}</textarea>
                                             </div>
                                             <div class="mb-3">
                                                 <label for="teacherID-{{ $class->id }}" class="form-label">Giảng
@@ -260,3 +260,5 @@
         <!-- /.container-fluid -->
     </div>
 @endsection
+
+
