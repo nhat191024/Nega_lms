@@ -18,18 +18,6 @@
                         @method('PUT')
 
                         <!-- Select Class -->
-                        <!-- Class ID -->
-                        <div class="form-group">
-                            <label for="class_id">Class Name</label>
-                            <select name="class_id" id="class_id" class="form-control" required>
-                                @foreach($classes as $class)
-                                <option value="{{ $class->id }}" {{ ($class->id === $assignment->class_id) ? 'selected' : '' }}>
-                                    {{ $class->class_name }}
-                                </option>
-                                @endforeach
-                            </select>
-                        </div>
-
                         <!-- Creator ID -->
                         <div class="form-group">
                             <label for="creator_id">Creator</label>
@@ -44,8 +32,8 @@
 
                         <!-- Name -->
                         <div class="form-group">
-                            <label for="name">Name</label>
-                            <input type="text" name="name" id="name" class="form-control" value="{{ $assignment->name }}" required>
+                            <label for="name">title</label>
+                            <input type="text" name="title" id="title" class="form-control" value="{{ $assignment->title }}" required>
                         </div>
 
                         <!-- Description -->
@@ -72,12 +60,6 @@
                             </select>
                         </div>
 
-                        <!-- Duration -->
-                        <div class="form-group">
-                            <label for="duration">Duration (in minutes)</label>
-                            <input type="number" name="duration" id="duration" class="form-control" value="{{ $assignment->duration }}" min="1" required>
-                        </div>
-
                         <!-- Total Score -->
                         <div class="form-group">
                             <label for="totalScore">Total Score</label>
@@ -100,27 +82,6 @@
                         <div class="form-group">
                             <label for="topic">Topic</label>
                             <input type="text" name="topic" id="topic" class="form-control" value="{{ $assignment->topic }}" required>
-                        </div>
-
-                        <!-- Start Date -->
-                        <div class="form-group">
-                            <label for="start_date">Start Date</label>
-                            <input type="date" name="start_date" id="start_date" class="form-control" value="{{ $assignment->start_date }}" required>
-                        </div>
-
-                        <!-- Due Date -->
-                        <div class="form-group">
-                            <label for="due_date">Due Date</label>
-                            <input type="date" name="due_date" id="due_date" class="form-control" value="{{ $assignment->due_date }}" required>
-                        </div>
-
-                        <!-- Auto Grade -->
-                        <div class="form-group">
-                            <label for="auto_grade">Auto Grade</label>
-                            <select name="auto_grade" id="auto_grade" class="form-control" required>
-                                <option value="1" {{ $assignment->auto_grade == 1 ? 'selected' : '' }}>True</option>
-                                <option value="0" {{ $assignment->auto_grade == 0 ? 'selected' : '' }}>False</option>
-                            </select>
                         </div>
 
                         <a href="{{ route('assignments.index') }}" class="btn btn-secondary">Cancel</a>
