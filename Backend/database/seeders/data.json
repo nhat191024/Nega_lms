@@ -14,17 +14,20 @@
         {
             "class_name": "Php",
             "class_description": "Php class",
-            "teacher_id": 2
+            "teacher_id": 2,
+            "class_code": "php2024"
         },
         {
             "class_name": "Java",
             "class_description": "Java class",
-            "teacher_id": 2
+            "teacher_id": 2,
+            "class_code": "java2024"
         },
         {
             "class_name": "C#",
             "class_description": "C# class",
-            "teacher_id": 3
+            "teacher_id": 3,
+            "class_code": "csharp2024"
         }
     ],
     "enrollment": [
@@ -55,100 +58,70 @@
     ],
     "assignment": [
         {
-            "class_id": 1,
             "creator_id": 1,
             "title": "Lập trình php",
             "description": "Làm bài tập lập trình php cơ bản",
             "status": "published",
             "level": "Cao đẳng",
-            "duration": 15,
             "totalScore": 1,
             "specialized": "Web",
             "subject": "php cơ bản",
-            "topic": "php",
-            "start_date": "2024-11-20 00:00:00",
-            "due_date": "2024-11-21 00:00:00",
-            "auto_grade": true
+            "topic": "php"
         },
         {
-            "class_id": 1,
             "creator_id": 1,
             "title": "Lập trình php 2",
             "description": "Làm bài tập lập trình php nâng cao",
             "status": "published",
             "level": "Cao đẳng",
-            "duration": 15,
             "totalScore": 1,
             "specialized": "Web",
             "subject": "php nâng cao",
-            "topic": "php",
-            "start_date": "2024-11-20 00:00:00",
-            "due_date": "2024-11-21 00:00:00",
-            "auto_grade": true
+            "topic": "php"
         },
         {
-            "class_id": 2,
             "creator_id": 1,
             "title": "Lập trình Java",
             "description": "Làm bài tập lập trình Java cơ bản",
             "status": "published",
             "level": "Cao đẳng",
-            "duration": 15,
             "totalScore": 1,
             "specialized": "App",
             "subject": "Java cơ bản",
-            "topic": "Java",
-            "start_date": "2024-11-20 00:00:00",
-            "due_date": "2024-11-21 00:00:00",
-            "auto_grade": true
+            "topic": "Java"
         },
         {
-            "class_id": 2,
             "creator_id": 1,
             "title": "Lập trình Java 2",
             "description": "Làm bài tập lập trình Java nâng cao",
             "status": "published",
             "level": "Cao đẳng",
-            "duration": 15,
             "totalScore": 1,
             "specialized": "App",
             "subject": "Java nâng cao",
-            "topic": "Java",
-            "start_date": "2024-11-20 00:00:00",
-            "due_date": "2024-11-21 00:00:00",
-            "auto_grade": true
+            "topic": "Java"
         },
         {
-            "class_id": 3,
             "creator_id": 1,
             "title": "Lập trình C#",
             "description": "Làm bài tập lập trình C# cơ bản",
             "status": "published",
             "level": "Cao đẳng",
-            "duration": 15,
             "totalScore": 1,
             "specialized": "App",
             "subject": "C# cơ bản",
-            "topic": "C#",
-            "start_date": "2024-11-20 00:00:00",
-            "due_date": "2024-11-21 00:00:00",
-            "auto_grade": true
+            "topic": "C#"
         },
         {
-            "class_id": 3,
             "creator_id": 1,
             "title": "Lập trình C# 2",
-            "description":  "Làm bài tập lập trình C# nâng cao",
+            "description": "Làm bài tập lập trình C# nâng cao",
             "status": "published",
             "level": "Cao đẳng",
-            "duration": 15,
             "totalScore": 1,
             "specialized": "App",
             "subject": "C# nâng cao",
-            "topic": "C#",
-            "start_date": "2024-11-20 00:00:00",
-            "due_date": "2024-11-21 00:00:00",
-            "auto_grade": true
+            "topic": "C#"
         }
     ],
     "questions": [
