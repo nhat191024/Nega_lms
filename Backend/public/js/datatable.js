@@ -38,6 +38,7 @@
     $(document).ready(function () {
         initializeDataTables();
         initializeSelectPicker();
+        initializeSpecificDataTables();
     });
 
     // Re-initialize tables after form submission
@@ -47,4 +48,60 @@
             initializeSelectPicker();
         }, 500);
     });
+
+    function initializeSpecificDataTables() {
+        $('#averageScoreTable').DataTable({
+            "pageLength": 5,
+            "language": {
+                "lengthMenu": "Hiển thị _MENU_ bản ghi mỗi trang",
+                "zeroRecords": "Không tìm thấy dữ liệu",
+                "info": "Hiển thị _START_ đến _END_ trong tổng số _TOTAL_ bản ghi",
+                "infoEmpty": "Không có dữ liệu",
+                "infoFiltered": "(được lọc từ _MAX_ tổng số bản ghi)",
+                "search": "Tìm kiếm:",
+                "paginate": {
+                    "first": "Đầu tiên",
+                    "previous": "Trước",
+                    "next": "Tiếp theo",
+                    "last": "Cuối cùng"
+                }
+            }
+        });
+
+        $('#topSubmissionsTable').DataTable({
+            "pageLength": 5,
+            "language": {
+                "lengthMenu": "Hiển thị _MENU_ bản ghi mỗi trang",
+                "zeroRecords": "Không tìm thấy dữ liệu",
+                "info": "Hiển thị _START_ đến _END_ trong tổng số _TOTAL_ bản ghi",
+                "infoEmpty": "Không có dữ liệu",
+                "infoFiltered": "(được lọc từ _MAX_ tổng số bản ghi)",
+                "search": "Tìm kiếm:",
+                "paginate": {
+                    "first": "Đầu tiên",
+                    "previous": "Trước",
+                    "next": "Tiếp theo",
+                    "last": "Cuối cùng"
+                }
+            }
+        });
+
+        $('#latestStudentsTable').DataTable({
+            "pageLength": 5,
+            "language": {
+                "lengthMenu": "Hiển thị _MENU_ bản ghi mỗi trang",
+                "zeroRecords": "Không tìm thấy dữ liệu",
+                "info": "Hiển thị _START_ đến _END_ trong tổng số _TOTAL_ bản ghi",
+                "infoEmpty": "Không có dữ liệu",
+                "infoFiltered": "(được lọc từ _MAX_ tổng số bản ghi)",
+                "search": "Tìm kiếm:",
+                "paginate": {
+                    "first": "Đầu tiên",
+                    "previous": "Trước",
+                    "next": "Tiếp theo",
+                    "last": "Cuối cùng"
+                }
+            }
+        });
+    }
 })(jQuery);
