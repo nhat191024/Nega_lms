@@ -26,12 +26,10 @@ Route::prefix('class')->name('classes.')->group(function () {
     Route::post('/add-student', [ClassController::class, 'addStudentToClass'])->name('addStudent');
     Route::delete('/remove-student/{class_id}/{student_id}', [ClassController::class, 'removeStudentFromAClass'])->name('removeStudent');
     Route::post('/add-class', [ClassController::class, 'addNewClass'])->name('addClass');
-    Route::get('/edit-class/{class_id}',[ClassController::class,'editClass'])->name('editClass');
-    Route::put('/update-class/{class_id}',[ClassController::class,'updateClass'])->name('updateClass');
     Route::get('/hide-class/{class_id}', [ClassController::class, 'hideClass'])->name('hideClass');
-    Route::get('/class/{class_id}/assignments', [AssignmentController::class, 'getAssignmentsByClass'])->name('assignments.byClass');
+    Route::get('/edit-class/{class_id}', [ClassController::class, 'editClass'])->name('editClass');
+    Route::put('/update-class/{class_id}', [ClassController::class, 'updateClass'])->name('updateClass');
 });
-
 
 Route::prefix('/assignment')->name('assignments.')->group(function () {
     Route::get('/', [AssignmentController::class, 'index'])->name('index');

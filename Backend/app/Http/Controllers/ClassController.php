@@ -72,14 +72,13 @@ class ClassController extends Controller
         $classDescription = $request->classDescription;
         $teacherID = $request->teacherID;
 
-        // Kiểm tra lớp học đã tồn tại chưa
         $existingClass = Classes::where('class_name', $className)->first();
         if ($existingClass) {
             return redirect()->back()->withInput()->with('error', 'Lớp học đã tồn tại!');
         }
 
         $class = Classes::create([
-            'class_code' => Str::upper(Str::random(5)), // Mã lớp học tự động tạo
+            'class_code' => Str::upper(Str::random(5)),
             'class_name' => $className,
             'class_description' => $classDescription,
             'teacher_id' => $teacherID,
@@ -91,47 +90,6 @@ class ClassController extends Controller
             return redirect()->back()->with('error', 'Thêm lớp học thất bại');
         }
     }
-
-    public function editClass($class_id)
-    {
-        $class = Classes::find($class_id);
-
-        if (!$class) {
-            return redirect()->route('class.index')->with('error', 'Lớp học không tồn tại');
-        }
-        $teachersNotInClass = User::where('role_id', 2)->get();
-
-        return view('class.edit', compact('class', 'teachersNotInClass'));
-    }
-
-    public function updateClass(Request $request, $class_id)
-    {
-        $request->validate([
-            'className' => 'required|string|max:255',
-            'classDescription' => 'required|string|max:500',
-            'teacherID' => 'required|integer|exists:users,id',
-        ],[
-                'className.required' => 'Vui lòng nhập tên lớp!',
-                'classDescription.required' => 'Vui lòng nhập mô tả lớp!',
-                'teacherID.required' => 'Vui lòng chọn giảng viên!',
-                'teacherID.exists' => 'Giảng viên không tồn tại!',
-            ]);
-
-        $class = Classes::find($class_id);
-
-        if (!$class) {
-            return redirect()->route('classes.index')->with('error', 'Lớp học không tồn tại!');
-        }
-
-        $class->update([
-            'class_name' => $request->className,
-            'class_description' => $request->classDescription,
-            'teacher_id' => $request->teacherID,
-        ]);
-
-        return redirect()->route('classes.index')->with('success', 'Cập nhật lớp học thành công');
-    }
-
 
     public function hideClass(Request $request)
     {
@@ -147,5 +105,37 @@ class ClassController extends Controller
 
         $message = $newStatus === 0 ? 'Đã ẩn lớp học!' : 'Đã hiển thị lớp học!';
         return redirect()->back()->with('success', $message);
+    }
+    public function editClass($class_id)
+    {
+        $class = Classes::findOrFail($class_id);
+        $teachersNotInClass = User::where('role_id', 2)->get();
+        return view('class.edit', compact('class', 'teachersNotInClass'));
+    }
+
+    public function updateClass(Request $request, $class_id)
+    {
+        $request->validate(
+            [
+                'className' => 'required|string|max:255',
+                'classDescription' => 'required|string|max:500',
+                'teacherID' => 'required|integer|exists:users,id',
+            ],
+            [
+                'className.required' => 'Vui lòng nhập tên lớp!',
+                'classDescription.required' => 'Vui lòng nhập mô tả lớp!',
+                'teacherID.required' => 'Vui lòng chọn giảng viên!',
+                'teacherID.exists' => 'Giảng viên không tồn tại!',
+            ]
+        );
+
+        $class = Classes::findOrFail($class_id);
+        $class->update([
+            'class_name' => $request->className,
+            'class_description' => $request->classDescription,
+            'teacher_id' => $request->teacherID,
+        ]);
+
+        return redirect()->route('classes.index')->with('success', 'Lớp học đã được cập nhật.');
     }
 }
