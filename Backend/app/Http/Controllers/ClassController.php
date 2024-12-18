@@ -27,8 +27,25 @@ class ClassController extends Controller
 
     public function addStudentToClass(Request $request)
     {
+        // Kiểm tra nếu student_id và class_id không được chọn (null)
+        if (is_null($request->student_id) || is_null($request->class_id)) {
+            return redirect()->back()->with('error', 'Vui lòng chọn học sinh và lớp học!');
+        }
+
         $studentID = $request->student_id;
         $classID = $request->class_id;
+
+        $student = User::find($studentID);
+        $class = Classes::find($classID);
+
+        if (!$student) {
+            return redirect()->back()->with('error', 'Học sinh không tồn tại!');
+        }
+
+        if (!$class) {
+            return redirect()->back()->with('error', 'Lớp học không tồn tại!');
+        }
+
         $enrollment = Enrollment::create([
             'student_id' => $studentID,
             'class_id' => $classID,
@@ -40,6 +57,7 @@ class ClassController extends Controller
             return redirect()->back()->with('error', 'Thêm học sinh thất bại');
         }
     }
+
 
     public function removeStudentFromAClass($class_id, $student_id)
     {
@@ -84,12 +102,9 @@ class ClassController extends Controller
             'teacher_id' => $teacherID,
         ]);
 
-        if ($class) {
-            return redirect()->route('classes.index')->with('success', 'Thêm lớp học thành công');
-        } else {
-            return redirect()->back()->with('error', 'Thêm lớp học thất bại');
-        }
+        return redirect()->route('classes.index')->with('success', 'Thêm lớp học thành công');
     }
+
 
     public function hideClass(Request $request)
     {

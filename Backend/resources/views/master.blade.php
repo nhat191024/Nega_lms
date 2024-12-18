@@ -329,4 +329,12 @@
     @endif
 </script>
 
+<script>
+     @if ($errors->hasBag('default'))
+        var addClassModal = new bootstrap.Modal(document.getElementById('add-class-modal'), {});
+        addClassModal.show();
+    @endif
+</script>
+
+
 </html>
