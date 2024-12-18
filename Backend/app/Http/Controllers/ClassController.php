@@ -105,7 +105,6 @@ class ClassController extends Controller
         return redirect()->route('classes.index')->with('success', 'Thêm lớp học thành công');
     }
 
-
     public function hideClass(Request $request)
     {
         $class_id = $request->class_id;
