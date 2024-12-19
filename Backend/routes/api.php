@@ -29,8 +29,12 @@ Route::group(['middleware' => ['auth:sanctum', 'ability:teacher']], function () 
 
 // Student routes
 Route::group(['middleware' => ['auth:sanctum', 'ability:student']], function () {
-    Route::get('/classes', [ClassController::class, 'index']);
-    Route::get('/student-class', [ClassController::class, 'getStudentClasses']);
+    Route::prefix('classes')->group(function () {
+        Route::get('/', [ClassController::class, 'index']);
+        Route::get('/student-class', [ClassController::class, 'getStudentClasses']);
+        Route::get('/join/{classId}', [ClassController::class, 'joinClass']);
+        Route::get('/search/{classCode}', [ClassController::class, 'searchClassByCode']);
+    });
 
     Route::get('/user', [ProfileController::class, 'showProfile'])->name('user.profile.show');
     Route::post('/user/update', [ProfileController::class, 'updateProfile'])->name('user.profile.update');
