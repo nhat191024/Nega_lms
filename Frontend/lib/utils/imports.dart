@@ -32,7 +32,6 @@ export 'package:nega_lms/utils/text.dart';
 export 'package:nega_lms/utils/images.dart';
 export 'package:nega_lms/utils/api.dart';
 
-
 //service imports
 export 'package:nega_lms/service/local_storage.dart';
 export 'package:nega_lms/service/token.dart';
@@ -41,6 +40,7 @@ export 'package:nega_lms/service/token.dart';
 export 'package:nega_lms/components/nav.dart';
 export 'package:nega_lms/components/button.dart';
 export 'package:nega_lms/components/field.dart';
+export 'package:nega_lms/components/dialog.dart';
 
 //model imports
 export 'package:nega_lms/models/class_model.dart';
