@@ -39,6 +39,7 @@ class LoginScreen extends GetView<LoginController> {
                       CustomButton(
                         onTap: () {},
                         btnText: "Đăng nhập bằng Google",
+                        width: Get.width * 0.2,
                         textColor: CustomColors.white,
                         btnColor: CustomColors.primary,
                         prefixSvgImage: Images.googleIcon,
@@ -91,13 +92,15 @@ class LoginScreen extends GetView<LoginController> {
                               controller.usernameErrorText.value = "Vui lòng nhập tài khoản hoặc email";
                               controller.isUsernameError.value = true;
                             } else {
-                              if (!GetUtils.isEmail(value)) {
-                                controller.usernameErrorText.value = "Email không hợp lệ";
-                                controller.isUsernameError.value = true;
-                              } else {
-                                controller.usernameErrorText.value = "";
-                                controller.isUsernameError.value = false;
-                              }
+                              controller.usernameErrorText.value = "";
+                              controller.isUsernameError.value = false;
+                              // if (!GetUtils.isEmail(value)) {
+                              //   controller.usernameErrorText.value = "Email không hợp lệ";
+                              //   controller.isUsernameError.value = true;
+                              // } else {
+                              //   controller.usernameErrorText.value = "";
+                              //   controller.isUsernameError.value = false;
+                              // }
                             }
                           },
                           errorText: controller.usernameErrorText.value,
@@ -192,15 +195,21 @@ class LoginScreen extends GetView<LoginController> {
                           ],
                         ),
                       ),
-                      CustomButton(
-                        onTap: () {},
-                        btnText: "Đăng nhập",
-                        textColor: CustomColors.white,
-                        btnColor: CustomColors.primary,
-                        borderRadius: 8,
-                        leftPadding: 0,
-                        rightPadding: 0,
-                        bottomPadding: 40,
+                      Obx(
+                        () => CustomButton(
+                          onTap: () {
+                            controller.login();
+                          },
+                          isLoading: controller.isButtonLoading.value,
+                          btnText: "Đăng nhập",
+                          width: Get.width * 0.2,
+                          textColor: CustomColors.white,
+                          btnColor: CustomColors.primary,
+                          borderRadius: 8,
+                          leftPadding: 0,
+                          rightPadding: 0,
+                          bottomPadding: 40,
+                        ),
                       ),
                     ],
                   )
