@@ -32,6 +32,9 @@ export 'package:nega_lms/utils/text.dart';
 export 'package:nega_lms/utils/images.dart';
 export 'package:nega_lms/utils/api.dart';
 
+//service imports
+export 'package:nega_lms/service/local_storage.dart';
+
 //components imports
 export 'package:nega_lms/components/nav.dart';
 export 'package:nega_lms/components/button.dart';
