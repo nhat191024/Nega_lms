@@ -28,3 +28,7 @@ class StorageService {
     box.remove(key);
   }
 }
+
+class LocalStorageKeys {
+  static const String token = "token";
+}
