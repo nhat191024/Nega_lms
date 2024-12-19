@@ -5,23 +5,25 @@ class LoginScreen extends GetView<LoginController> {
 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
+        toolbarHeight: screenHeight * 0.08,
         title: const NavBar(),
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.fromLTRB(100, 60, 200, 0),
+              padding: const EdgeInsets.fromLTRB(100, 60, 200, 20),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Image.asset(
                     Images.login,
-                    width: 800,
+                    width: screenHeight * 0.8,
                   ),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
