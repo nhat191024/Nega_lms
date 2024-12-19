@@ -41,7 +41,7 @@ class LoginController extends GetxController {
         });
         var data = jsonDecode(response.body);
         if (response.statusCode == 200) {
-          storeToken(data["token"]);
+          Token.storeToken(data["token"]);
           Get.offAllNamed(Routes.homePage);
         } else if (response.statusCode == 401) {
           Get.snackbar("Lỗi", data["message"]);
@@ -51,16 +51,5 @@ class LoginController extends GetxController {
         isButtonLoading.value = false;
       }
     }
-  }
-
-  storeToken(String token) async {
-    if (StorageService.checkData(key: LocalStorageKeys.token)) {
-      StorageService.removeData(key: LocalStorageKeys.token);
-    }
-
-    StorageService.writeStringData(
-      key: LocalStorageKeys.token,
-      value: token,
-    );
   }
 }
