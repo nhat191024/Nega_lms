@@ -15,6 +15,7 @@ class ClassListScreen extends GetView<ClassController> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
+        toolbarHeight: 80,
         title: const NavBar(),
       ),
       body: SingleChildScrollView(
