@@ -25,6 +25,18 @@
                                 
                                 <div class="modal-body">
                                     <div class="row g-3 needs-validation" novalidate>
+
+                                        <div class="col-md-12">
+                                            <label for="classCode" class="form-label">Nhập mã lớp</label>
+                                            <input name="classCode" type="text"
+                                                class="form-control @error('classCode') is-invalid @enderror" id="classCode"
+                                                placeholder="Vd: ABC123" value="{{ old('classCode') }}">
+                                            @error('classCode')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                        
+
                                         <div class="col-md-12">
                                             <label for="className" class="form-label">Nhập tên lớp</label>
                                             <input name="className" type="text"

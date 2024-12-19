@@ -10,6 +10,16 @@
             @method('PUT')
 
             <div class="mb-3">
+                <label for="classCode" class="form-label">Mã lớp</label>
+                <input type="text" class="form-control" id="classCode" name="classCode" value="{{ $class->class_code }}">
+                <p class="fs-6 text-danger">
+                    @error('classCode')
+                        {{ $message }}
+                    @enderror
+                </p>
+            </div>
+
+            <div class="mb-3">
                 <label for="className" class="form-label">Tên lớp</label>
                 <input type="text" class="form-control" id="className" name="className" value="{{ $class->class_name }}">
                 <p class="fs-6 text-danger">

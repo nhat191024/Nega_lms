@@ -74,11 +74,14 @@ class ClassController extends Controller
     {
         $request->validate(
             [
+                'classCode' => 'required|string|max:10',
                 'className' => 'required|string|max:255',
                 'classDescription' => 'required|string|max:500',
                 'teacherID' => 'required|integer|exists:users,id',
             ],
             [
+                'classCode' => 'Vui lòng nhập mã lớp',
+                'classCode.unique' => 'Mã lớp đã tồn tại, vui lòng chọn mã khác',
                 'className.required' => 'Vui lòng nhập tên lớp!',
                 'classDescription.required' => 'Vui lòng nhập mô tả lớp!',
                 'teacherID.required' => 'Vui lòng chọn giảng viên!',
@@ -86,6 +89,7 @@ class ClassController extends Controller
             ]
         );
 
+        $classCode = $request->classCode;
         $className = $request->className;
         $classDescription = $request->classDescription;
         $teacherID = $request->teacherID;
@@ -96,7 +100,7 @@ class ClassController extends Controller
         }
 
         $class = Classes::create([
-            'class_code' => Str::upper(Str::random(5)),
+            'class_code' => $classCode,
             'class_name' => $className,
             'class_description' => $classDescription,
             'teacher_id' => $teacherID,
@@ -131,6 +135,7 @@ class ClassController extends Controller
     {
         $request->validate(
             [
+                'classCode' => 'required|string|max:10|unique:classes,class_code,' . $class_id,
                 'className' => 'required|string|max:255',
                 'classDescription' => 'required|string|max:500',
                 'teacherID' => 'required|integer|exists:users,id',
@@ -145,6 +150,7 @@ class ClassController extends Controller
 
         $class = Classes::findOrFail($class_id);
         $class->update([
+            'class_code' => $request->classCode,
             'class_name' => $request->className,
             'class_description' => $request->classDescription,
             'teacher_id' => $request->teacherID,
