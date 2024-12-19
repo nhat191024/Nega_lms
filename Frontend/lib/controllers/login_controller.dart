@@ -35,6 +35,7 @@ class LoginController extends GetxController {
     if (!isUsernameError.value && !isPasswordError.value) {
       var url = Uri.parse("${Api.server}login");
       try {
+        isButtonLoading.value = true;
         var response = await post(url, body: {
           "login": username.text,
           "password": password.text,
@@ -42,11 +43,15 @@ class LoginController extends GetxController {
         var data = jsonDecode(response.body);
         if (response.statusCode == 200) {
           Token.storeToken(data["token"]);
-          Get.offAllNamed(Routes.homePage);
+          Get.offAllNamed(Routes.classListPage);
         } else if (response.statusCode == 401) {
-          Get.snackbar("Lỗi", data["message"]);
+          Get.dialog(
+            const NotificationDialog(
+              title: "Đăng nhập thất bại",
+              message: "Tài khoản hoặc mật khẩu không đúng",
+            ),
+          );
         }
-        isButtonLoading.value = true;
       } finally {
         isButtonLoading.value = false;
       }
