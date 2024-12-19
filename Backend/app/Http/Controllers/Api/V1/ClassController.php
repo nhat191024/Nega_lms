@@ -14,15 +14,19 @@ class ClassController extends Controller
 {
     public function index()
     {
+        $user = Auth::user();
+        $enrolledClassIds = $user->enrollments->pluck('class_id')->toArray();
+
         $classes = Classes::with('teacher')->get();
 
-        $classes = $classes->map(function ($class) {
+        $classes = $classes->map(function ($class) use ($enrolledClassIds) {
             return [
                 'id' => $class->id,
                 'name' => $class->class_name,
                 'description' => $class->class_description,
                 'teacherName' => $class->teacher ? $class->teacher->name : 'Chưa có giáo viên',
                 'createdAt' => $class->created_at,
+                'isJoined' => in_array($class->id, $enrolledClassIds),
             ];
         });
 
