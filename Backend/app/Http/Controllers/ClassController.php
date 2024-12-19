@@ -74,7 +74,7 @@ class ClassController extends Controller
     {
         $request->validate(
             [
-                'classCode' => 'required|string|max:10',
+                'classCode' => 'required|string|max:10|unique:classes,class_code',
                 'className' => 'required|string|max:255',
                 'classDescription' => 'required|string|max:500',
                 'teacherID' => 'required|integer|exists:users,id',
@@ -141,6 +141,8 @@ class ClassController extends Controller
                 'teacherID' => 'required|integer|exists:users,id',
             ],
             [
+                'classCode.required' => 'Vui lòng nhập mã lớp!',
+                'classCode.unique' => 'Mã lớp đã tồn tại, vui lòng chọn mã khác',
                 'className.required' => 'Vui lòng nhập tên lớp!',
                 'classDescription.required' => 'Vui lòng nhập mô tả lớp!',
                 'teacherID.required' => 'Vui lòng chọn giảng viên!',
