@@ -69,8 +69,8 @@
                         <div class="form-group">
                             <label for="level">Level</label>
                             <select name="level" id="level" class="form-control" >
-                                <option value="college">Cao đẳng</option>
-                                <option value="university">Đại học</option>
+                                <option value="Cao đẳng">Cao đẳng</option>
+                                <option value="Đại học">Đại học</option>
                             </select>
                         </div>
 

@@ -55,8 +55,8 @@
                         <div class="form-group">
                             <label for="level">Level</label>
                             <select name="level" id="level" class="form-control" required>
-                                <option value="college" {{ $assignment->level == 'college' ? 'selected' : '' }}>Cao đẳng</option>
-                                <option value="university" {{ $assignment->level == 'university' ? 'selected' : '' }}>Đại học</option>
+                                <option value="Cao đẳng" {{ $assignment->level == 'college' ? 'selected' : '' }}>Cao đẳng</option>
+                                <option value="Đại học" {{ $assignment->level == 'university' ? 'selected' : '' }}>Đại học</option>
                             </select>
                         </div>
 
