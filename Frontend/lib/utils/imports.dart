@@ -46,7 +46,7 @@ export 'package:nega_lms/models/answer_model.dart';
 //package imports
 export 'package:get/get.dart' hide Response, FormData, MultipartFile, HeaderValue;
 export 'package:flutter_svg/svg.dart';
-export 'package:flutter_web_plugins/flutter_web_plugins.dart';
+// export 'package:flutter_web_plugins/flutter_web_plugins.dart';
 export 'package:http/http.dart';
 export 'package:get_storage/get_storage.dart' hide Data;
 export 'dart:convert';
