@@ -12,6 +12,11 @@ use GuzzleHttp\Middleware;
 // Public routes
 Route::post('/login', [LoginController::class, 'login']);
 
+//no role required routes
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::get('/token-check', [LoginController::class, 'tokenCheck']);
+});
+
 // Admin routes
 Route::middleware(['auth:sanctum', 'ability:admin'])->group(function () {
     // Add admin-specific routes here
