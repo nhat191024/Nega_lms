@@ -2,6 +2,7 @@ import 'package:nega_lms/utils/imports.dart';
 
 class CustomButton extends StatelessWidget {
   final bool isDisabled;
+  final bool isLoading;
   final VoidCallback onTap;
   final String btnText;
   final double textSize;
@@ -43,6 +44,7 @@ class CustomButton extends StatelessWidget {
   const CustomButton({
     super.key,
     this.isDisabled = false,
+    this.isLoading = false,
     required this.onTap,
     required this.btnText,
     this.textSize = 16,
@@ -87,7 +89,7 @@ class CustomButton extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.fromLTRB(leftPadding, topPadding, rightPadding, bottomPadding),
       child: ElevatedButton(
-        onPressed: isDisabled ? null : onTap,
+        onPressed: (isDisabled || isLoading) ? null : onTap,
         style: ElevatedButton.styleFrom(
           backgroundColor: isDisabled ? CustomColors.disable : btnColor,
           minimumSize: Size(width ?? Get.width * 0.2, height ?? 48),
@@ -97,72 +99,81 @@ class CustomButton extends StatelessWidget {
           ),
           padding: const EdgeInsets.symmetric(horizontal: 16),
         ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            if (prefixIcon != null) ...[
-              Icon(
-                prefixIcon,
-                color: prefixIconColor,
-                size: prefixIconSize,
+        child: isLoading
+            ? SizedBox(
+                width: 24,
+                height: 24,
+                child: CircularProgressIndicator(
+                  color: textColor,
+                  strokeWidth: 2,
+                ),
+              )
+            : Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  if (prefixIcon != null) ...[
+                    Icon(
+                      prefixIcon,
+                      color: prefixIconColor,
+                      size: prefixIconSize,
+                    ),
+                    SizedBox(width: prefixTextGap),
+                  ],
+                  if (prefixImage != null) ...[
+                    Image(
+                      image: prefixImage!,
+                      height: prefixImageWidth,
+                      width: prefixImageHeight,
+                    ),
+                    SizedBox(width: prefixTextGap),
+                  ],
+                  if (prefixSvgImage != null) ...[
+                    SvgPicture.asset(
+                      prefixSvgImage!,
+                      width: prefixSvgImageWidth,
+                      height: prefixSvgImageHeight,
+                      fit: BoxFit.fill,
+                      colorFilter: prefixSvgImageColor != null ? ColorFilter.mode(prefixSvgImageColor!, BlendMode.srcIn) : null,
+                    ),
+                    SizedBox(width: prefixTextGap),
+                  ],
+                  Text(
+                    btnText,
+                    style: TextStyle(
+                      color: textColor,
+                      fontSize: textSize,
+                      fontFamily: fontFamily,
+                    ),
+                  ),
+                  if (suffixIcon != null) ...[
+                    const SizedBox(width: 8),
+                    Icon(
+                      suffixIcon,
+                      color: suffixIconColor,
+                      size: suffixIconSize,
+                    ),
+                  ],
+                  if (suffixImage != null) ...[
+                    const SizedBox(width: 8),
+                    Image(
+                      image: suffixImage!,
+                      height: suffixImageWidth,
+                      width: suffixImageHeight,
+                    ),
+                  ],
+                  if (suffixSvgImage != null) ...[
+                    const SizedBox(width: 8),
+                    SvgPicture.asset(
+                      suffixSvgImage!,
+                      width: suffixSvgImageWidth,
+                      height: suffixSvgImageHeight,
+                      fit: BoxFit.fill,
+                      colorFilter: ColorFilter.mode(suffixSvgImageColor ?? CustomColors.white, BlendMode.srcIn),
+                    ),
+                  ],
+                ],
               ),
-              SizedBox(width: prefixTextGap),
-            ],
-            if (prefixImage != null) ...[
-              Image(
-                image: prefixImage!,
-                height: prefixImageWidth,
-                width: prefixImageHeight,
-              ),
-              SizedBox(width: prefixTextGap),
-            ],
-            if (prefixSvgImage != null) ...[
-              SvgPicture.asset(
-                prefixSvgImage!,
-                width: prefixSvgImageWidth,
-                height: prefixSvgImageHeight,
-                fit: BoxFit.fill,
-                colorFilter: prefixSvgImageColor != null ? ColorFilter.mode(prefixSvgImageColor!, BlendMode.srcIn) : null,
-              ),
-              SizedBox(width: prefixTextGap),
-            ],
-            Text(
-              btnText,
-              style: TextStyle(
-                color: textColor,
-                fontSize: textSize,
-                fontFamily: fontFamily,
-              ),
-            ),
-            if (suffixIcon != null) ...[
-              const SizedBox(width: 8),
-              Icon(
-                suffixIcon,
-                color: suffixIconColor,
-                size: suffixIconSize,
-              ),
-            ],
-            if (suffixImage != null) ...[
-              const SizedBox(width: 8),
-              Image(
-                image: suffixImage!,
-                height: suffixImageWidth,
-                width: suffixImageHeight,
-              ),
-            ],
-            if (suffixSvgImage != null) ...[
-              const SizedBox(width: 8),
-              SvgPicture.asset(
-                suffixSvgImage!,
-                width: suffixSvgImageWidth,
-                height: suffixSvgImageHeight,
-                fit: BoxFit.fill,
-                colorFilter: ColorFilter.mode(suffixSvgImageColor ?? CustomColors.white, BlendMode.srcIn),
-              ),
-            ],
-          ],
-        ),
       ),
     );
   }
