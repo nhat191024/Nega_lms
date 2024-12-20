@@ -43,6 +43,9 @@ class LoginController extends GetxController {
         var data = jsonDecode(response.body);
         if (response.statusCode == 200) {
           Token.storeToken(data["token"]);
+          StorageService.writeStringData(key: "username", value: data["username"]);
+          StorageService.writeStringData(key: "avatar", value: data["avatar"]);
+          StorageService.writeStringData(key: "isLogin", value: "true");
           Get.offAllNamed(Routes.classListPage);
         } else if (response.statusCode == 401) {
           Get.dialog(
