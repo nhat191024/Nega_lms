@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 //model
+use App\Models\Homework;
 use App\Models\Assignment;
 use App\Models\Choice;
 use App\Models\Question;
@@ -18,20 +19,18 @@ class AssignmentController extends Controller
 {
     public function GetAssignmentByClassId($class_id)
     {
-        $assignments = Assignment::where('class_id', $class_id)->where('status', 'published')->get();
+        $homeworks = Homework::where('class_id', $class_id)->where('status', 1)->with('assignment')->get();
 
-        $assignments = $assignments->map(function ($assignment) {
+        $assignments = $homeworks->map(function ($homework) {
             return [
-                'id' => $assignment->id,
-                'name' => $assignment->title,
-                'description' => $assignment->description,
-                'level' => $assignment->level,
-                'duration' => $assignment->duration,
-                'totalScore' => $assignment->totalScore,
-                'specialized' => $assignment->specialized,
-                'subject' => $assignment->subject,
-                'topic' => $assignment->topic,
-                'dueDate' => $assignment->due_date,
+                'id' => $homework->assignment->id,
+                'name' => $homework->assignment->title,
+                'description' => $homework->assignment->description,
+                'level' => $homework->assignment->level,
+                'totalScore' => $homework->assignment->totalScore,
+                'specialized' => $homework->assignment->specialized,
+                'subject' => $homework->assignment->subject,
+                'topic' => $homework->assignment->topic,
             ];
         });
 
