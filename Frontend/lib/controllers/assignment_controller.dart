@@ -3,7 +3,8 @@ import 'package:nega_lms/utils/imports.dart';
 class AssignmentController extends GetxController {
   final TextEditingController searchController = TextEditingController();
   RxBool isLoading = true.obs;
-  late final String? classId;
+  RxInt classId = 0.obs;
+  RxString token = "".obs;
   RxString assignmentTitle = 'test'.obs;
   RxInt assignmentDuration = 0.obs;
   RxInt currentQuestion = 0.obs;
@@ -24,19 +25,22 @@ class AssignmentController extends GetxController {
 
   @override
   void onInit() async {
-    // assignmentId = Get.parameters['assignment_id']!;
-    classId = Get.parameters['class_id'];
-    await fetchClassAssignment();
-    // await fetchAssignment();
     super.onInit();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (!await Token.checkToken()) return;
+      token.value = await Token.getToken();
+      classId.value = Get.arguments ?? 1; // remove this line after finish testing
+      await fetchClassAssignment(classId.value);
+      // await fetchAssignment();
+    });
   }
 
-  fetchClassAssignment() async {
+  fetchClassAssignment(id) async {
     try {
       isLoading(true);
-      String url = "${Api.server}assignment/$classId";
+      String url = "${Api.server}assignment/$id";
       var response = await get(Uri.parse(url), headers: {
-        'Authorization': 'Bearer ${Api.testToken}',
+        'Authorization': 'Bearer $token',
       }).timeout(const Duration(seconds: 10));
 
       if (response.statusCode == 200) {
