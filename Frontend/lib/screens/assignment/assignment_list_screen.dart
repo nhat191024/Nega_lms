@@ -9,7 +9,8 @@ class AssignmentListScreen extends GetView<AssignmentController> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: const NavBar(),
+        toolbarHeight: 80,
+        title: NavBar(),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -97,7 +98,7 @@ class AssignmentListScreen extends GetView<AssignmentController> {
                         child: Column(
                           children: [
                             Obx(() => SizedBox(
-                                  height: Get.height * 0.7,
+                                  height: Get.height * 0.8,
                                   child: controller.isLoading.value
                                       ? const Center(
                                           child: CircularProgressIndicator(),
