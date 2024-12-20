@@ -14,6 +14,6 @@ abstract class _Paths {
   static const homePage = '/';
   static const loginPage = '/login';
   static const classListPage = '/class-list';
-  static const assignmentListPage = '/assignment-list/:class_id';
-  static const doAssignmentScreen = '/do-assignment/:assignment_id';
+  static const assignmentListPage = '/assignment-list';
+  static const doAssignmentScreen = '/do-assignment';
 }
