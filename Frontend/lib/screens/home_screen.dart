@@ -10,7 +10,7 @@ class HomeScreen extends GetView<HomeController> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         toolbarHeight: 80,
-        title: const NavBar(),
+        title: NavBar(),
       ),
       body: SingleChildScrollView(
         child: Column(

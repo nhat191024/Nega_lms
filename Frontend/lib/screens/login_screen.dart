@@ -11,7 +11,7 @@ class LoginScreen extends GetView<LoginController> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         toolbarHeight: screenHeight * 0.08,
-        title: const NavBar(),
+        title: NavBar(),
       ),
       body: SingleChildScrollView(
         child: Column(

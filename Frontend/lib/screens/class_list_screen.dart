@@ -18,7 +18,7 @@ class ClassListScreen extends GetView<ClassController> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         toolbarHeight: 80,
-        title: const NavBar(),
+        title: NavBar(),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -105,29 +105,31 @@ class ClassListScreen extends GetView<ClassController> {
                       Expanded(
                         child: Column(
                           children: [
-                            Obx(() => SizedBox(
-                                  height: Get.height * 0.7,
-                                  child: controller.isLoading.value
-                                      ? const Center(
-                                          child: CircularProgressIndicator(),
-                                        )
-                                      : ListView.builder(
-                                          shrinkWrap: true,
-                                          physics: const AlwaysScrollableScrollPhysics(),
-                                          itemCount: controller.filteredList.length,
-                                          itemBuilder: (context, index) {
-                                            return classCardBuilder(
-                                              controller.filteredList[index].name ?? '',
-                                              controller.filteredList[index].description ?? '',
-                                              controller.filteredList[index].id ?? 0,
-                                              controller.filteredList[index].isJoined ?? false,
-                                              ["Lập trình"],
-                                              10,
-                                              index == controller.filteredList.length - 1,
-                                            );
-                                          },
-                                        ),
-                                )),
+                            Obx(
+                              () => SizedBox(
+                                height: Get.height * 0.8,
+                                child: controller.isLoading.value
+                                    ? const Center(
+                                        child: CircularProgressIndicator(),
+                                      )
+                                    : ListView.builder(
+                                        shrinkWrap: true,
+                                        physics: const AlwaysScrollableScrollPhysics(),
+                                        itemCount: controller.filteredList.length,
+                                        itemBuilder: (context, index) {
+                                          return classCardBuilder(
+                                            controller.filteredList[index].name ?? '',
+                                            controller.filteredList[index].description ?? '',
+                                            controller.filteredList[index].id ?? 0,
+                                            controller.filteredList[index].isJoined ?? false,
+                                            ["Lập trình"],
+                                            10,
+                                            index == controller.filteredList.length - 1,
+                                          );
+                                        },
+                                      ),
+                              ),
+                            ),
                           ],
                         ),
                       ),
