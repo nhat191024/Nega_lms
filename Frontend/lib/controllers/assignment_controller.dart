@@ -2,7 +2,8 @@ import 'package:nega_lms/utils/imports.dart';
 
 class AssignmentController extends GetxController {
   RxBool isLoading = true.obs;
-  RxInt assignmentId = 0.obs;
+  RxString assignmentId = ''.obs;
+  RxString classId = ''.obs;
   RxString token = "".obs;
   RxString assignmentTitle = 'test'.obs;
   RxInt assignmentDuration = 0.obs;
@@ -27,17 +28,19 @@ class AssignmentController extends GetxController {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (!await Token.checkToken()) return;
       token.value = await Token.getToken();
-      assignmentId.value = Get.arguments ?? 1; // remove this line after finish testing
-      await fetchAssignment(assignmentId.value);
+      final arguments = Get.arguments as Map<String, dynamic>;
+      assignmentId.value = arguments['assignment_id'].toString();
+      classId.value = arguments['class_id'].toString();
+      await fetchAssignment(assignmentId.value, classId.value);
     });
   }
 
-  fetchAssignment(id) async {
+  fetchAssignment(assignmentId, classId) async {
     try {
       isLoading(true);
-      String url = "${Api.server}assignment/detail/$id";
+      String url = "${Api.server}assignment/detail/$assignmentId/$classId";
       var response = await get(Uri.parse(url), headers: {
-        'Authorization': 'Bearer ${Api.testToken}',
+        'Authorization': 'Bearer $token',
       }).timeout(const Duration(seconds: 10));
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body)['assignment'];
@@ -72,12 +75,6 @@ class AssignmentController extends GetxController {
     } finally {
       isLoading(false);
     }
-  }
-
-  void loadAssignment(String id) {
-    Get.toNamed("/do-assignment/$id");
-    // assignmentId = id;
-    fetchAssignment(id);
   }
 
   void loadChoiceToAnswerList() {
