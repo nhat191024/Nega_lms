@@ -5,6 +5,8 @@ class CustomTextField extends StatelessWidget {
   final Color labelColor;
   final double labelSize;
   final TextInputType? keyboardType;
+  final int minLines;
+  final int maxLines;
   final double leftPadding;
   final double rightPadding;
   final double topPadding;
@@ -30,6 +32,8 @@ class CustomTextField extends StatelessWidget {
     required this.labelText,
     this.labelColor = CustomColors.secondaryText,
     this.labelSize = 14,
+    this.minLines = 1,
+    this.maxLines = 1,
     this.keyboardType,
     this.leftPadding = 20,
     this.rightPadding = 20,
@@ -84,6 +88,8 @@ class CustomTextField extends StatelessWidget {
             width: width,
             child: Obx(
               () => TextField(
+                maxLines: maxLines,
+                minLines: minLines,
                 obscureText: obscureText.value,
                 keyboardType: keyboardType,
                 controller: controller,
