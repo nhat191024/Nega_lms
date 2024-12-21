@@ -24,8 +24,8 @@ class Pages {
       binding: ClassBinding(),
     ),
     GetPage(
-      name: _Paths.assignmentListPage,
-      page: () => const AssignmentListScreen(),
+      name: _Paths.classDetailScreen,
+      page: () => const ClassDetailScreen(),
       binding: AssignmentBinding(),
     ),
     GetPage(
