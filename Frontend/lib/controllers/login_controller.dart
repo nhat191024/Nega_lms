@@ -46,6 +46,7 @@ class LoginController extends GetxController {
           StorageService.writeStringData(key: "username", value: data["username"]);
           StorageService.writeStringData(key: "avatar", value: data["avatar"]);
           StorageService.writeStringData(key: "isLogin", value: "true");
+          StorageService.writeStringData(key: "role", value: data["role"]);
           Get.offAllNamed(Routes.classListPage);
         } else if (response.statusCode == 401) {
           Get.dialog(
