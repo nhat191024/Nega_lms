@@ -25,8 +25,8 @@ class Pages {
     ),
     GetPage(
       name: _Paths.classDetailScreen,
-      page: () => const ClassDetailScreen(),
-      binding: AssignmentBinding(),
+      page: () => const ClassDetailTab(),
+      binding: ClassDetailBinding(),
     ),
     GetPage(
       name: _Paths.doAssignmentScreen,
