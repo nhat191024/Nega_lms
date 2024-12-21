@@ -99,7 +99,7 @@ class ClassDetailScreen extends GetView<ClassDetailController> {
               const SizedBox(width: 20),
               CustomButton(
                 onTap: () {
-                  Get.toNamed(Routes.doAssignmentScreen, arguments: id);
+                  Get.toNamed(Routes.doAssignmentScreen, arguments: {'assignment_id': id, 'class_id': controller.classId.value});
                 },
                 btnText: 'Làm bài tập',
                 btnColor: CustomColors.primary,
