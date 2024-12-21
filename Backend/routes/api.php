@@ -43,7 +43,7 @@ Route::prefix('assignment')->group(function () {
     });
     Route::middleware(['auth:sanctum', 'ability:student'])->group(function () {
         Route::get('{class_id}', [AssignmentController::class, 'GetAssignmentByClassId']);
-        Route::get('detail/{id}', [AssignmentController::class, 'getAssignment'])->name('get');
+        Route::get('detail/{id}/{class_id}', [AssignmentController::class, 'getAssignment']);
         Route::post('submit', [AssignmentController::class, 'submitAssignment'])->name('submit');
     });
 });
