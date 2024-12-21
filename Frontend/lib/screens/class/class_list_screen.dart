@@ -18,7 +18,7 @@ class ClassListScreen extends GetView<ClassController> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         toolbarHeight: 80,
-        title: NavBar(),
+        // title: NavBar(),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -152,7 +152,7 @@ class ClassListScreen extends GetView<ClassController> {
       child: Column(
         children: [
           GestureDetector(
-            onTap: () => Get.toNamed(Routes.assignmentListPage, arguments: id),
+            onTap: () => Get.toNamed(Routes.classDetailScreen, arguments: id),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
