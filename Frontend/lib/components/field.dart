@@ -114,6 +114,20 @@ class CustomTextField extends StatelessWidget {
                       width: 1,
                     ),
                   ),
+                  focusedErrorBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(14),
+                    borderSide: const BorderSide(
+                      color: CustomColors.errorMain,
+                      width: 1,
+                    ),
+                  ),
+                  errorBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(14),
+                    borderSide: const BorderSide(
+                      color: CustomColors.errorMain,
+                      width: 1,
+                    ),
+                  ),
                   errorText: needErrorText
                       ? isError.value
                           ? errorText
@@ -425,6 +439,20 @@ class SelectBox extends StatelessWidget {
                       width: 1,
                     ),
                   ),
+                  focusedErrorBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(14),
+                    borderSide: const BorderSide(
+                      color: CustomColors.errorMain,
+                      width: 1,
+                    ),
+                  ),
+                  errorBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(14),
+                    borderSide: const BorderSide(
+                      color: CustomColors.errorMain,
+                      width: 1,
+                    ),
+                  ),
                   errorText: needErrorText
                       ? isError.value
                           ? errorText
@@ -606,6 +634,20 @@ class DateTimeField extends StatelessWidget {
                     borderRadius: BorderRadius.circular(14),
                     borderSide: BorderSide(
                       color: isError.value ? CustomColors.errorMain : CustomColors.dividers,
+                      width: 1,
+                    ),
+                  ),
+                  focusedErrorBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(14),
+                    borderSide: const BorderSide(
+                      color: CustomColors.errorMain,
+                      width: 1,
+                    ),
+                  ),
+                  errorBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(14),
+                    borderSide: const BorderSide(
+                      color: CustomColors.errorMain,
                       width: 1,
                     ),
                   ),
