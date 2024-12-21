@@ -3,6 +3,7 @@ import 'package:nega_lms/utils/imports.dart';
 class CustomTextField extends StatelessWidget {
   final String labelText;
   final Color labelColor;
+  final double labelSize;
   final TextInputType? keyboardType;
   final double leftPadding;
   final double rightPadding;
@@ -28,6 +29,7 @@ class CustomTextField extends StatelessWidget {
     super.key,
     required this.labelText,
     this.labelColor = CustomColors.secondaryText,
+    this.labelSize = 14,
     this.keyboardType,
     this.leftPadding = 20,
     this.rightPadding = 20,
@@ -61,7 +63,7 @@ class CustomTextField extends StatelessWidget {
             text: TextSpan(
               text: labelText,
               style: TextStyle(
-                fontSize: 14,
+                fontSize: labelSize,
                 fontFamily: FontStyleTextStrings.bold,
                 color: labelColor,
               ),
@@ -294,10 +296,145 @@ class CheckBoxField extends StatelessWidget {
           const SizedBox(width: 10),
           Text(
             title,
-            style: TextStyle(
-              fontSize: textSize,
-              color: CustomColors.primaryText,
-              fontFamily: fontFamily
+            style: TextStyle(fontSize: textSize, color: CustomColors.primaryText, fontFamily: fontFamily),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class SelectBox extends StatelessWidget {
+  final String labelText;
+  final Color labelColor;
+  final double labelSize;
+  final double leftPadding;
+  final double rightPadding;
+  final double topPadding;
+  final double bottomPadding;
+  final double border;
+  final String hintText;
+  final Color hintTextColor;
+  final String errorText;
+  final RxBool isError;
+  final bool needErrorText;
+  final bool? isRequire;
+  final Color backgroundColor;
+  final double? width;
+  final List<DropdownMenuItem<dynamic>> items;
+  final dynamic value;
+  final Function(dynamic) onChanged;
+
+  const SelectBox({
+    super.key,
+    required this.labelText,
+    this.labelColor = CustomColors.secondaryText,
+    this.labelSize = 14,
+    this.leftPadding = 20,
+    this.rightPadding = 20,
+    this.topPadding = 0,
+    this.bottomPadding = 0,
+    this.border = 5,
+    required this.hintText,
+    this.hintTextColor = CustomColors.disable,
+    required this.errorText,
+    required this.isError,
+    this.needErrorText = true,
+    this.isRequire = false,
+    this.backgroundColor = CustomColors.background,
+    this.width,
+    required this.items,
+    required this.value,
+    required this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.fromLTRB(leftPadding, topPadding, rightPadding, bottomPadding),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          RichText(
+            text: TextSpan(
+              text: labelText,
+              style: TextStyle(
+                fontSize: labelSize,
+                fontFamily: FontStyleTextStrings.bold,
+                color: labelColor,
+              ),
+              children: isRequire == true
+                  ? [
+                      const TextSpan(
+                        text: '*',
+                        style: TextStyle(
+                          color: Colors.red,
+                        ),
+                      ),
+                    ]
+                  : [],
+            ),
+          ),
+          const SizedBox(height: 5),
+          SizedBox(
+            width: width,
+            child: Obx(
+              () => DropdownButtonFormField(
+                value: value,
+                items: [
+                  DropdownMenuItem(
+                    value: null,
+                    child: Text(
+                      hintText,
+                      style: TextStyle(
+                        color: hintTextColor,
+                        fontSize: 14,
+                        fontFamily: FontStyleTextStrings.regular,
+                      ),
+                    ),
+                  ),
+                  ...items,
+                ],
+                onChanged: onChanged,
+                style: const TextStyle(
+                  color: CustomColors.primaryText,
+                  fontSize: 14,
+                  fontFamily: FontStyleTextStrings.regular,
+                ),
+                decoration: InputDecoration(
+                  hintText: hintText,
+                  hintStyle: TextStyle(color: hintTextColor),
+                  contentPadding: const EdgeInsets.fromLTRB(15, 15, 10, 15),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(border),
+                    borderSide: BorderSide(
+                      color: isError.value ? CustomColors.errorMain : CustomColors.dividers,
+                      width: 1,
+                    ),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(14),
+                    borderSide: BorderSide(
+                      color: isError.value ? CustomColors.errorMain : CustomColors.dividers,
+                      width: 1,
+                    ),
+                  ),
+                  errorText: needErrorText
+                      ? isError.value
+                          ? errorText
+                          : null
+                      : null,
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: isError.value ? CustomColors.errorMain : CustomColors.primaryText, width: 1),
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                  filled: backgroundColor == CustomColors.background ? isError.value : true,
+                  fillColor: isError.value ? CustomColors.errorLight : backgroundColor,
+                ),
+                icon: const Icon(Icons.arrow_drop_down),
+                isExpanded: true,
+                dropdownColor: Colors.white,
+              ),
             ),
           ),
         ],
