@@ -9,6 +9,7 @@ export 'package:nega_lms/screens/home_screen.dart';
 export 'package:nega_lms/screens/login_screen.dart';
 export 'package:nega_lms/screens/class/class_list_screen.dart';
 export 'package:nega_lms/screens/class/class_detail_screen.dart';
+export 'package:nega_lms/screens/class/class_detail_tab.dart';
 export 'package:nega_lms/screens/assignment/assignment_detail_screen.dart';
 export 'package:nega_lms/screens/assignment/do_assignment_screen.dart';
 
@@ -25,6 +26,7 @@ export 'package:nega_lms/controllers/assignment_controller.dart';
 export 'package:nega_lms/bindings/home_binding.dart';
 export 'package:nega_lms/bindings/login_binding.dart';
 export 'package:nega_lms/bindings/class_binding.dart';
+export 'package:nega_lms/bindings/class_detail_binding.dart';
 export 'package:nega_lms/bindings/assignment_binding.dart';
 
 //utils imports
