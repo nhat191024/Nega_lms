@@ -1,80 +1,37 @@
 import 'package:nega_lms/utils/imports.dart';
 
-class ClassDetailScreen extends GetView<AssignmentController> {
+class ClassDetailScreen extends GetView<ClassDetailController> {
   const ClassDetailScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final ValueNotifier<bool> isCollapsed = ValueNotifier<bool>(true);
-
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        toolbarHeight: 80,
-        titleSpacing: 0,
-        title: NavBar(
-          onMenuPressed: () {
-            isCollapsed.value = !isCollapsed.value;
-          },
-          showMenuButton: true,
-        ),
-      ),
-      body: Row(
+      body: Column(
         children: [
-          ValueListenableBuilder<bool>(
-            valueListenable: isCollapsed,
-            builder: (context, value, child) {
-              return SideBar(isCollapsed: value);
-            },
-          ),
           Expanded(
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(100, 60, 200, 0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Expanded(
-                              child: Column(
-                                children: [
-                                  Obx(() => SizedBox(
-                                        height: Get.height * 0.8,
-                                        child: controller.isLoading.value
-                                            ? const Center(
-                                                child: CircularProgressIndicator(),
-                                              )
-                                            : ListView.builder(
-                                                shrinkWrap: true,
-                                                physics: const AlwaysScrollableScrollPhysics(),
-                                                itemCount: controller.assignmentList.length,
-                                                itemBuilder: (context, index) {
-                                                  return classCardBuilder(
-                                                    controller.assignmentList[index].name ?? '',
-                                                    controller.assignmentList[index].description ?? '',
-                                                    ["Lập trình"],
-                                                    10,
-                                                    index == controller.assignmentList.length - 1,
-                                                    // controller.assignmentList[index].id.toString(),
-                                                    '1',
-                                                  );
-                                                },
-                                              ),
-                                      )),
-                                ],
-                              ),
-                            ),
-                          ],
-                        )
-                      ],
-                    ),
-                  ),
-                ],
+            child: Obx(
+              () => SizedBox(
+                height: Get.height * 0.8,
+                child: controller.isLoading.value
+                    ? const Center(
+                        child: CircularProgressIndicator(),
+                      )
+                    : ListView.builder(
+                        shrinkWrap: true,
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        itemCount: controller.assignmentList.length,
+                        itemBuilder: (context, index) {
+                          return classCardBuilder(
+                            controller.assignmentList[index].name ?? '',
+                            controller.assignmentList[index].description ?? '',
+                            ["Lập trình"],
+                            10,
+                            index == controller.assignmentList.length - 1,
+                            // controller.assignmentList[index].id.toString(),
+                            '1',
+                          );
+                        },
+                      ),
               ),
             ),
           ),
