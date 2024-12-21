@@ -17,11 +17,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/token-check', [LoginController::class, 'tokenCheck']);
 });
 
-// Admin routes
-Route::middleware(['auth:sanctum', 'ability:admin'])->group(function () {
-    // Add admin-specific routes here
-});
-
 // Teacher routes
 Route::group(['middleware' => ['auth:sanctum', 'ability:teacher']], function () {
     // Add teacher-specific routes here
@@ -31,6 +26,7 @@ Route::group(['middleware' => ['auth:sanctum', 'ability:teacher']], function () 
 Route::group(['middleware' => ['auth:sanctum', 'ability:student']], function () {
     Route::prefix('classes')->group(function () {
         Route::get('/', [ClassController::class, 'index']);
+        Route::get('/{id}', [ClassController::class, 'getClassById']);
         Route::get('/student-class', [ClassController::class, 'getStudentClasses']);
         Route::get('/join/{classId}', [ClassController::class, 'joinClass']);
         Route::get('/search/{classCode}', [ClassController::class, 'searchClassByCode']);

@@ -35,6 +35,20 @@ class ClassController extends Controller
         ], Response::HTTP_OK);
     }
 
+    public function getClassById($id)
+    {
+        $class = Classes::where('id', $id)->with('teacher')->first();
+
+        return response()->json([
+            'id' => $class->id,
+            'code' => $class->class_code,
+            'name' => $class->class_name,
+            'description' => $class->class_description,
+            'teacherName' => $class->teacher ? $class->teacher->name : 'Chưa có giáo viên',
+            'createdAt' => $class->created_at
+        ], Response::HTTP_OK);
+    }
+
     public function getStudentClasses()
     {
         $user = Auth::user();
