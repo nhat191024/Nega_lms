@@ -7,16 +7,18 @@ export 'package:flutter/material.dart';
 //screen imports
 export 'package:nega_lms/screens/home_screen.dart';
 export 'package:nega_lms/screens/login_screen.dart';
-export 'package:nega_lms/screens/class_list_screen.dart';
-export 'package:nega_lms/screens/assignment/assignment_list_screen.dart';
+export 'package:nega_lms/screens/class/class_list_screen.dart';
+export 'package:nega_lms/screens/class/class_detail_screen.dart';
 export 'package:nega_lms/screens/assignment/assignment_detail_screen.dart';
 export 'package:nega_lms/screens/assignment/do_assignment_screen.dart';
 
 //controller imports
+export 'package:nega_lms/controllers/nav_controller.dart';
 export 'package:nega_lms/controllers/splash_controller.dart';
 export 'package:nega_lms/controllers/home_controller.dart';
 export 'package:nega_lms/controllers/login_controller.dart';
 export 'package:nega_lms/controllers/class_controller.dart';
+export 'package:nega_lms/controllers/class_detail_controller.dart';
 export 'package:nega_lms/controllers/assignment_controller.dart';
 
 //binding imports
