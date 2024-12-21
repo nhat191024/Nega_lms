@@ -14,6 +14,7 @@ use App\Models\Assignment;
 use App\Models\Choice;
 use App\Models\Question;
 use App\Models\Answer;
+use App\Models\Classes;
 
 class AssignmentController extends Controller
 {
@@ -179,9 +180,10 @@ class AssignmentController extends Controller
         // ], Response::HTTP_OK);
     }
 
-    public function getAssignment($id)
+    public function getAssignment($id, $class_id)
     {
-        $assignment = Assignment::with(['creator', 'questions.choices'])->find($id);
+        $class = Classes::find($class_id)::with('homeworks', 'homeworks.assignment', 'homeworks.assignment.questions', 'homeworks.assignment.questions.choices')->first();
+        $assignment = $class->homeworks->where('assignment_id', $id)->first();
 
         if (!$assignment) {
             return response()->json(
@@ -194,13 +196,13 @@ class AssignmentController extends Controller
 
         $response = [
             'id' => $assignment->id,
-            'creatorName' => $assignment->creator ? $assignment->creator->name : null,
-            'name' => $assignment->title,
-            'description' => $assignment->description,
+            'creatorName' => $assignment->assignment->creator ? $assignment->assignment->creator->name : null,
+            'name' => $assignment->assignment->title,
+            'description' => $assignment->assignment->description,
             'duration' => $assignment->duration,
-            'startDate' => $assignment->start_date,
-            'dueDate' => $assignment->due_date,
-            'questions' => $assignment->questions->map(function ($question) {
+            'startDate' => $assignment->start_datetime,
+            'dueDate' => $assignment->due_datetime,
+            'questions' => $assignment->assignment->questions->map(function ($question) {
                 return [
                     'id' => $question->id,
                     'question' => $question->question,
