@@ -29,8 +29,8 @@ class Classes extends Model
         return $this->hasMany(Enrollment::class, 'class_id');
     }
 
-    public function assignments()
+    public function homeworks()
     {
-        return $this->hasMany(Assignment::class);
+        return $this->hasMany(Homework::class, 'class_id');
     }
 }
