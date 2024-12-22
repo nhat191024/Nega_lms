@@ -43,71 +43,65 @@ class AssignmentController extends Controller
     public function CreateAssignment(Request $request)
     {
         $rules = [
+            //assignment
+            'title' => 'string',
+            'description' => 'string',
+            'status' => 'in:closed,published,private,draft',
+            'level' => 'string',
+            'totalScore' => 'integer',
+            'specialized' => 'string',
+            'subject' => 'string',
+            'topic' => 'string',
+            //question
+            'questions' => 'array',
+            'questions.*.question' => 'string',
+            'questions.*.score' => 'integer',
+            'questions.*.choices' => 'array',
+            'questions.*.choices.*.choice' => 'string',
+            'questions.*.choices.*.is_correct' => 'boolean',
+            //homework
             'class_id' => 'required|integer',
-            'creator_id' => 'required|integer',
-            'name' => 'required|string',
-            'description' => 'nullable|string',
-            'status' => 'required|in:closed,published,private,draft',
-            'level' => 'required|string',
-            'duration' => 'required|date_format:H:i:s',
-            'totalScore' => 'required|integer',
-            'specialized' => 'required|string',
-            'subject' => 'required|string',
-            'topic' => 'required|string',
-            'start_date' => 'required|date_format:Y-m-d H:i:s',
-            'due_date' => 'required|date_format:Y-m-d H:i:s',
+            'type' => 'required|in:homework,quiz',
+            'title' => 'string',
+            'link' => 'string',
+            'start_datetime' => 'required|String',
+            'due_datetime' => 'required|String',
+            'duration' => 'required|integer',
             'auto_grade' => 'required|boolean',
-            'questions' => 'required|array',
-            'questions.*.question' => 'required|string',
-            'questions.*.duration' => 'required|string',
-            'questions.*.score' => 'required|integer',
-            'questions.*.choices' => 'required|array',
-            'questions.*.choices.*.choice' => 'required|string',
-            'questions.*.choices.*.is_correct' => 'required|boolean',
+            'status' => 'required|integer',
         ];
 
         $messages = [
-            'class_id.required' => 'Trường class_id là bắt buộc.',
-            'class_id.integer' => 'Trường class_id phải là một số nguyên.',
-            'creator_id.required' => 'Trường creator_id là bắt buộc.',
-            'creator_id.integer' => 'Trường creator_id phải là một số nguyên.',
-            'name.required' => 'Trường tên là bắt buộc.',
-            'name.string' => 'Trường tên phải là chuỗi ký tự.',
-            'description.string' => 'Trường mô tả phải là chuỗi ký tự.',
-            'status.required' => 'Trường trạng thái là bắt buộc.',
-            'status.in' => 'Trường trạng thái phải là một trong các giá trị: closed, published, private, draft.',
-            'level.required' => 'Trường cấp độ là bắt buộc.',
-            'level.string' => 'Trường cấp độ phải là chuỗi ký tự.',
-            'duration.required' => 'Trường thời lượng là bắt buộc.',
-            'duration.date_format' => 'Trường thời lượng phải theo định dạng HH:mm:ss.',
-            'totalScore.required' => 'Trường tổng điểm là bắt buộc.',
-            'totalScore.integer' => 'Trường tổng điểm phải là một số nguyên.',
-            'specialized.required' => 'Trường chuyên ngành là bắt buộc.',
-            'specialized.string' => 'Trường chuyên ngành phải là chuỗi ký tự.',
-            'subject.required' => 'Trường môn học là bắt buộc.',
-            'subject.string' => 'Trường môn học phải là chuỗi ký tự.',
-            'topic.required' => 'Trường chủ đề là bắt buộc.',
-            'topic.string' => 'Trường chủ đề phải là chuỗi ký tự.',
-            'start_date.required' => 'Trường ngày bắt đầu là bắt buộc.',
-            'start_date.date_format' => 'Trường ngày bắt đầu phải theo định dạng Y-m-d H:i:s.',
-            'due_date.required' => 'Trường ngày kết thúc là bắt buộc.',
-            'due_date.date_format' => 'Trường ngày kết thúc phải theo định dạng Y-m-d H:i:s.',
-            'auto_grade.required' => 'Trường tự động chấm điểm là bắt buộc.',
-            'auto_grade.boolean' => 'Trường tự động chấm điểm phải là giá trị boolean.',
-            'questions.required' => 'Trường câu hỏi là bắt buộc.',
-            'questions.array' => 'Trường câu hỏi phải là một mảng.',
-            'questions.*.question.required' => 'Câu hỏi là bắt buộc.',
-            'questions.*.question.string' => 'Câu hỏi phải là chuỗi ký tự.',
-            'questions.*.duration.required' => 'Thời lượng câu hỏi là bắt buộc.',
-            'questions.*.duration.string' => 'Thời lượng câu hỏi phải là chuỗi ký tự.',
-            'questions.*.score.required' => 'Điểm câu hỏi là bắt buộc.',
-            'questions.*.score.integer' => 'Điểm câu hỏi phải là một số nguyên.',
-            'questions.*.choices.required' => 'Danh sách các lựa chọn là bắt buộc.',
-            'questions.*.choices.array' => 'Danh sách các lựa chọn phải là một mảng.',
-            'questions.*.choices.*.choice.required' => 'Nội dung lựa chọn là bắt buộc.',
-            'questions.*.choices.*.choice.string' => 'Nội dung lựa chọn phải là chuỗi ký tự.',
-            'questions.*.choices.*.is_correct.required' => 'Trạng thái đúng/sai của lựa chọn là bắt buộc.',
-            'questions.*.choices.*.is_correct.boolean' => 'Trạng thái đúng/sai của lựa chọn phải là giá trị boolean.',
+            'title.string' => 'title phải là chuỗi',
+            'description.string' => 'description phải là chuỗi',
+            'status.in' => 'status phải là closed, published, private hoặc draft',
+            'level.string' => 'level phải là chuỗi',
+            'totalScore.integer' => 'totalScore phải là số nguyên',
+            'specialized.string' => 'specialized phải là chuỗi',
+            'subject.string' => 'subject phải là chuỗi',
+            'topic.string' => 'topic phải là chuỗi',
+            'questions.array' => 'questions phải là mảng',
+            'questions.*.question.string' => 'questions.*.question phải là chuỗi',
+            'questions.*.score.integer' => 'questions.*.score phải là số nguyên',
+            'questions.*.choices.array' => 'questions.*.choices phải là mảng',
+            'questions.*.choices.*.choice.string' => 'questions.*.choices.*.choice phải là chuỗi',
+            'questions.*.choices.*.is_correct.boolean' => 'questions.*.choices.*.is_correct phải là boolean',
+            'class_id.required' => 'class_id không được để trống',
+            'class_id.integer' => 'class_id phải là số nguyên',
+            'type.required' => 'type không được để trống',
+            'type.in' => 'type phải là homework hoặc quiz',
+            'title.string' => 'title phải là chuỗi',
+            'link.string' => 'link phải là chuỗi',
+            'start_datetime.required' => 'start_datetime không được để trống',
+            'start_datetime.string' => 'start_datetime phải là chuỗi',
+            'due_datetime.required' => 'due_datetime không được để trống',
+            'due_datetime.string' => 'due_datetime phải là chuỗi',
+            'duration.required' => 'duration không được để trống',
+            'duration.integer' => 'duration phải là số nguyên',
+            'auto_grade.required' => 'auto_grade không được để trống',
+            'auto_grade.boolean' => 'auto_grade phải là boolean',
+            'status.required' => 'status không được để trống',
+            'status.integer' => 'status phải là số nguyên',
         ];
 
         $validated = Validator::make($request->all(), $rules, $messages);
@@ -117,39 +111,51 @@ class AssignmentController extends Controller
             ], Response::HTTP_BAD_REQUEST);
         }
 
-        $assignment = Assignment::create([
-            'class_id' => $request->input('class_id'),
-            'creator_id' => $request->input('creator_id'),
-            'name' => $request->input('name'),
-            'description' => $request->input('description'),
-            'status' => $request->input('status'),
-            'level' => $request->input('level'),
-            'duration' => $request->input('duration'),
-            'totalScore' => $request->input('totalScore'),
-            'specialized' => $request->input('specialized'),
-            'subject' => $request->input('subject'),
-            'topic' => $request->input('topic'),
-            'start_date' => $request->input('start_date'),
-            'due_date' => $request->input('due_date'),
-            'auto_grade' => $request->input('auto_grade'),
-        ]);
+        $user = Auth::user();
 
-        foreach ($request->input('questions') as $questionData) {
-            $question = Question::create([
-                'assignment_id' => $assignment->id,
-                'question' => $questionData['question'],
-                'duration' => $questionData['duration'],
-                'score' => $questionData['score'],
+        if ($request->input('title') != null) {
+            $assignment = Assignment::create([
+                'creator_id' => $user->id,
+                'title' => $request->input('title'),
+                'description' => $request->input('description'),
+                'status' => $request->input('status'),
+                'level' => $request->input('level'),
+                'totalScore' => $request->input('totalScore'),
+                'specialized' => $request->input('specialized'),
+                'subject' => $request->input('subject'),
+                'topic' => $request->input('topic'),
             ]);
 
-            foreach ($questionData['choices'] as $choiceData) {
-                Choice::create([
-                    'question_id' => $question->id,
-                    'choice' => $choiceData['choice'],
-                    'is_correct' => $choiceData['is_correct'],
+            foreach ($request->input('questions') as $questionData) {
+                $question = Question::create([
+                    'assignment_id' => $assignment->id,
+                    'question' => $questionData['question'],
+                    'duration' => "00:00:00",
+                    'score' => $questionData['score'],
                 ]);
+
+                foreach ($questionData['choices'] as $choiceData) {
+                    Choice::create([
+                        'question_id' => $question->id,
+                        'choice' => $choiceData['choice'],
+                        'is_correct' => $choiceData['is_correct'],
+                    ]);
+                }
             }
         }
+
+        $homework = new Homework();
+        $homework->class_id = $request->input('class_id');
+        $homework->assignment_id = $assignment ? $assignment->id : null;
+        $homework->type = $request->input('type');
+        $homework->link = $request->input('link') ?? null;
+        $homework->title = $request->input('title') ?? null;
+        $homework->start_datetime = $request->input('start_datetime');
+        $homework->due_datetime = $request->input('due_datetime');
+        $homework->duration = $request->input('duration');
+        $homework->auto_grade = $request->input('auto_grade');
+        $homework->status = $request->input('status');
+        $homework->save();
 
         return response()->json([
             'message' => 'Tạo đề thi thành công',
