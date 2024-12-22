@@ -24,14 +24,15 @@ class AssignmentController extends Controller
 
         $assignments = $homeworks->map(function ($homework) {
             return [
-                'id' => $homework->assignment->id,
-                'name' => $homework->assignment->title,
-                'description' => $homework->assignment->description,
-                'level' => $homework->assignment->level,
-                'totalScore' => $homework->assignment->totalScore,
-                'specialized' => $homework->assignment->specialized,
-                'subject' => $homework->assignment->subject,
-                'topic' => $homework->assignment->topic,
+                'id' => $homework->assignment ? $homework->assignment->id : $homework->id,
+                'name' => $homework->assignment ? $homework->assignment->title : $homework->title,
+                'description' => $homework->assignment ? $homework->assignment->description : $homework->description,
+                'level' => $homework->assignment ? $homework->assignment->level : "Không có",
+                'totalScore' => $homework->assignment ? $homework->assignment->totalScore : $homework->score,
+                'specialized' => $homework->assignment ? $homework->assignment->specialized : "Không có",
+                'subject' => $homework->assignment ?  $homework->assignment->subject : "Không có",
+                'topic' => $homework->assignment ? $homework->assignment->topic : "Không có",
+                'type' => $homework->type,
             ];
         });
 
