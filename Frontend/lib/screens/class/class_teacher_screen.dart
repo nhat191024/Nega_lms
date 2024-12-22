@@ -1051,6 +1051,46 @@ class ClassTeacherScreen extends GetView<ClassDetailController> {
                             }
                           },
                         ),
+                        const SizedBox(height: 20),
+                        const Text(
+                          "Kho bài tập",
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: CustomColors.primary,
+                            fontFamily: FontStyleTextStrings.medium,
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+                          child: GridView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              crossAxisSpacing: 30,
+                              mainAxisSpacing: 30,
+                              childAspectRatio: 7 / 2,
+                            ),
+                            itemCount: controller.assignmentListForTeacher.length,
+                            itemBuilder: (context, index) {
+                              return assignmentCardBuilder(
+                                controller.assignmentListForTeacher[index].name ?? '',
+                                controller.assignmentListForTeacher[index].description ?? '',
+                                controller.assignmentListForTeacher[index].creator ?? '',
+                                controller.assignmentListForTeacher[index].isCreator ?? false,
+                                controller.assignmentListForTeacher[index].createAt ?? '',
+                                controller.assignmentListForTeacher[index].totalQuestion ?? 0,
+                                [
+                                  controller.assignmentListForTeacher[index].level ?? '',
+                                  controller.assignmentListForTeacher[index].specialized ?? '',
+                                  controller.assignmentListForTeacher[index].topic ?? '',
+                                ],
+                                controller.assignmentListForTeacher[index].id.toString(),
+                              );
+                            },
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -1060,6 +1100,130 @@ class ClassTeacherScreen extends GetView<ClassDetailController> {
           ),
         );
       },
+    );
+  }
+
+  Widget assignmentCardBuilder(
+    String title,
+    String description,
+    String creator,
+    bool isCreator,
+    String createAt,
+    int totalQuestion,
+    List<String> tags,
+    String id,
+  ) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+      decoration: BoxDecoration(
+        color: CustomColors.white,
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: [
+          BoxShadow(
+            color: CustomColors.primaryText.withOpacity(0.5),
+            offset: const Offset(0, 2),
+            blurRadius: 5,
+          ),
+        ],
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 16,
+                  color: CustomColors.primaryText,
+                  fontFamily: FontStyleTextStrings.medium,
+                ),
+              ),
+              const SizedBox(height: 5),
+              SizedBox(
+                width: Get.width * 0.2,
+                child: Text(
+                  description,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    color: CustomColors.secondaryText,
+                    fontFamily: FontStyleTextStrings.regular,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 5),
+              Text(
+                "Số câu: ${totalQuestion.toString()}",
+                style: const TextStyle(
+                  fontSize: 14,
+                  color: CustomColors.secondaryText,
+                  fontFamily: FontStyleTextStrings.regular,
+                ),
+              ),
+              const SizedBox(height: 5),
+              Text(
+                "Người tạo: ${isCreator ? "Bạn" : creator}",
+                style: const TextStyle(
+                  fontSize: 14,
+                  color: CustomColors.secondaryText,
+                  fontFamily: FontStyleTextStrings.regular,
+                ),
+              ),
+              const SizedBox(height: 5),
+              Text(
+                "Ngày tạo: $createAt",
+                style: const TextStyle(
+                  fontSize: 14,
+                  color: CustomColors.secondaryText,
+                  fontFamily: FontStyleTextStrings.regular,
+                ),
+              ),
+              const Spacer(),
+              Wrap(
+                children: tags
+                    .map(
+                      (tag) => Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                        margin: const EdgeInsets.only(right: 10),
+                        decoration: BoxDecoration(
+                          color: CustomColors.primary,
+                          borderRadius: BorderRadius.circular(50),
+                        ),
+                        child: Text(
+                          tag,
+                          style: const TextStyle(
+                            fontSize: 12,
+                            color: CustomColors.background,
+                            fontFamily: FontStyleTextStrings.medium,
+                          ),
+                        ),
+                      ),
+                    )
+                    .toList(),
+              ),
+            ],
+          ),
+          const SizedBox(width: 20),
+          Obx(
+            () => CustomButton(
+              onTap: () {
+                if (controller.selectedAssignment.value == id) {
+                  controller.selectedAssignment.value = '';
+                } else {
+                  controller.selectedAssignment.value = id;
+                }
+              },
+              btnText: controller.selectedAssignment.value == id ? 'Bỏ Chọn' : 'Chọn',
+              btnColor: CustomColors.primary,
+              width: 140,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
