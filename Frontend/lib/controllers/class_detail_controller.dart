@@ -568,8 +568,39 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
     }
   }
 
-  void updateQuiz() async {
+  void updateQuiz(String id, String type) async {
+    if (!validateQuiz()) return;
+    var uri = Uri.parse("${Api.server}assignment/update");
+    var response = MultipartRequest('POST', uri);
+    response.headers['Authorization'] = 'Bearer $token';
+    response.headers['Content-Type'] = 'application/json';
+    response.headers['Accept'] = 'application/json';
 
+    response.fields['id'] = id;
+    response.fields['start_datetime'] = assignmentStartDate.text.trim();
+    response.fields['due_datetime'] = assignmentDueDate.text.trim();
+    response.fields['duration'] = assignmentDuration.text.trim();
+    response.fields['status'] = assignmentStatus.value == 'true' ? 1.toString() : 0.toString();
+    if (type == 'quiz') {
+      response.fields['assignment_id'] = selectedAssignment.value;
+      response.fields['auto_grade'] = assignmentAutoGrade.value == 'true' ? 1.toString() : 0.toString();
+    } else {
+      response.fields['title'] = assignmentName.text.trim();
+      response.fields['score'] = homeworkScore.text.trim();
+      response.fields['description'] = assignmentDescription.text.trim();
+    }
+
+    var streamedResponse = await response.send();
+    if (streamedResponse.statusCode == 200) {
+      clear();
+      Get.back();
+      fetchClassAssignment(classId.value);
+      fetchAllClassAssignment(classId.value);
+      fetchAssignmentForTeacher();
+      Get.snackbar("Thành công", "Cập nhật bài tập thành công", maxWidth: Get.width * 0.2);
+    } else {
+      Get.snackbar("Lỗi", "Cập nhật bài tập thất bại", maxWidth: Get.width * 0.2);
+    }
   }
 
   void clear() {
