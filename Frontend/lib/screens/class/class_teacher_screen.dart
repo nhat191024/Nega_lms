@@ -178,8 +178,8 @@ class ClassTeacherScreen extends GetView<ClassDetailController> {
           canPop: true,
           onPopInvokedWithResult: (didPop, result) {
             if (didPop) {
-              Get.back();
               controller.clear();
+              Get.back();
             }
           },
           child: Center(
@@ -610,8 +610,8 @@ class ClassTeacherScreen extends GetView<ClassDetailController> {
           canPop: true,
           onPopInvokedWithResult: (didPop, result) {
             if (didPop) {
-              Get.back();
               controller.clear();
+              Get.back();
             }
           },
           child: Center(
