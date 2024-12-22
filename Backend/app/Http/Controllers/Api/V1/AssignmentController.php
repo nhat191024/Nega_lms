@@ -23,6 +23,15 @@ class AssignmentController extends Controller
         $homeworks = Homework::where('class_id', $class_id)->where('status', 1)->with('assignment')->get();
 
         $assignments = $homeworks->map(function ($homework) {
+            // dd($homework->assignment->answers);
+            $submit = false;
+            if ($homework->type == 'link') {
+                $submit =  $homework->answers->where('user_id', Auth::user()->id)->count() > 0;
+            } else {
+                $homework->assignment->answers == null ? $submit = false : $homework->assignment->answers->where('user_id', Auth::user()->id)->count() > 0;
+            }
+            $answers = Answer::where('user_id', Auth::user()->id)->where('assignment_id', $homework->assignment ? $homework->assignment->id : $homework->id)->get();
+            dd($answers);
             return [
                 'id' => $homework->assignment ? $homework->assignment->id : $homework->id,
                 'name' => $homework->assignment ? $homework->assignment->title : $homework->title,
@@ -33,6 +42,7 @@ class AssignmentController extends Controller
                 'subject' => $homework->assignment ?  $homework->assignment->subject : "Không có",
                 'topic' => $homework->assignment ? $homework->assignment->topic : "Không có",
                 'type' => $homework->type,
+                'isSubmitted' => $submit,
             ];
         });
 
@@ -170,25 +180,32 @@ class AssignmentController extends Controller
 
     public function SubmitAssignment(Request $request)
     {
-        return response()->json([
-            'message' => 'Nộp bài thi thành công',
-        ], Response::HTTP_OK);
-        // $user = Auth::user();
-        // $assignment = Assignment::find($request->assignment_id);
-        // $questions = $assignment->questions;
-        // $answers = Answer::new();
-        // $answers->question_id = $questions->id;
-        // $answers->user_id = $user->id;
-        // foreach ($questions as $question) {
-        //     $choice =  $question->choices;
-        // }
-        // return response()->json([
-        //     $request->
-        // ], Response::HTTP_OK);
-        // return response()->json([
-        //     'message' => 'Nộp bài thi thành công',
-        //     'data' => $answers,
-        // ], Response::HTTP_OK);
+        $user = Auth::user();
+        if ($request->type == 'link') {
+            Answer::create([
+                'user_id' => $user->id,
+                'homework_id' => $request->assignment_id,
+                'link' => $request->link,
+            ]);
+
+            return response()->json([
+                'message' => 'Nộp bài thành công',
+            ], Response::HTTP_OK);
+        } else {
+            $answers = json_decode($request->answers, true);
+            foreach ($answers as $answer) {
+                Answer::create([
+                    'user_id' => $user->id,
+                    'assignment_id' => $request->assignment_id,
+                    'question_id' => $answer['question_id'],
+                    'choice_id' => $answer['choice_id'],
+                ]);
+            }
+
+            return response()->json([
+                'message' => 'Nộp bài thành công',
+            ], Response::HTTP_OK);
+        }
     }
 
     public function getAssignment($id, $class_id)
