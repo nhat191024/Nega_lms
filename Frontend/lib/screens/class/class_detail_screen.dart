@@ -6,36 +6,38 @@ class ClassDetailScreen extends GetView<ClassDetailController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          Expanded(
-            child: Obx(
-              () => SizedBox(
-                height: Get.height * 0.8,
-                child: controller.isLoading.value
-                    ? const Center(
-                        child: CircularProgressIndicator(),
-                      )
-                    : ListView.builder(
-                        shrinkWrap: true,
-                        physics: const AlwaysScrollableScrollPhysics(),
-                        itemCount: controller.assignmentList.length,
-                        itemBuilder: (context, index) {
-                          return classCardBuilder(
-                            controller.assignmentList[index].name ?? '',
-                            controller.assignmentList[index].description ?? '',
-                            ["Lập trình"],
-                            10,
-                            index == controller.assignmentList.length - 1,
-                            // controller.assignmentList[index].id.toString(),
-                            '1',
-                          );
-                        },
-                      ),
+      body: Padding(
+        padding: const EdgeInsets.fromLTRB(60, 20, 60, 0),
+        child: Column(
+          children: [
+            Expanded(
+              child: Obx(
+                () => SizedBox(
+                  height: Get.height * 0.8,
+                  child: controller.isLoading.value
+                      ? const Center(
+                          child: CircularProgressIndicator(),
+                        )
+                      : ListView.builder(
+                          shrinkWrap: true,
+                          physics: const AlwaysScrollableScrollPhysics(),
+                          itemCount: controller.assignmentList.length,
+                          itemBuilder: (context, index) {
+                            return classCardBuilder(
+                              controller.assignmentList[index].name ?? '',
+                              controller.assignmentList[index].description ?? '',
+                              ["Lập trình"],
+                              10,
+                              index == controller.assignmentList.length - 1,
+                              controller.assignmentList[index].id.toString(),
+                            );
+                          },
+                        ),
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
