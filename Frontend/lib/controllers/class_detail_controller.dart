@@ -44,6 +44,7 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
   RxList<Map<String, dynamic>> questions = <Map<String, dynamic>>[].obs;
 
   TextEditingController homeworkScore = TextEditingController();
+  TextEditingController linkSubmit = TextEditingController();
 
   RxBool isAssignmentNameError = false.obs;
   RxBool isAssignmentSubjectError = false.obs;
@@ -58,6 +59,7 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
   RxBool isAssignmentDescriptionError = false.obs;
 
   RxBool isHomeworkScoreError = false.obs;
+  RxBool isLinkSubmitError = false.obs;
 
   RxString assignmentNameError = ''.obs;
   RxString assignmentSubjectError = ''.obs;
@@ -72,6 +74,7 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
   RxString assignmentDescriptionError = ''.obs;
 
   RxString homeworkScoreError = ''.obs;
+  RxString linkSubmitError = ''.obs;
 
   @override
   void onInit() {
