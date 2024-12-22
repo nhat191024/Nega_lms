@@ -42,4 +42,6 @@ Route::prefix('/assignment')->name('assignments.')->group(function () {
     Route::get('/edit/{id}', [AssignmentController::class, 'edit'])->name('edit');
     Route::put('/{id}', [AssignmentController::class, 'update'])->name('update');
     Route::delete('/delete/{id}', [AssignmentController::class, 'destroy'])->name('destroy');
+    Route::get('/assignments/visibility/{id}', [AssignmentController::class, 'toggleVisibility'])
+    ->name('assignments.visibility');
 });

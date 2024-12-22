@@ -8,7 +8,7 @@ class Assignment extends Model
 {
     protected $fillable = [
         'creator_id',
-        'name',
+        'title',
         'description',
         'status',
         'level',
@@ -16,7 +16,7 @@ class Assignment extends Model
         'specialized',
         'subject',
         'topic',
-        'auto_grade',
+        'visibility',
     ];
 
     public function homeworks()

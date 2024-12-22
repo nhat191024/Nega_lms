@@ -58,17 +58,6 @@
     ],
     "homework": [
         {
-            "class_id": 1,
-            "type": "quiz",
-            "assignment_id": 1,
-            "link": null,
-            "start_datetime": "2024-12-31 09:00:00",
-            "due_datetime": "2024-12-31 10:00:00",
-            "duration": 30,
-            "auto_grade": true,
-            "status": 1
-        },
-        {
             "creator_id": 1,
             "title": "Lập trình php",
             "description": "Làm bài tập lập trình php cơ bản",
@@ -78,9 +67,6 @@
             "specialized": "Web",
             "subject": "php cơ bản",
             "topic": "php"
-        },
-        {
-            "creator_id": 1,
             "title": "Lập trình php 2",
             "description": "Làm bài tập lập trình php nâng cao",
             "status": "published",
