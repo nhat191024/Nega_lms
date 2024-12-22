@@ -578,7 +578,12 @@ class ClassTeacherScreen extends GetView<ClassDetailController> {
                           ),
                         ),
                         const SizedBox(height: 20),
-                        CustomButton(onTap: () => controller.createQuiz(), btnText: 'Tạo bài tập', btnColor: CustomColors.primary, width: 200),
+                        CustomButton(
+                          onTap: () => controller.createQuiz(),
+                          btnText: 'Tạo bài tập',
+                          btnColor: CustomColors.primary,
+                          width: 200,
+                        ),
                       ],
                     ),
                   ),
