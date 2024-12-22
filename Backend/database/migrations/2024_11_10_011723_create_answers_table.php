@@ -16,6 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('question_id')->nullable();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('choice_id')->nullable();
+            $table->unsignedBigInteger('assignment_id')->nullable();
             $table->unsignedBigInteger('homework_id')->nullable();
             $table->string('link')->nullable();
             $table->timestamps();
