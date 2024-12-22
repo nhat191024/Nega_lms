@@ -30,6 +30,7 @@ class AssignmentController extends Controller
             $answers = Answer::where('user_id', Auth::user()->id)->where('assignment_id', $homework->assignment ? $homework->assignment->id : $homework->id)->get();
             return [
                 'id' => $homework->assignment ? $homework->assignment->id : $homework->id,
+                'homeworkId' => $homework->id,
                 'creatorName' => $homework->assignment ? $homework->assignment->creator->name : null,
                 'name' => $homework->assignment ? $homework->assignment->title : $homework->title,
                 'description' => $homework->assignment ? $homework->assignment->description : $homework->description,
@@ -284,6 +285,35 @@ class AssignmentController extends Controller
 
         return response()->json([
             'assignment' => $response,
+        ], Response::HTTP_OK);
+    }
+
+    public function getHomeworkByIdToEdit($id)
+    {
+        $homework = Homework::find($id);
+        if (!$homework) {
+            return response()->json(
+                [
+                    'message' => 'Không tìm thấy đề thi.',
+                ],
+                Response::HTTP_NOT_FOUND
+            );
+        }
+
+        $homeworkFormatted = [
+            'title' => $homework->type == 'link' ? $homework->title : null,
+            'score' => $homework->type == 'link' ? $homework->score : null,
+            'description' => $homework->type == 'link' ? $homework->description : null,
+            'duration' => $homework->duration,
+            'autoGrade' => $homework->auto_grade,
+            'startDate' => $homework->start_datetime,
+            'dueDate' => $homework->due_datetime,
+            'status' => $homework->status,
+            'assignmentId' => $homework->assignment_id,
+        ];
+
+        return response()->json([
+            'homework' => $homeworkFormatted,
         ], Response::HTTP_OK);
     }
 }
