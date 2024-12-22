@@ -17,6 +17,7 @@ class AssignmentController extends GetxController {
     startDate: '',
     dueDate: '',
     type: '',
+    isSubmitted: false,
   ).obs;
   RxList<QuestionModel> questionList = <QuestionModel>[].obs;
   RxList<AnswerModel> answerList = <AnswerModel>[].obs;
@@ -71,7 +72,7 @@ class AssignmentController extends GetxController {
         'answers': jsonEncode(answerList.map((e) => e.toMap()).toList()),
       }).timeout(const Duration(seconds: 10));
       if (response.statusCode == 200) {
-        Get.offAllNamed("/assignment-list/$id");
+        Get.toNamed(Routes.classListPage);
       }
     } finally {
       isLoading(false);
