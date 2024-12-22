@@ -670,7 +670,7 @@ class ClassTeacherScreen extends GetView<ClassDetailController> {
                   () => Column(
                     children: [
                       const Text(
-                        "Tạo bài tập",
+                        "Tạo bài tập 1 câu trả lời",
                         style: TextStyle(
                           fontSize: 22,
                           color: CustomColors.primary,
@@ -857,7 +857,7 @@ class ClassTeacherScreen extends GetView<ClassDetailController> {
                               child: Padding(
                                 padding: EdgeInsets.only(top: 15),
                                 child: Text(
-                                  "Tạo bộ câu hỏi",
+                                  "Tạo bài tập từ kho quiz",
                                   style: TextStyle(
                                     fontSize: 22,
                                     color: CustomColors.primary,
