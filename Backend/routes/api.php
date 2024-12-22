@@ -38,10 +38,11 @@ Route::group(['middleware' => ['auth:sanctum', 'ability:student']], function () 
 
 Route::prefix('assignment')->group(function () {
     Route::middleware(['auth:sanctum', 'ability:teacher'])->group(function () {
+        Route::get('/getForTeacher', [AssignmentController::class, 'GetAssignmentForTeacher']);
         Route::post('/create', [AssignmentController::class, 'CreateAssignment']);
     });
     Route::middleware(['auth:sanctum', 'ability:student'])->group(function () {
-        Route::get('{class_id}', [AssignmentController::class, 'GetAssignmentByClassId']);
+        Route::get('{class_id}/{role}', [AssignmentController::class, 'GetAssignmentByClassId']);
         Route::get('detail/{id}/{class_id}', [AssignmentController::class, 'getAssignment']);
         Route::post('submit', [AssignmentController::class, 'submitAssignment'])->name('submit');
     });
