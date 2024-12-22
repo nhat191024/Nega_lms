@@ -69,63 +69,6 @@
             "status": 1
         },
         {
-            "class_id": 1,
-            "type": "quiz",
-            "assignment_id": 2,
-            "link": null,
-            "start_datetime": "2024-12-31 09:00:00",
-            "due_datetime": "2024-12-31 10:00:00",
-            "duration": 30,
-            "auto_grade": true,
-            "status": 1
-        },
-        {
-            "class_id": 2,
-            "type": "quiz",
-            "assignment_id": 3,
-            "link": null,
-            "start_datetime": "2024-12-31 09:00:00",
-            "due_datetime": "2024-12-31 10:00:00",
-            "duration": 30,
-            "auto_grade": true,
-            "status": 1
-        },
-        {
-            "class_id": 2,
-            "type": "quiz",
-            "assignment_id": 4,
-            "link": null,
-            "start_datetime": "2024-12-31 09:00:00",
-            "due_datetime": "2024-12-31 10:00:00",
-            "duration": 30,
-            "auto_grade": true,
-            "status": 1
-        },
-        {
-            "class_id": 3,
-            "type": "quiz",
-            "assignment_id": 5,
-            "link": null,
-            "start_datetime": "2024-12-31 09:00:00",
-            "due_datetime": "2024-12-31 10:00:00",
-            "duration": 30,
-            "auto_grade": true,
-            "status": 1
-        },
-        {
-            "class_id": 3,
-            "type": "quiz",
-            "assignment_id": 6,
-            "link": null,
-            "start_datetime": "2024-12-31 09:00:00",
-            "due_datetime": "2024-12-31 10:00:00",
-            "duration": 30,
-            "auto_grade": true,
-            "status": 1
-        }
-    ],
-    "assignment": [
-        {
             "creator_id": 1,
             "title": "Lập trình php",
             "description": "Làm bài tập lập trình php cơ bản",
