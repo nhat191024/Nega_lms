@@ -16,6 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('class_id');
             $table->enum('type', ['homework', 'quiz']);
             $table->unsignedBigInteger('assignment_id')->nullable();
+            $table->string('title')->nullable();
             $table->string('link')->nullable();
             $table->dateTime('start_datetime')->nullable();
             $table->dateTime('due_datetime')->nullable();
