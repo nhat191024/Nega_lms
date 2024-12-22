@@ -215,6 +215,36 @@ class AssignmentController extends Controller
         ], Response::HTTP_CREATED);
     }
 
+    public function UpdateAssignment(Request $request)
+    {
+        $homework = Homework::find($request->id);
+        if (!$homework) {
+            return response()->json(
+                [
+                    'message' => 'Không tìm thấy đề thi.',
+                ],
+                Response::HTTP_NOT_FOUND
+            );
+        }
+        $homework->start_datetime = $request->start_datetime;
+        $homework->due_datetime = $request->due_datetime;
+        $homework->duration = $request->duration;
+        $homework->status = $request->status;
+        if ($request->type == "quiz") {
+            $homework->assignment_id = $request->assignment_id;
+            $homework->auto_grade = $request->auto_grade;
+        } else {
+            $homework->title = $request->title;
+            $homework->score = $request->score;
+            $homework->description = $request->description;
+        }
+        $homework->save();
+
+        return response()->json([
+            'message' => 'Cập nhật đề thi thành công',
+        ], Response::HTTP_OK);
+    }
+
     public function SubmitAssignment(Request $request)
     {
         $user = Auth::user();
