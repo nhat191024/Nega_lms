@@ -537,14 +537,47 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
     }
   }
 
-  void loadDataToEdit() {}
+  Future loadDataToEdit(String id, String type) async {
+    clear();
+    try {
+      String url = "${Api.server}assignment/get/$id";
+      var response = await get(Uri.parse(url), headers: {
+        'Authorization': 'Bearer $token',
+      }).timeout(const Duration(seconds: 10));
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body);
+        var assignmentData = data['homework'];
+        if (type == 'quiz') {
+          assignmentDuration.text = assignmentData['duration'].toString();
+          assignmentAutoGrade.value = assignmentData['autoGrade'] == 1 ? 'true' : 'false';
+          assignmentStartDate.text = assignmentData['startDate'];
+          assignmentDueDate.text = assignmentData['dueDate'];
+          assignmentStatus.value = assignmentData['status'] == 1 ? 'true' : 'false';
+          selectedAssignment.value = assignmentData['assignmentId'].toString();
+        } else {
+          assignmentName.text = assignmentData['title'];
+          assignmentDuration.text = assignmentData['duration'].toString();
+          homeworkScore.text = assignmentData['score'].toString();
+          assignmentStartDate.text = assignmentData['startDate'];
+          assignmentDueDate.text = assignmentData['dueDate'];
+          assignmentDescription.text = assignmentData['description'];
+        }
+      }
+    } catch (e) {
+      Get.snackbar("Error", "Failed to fetch homework info");
+    }
+  }
+
+  void updateQuiz() async {
+
+  }
 
   void clear() {
     assignmentName.clear();
     isAssignmentNameError.value = false;
     assignmentSubject.clear();
     isAssignmentSubjectError.value = false;
-    assignmentStatus.value = '';
+    assignmentStatus.value = 'true';
     isAssignmentStatusError.value = false;
     assignmentLevel.value = '';
     isAssignmentLevelError.value = false;
@@ -560,7 +593,7 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
     isAssignmentDescriptionError.value = false;
     assignmentDuration.clear();
     isAssignmentDurationError.value = false;
-    assignmentAutoGrade.value = '';
+    assignmentAutoGrade.value = 'true';
     isAssignmentAutoGrade.value = false;
     homeworkScore.clear();
     isHomeworkScoreError.value = false;
