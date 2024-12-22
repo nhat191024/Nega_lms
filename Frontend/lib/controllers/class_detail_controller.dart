@@ -15,29 +15,8 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
   RxInt currentQuestion = 0.obs;
 
   RxList<HomeworkModel> assignmentList = <HomeworkModel>[].obs;
-  Rx<HomeworkModel> assignment = HomeworkModel(
-    id: 0,
-    creatorName: '',
-    name: '',
-    description: '',
-    duration: 0,
-    startDate: '',
-    dueDate: '',
-    type: '',
-    isSubmitted: false,
-  ).obs;
-
+  RxList<HomeworkModel> assignmentsList = <HomeworkModel>[].obs;
   RxList<AssignmentModel> assignmentListForTeacher = <AssignmentModel>[].obs;
-  Rx<AssignmentModel> assignmentForTeacher = AssignmentModel(
-    id: 0,
-    name: '',
-    description: '',
-    level: '',
-    totalScore: 0.0,
-    specialized: '',
-    subject: '',
-    topic: '',
-  ).obs;
 
   RxList<QuestionModel> questionList = <QuestionModel>[].obs;
   RxList<AnswerModel> answerList = <AnswerModel>[].obs;
@@ -101,6 +80,8 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
       classId.value = Get.arguments ?? 1; // remove this line after finish testing
       await fetchClassInfo(classId.value);
       await fetchClassAssignment(classId.value);
+      await fetchAllClassAssignment(classId.value);
+      await fetchAssignmentForTeacher();
     });
     addNewQuestion();
   }
@@ -128,7 +109,7 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
     assignmentList.clear();
     try {
       isLoading(true);
-      String url = "${Api.server}assignment/$id";
+      String url = "${Api.server}assignment/$id/2";
       var response = await get(Uri.parse(url), headers: {
         'Authorization': 'Bearer $token',
       }).timeout(const Duration(seconds: 10));
@@ -139,6 +120,41 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
       }
     } finally {
       isLoading(false);
+    }
+  }
+
+  fetchAllClassAssignment(id) async {
+    assignmentsList.clear();
+    try {
+      isLoading(true);
+      String url = "${Api.server}assignment/$id/1";
+      var response = await get(Uri.parse(url), headers: {
+        'Authorization': 'Bearer $token',
+      }).timeout(const Duration(seconds: 10));
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body);
+        var assignmentData = data['assignments'];
+        assignmentsList.value = (assignmentData as List).map((e) => HomeworkModel.fromMap(e)).toList();
+      }
+    } finally {
+      isLoading(false);
+    }
+  }
+
+  fetchAssignmentForTeacher() async {
+    assignmentListForTeacher.clear();
+    try {
+      String url = "${Api.server}assignment/getForTeacher";
+      var response = await get(Uri.parse(url), headers: {
+        'Authorization': 'Bearer $token',
+      }).timeout(const Duration(seconds: 10));
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body);
+        var assignmentData = data['assignments'];
+        assignmentListForTeacher.value = (assignmentData as List).map((e) => AssignmentModel.fromMap(e)).toList();
+      }
+    } catch (e) {
+      Get.snackbar("Error", "Failed to fetch assignment for teacher");
     }
   }
 
