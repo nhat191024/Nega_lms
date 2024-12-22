@@ -35,6 +35,7 @@ class ClassDetailScreen extends GetView<ClassDetailController> {
                               index == controller.assignmentList.length - 1,
                               controller.assignmentList[index].id.toString(),
                               controller.assignmentList[index].type ?? '',
+                              controller.assignmentList[index].isSubmitted ?? false,
                             );
                           },
                         ),
@@ -48,7 +49,8 @@ class ClassDetailScreen extends GetView<ClassDetailController> {
   }
 
   //class card builder
-  Widget classCardBuilder(context, String title, String description, List<String> tags, double verticalPadding, bool isLast, String id, String type) {
+  Widget classCardBuilder(
+      context, String title, String description, List<String> tags, double verticalPadding, bool isLast, String id, String type, bool isSubmitted) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: verticalPadding),
       child: Column(
@@ -106,6 +108,12 @@ class ClassDetailScreen extends GetView<ClassDetailController> {
               const SizedBox(width: 20),
               CustomButton(
                 onTap: () {
+                  if (isSubmitted) {
+                    Get.dialog(
+                      const NotificationDialogWithoutButton(title: "Thông báo", message: "Bạn đã nộp bài tập này rồi"),
+                    );
+                    return;
+                  }
                   if (type == 'quiz') {
                     Get.toNamed(Routes.doAssignmentScreen, arguments: {'assignment_id': id, 'class_id': controller.classId.value});
                   } else {
