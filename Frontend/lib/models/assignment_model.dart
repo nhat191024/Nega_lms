@@ -7,6 +7,7 @@ class AssignmentModel {
   String? startDate;
   String? dueDate;
   String? type;
+  bool? isSubmitted;
 
   AssignmentModel({
     required this.id,
@@ -17,6 +18,7 @@ class AssignmentModel {
     required this.startDate,
     required this.dueDate,
     required this.type,
+    required this.isSubmitted,
   });
 
   Map<String, dynamic> toMap() {
@@ -29,6 +31,7 @@ class AssignmentModel {
       'startDate': startDate,
       'dueDate': dueDate,
       'type': type,
+      'isSubmitted': isSubmitted,
     };
   }
 
@@ -41,5 +44,6 @@ class AssignmentModel {
     startDate = map['startDate'];
     dueDate = map['dueDate'];
     type = map['type'];
+    isSubmitted = map['isSubmitted'];
   }
 }
