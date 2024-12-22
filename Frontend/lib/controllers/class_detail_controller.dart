@@ -33,8 +33,8 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
   TextEditingController assignmentSubject = TextEditingController();
   RxString assignmentStatus = ''.obs;
   RxString assignmentLevel = ''.obs;
-  RxString assignmentTotalScore = ''.obs;
-  RxString assignmentDuration = ''.obs;
+  TextEditingController assignmentDuration = TextEditingController();
+  RxString assignmentAutoGrade = ''.obs;
   TextEditingController assignmentStartDate = TextEditingController();
   TextEditingController assignmentDueDate = TextEditingController();
   RxString assignmentSpecialized = ''.obs;
@@ -46,6 +46,8 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
   RxBool isAssignmentSubjectError = false.obs;
   RxBool isAssignmentStatusError = false.obs;
   RxBool isAssignmentLevelError = false.obs;
+  RxBool isAssignmentDurationError = false.obs;
+  RxBool isAssignmentAutoGrade = false.obs;
   RxBool isAssignmentStartDateError = false.obs;
   RxBool isAssignmentDueDateError = false.obs;
   RxBool isAssignmentSpecializedError = false.obs;
@@ -56,6 +58,8 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
   RxString assignmentSubjectError = ''.obs;
   RxString assignmentStatusError = ''.obs;
   RxString assignmentLevelError = ''.obs;
+  RxString assignmentDurationError = ''.obs;
+  RxString assignmentAutoGradeError = ''.obs;
   RxString assignmentStartDateError = ''.obs;
   RxString assignmentDueDateError = ''.obs;
   RxString assignmentSpecializedError = ''.obs;
@@ -96,6 +100,7 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
   }
 
   fetchClassAssignment(id) async {
+    assignmentList.clear();
     try {
       isLoading(true);
       String url = "${Api.server}assignment/$id";
@@ -135,6 +140,34 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
     var currentValue = answers[answerIndex]['isCorrect'] as RxBool;
     currentValue.toggle();
     questions.refresh();
+  }
+
+  void removeQuestion(int index) {
+    if (questions.length > 1) {
+      questions.removeAt(index);
+    } else {
+      Get.dialog(
+        const NotificationDialogWithoutButton(
+          title: "Lỗi",
+          message: "Bài tập phải có ít nhất 1 câu hỏi",
+        ),
+      );
+    }
+  }
+
+  void removeAnswer(int questionIndex, int answerIndex) {
+    var answers = questions[questionIndex]['answers'] as RxList<Map<String, dynamic>>;
+    if (answers.length > 2) {
+      answers.removeAt(answerIndex);
+      questions.refresh();
+    } else {
+      Get.dialog(
+        const NotificationDialogWithoutButton(
+          title: "Lỗi",
+          message: "Câu hỏi phải có ít nhất 2 câu trả lời",
+        ),
+      );
+    }
   }
 
   bool validateQuiz() {
@@ -271,24 +304,19 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
     return true;
   }
 
-  void createQuiz() {
-    // if (!validateQuiz()) return;
+  void createQuiz() async {
+    if (!validateQuiz()) return;
     var uri = Uri.parse("${Api.server}assignment/create");
     var response = MultipartRequest('POST', uri);
+    response.headers['Authorization'] = 'Bearer $token';
+    response.headers['Content-Type'] = 'application/json';
+    response.headers['Accept'] = 'application/json';
+
     if (assignmentType.value == 'quiz') {
-      //assignment data
-      response.fields['name'] = assignmentName.text.trim();
-      response.headers['Authorization'] = 'Bearer $token';
-      response.fields['description'] = assignmentDescription.text.trim();
-      response.fields['status'] = assignmentStatus.value;
-      response.fields['level'] = assignmentLevel.value;
-      response.fields['totalScore'] = assignmentTotalScore.value;
-      response.fields['specialized'] = assignmentSpecialized.value;
-      response.fields['subject'] = assignmentSubject.text.trim();
-      response.fields['topic'] = assignmentTopic.value;
-      //question data
+      double totalScore = 0.0;
       List<Map<String, dynamic>> formattedQuestions = questions.map((question) {
         var answers = question['answers'] as RxList<Map<String, dynamic>>;
+        totalScore += double.parse(question['score'].text.trim());
         return {
           'question': question['question'].text.trim(),
           'score': double.parse(question['score'].text.trim()),
@@ -300,30 +328,43 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
           }).toList(),
         };
       }).toList();
-      response.fields['questions'] = jsonEncode(formattedQuestions);
+
+      //assignment data
+      response.fields['title'] = assignmentName.text.trim();
+      response.fields['description'] = assignmentDescription.text.trim();
+      response.fields['status'] = assignmentStatus.value.toString();
+      response.fields['level'] = assignmentLevel.value;
+      response.fields['totalScore'] = totalScore.toString();
+      response.fields['specialized'] = assignmentSpecialized.value;
+      response.fields['subject'] = assignmentSubject.text.trim();
+      response.fields['topic'] = assignmentTopic.value;
+      String questionsJson = jsonEncode(formattedQuestions);
+      response.fields['questions'] = questionsJson;
     }
 
     //homework data
     response.fields['class_id'] = classId.value.toString();
     response.fields['type'] = assignmentType.value;
-    response.fields['name'] = assignmentName.text.trim();
-    response.fields['link'] = '';
+    if (assignmentType.value == 'link') response.fields['title'] = assignmentName.text.trim();
+    if (assignmentType.value == 'link') response.fields['link'] = '';
     response.fields['start_datetime'] = assignmentStartDate.text.trim();
     response.fields['due_datetime'] = assignmentDueDate.text.trim();
-    response.fields['duration'] = assignmentDuration.value;
-    response.fields['auto_grade'] = 'true';
-    response.fields['status'] = 1.toString();
+    response.fields['duration'] = assignmentDuration.text.trim();
+    response.fields['auto_grade'] = assignmentAutoGrade.value;
+    response.fields['homework_status'] = 1.toString();
 
-    // response.send().then((result) {
-    //   if (result.statusCode == 200) {
-    //   Get.snackbar("Success", "Quiz created successfully");
-    //   clear();
-    //   } else {
-    //   Get.snackbar("Error", "Failed to create quiz");
-    //   }
-    // }).catchError((error) {
-    //   Get.snackbar("Error", "Failed to create quiz");
-    // });
+    var streamedResponse = await response.send();
+    if (streamedResponse.statusCode == 201) {
+      Get.snackbar("Thành công", "Tạo bài tập thành công");
+      fetchClassAssignment(classId.value);
+      Get.back();
+      clear();
+    } else {
+      const NotificationDialogWithoutButton(
+        title: "Lỗi",
+        message: "Đã có lỗi xảy ra",
+      );
+    }
   }
 
   void clear() {
