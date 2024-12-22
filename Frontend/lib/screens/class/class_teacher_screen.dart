@@ -201,14 +201,12 @@ class ClassTeacherScreen extends GetView<ClassDetailController> {
                           children: [
                             Expanded(
                               flex: 1,
-                              child: Obx(
-                                () => CheckBoxField(
-                                  title: "Tạo thành bài tập và đẩy lên lớp",
-                                  value: controller.createAssignmentThenPushToClass.value.obs,
-                                  onChanged: (value) {
-                                    controller.createAssignmentThenPushToClass.value = value!;
-                                  },
-                                ),
+                              child: CheckBoxField(
+                                title: "Tạo thành bài tập và đẩy lên lớp",
+                                value: controller.createAssignmentThenPushToClass.value.obs,
+                                onChanged: (value) {
+                                  controller.createAssignmentThenPushToClass.value = value!;
+                                },
                               ),
                             ),
                             const Expanded(
@@ -379,93 +377,97 @@ class ClassTeacherScreen extends GetView<ClassDetailController> {
                           ],
                         ),
                         const SizedBox(height: 20),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            CustomTextField(
-                              labelText: "Thời gian làm bài",
-                              labelColor: CustomColors.primary,
-                              labelSize: 18,
-                              hintText: "nhập",
-                              errorText: controller.assignmentDurationError.value,
-                              isError: controller.isAssignmentDurationError.value.obs,
-                              width: Get.width * 0.3,
-                              obscureText: false.obs,
-                              controller: controller.assignmentDuration,
-                              onChanged: (value) {
-                                if (value.isNotEmpty) {
-                                  controller.isAssignmentDurationError.value = false;
-                                } else {
-                                  controller.isAssignmentDurationError.value = true;
-                                  controller.assignmentDurationError.value = "Thời gian làm bài không được để trống";
-                                }
-                              },
-                            ),
-                            SelectBox(
-                              labelText: "Tự động chấm điểm",
-                              labelColor: CustomColors.primary,
-                              labelSize: 18,
-                              hintText: "Chọn",
-                              errorText: controller.assignmentAutoGradeError.value,
-                              isError: controller.isAssignmentAutoGrade.value.obs,
-                              width: Get.width * 0.3,
-                              value: null,
-                              items: const [
-                                DropdownMenuItem(value: 'true', child: Text('Bật')),
-                                DropdownMenuItem(value: 'false', child: Text('Tắt')),
-                              ],
-                              onChanged: (value) {
-                                if (value != null) {
-                                  controller.assignmentAutoGrade.value = value;
-                                  controller.isAssignmentAutoGrade.value = false;
-                                }
-                              },
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 20),
-                        Row(
-                          children: [
-                            DateTimeField(
-                              labelText: "Thời gian bắt đầu",
-                              labelColor: CustomColors.primary,
-                              labelSize: 18,
-                              hintText: "nhập",
-                              errorText: controller.assignmentStartDateError.value,
-                              isError: controller.isAssignmentStartDateError.value.obs,
-                              width: Get.width * 0.3,
-                              leftPadding: 55,
-                              controller: controller.assignmentStartDate,
-                              onChanged: (value) {
-                                if (value.isNotEmpty) {
-                                  controller.isAssignmentStartDateError.value = false;
-                                } else {
-                                  controller.isAssignmentStartDateError.value = true;
-                                  controller.assignmentStartDateError.value = "Ngày bắt đầu không được để trống";
-                                }
-                              },
-                            ),
-                            DateTimeField(
-                              labelText: "Thời gian kết thúc",
-                              labelColor: CustomColors.primary,
-                              labelSize: 18,
-                              hintText: "nhập",
-                              errorText: controller.assignmentDueDateError.value,
-                              isError: controller.isAssignmentDueDateError.value.obs,
-                              width: Get.width * 0.3,
-                              controller: controller.assignmentDueDate,
-                              onChanged: (value) {
-                                if (value.isNotEmpty) {
-                                  controller.isAssignmentDueDateError.value = false;
-                                } else {
-                                  controller.isAssignmentDueDateError.value = true;
-                                  controller.assignmentDueDateError.value = "Ngày kết thúc không được để trống";
-                                }
-                              },
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 20),
+                        if (controller.createAssignmentThenPushToClass.value == true) ...[
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              CustomTextField(
+                                labelText: "Thời gian làm bài",
+                                labelColor: CustomColors.primary,
+                                labelSize: 18,
+                                hintText: "nhập",
+                                errorText: controller.assignmentDurationError.value,
+                                isError: controller.isAssignmentDurationError.value.obs,
+                                width: Get.width * 0.3,
+                                obscureText: false.obs,
+                                controller: controller.assignmentDuration,
+                                onChanged: (value) {
+                                  if (value.isNotEmpty) {
+                                    controller.isAssignmentDurationError.value = false;
+                                  } else {
+                                    controller.isAssignmentDurationError.value = true;
+                                    controller.assignmentDurationError.value = "Thời gian làm bài không được để trống";
+                                  }
+                                },
+                              ),
+                              SelectBox(
+                                labelText: "Tự động chấm điểm",
+                                labelColor: CustomColors.primary,
+                                labelSize: 18,
+                                hintText: "Chọn",
+                                errorText: controller.assignmentAutoGradeError.value,
+                                isError: controller.isAssignmentAutoGrade.value.obs,
+                                width: Get.width * 0.3,
+                                value: null,
+                                items: const [
+                                  DropdownMenuItem(value: 'true', child: Text('Bật')),
+                                  DropdownMenuItem(value: 'false', child: Text('Tắt')),
+                                ],
+                                onChanged: (value) {
+                                  if (value != null) {
+                                    controller.assignmentAutoGrade.value = value;
+                                    controller.isAssignmentAutoGrade.value = false;
+                                  }
+                                },
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 20),
+                        ],
+                        if (controller.createAssignmentThenPushToClass.value == true) ...[
+                          Row(
+                            children: [
+                              DateTimeField(
+                                labelText: "Thời gian bắt đầu",
+                                labelColor: CustomColors.primary,
+                                labelSize: 18,
+                                hintText: "nhập",
+                                errorText: controller.assignmentStartDateError.value,
+                                isError: controller.isAssignmentStartDateError.value.obs,
+                                width: Get.width * 0.3,
+                                leftPadding: 55,
+                                controller: controller.assignmentStartDate,
+                                onChanged: (value) {
+                                  if (value.isNotEmpty) {
+                                    controller.isAssignmentStartDateError.value = false;
+                                  } else {
+                                    controller.isAssignmentStartDateError.value = true;
+                                    controller.assignmentStartDateError.value = "Ngày bắt đầu không được để trống";
+                                  }
+                                },
+                              ),
+                              DateTimeField(
+                                labelText: "Thời gian kết thúc",
+                                labelColor: CustomColors.primary,
+                                labelSize: 18,
+                                hintText: "nhập",
+                                errorText: controller.assignmentDueDateError.value,
+                                isError: controller.isAssignmentDueDateError.value.obs,
+                                width: Get.width * 0.3,
+                                controller: controller.assignmentDueDate,
+                                onChanged: (value) {
+                                  if (value.isNotEmpty) {
+                                    controller.isAssignmentDueDateError.value = false;
+                                  } else {
+                                    controller.isAssignmentDueDateError.value = true;
+                                    controller.assignmentDueDateError.value = "Ngày kết thúc không được để trống";
+                                  }
+                                },
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 20),
+                        ],
                         CustomTextField(
                           labelText: "Mô tả",
                           labelColor: CustomColors.primary,
