@@ -85,6 +85,7 @@ class AssignmentController extends Controller
         $rules = [
             'create_homework' => 'required|String',
             //assignment
+            'assignment_id' => 'String',
             'title' => 'string',
             'description' => 'string',
             'status' => 'in:closed,published,private,draft',
@@ -112,6 +113,7 @@ class AssignmentController extends Controller
         $messages = [
             'create_homework.required' => 'only_assignment không được để trống',
             'create_homework.string' => 'only_assignment phải là chuỗi',
+            'assignment_id.string' => 'assignment_id phải là chuỗi',
             'title.string' => 'title phải là chuỗi',
             'description.string' => 'description phải là chuỗi',
             'status.in' => 'status phải là closed, published, private hoặc draft',
@@ -146,7 +148,7 @@ class AssignmentController extends Controller
         }
         $user = Auth::user();
         $assignment = $request->type == 'quiz' ? new Assignment() : null;
-        if ($request->type == 'quiz') {
+        if ($request->type == 'quiz' && $request->assignment_id == null) {
             $assignment->creator_id = $user->id;
             $assignment->title = $request->title;
             $assignment->description = $request->description;
@@ -180,9 +182,17 @@ class AssignmentController extends Controller
         }
 
         if ($request->create_homework == 'true') {
+            $assignmentId = null;
+            if ($request->type == 'quiz' && $request->assignment_id == null) {
+                $assignmentId = $assignment->id;
+            } else if ($request->type == 'link') {
+                $assignmentId = null;
+            } else {
+                $assignmentId = $request->assignment_id;
+            }
             $homework = new Homework();
             $homework->class_id = $request->class_id;
-            $homework->assignment_id = $request->type == 'link' ? null : $assignment->id;
+            $homework->assignment_id = $assignmentId;
             $homework->type = $request->type;
             $homework->title = $request->type == 'link' ? $request->title : null;
             $homework->score = $request->type == 'link' ? $request->score : null;
