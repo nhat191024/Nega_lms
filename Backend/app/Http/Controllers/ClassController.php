@@ -82,7 +82,7 @@ class ClassController extends Controller
                 'classCode.required' => 'Vui lòng nhập mã lớp',
                 'classCode.unique' => 'Mã lớp đã tồn tại, vui lòng chọn mã khác',
                 'className.required' => 'Vui lòng nhập tên lớp!',
-                'className.unique' =>'Lớp học đã tồn tại, vui lòng nhập tên khác',
+                'className.unique' => 'Lớp học đã tồn tại, vui lòng nhập tên khác',
                 'classDescription.required' => 'Vui lòng nhập mô tả lớp!',
                 'teacherID.required' => 'Vui lòng chọn giảng viên!',
                 'teacherID.exists' => 'Giảng viên không tồn tại!',
@@ -130,8 +130,8 @@ class ClassController extends Controller
     {
         $request->validate(
             [
-                'classCode' => 'required|string|max:10|unique:classes,class_code' . $class_id,
-                'className' => 'required|string|max:255|unique:classes,class_name'. $class_id,
+                'classCode' => 'required|string|max:10|unique:classes,class_code,' . $class_id,
+                'className' => 'required|string|max:255|unique:classes,class_name,' . $class_id,
                 'classDescription' => 'required|string|max:500',
                 'teacherID' => 'required|integer|exists:users,id',
             ],
@@ -139,12 +139,12 @@ class ClassController extends Controller
                 'classCode.required' => 'Vui lòng nhập mã lớp!',
                 'classCode.unique' => 'Mã lớp đã tồn tại, vui lòng chọn mã khác',
                 'className.required' => 'Vui lòng nhập tên lớp!',
-                'className.unique' =>'Lớp học đã tồn tại, vui lòng nhập tên khác',
+                'className.unique' => 'Lớp học đã tồn tại, vui lòng nhập tên khác',
                 'classDescription.required' => 'Vui lòng nhập mô tả lớp!',
                 'teacherID.required' => 'Vui lòng chọn giảng viên!',
                 'teacherID.exists' => 'Giảng viên không tồn tại!',
             ]
-        );   
+        );
 
         $class = Classes::findOrFail($class_id);
         $class->update([

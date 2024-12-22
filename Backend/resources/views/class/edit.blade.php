@@ -56,7 +56,7 @@
                 </p>
             </div>
 
-            <button type="submit" class="btn btn-primary">Cập nhật</button>
+            <button type="submit" class="btn btn-primary" onclick="if(confirm('Bạn có chắc chắn muốn cập nhật thông tin lớp học này không?')) { document.submit()}">Cập nhật</button>
             <a href="{{ route('classes.index') }}" class="btn btn-secondary">Hủy</a>
         </form>
     </div>
