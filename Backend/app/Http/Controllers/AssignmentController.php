@@ -116,7 +116,7 @@ class AssignmentController extends Controller
     public function toggleVisibility($id)
     {
         $assignment = Assignment::findOrFail($id);
-        $assignment->visibility = !$assignment->visibility;
+        $assignment->status = $assignment->status === 'published' ? 'closed' : 'published';
         $assignment->save();
         return redirect()->route('assignments.index')->with('success', 'Trạng thái hiển thị đã được cập nhật!');
     }
