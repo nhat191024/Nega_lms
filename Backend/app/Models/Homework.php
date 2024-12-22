@@ -11,6 +11,8 @@ class Homework extends Model
         'type',
         'assignment_id',
         'title',
+        'score',
+        'description',
         'link',
         'start_datetime',
         'due_datetime',
