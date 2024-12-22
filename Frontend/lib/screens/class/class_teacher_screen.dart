@@ -173,7 +173,9 @@ class ClassTeacherScreen extends GetView<ClassDetailController> {
               CustomButton(
                 onTap: () async {
                   await controller.loadDataToEdit(homeworkId, type);
-                  type == "quiz" ? _showAddQuizFromBankModal(context, isEdit: true) : _showAddLinkHomeworkModal(context, isEdit: true);
+                  type == "quiz"
+                      ? _showAddQuizFromBankModal(context, isEdit: true, homeworkId: homeworkId, type: type)
+                      : _showAddLinkHomeworkModal(context, isEdit: true);
                 },
                 btnText: 'Chỉnh sửa',
                 btnColor: CustomColors.primary,
@@ -659,7 +661,7 @@ class ClassTeacherScreen extends GetView<ClassDetailController> {
     );
   }
 
-  Future _showAddLinkHomeworkModal(context, {isEdit = false}) {
+  Future _showAddLinkHomeworkModal(context, {isEdit = false, homeworkId = '', type = ''}) {
     return showGeneralDialog(
       context: context,
       barrierColor: Colors.black.withOpacity(0.5),
@@ -828,7 +830,7 @@ class ClassTeacherScreen extends GetView<ClassDetailController> {
                       ),
                       const Spacer(),
                       CustomButton(
-                        onTap: () => controller.createQuiz(),
+                        onTap: () => isEdit ? controller.updateQuiz(homeworkId, type) : controller.createQuiz(),
                         btnText: isEdit ? 'Chỉnh sửa bài tập' : 'Tạo bài tập',
                         btnColor: CustomColors.primary,
                         width: 200,
@@ -844,7 +846,7 @@ class ClassTeacherScreen extends GetView<ClassDetailController> {
     );
   }
 
-  Future _showAddQuizFromBankModal(context, {isEdit = false}) {
+  Future _showAddQuizFromBankModal(context, {isEdit = false, homeworkId = '', type = ''}) {
     return showGeneralDialog(
       context: context,
       barrierColor: Colors.black.withOpacity(0.5),
@@ -892,7 +894,7 @@ class ClassTeacherScreen extends GetView<ClassDetailController> {
                             Align(
                               alignment: Alignment.centerRight,
                               child: CustomButton(
-                                onTap: () => isEdit ? controller.updateQuiz() : controller.createQuiz(),
+                                onTap: () => isEdit ? controller.updateQuiz(homeworkId, type) : controller.createQuiz(),
                                 btnText: isEdit ? 'Sửa bài tập' : 'Tạo bài tập',
                                 btnColor: CustomColors.primary,
                                 width: 200,
