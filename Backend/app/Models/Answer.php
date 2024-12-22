@@ -10,6 +10,7 @@ class Answer extends Model
         'question_id',
         'user_id',
         'choice_id',
+        'assignment_id',
         'homework_id',
         'link',
     ];
@@ -27,5 +28,15 @@ class Answer extends Model
     public function choice()
     {
         return $this->belongsTo(Choice::class);
+    }
+
+    public function homework()
+    {
+        return $this->belongsTo(Homework::class);
+    }
+
+    public function assignment()
+    {
+        return $this->belongsTo(Assignment::class);
     }
 }
