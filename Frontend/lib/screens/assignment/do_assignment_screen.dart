@@ -84,7 +84,9 @@ class DoAssignmentScreen extends GetView<AssignmentController> {
                                     children: [
                                       CustomButton(
                                         width: 100,
-                                        onTap: () {},
+                                        onTap: () {
+                                          Get.back();
+                                        },
                                         btnText: "Quay lại",
                                         btnColor: CustomColors.errorMain,
                                         borderColor: CustomColors.errorMain,
