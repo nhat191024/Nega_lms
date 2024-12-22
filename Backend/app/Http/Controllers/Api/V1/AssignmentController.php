@@ -61,13 +61,13 @@ class AssignmentController extends Controller
             // 'questions.*.choices.*.is_correct' => 'boolean',
             //homework
             'class_id' => 'required|integer',
-            'type' => 'required|in:homework,quiz',
+            'type' => 'required|in:link,quiz',
             'title' => 'string',
-            'link' => 'string',
+            'score' => 'integer',
             'start_datetime' => 'required|String',
             'due_datetime' => 'required|String',
             'duration' => 'required|integer',
-            'auto_grade' => 'required|String',
+            'auto_grade' => 'String',
             'homework_status' => 'required|integer',
         ];
 
@@ -89,16 +89,15 @@ class AssignmentController extends Controller
             'class_id.required' => 'class_id không được để trống',
             'class_id.integer' => 'class_id phải là số nguyên',
             'type.required' => 'type không được để trống',
-            'type.in' => 'type phải là homework hoặc quiz',
+            'type.in' => 'type phải là link hoặc quiz',
             'title.string' => 'title phải là chuỗi',
-            'link.string' => 'link phải là chuỗi',
+            'score.integer' => 'score phải là số nguyên',
             'start_datetime.required' => 'start_datetime không được để trống',
             'start_datetime.string' => 'start_datetime phải là chuỗi',
             'due_datetime.required' => 'due_datetime không được để trống',
             'due_datetime.string' => 'due_datetime phải là chuỗi',
             'duration.required' => 'duration không được để trống',
             'duration.integer' => 'duration phải là số nguyên',
-            'auto_grade.required' => 'auto_grade không được để trống',
             'auto_grade.string' => 'auto_grade phải là boolean',
             'homework_status.required' => 'status không được để trống',
             'homework_status.integer' => 'status phải là số nguyên',
@@ -149,12 +148,17 @@ class AssignmentController extends Controller
         $homework->class_id = $request->class_id;
         $homework->assignment_id = $request->type == 'link' ? null : $assignment->id;
         $homework->type = $request->type;
-        $homework->link = $request->type == 'link' ?  $request->link : null;
         $homework->title = $request->type == 'link' ? $request->title : null;
+        $homework->score = $request->type == 'link' ? $request->score : null;
+        $homework->description = $request->type == 'link' ? $request->description : null;
         $homework->start_datetime = $request->start_datetime;
         $homework->due_datetime = $request->due_datetime;
         $homework->duration = $request->duration;
-        $homework->auto_grade = $request->auto_grade == 'true' ? true : false;
+        if ($request->type != 'link') {
+            $homework->auto_grade = $request->auto_grade == 'true' ? true : false;
+        } else {
+            $homework->auto_grade = false;
+        }
         $homework->status = $request->homework_status;
         $homework->save();
 
