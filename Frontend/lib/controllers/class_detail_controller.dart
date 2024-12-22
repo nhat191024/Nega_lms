@@ -370,6 +370,19 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
 
     if (error.value) return false;
 
+    //for quiz bank type homework only
+    if (assignmentType.value == 'quiz_bank') {
+      if (selectedAssignment.value.isEmpty) {
+        Get.dialog(
+          const NotificationDialogWithoutButton(
+            title: "Lỗi",
+            message: "Bạn phải chọn 1 bài tập từ ngân hàng câu hỏi",
+          ),
+        );
+        return false;
+      }
+    }
+
     if (assignmentType.value == 'quiz') {
       if (questions.isEmpty) {
         Get.dialog(
