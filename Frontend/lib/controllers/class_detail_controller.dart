@@ -21,6 +21,7 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
     duration: 0,
     startDate: '',
     dueDate: '',
+    type: '',
   ).obs;
 
   RxList<QuestionModel> questionList = <QuestionModel>[].obs;
@@ -113,11 +114,11 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
       var response = await get(Uri.parse(url), headers: {
         'Authorization': 'Bearer $token',
       }).timeout(const Duration(seconds: 10));
-
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
         var assignmentData = data['assignments'];
         assignmentList.value = (assignmentData as List).map((e) => AssignmentModel.fromMap(e)).toList();
+        print(assignmentList.toJson());
       }
     } finally {
       isLoading(false);
