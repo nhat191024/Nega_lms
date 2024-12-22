@@ -109,7 +109,7 @@ class ClassDetailScreen extends GetView<ClassDetailController> {
                   if (type == 'quiz') {
                     Get.toNamed(Routes.doAssignmentScreen, arguments: {'assignment_id': id, 'class_id': controller.classId.value});
                   } else {
-                    _showLinkSubmitModal(context, title, description);
+                    _showLinkSubmitModal(context, title, description, type, id);
                   }
                 },
                 btnText: type == 'quiz' ? 'Làm bài tập' : 'Nộp bài',
@@ -125,9 +125,12 @@ class ClassDetailScreen extends GetView<ClassDetailController> {
     );
   }
 
-  Future _showLinkSubmitModal(context, String title, String description) {
+  Future _showLinkSubmitModal(context, String title, String description, String type, String id) {
     return showGeneralDialog(
       context: context,
+      barrierColor: Colors.black.withOpacity(0.5),
+      barrierDismissible: true,
+      barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
       pageBuilder: (context, animation, secondaryAnimation) {
         return PopScope(
           canPop: true,
@@ -213,7 +216,7 @@ class ClassDetailScreen extends GetView<ClassDetailController> {
                     CustomButton(
                       onTap: () {
                         if (controller.linkSubmit.text.isNotEmpty) {
-                          // controller.submitAssignment();
+                          controller.submitAssignment(type, id);
                           Get.back();
                         } else {
                           controller.isLinkSubmitError.value = true;
