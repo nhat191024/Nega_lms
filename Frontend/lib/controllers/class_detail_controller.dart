@@ -249,128 +249,141 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
     var vietnameseRegex = RegExp(
         r'^[a-zA-ZÃ€ÃÃ‚ÃƒÃˆÃ‰ÃŠÃŒÃÃ’Ã“Ã”Ã•Ã™ÃšÄ‚ÄÄ¨Å¨Æ Ã Ã¡Ã¢Ã£Ã¨Ã©ÃªÃ¬Ã­Ã²Ã³Ã´ÃµÃ¹ÃºÄƒÄ‘Ä©Å©Æ¡Æ¯Ä‚áº áº¢áº¤áº¦áº¨áºªáº¬áº®áº°áº²áº´áº¶áº¸áººáº¼á»€á»€á»‚áº¾Æ°Äƒáº¡áº£áº¥áº§áº©áº«áº­áº¯áº±áº³áºµáº·áº¹áº»áº½á»á»á»ƒáº¿á»„á»†á»ˆá»Šá»Œá»Žá»á»’á»”á»–á»˜á»šá»œá»žá» á»¢á»¤á»¦á»¨á»ªá»…á»‡á»‰á»‹á»á»á»‘á»“á»•á»—á»™á»›á»á»Ÿá»¡á»£á»¥á»§á»©á»«á»¬á»®á»°á»²á»´Ãá»¶á»¸á»­á»¯á»±á»³á»µá»·á»¹\s\W|_\d]+$');
 
-    //for both quiz and link type homework || only need if push to class is checked
-    if (createAssignmentThenPushToClass.value == true) {
-      if (assignmentDuration.text.trim().isEmpty) {
-        error.value = true;
-        isAssignmentDurationError.value = true;
-        assignmentDurationError.value = "Thời lượng không được để trống";
-      } else if (!RegExp(r'^\d+$').hasMatch(assignmentDuration.text.trim())) {
-        error.value = true;
-        isAssignmentDurationError.value = true;
-        assignmentDurationError.value = "Thời lượng phải là số dương";
-      }
+    void setError(RxBool errorField, RxString errorMessage, String message) {
+      error.value = true;
+      errorField.value = true;
+      errorMessage.value = message;
+    }
 
+    void isOverTimeToday(String date, RxBool errorField, RxString errorMessage, String message) {
+      DateTime now = DateTime.now();
+      DateTime selectedDate = DateTime.parse(date);
+      if (selectedDate.isBefore(now)) {
+        setError(errorField, errorMessage, message);
+      }
+    }
+
+    // Validate common fields
+    if (createAssignmentThenPushToClass.value == true) {
       if (assignmentStartDate.text.trim().isEmpty) {
-        error.value = true;
-        isAssignmentStartDateError.value = true;
-        assignmentStartDateError.value = "Ngày bắt đầu không được để trống";
+        setError(isAssignmentStartDateError, assignmentStartDateError, "Ngày bắt đầu không được để trống");
+      } else {
+        isOverTimeToday(
+          assignmentStartDate.text.trim(),
+          isAssignmentStartDateError,
+          assignmentStartDateError,
+          "Ngày bắt đầu không được lớn hơn ngày hiện tại",
+        );
       }
 
       if (assignmentDueDate.text.trim().isEmpty) {
-        error.value = true;
-        isAssignmentDueDateError.value = true;
-        assignmentDueDateError.value = "Ngày kết thúc không được để trống";
+        setError(isAssignmentDueDateError, assignmentDueDateError, "Ngày kết thúc không được để trống");
+      } else {
+        isOverTimeToday(
+          assignmentDueDate.text.trim(),
+          isAssignmentDueDateError,
+          assignmentDueDateError,
+          "Ngày kết thúc không được lớn hơn ngày hiện tại",
+        );
+      }
+
+      if (assignmentDuration.text.trim().isEmpty) {
+        setError(isAssignmentDurationError, assignmentDurationError, "Thời lượng không được để trống");
+      } else if (!RegExp(r'^\d+$').hasMatch(assignmentDuration.text.trim())) {
+        setError(isAssignmentDurationError, assignmentDurationError, "Thời lượng phải là số dương");
+      } else if (assignmentStartDate.text.isNotEmpty && assignmentDueDate.text.isNotEmpty) {
+        DateTime startDate = DateTime.parse(assignmentStartDate.text.trim());
+        DateTime dueDate = DateTime.parse(assignmentDueDate.text.trim());
+        int durationMinutes = int.parse(assignmentDuration.text.trim());
+        int diffMinutes = dueDate.difference(startDate).inMinutes;
+
+        if (diffMinutes < durationMinutes) {
+          setError(
+            isAssignmentDurationError,
+            assignmentDurationError,
+            "Thời lượng không được lớn hơn khoảng thời gian giữa ngày bắt đầu và kết thúc",
+          );
+          setError(
+            isAssignmentStartDateError,
+            assignmentStartDateError,
+            "Thời lượng không được lớn hơn khoảng thời gian giữa ngày bắt đầu và kết thúc",
+          );
+          setError(
+            isAssignmentDueDateError,
+            assignmentDueDateError,
+            "Thời lượng không được lớn hơn khoảng thời gian giữa ngày bắt đầu và kết thúc",
+          );
+        }
       }
 
       if (assignmentType.value == 'quiz' || assignmentType.value == 'quiz_bank') {
         if (assignmentAutoGrade.value.isEmpty) {
-          error.value = true;
-          isAssignmentAutoGrade.value = true;
-          assignmentAutoGradeError.value = "Tự động chấm điểm không được để trống";
+          setError(isAssignmentAutoGrade, assignmentAutoGradeError, "Tự động chấm điểm không được để trống");
         }
       }
     }
 
-    //for quiz type homework only
+    // Validate quiz specific fields
     if (assignmentType.value == 'quiz') {
       if (assignmentSubject.text.trim().isEmpty) {
-        error.value = true;
-        isAssignmentSubjectError.value = true;
-        assignmentSubjectError.value = "Chủ đề không được để trống";
+        setError(isAssignmentSubjectError, assignmentSubjectError, "Chủ đề không được để trống");
       } else if (assignmentSubject.text.trim().length > 255) {
-        error.value = true;
-        isAssignmentSubjectError.value = true;
-        assignmentSubjectError.value = "Chủ đề không được quá 255 ký tự";
+        setError(isAssignmentSubjectError, assignmentSubjectError, "Chủ đề không được quá 255 ký tự");
       } else if (!vietnameseRegex.hasMatch(assignmentSubject.text.trim())) {
-        error.value = true;
-        isAssignmentSubjectError.value = true;
-        assignmentSubjectError.value = "Chủ đề chỉ chứa ký tự chữ và số";
+        setError(isAssignmentSubjectError, assignmentSubjectError, "Chủ đề chỉ chứa ký tự chữ và số");
       }
 
       if (assignmentLevel.value.isEmpty) {
-        error.value = true;
-        isAssignmentLevelError.value = true;
-        assignmentLevelError.value = "Cấp độ không được để trống";
+        setError(isAssignmentLevelError, assignmentLevelError, "Cấp độ không được để trống");
       }
 
       if (assignmentSpecialized.value.isEmpty) {
-        error.value = true;
-        isAssignmentSpecializedError.value = true;
-        assignmentSpecializedError.value = "Chuyên ngành không được để trống";
+        setError(isAssignmentSpecializedError, assignmentSpecializedError, "Chuyên ngành không được để trống");
       }
 
       if (assignmentTopic.value.isEmpty) {
-        error.value = true;
-        isAssignmentTopicError.value = true;
-        assignmentTopicError.value = "Chủ đề không được để trống";
+        setError(isAssignmentTopicError, assignmentTopicError, "Chủ đề không được để trống");
       }
     }
 
+    // Validate common fields for quiz and quiz_bank
     if (assignmentType.value == 'quiz' || assignmentType.value == 'quiz_bank') {
       if (assignmentStatus.value.isEmpty) {
-        error.value = true;
-        isAssignmentStatusError.value = true;
-        assignmentStatusError.value = "Trạng thái không được để trống";
+        setError(isAssignmentStatusError, assignmentStatusError, "Trạng thái không được để trống");
       }
     }
 
-    //for both quiz and link type homework
-    if (assignmentName.text.trim().isEmpty) {
-      error.value = true;
-      isAssignmentNameError.value = true;
-      assignmentNameError.value = "Tên bài tập không được để trống";
-    } else if (assignmentName.text.trim().length > 255) {
-      error.value = true;
-      isAssignmentNameError.value = true;
-      assignmentNameError.value = "Tên bài tập không được quá 255 ký tự";
-    } else if (!vietnameseRegex.hasMatch(assignmentName.text.trim())) {
-      error.value = true;
-      isAssignmentNameError.value = true;
-      assignmentNameError.value = "Tên bài tập chỉ chứa ký tự chữ và số";
+    // Validate common fields for quiz and link
+    if (assignmentType.value == 'quiz' || assignmentType.value == 'link') {
+      if (assignmentName.text.trim().isEmpty) {
+        setError(isAssignmentNameError, assignmentNameError, "Tên bài tập không được để trống");
+      } else if (assignmentName.text.trim().length > 255) {
+        setError(isAssignmentNameError, assignmentNameError, "Tên bài tập không được quá 255 ký tự");
+      } else if (!vietnameseRegex.hasMatch(assignmentName.text.trim())) {
+        setError(isAssignmentNameError, assignmentNameError, "Tên bài tập chỉ chứa ký tự chữ và số");
+      }
+
+      if (assignmentDescription.text.trim().isEmpty) {
+        setError(isAssignmentDescriptionError, assignmentDescriptionError, "Mô tả không được để trống");
+      } else if (assignmentDescription.text.trim().length > 255) {
+        setError(isAssignmentDescriptionError, assignmentDescriptionError, "Mô tả không được quá 255 ký tự");
+      } else if (!vietnameseRegex.hasMatch(assignmentDescription.text.trim())) {
+        setError(isAssignmentDescriptionError, assignmentDescriptionError, "Mô tả chỉ chứa ký tự chữ và số");
+      }
     }
 
-    //for both quiz and link type homework
-    if (assignmentDescription.text.trim().isEmpty) {
-      error.value = true;
-      isAssignmentDescriptionError.value = true;
-      assignmentDescriptionError.value = "Mô tả không được để trống";
-    } else if (assignmentDescription.text.trim().length > 255) {
-      error.value = true;
-      isAssignmentDescriptionError.value = true;
-      assignmentDescriptionError.value = "Mô tả không được quá 255 ký tự";
-    } else if (!vietnameseRegex.hasMatch(assignmentDescription.text.trim())) {
-      error.value = true;
-      isAssignmentDescriptionError.value = true;
-      assignmentDescriptionError.value = "Mô tả chỉ chứa ký tự chữ và số";
-    }
-
-    //for link type homework only
-    if (assignmentType.value == 'link' || assignmentType.value == 'quiz_bank') {
+    // Validate link specific fields
+    if (assignmentType.value == 'link') {
       if (homeworkScore.text.trim().isEmpty) {
-        error.value = true;
-        isHomeworkScoreError.value = true;
-        homeworkScoreError.value = "Điểm số không được để trống";
+        setError(isHomeworkScoreError, homeworkScoreError, "Điểm số không được để trống");
       } else if (!RegExp(r'^\d*\.?\d+$').hasMatch(homeworkScore.text.trim())) {
-        error.value = true;
-        isHomeworkScoreError.value = true;
-        homeworkScoreError.value = "Điểm số phải là số dương";
+        setError(isHomeworkScoreError, homeworkScoreError, "Điểm số phải là số dương");
       }
     }
 
     if (error.value) return false;
 
-    //for quiz bank type homework only
+    // Validate quiz_bank specific fields
     if (assignmentType.value == 'quiz_bank') {
       if (selectedAssignment.value.isEmpty) {
         Get.dialog(
@@ -383,6 +396,7 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
       }
     }
 
+    // Validate quiz questions and answers
     if (assignmentType.value == 'quiz') {
       if (questions.isEmpty) {
         Get.dialog(
@@ -490,11 +504,12 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
 
     //homework data
     if (createAssignmentThenPushToClass.value || assignmentType.value == 'link') {
+      if (selectedAssignment.value.isNotEmpty) response.fields['assignment_id'] = selectedAssignment.value;
       response.fields['class_id'] = classId.value.toString();
-      response.fields['type'] = assignmentType.value;
-      if (assignmentType.value == 'link' || assignmentType.value == 'quiz_bank') response.fields['title'] = assignmentName.text.trim();
-      if (assignmentType.value == 'link' || assignmentType.value == 'quiz_bank') response.fields['score'] = homeworkScore.text.trim();
-      if (assignmentType.value == 'link' || assignmentType.value == 'quiz_bank') response.fields['description'] = assignmentDescription.text.trim();
+      response.fields['type'] = assignmentType.value == 'link' ? 'link' : 'quiz';
+      if (assignmentType.value == 'link') response.fields['title'] = assignmentName.text.trim();
+      if (assignmentType.value == 'link') response.fields['score'] = homeworkScore.text.trim();
+      if (assignmentType.value == 'link') response.fields['description'] = assignmentDescription.text.trim();
       response.fields['start_datetime'] = assignmentStartDate.text.trim();
       response.fields['due_datetime'] = assignmentDueDate.text.trim();
       response.fields['duration'] = assignmentDuration.text.trim();
@@ -502,17 +517,25 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
       response.fields['homework_status'] = 1.toString();
     }
 
-    // var streamedResponse = await response.send();
-    // if (streamedResponse.statusCode == 201) {
-    //   clear();
-    //   Get.back();
-    //   fetchClassAssignment(classId.value);
-    //   Get.snackbar("Thành công", "Tạo bài tập thành công", maxWidth: Get.width * 0.2);
-    // } else {
-    //   var data = await streamedResponse.stream.bytesToString();
-    //   print(jsonEncode(data));
-    //   Get.snackbar("Lỗi", "Đã có lỗi xảy ra", maxWidth: Get.width * 0.2);
-    // }
+    print(response.fields);
+
+    var streamedResponse = await response.send();
+    if (streamedResponse.statusCode == 201) {
+      clear();
+      Get.back();
+      fetchClassAssignment(classId.value);
+      Get.snackbar("Thành công", "Tạo bài tập thành công", maxWidth: Get.width * 0.2);
+    } else {
+      RxString errors = ''.obs;
+      var responseString = await streamedResponse.stream.bytesToString();
+      var data = jsonDecode(responseString);
+      print(data);
+      for (var error in data['error']) {
+        errors.value += '${error.value}\n';
+      }
+
+      Get.snackbar("Lỗi", errors.value, maxWidth: Get.width * 0.2);
+    }
   }
 
   void clear() {
