@@ -1,13 +1,13 @@
 import 'package:nega_lms/utils/imports.dart';
 
 class AssignmentController extends GetxController {
-  final TextEditingController searchController = TextEditingController();
   RxBool isLoading = true.obs;
-  late final String? classId;
+  RxString assignmentId = ''.obs;
+  RxString classId = ''.obs;
+  RxString token = "".obs;
   RxString assignmentTitle = 'test'.obs;
   RxInt assignmentDuration = 0.obs;
   RxInt currentQuestion = 0.obs;
-  RxList<AssignmentModel> assignmentList = <AssignmentModel>[].obs;
   Rx<AssignmentModel> assignment = AssignmentModel(
     id: 0,
     creatorName: '',
@@ -16,6 +16,7 @@ class AssignmentController extends GetxController {
     duration: 0,
     startDate: '',
     dueDate: '',
+    type: '',
   ).obs;
   RxList<QuestionModel> questionList = <QuestionModel>[].obs;
   RxList<AnswerModel> answerList = <AnswerModel>[].obs;
@@ -24,37 +25,23 @@ class AssignmentController extends GetxController {
 
   @override
   void onInit() async {
-    // assignmentId = Get.parameters['assignment_id']!;
-    classId = Get.parameters['class_id'];
-    await fetchClassAssignment();
-    // await fetchAssignment();
     super.onInit();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (!await Token.checkToken()) return;
+      token.value = await Token.getToken();
+      final arguments = Get.arguments as Map<String, dynamic>;
+      assignmentId.value = arguments['assignment_id'].toString();
+      classId.value = arguments['class_id'].toString();
+      await fetchAssignment(assignmentId.value, classId.value);
+    });
   }
 
-  fetchClassAssignment() async {
+  fetchAssignment(assignmentId, classId) async {
     try {
       isLoading(true);
-      String url = "${Api.server}assignment/$classId";
+      String url = "${Api.server}assignment/detail/$assignmentId/$classId";
       var response = await get(Uri.parse(url), headers: {
-        'Authorization': 'Bearer ${Api.testToken}',
-      }).timeout(const Duration(seconds: 10));
-
-      if (response.statusCode == 200) {
-        var data = jsonDecode(response.body);
-        var assignmentData = data['assignments'];
-        assignmentList.value = (assignmentData as List).map((e) => AssignmentModel.fromMap(e)).toList();
-      }
-    } finally {
-      isLoading(false);
-    }
-  }
-
-  fetchAssignment(id) async {
-    try {
-      isLoading(true);
-      String url = "${Api.server}assignment/detail/$id";
-      var response = await get(Uri.parse(url), headers: {
-        'Authorization': 'Bearer ${Api.testToken}',
+        'Authorization': 'Bearer $token',
       }).timeout(const Duration(seconds: 10));
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body)['assignment'];
@@ -89,12 +76,6 @@ class AssignmentController extends GetxController {
     } finally {
       isLoading(false);
     }
-  }
-
-  void loadAssignment(String id) {
-    Get.toNamed("/do-assignment/$id");
-    // assignmentId = id;
-    fetchAssignment(id);
   }
 
   void loadChoiceToAnswerList() {

@@ -6,11 +6,14 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ClassController;
 use App\Http\Controllers\AdminAuthController;
 use App\Http\Controllers\AssignmentController;
+use App\Http\Controllers\DashboardController;
 
 Route::get('/', [AdminAuthController::class, 'showLoginForm'])->name('admin.login');
 Route::post('/login', [AdminAuthController::class, 'login'])->name('admin.login.submit');
 
-Route::get('master', [AdminAuthController::class, 'showMaster'])->name('master');
+Route::prefix('/dashboard')->name('dashboard.')->group(function () {
+    Route::get('/', [DashboardController::class, 'index'])->name('index');
+});
 
 Route::prefix('/users')->name('users.')->group(function () {
     Route::get('/', [UserController::class, 'index'])->name('index');
@@ -21,13 +24,14 @@ Route::prefix('/users')->name('users.')->group(function () {
     Route::get('/status/{id}', [UserController::class, 'status'])->name('status');
 });
 
-Route::prefix(('/class'))->name('classes.')->group(function () {
+Route::prefix('class')->name('classes.')->group(function () {
     Route::get('/', [ClassController::class, 'index'])->name('index');
     Route::post('/add-student', [ClassController::class, 'addStudentToClass'])->name('addStudent');
     Route::delete('/remove-student/{class_id}/{student_id}', [ClassController::class, 'removeStudentFromAClass'])->name('removeStudent');
     Route::post('/add-class', [ClassController::class, 'addNewClass'])->name('addClass');
     Route::get('/hide-class/{class_id}', [ClassController::class, 'hideClass'])->name('hideClass');
-    Route::get('/class/{class_id}/assignments', [AssignmentController::class, 'getAssignmentsByClass'])->name('assignments.byClass');
+    Route::get('/edit-class/{class_id}', [ClassController::class, 'editClass'])->name('editClass');
+    Route::put('/update-class/{class_id}', [ClassController::class, 'updateClass'])->name('updateClass');
 });
 
 Route::prefix('/assignment')->name('assignments.')->group(function () {

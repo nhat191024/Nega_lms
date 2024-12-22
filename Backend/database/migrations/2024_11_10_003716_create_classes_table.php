@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('classes', function (Blueprint $table) {
             $table->id();
-            $table->string('class_code')->nullable();
-            $table->string('class_name');
+            $table->string('class_code')->unique();
+            $table->string('class_name')-> unique();
             $table->text('class_description');
             $table->unsignedBigInteger('teacher_id');
             $table->tinyInteger('status')->default(1);

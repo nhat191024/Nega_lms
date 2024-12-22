@@ -7,22 +7,27 @@ export 'package:flutter/material.dart';
 //screen imports
 export 'package:nega_lms/screens/home_screen.dart';
 export 'package:nega_lms/screens/login_screen.dart';
-export 'package:nega_lms/screens/class_list_screen.dart';
-export 'package:nega_lms/screens/assignment/assignment_list_screen.dart';
+export 'package:nega_lms/screens/class/class_list_screen.dart';
+export 'package:nega_lms/screens/class/class_detail_screen.dart';
+export 'package:nega_lms/screens/class/class_detail_tab.dart';
+export 'package:nega_lms/screens/class/class_teacher_screen.dart';
 export 'package:nega_lms/screens/assignment/assignment_detail_screen.dart';
 export 'package:nega_lms/screens/assignment/do_assignment_screen.dart';
 
 //controller imports
+export 'package:nega_lms/controllers/nav_controller.dart';
 export 'package:nega_lms/controllers/splash_controller.dart';
 export 'package:nega_lms/controllers/home_controller.dart';
 export 'package:nega_lms/controllers/login_controller.dart';
 export 'package:nega_lms/controllers/class_controller.dart';
+export 'package:nega_lms/controllers/class_detail_controller.dart';
 export 'package:nega_lms/controllers/assignment_controller.dart';
 
 //binding imports
 export 'package:nega_lms/bindings/home_binding.dart';
 export 'package:nega_lms/bindings/login_binding.dart';
 export 'package:nega_lms/bindings/class_binding.dart';
+export 'package:nega_lms/bindings/class_detail_binding.dart';
 export 'package:nega_lms/bindings/assignment_binding.dart';
 
 //utils imports
@@ -32,10 +37,15 @@ export 'package:nega_lms/utils/text.dart';
 export 'package:nega_lms/utils/images.dart';
 export 'package:nega_lms/utils/api.dart';
 
+//service imports
+export 'package:nega_lms/service/local_storage.dart';
+export 'package:nega_lms/service/token.dart';
+
 //components imports
 export 'package:nega_lms/components/nav.dart';
 export 'package:nega_lms/components/button.dart';
 export 'package:nega_lms/components/field.dart';
+export 'package:nega_lms/components/dialog.dart';
 
 //model imports
 export 'package:nega_lms/models/class_model.dart';
@@ -46,7 +56,7 @@ export 'package:nega_lms/models/answer_model.dart';
 //package imports
 export 'package:get/get.dart' hide Response, FormData, MultipartFile, HeaderValue;
 export 'package:flutter_svg/svg.dart';
-export 'package:flutter_web_plugins/flutter_web_plugins.dart';
+// export 'package:flutter_web_plugins/flutter_web_plugins.dart';
 export 'package:http/http.dart';
 export 'package:get_storage/get_storage.dart' hide Data;
 export 'dart:convert';

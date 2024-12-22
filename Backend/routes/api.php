@@ -12,9 +12,9 @@ use GuzzleHttp\Middleware;
 // Public routes
 Route::post('/login', [LoginController::class, 'login']);
 
-// Admin routes
-Route::middleware(['auth:sanctum', 'ability:admin'])->group(function () {
-    // Add admin-specific routes here
+//no role required routes
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::get('/token-check', [LoginController::class, 'tokenCheck']);
 });
 
 // Teacher routes
@@ -24,8 +24,13 @@ Route::group(['middleware' => ['auth:sanctum', 'ability:teacher']], function () 
 
 // Student routes
 Route::group(['middleware' => ['auth:sanctum', 'ability:student']], function () {
-    Route::get('/classes', [ClassController::class, 'index']);
-    Route::get('/student-class', [ClassController::class, 'getStudentClasses']);
+    Route::prefix('classes')->group(function () {
+        Route::get('/', [ClassController::class, 'index']);
+        Route::get('/{id}', [ClassController::class, 'getClassById']);
+        Route::get('/student-class', [ClassController::class, 'getStudentClasses']);
+        Route::get('/join/{classId}', [ClassController::class, 'joinClass']);
+        Route::get('/search/{classCode}', [ClassController::class, 'searchClassByCode']);
+    });
 
     Route::get('/user', [ProfileController::class, 'showProfile'])->name('user.profile.show');
     Route::post('/user/update', [ProfileController::class, 'updateProfile'])->name('user.profile.update');
@@ -38,7 +43,7 @@ Route::prefix('assignment')->group(function () {
     });
     Route::middleware(['auth:sanctum', 'ability:student'])->group(function () {
         Route::get('{class_id}', [AssignmentController::class, 'GetAssignmentByClassId']);
-        Route::get('detail/{id}', [AssignmentController::class, 'getAssignment'])->name('get');
+        Route::get('detail/{id}/{class_id}', [AssignmentController::class, 'getAssignment']);
         Route::post('submit', [AssignmentController::class, 'submitAssignment'])->name('submit');
     });
 });

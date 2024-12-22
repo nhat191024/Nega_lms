@@ -10,21 +10,25 @@ class StorageService {
     box.write(key, value);
   }
 
-    static dynamic readData({
+  static dynamic readData({
     required String key,
   }) {
     return box.read(key);
   }
 
-    static bool checkData({
+  static bool checkData({
     required String key,
   }) {
     return box.hasData(key);
   }
 
-    static removeData({
+  static removeData({
     required String key,
   }) {
     box.remove(key);
   }
+}
+
+class LocalStorageKeys {
+  static const String token = "token";
 }

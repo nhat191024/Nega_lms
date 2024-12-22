@@ -4,6 +4,7 @@ class ClassModel {
   String? description;
   String? teacherName;
   String? createAt;
+  bool? isJoined;
 
   ClassModel({
     required this.id,
@@ -11,6 +12,7 @@ class ClassModel {
     required this.description,
     required this.teacherName,
     required this.createAt,
+    required this.isJoined,
   });
 
   Map<String, dynamic> toMap() {
@@ -20,6 +22,7 @@ class ClassModel {
       'description': description,
       'teacherName': teacherName,
       'createAt': createAt,
+      'isJoined': isJoined,
     };
   }
 
@@ -29,6 +32,7 @@ class ClassModel {
     description = map['description'];
     teacherName = map['teacherName'];
     createAt = map['createAt'];
+    isJoined = map['isJoined'];
   }
 
   ClassModel.fromJson(Map<String, dynamic> json) {
@@ -37,5 +41,6 @@ class ClassModel {
     description = json['description'];
     teacherName = json['teacherName'];
     createAt = json['createAt'];
+    isJoined = json['isJoined'];
   }
 }

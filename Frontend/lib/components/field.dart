@@ -3,7 +3,10 @@ import 'package:nega_lms/utils/imports.dart';
 class CustomTextField extends StatelessWidget {
   final String labelText;
   final Color labelColor;
+  final double labelSize;
   final TextInputType? keyboardType;
+  final int minLines;
+  final int maxLines;
   final double leftPadding;
   final double rightPadding;
   final double topPadding;
@@ -28,6 +31,9 @@ class CustomTextField extends StatelessWidget {
     super.key,
     required this.labelText,
     this.labelColor = CustomColors.secondaryText,
+    this.labelSize = 14,
+    this.minLines = 1,
+    this.maxLines = 1,
     this.keyboardType,
     this.leftPadding = 20,
     this.rightPadding = 20,
@@ -61,7 +67,7 @@ class CustomTextField extends StatelessWidget {
             text: TextSpan(
               text: labelText,
               style: TextStyle(
-                fontSize: 14,
+                fontSize: labelSize,
                 fontFamily: FontStyleTextStrings.bold,
                 color: labelColor,
               ),
@@ -82,6 +88,8 @@ class CustomTextField extends StatelessWidget {
             width: width,
             child: Obx(
               () => TextField(
+                maxLines: maxLines,
+                minLines: minLines,
                 obscureText: obscureText.value,
                 keyboardType: keyboardType,
                 controller: controller,
@@ -103,6 +111,20 @@ class CustomTextField extends StatelessWidget {
                     borderRadius: BorderRadius.circular(14),
                     borderSide: BorderSide(
                       color: isError.value ? CustomColors.errorMain : CustomColors.dividers,
+                      width: 1,
+                    ),
+                  ),
+                  focusedErrorBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(14),
+                    borderSide: const BorderSide(
+                      color: CustomColors.errorMain,
+                      width: 1,
+                    ),
+                  ),
+                  errorBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(14),
+                    borderSide: const BorderSide(
+                      color: CustomColors.errorMain,
                       width: 1,
                     ),
                   ),
@@ -294,12 +316,357 @@ class CheckBoxField extends StatelessWidget {
           const SizedBox(width: 10),
           Text(
             title,
-            style: TextStyle(
-              fontSize: textSize,
-              color: CustomColors.primaryText,
-              fontFamily: fontFamily
+            style: TextStyle(fontSize: textSize, color: CustomColors.primaryText, fontFamily: fontFamily),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class SelectBox extends StatelessWidget {
+  final String labelText;
+  final Color labelColor;
+  final double labelSize;
+  final double leftPadding;
+  final double rightPadding;
+  final double topPadding;
+  final double bottomPadding;
+  final double border;
+  final String hintText;
+  final Color hintTextColor;
+  final String errorText;
+  final RxBool isError;
+  final bool needErrorText;
+  final bool? isRequire;
+  final Color backgroundColor;
+  final double? width;
+  final List<DropdownMenuItem<dynamic>> items;
+  final dynamic value;
+  final Function(dynamic) onChanged;
+
+  const SelectBox({
+    super.key,
+    required this.labelText,
+    this.labelColor = CustomColors.secondaryText,
+    this.labelSize = 14,
+    this.leftPadding = 20,
+    this.rightPadding = 20,
+    this.topPadding = 0,
+    this.bottomPadding = 0,
+    this.border = 5,
+    required this.hintText,
+    this.hintTextColor = CustomColors.disable,
+    required this.errorText,
+    required this.isError,
+    this.needErrorText = true,
+    this.isRequire = false,
+    this.backgroundColor = CustomColors.background,
+    this.width,
+    required this.items,
+    required this.value,
+    required this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.fromLTRB(leftPadding, topPadding, rightPadding, bottomPadding),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          RichText(
+            text: TextSpan(
+              text: labelText,
+              style: TextStyle(
+                fontSize: labelSize,
+                fontFamily: FontStyleTextStrings.bold,
+                color: labelColor,
+              ),
+              children: isRequire == true
+                  ? [
+                      const TextSpan(
+                        text: '*',
+                        style: TextStyle(
+                          color: Colors.red,
+                        ),
+                      ),
+                    ]
+                  : [],
             ),
           ),
+          const SizedBox(height: 5),
+          SizedBox(
+            width: width,
+            child: Obx(
+              () => DropdownButtonFormField(
+                value: value,
+                items: [
+                  DropdownMenuItem(
+                    value: null,
+                    child: Text(
+                      hintText,
+                      style: TextStyle(
+                        color: hintTextColor,
+                        fontSize: 14,
+                        fontFamily: FontStyleTextStrings.regular,
+                      ),
+                    ),
+                  ),
+                  ...items,
+                ],
+                onChanged: onChanged,
+                style: const TextStyle(
+                  color: CustomColors.primaryText,
+                  fontSize: 14,
+                  fontFamily: FontStyleTextStrings.regular,
+                ),
+                decoration: InputDecoration(
+                  hintText: hintText,
+                  hintStyle: TextStyle(color: hintTextColor),
+                  contentPadding: const EdgeInsets.fromLTRB(15, 15, 10, 15),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(border),
+                    borderSide: BorderSide(
+                      color: isError.value ? CustomColors.errorMain : CustomColors.dividers,
+                      width: 1,
+                    ),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(14),
+                    borderSide: BorderSide(
+                      color: isError.value ? CustomColors.errorMain : CustomColors.dividers,
+                      width: 1,
+                    ),
+                  ),
+                  focusedErrorBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(14),
+                    borderSide: const BorderSide(
+                      color: CustomColors.errorMain,
+                      width: 1,
+                    ),
+                  ),
+                  errorBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(14),
+                    borderSide: const BorderSide(
+                      color: CustomColors.errorMain,
+                      width: 1,
+                    ),
+                  ),
+                  errorText: needErrorText
+                      ? isError.value
+                          ? errorText
+                          : null
+                      : null,
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: isError.value ? CustomColors.errorMain : CustomColors.primaryText, width: 1),
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                  filled: backgroundColor == CustomColors.background ? isError.value : true,
+                  fillColor: isError.value ? CustomColors.errorLight : backgroundColor,
+                ),
+                icon: const Icon(Icons.arrow_drop_down),
+                isExpanded: true,
+                dropdownColor: Colors.white,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class DateTimeField extends StatelessWidget {
+  final String labelText;
+  final Color labelColor;
+  final double labelSize;
+  final double leftPadding;
+  final double rightPadding;
+  final double topPadding;
+  final double bottomPadding;
+  final double border;
+  final String hintText;
+  final Color hintTextColor;
+  final String errorText;
+  final RxBool isError;
+  final bool needErrorText;
+  final TextEditingController controller;
+  final Function(String) onChanged;
+  final bool? isRequire;
+  final Color backgroundColor;
+  final double? width;
+
+  const DateTimeField({
+    super.key,
+    required this.labelText,
+    this.labelColor = CustomColors.secondaryText,
+    this.labelSize = 14,
+    this.leftPadding = 20,
+    this.rightPadding = 20,
+    this.topPadding = 0,
+    this.bottomPadding = 0,
+    this.border = 5,
+    required this.hintText,
+    this.hintTextColor = CustomColors.disable,
+    required this.errorText,
+    required this.isError,
+    this.needErrorText = true,
+    required this.controller,
+    required this.onChanged,
+    this.isRequire = false,
+    this.backgroundColor = CustomColors.background,
+    this.width,
+  });
+
+  Future<void> _selectDateTime(BuildContext context) async {
+    final DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2100),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: const ColorScheme.light(
+              primary: CustomColors.primary,
+              onPrimary: Colors.white,
+              surface: Colors.white,
+              onSurface: CustomColors.primaryText,
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
+
+    if (pickedDate != null) {
+      final TimeOfDay? pickedTime = await showTimePicker(
+        // ignore: use_build_context_synchronously
+        context: context,
+        initialTime: TimeOfDay.now(),
+        builder: (context, child) {
+          return Theme(
+            data: Theme.of(context).copyWith(
+              colorScheme: const ColorScheme.light(
+                primary: CustomColors.primary,
+                onPrimary: Colors.white,
+                surface: Colors.white,
+                onSurface: CustomColors.primaryText,
+              ),
+              timePickerTheme: const TimePickerThemeData(
+                dialBackgroundColor: Colors.white,
+                hourMinuteTextColor: CustomColors.primary,
+                dialHandColor: CustomColors.primary,
+                dialTextColor: CustomColors.primaryText,
+              ),
+            ),
+            child: child!,
+          );
+        },
+      );
+
+      if (pickedTime != null) {
+        final DateTime combinedDateTime = DateTime(
+          pickedDate.year,
+          pickedDate.month,
+          pickedDate.day,
+          pickedTime.hour,
+          pickedTime.minute,
+        );
+
+        final String formattedDateTime =
+            '${combinedDateTime.year}-${combinedDateTime.month.toString().padLeft(2, '0')}-${combinedDateTime.day.toString().padLeft(2, '0')} ${combinedDateTime.hour.toString().padLeft(2, '0')}:${combinedDateTime.minute.toString().padLeft(2, '0')}:00';
+
+        controller.text = formattedDateTime;
+        onChanged(formattedDateTime);
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.fromLTRB(leftPadding, topPadding, rightPadding, bottomPadding),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          RichText(
+            text: TextSpan(
+              text: labelText,
+              style: TextStyle(
+                fontSize: labelSize,
+                fontFamily: FontStyleTextStrings.bold,
+                color: labelColor,
+              ),
+              children: isRequire == true
+                  ? [
+                      const TextSpan(
+                        text: '*',
+                        style: TextStyle(
+                          color: Colors.red,
+                        ),
+                      ),
+                    ]
+                  : [],
+            ),
+          ),
+          const SizedBox(height: 5),
+          SizedBox(
+            width: width,
+            child: Obx(
+              () => TextField(
+                controller: controller,
+                readOnly: true,
+                onTap: () => _selectDateTime(context),
+                decoration: InputDecoration(
+                  hintText: hintText,
+                  hintStyle: TextStyle(color: hintTextColor),
+                  contentPadding: const EdgeInsets.fromLTRB(15, 15, 10, 15),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(border),
+                    borderSide: BorderSide(
+                      color: isError.value ? CustomColors.errorMain : CustomColors.dividers,
+                      width: 1,
+                    ),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(14),
+                    borderSide: BorderSide(
+                      color: isError.value ? CustomColors.errorMain : CustomColors.dividers,
+                      width: 1,
+                    ),
+                  ),
+                  focusedErrorBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(14),
+                    borderSide: const BorderSide(
+                      color: CustomColors.errorMain,
+                      width: 1,
+                    ),
+                  ),
+                  errorBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(14),
+                    borderSide: const BorderSide(
+                      color: CustomColors.errorMain,
+                      width: 1,
+                    ),
+                  ),
+                  errorText: needErrorText
+                      ? isError.value
+                          ? errorText
+                          : null
+                      : null,
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: isError.value ? CustomColors.errorMain : CustomColors.primaryText, width: 1),
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                  filled: backgroundColor == CustomColors.background ? isError.value : true,
+                  fillColor: isError.value ? CustomColors.errorLight : backgroundColor,
+                  suffixIcon: const Icon(Icons.access_time),
+                ),
+              ),
+            ),
+          )
         ],
       ),
     );

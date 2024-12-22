@@ -14,8 +14,11 @@ return new class extends Migration
         Schema::create('homework', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('class_id');
-            $table->enum('type', ['homework', 'quiz']);
+            $table->enum('type', ['link', 'quiz']);
             $table->unsignedBigInteger('assignment_id')->nullable();
+            $table->string('title')->nullable();
+            $table->string('score')->nullable();
+            $table->text('description')->nullable();
             $table->string('link')->nullable();
             $table->dateTime('start_datetime')->nullable();
             $table->dateTime('due_datetime')->nullable();

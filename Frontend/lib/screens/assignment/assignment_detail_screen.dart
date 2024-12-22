@@ -9,7 +9,7 @@ class AssignmentDetailScreen extends GetView<AssignmentController> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: const NavBar(),
+        title: NavBar(),
       ),
       body: SingleChildScrollView(
         child: Column(

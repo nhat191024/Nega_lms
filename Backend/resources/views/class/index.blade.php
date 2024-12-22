@@ -10,7 +10,8 @@
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-class-modal">
                     Thêm lớp học
                 </button>
-                <!-- Modal -->
+
+                <!-- Modal thêm lớp học -->
                 <div class="modal fade" id="add-class-modal" tabindex="-1" aria-labelledby="modal-new-class"
                     aria-hidden="true">
                     <div class="modal-dialog">
@@ -19,78 +20,89 @@
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <h1 class="modal-title fs-5" id="modal-new-class">Thêm lớp học mới</h1>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                        aria-label="Close"></button>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
-                                {{-- <input type="hidden" name="class_id" value="{{ $class->id }}"> --}}
+                                
                                 <div class="modal-body">
-                                    <form class="row g-3 needs-validation" novalidate>
+                                    <div class="row g-3 needs-validation" novalidate>
+
                                         <div class="col-md-12">
-                                            <label for="validationCustom01" class="form-label">Nhập tên lớp</label>
-                                            <input name="className" type="text"
-                                                class="form-control @error('className') is-invalid @enderror"
-                                                id="validationCustom01" placeholder="Vd: Lớp bá đạo"
-                                                value="{{ old('className') }}">
-                                            <p class="fs-6 text-danger">
-                                                @error('className')
-                                                    {{ $message }}
-                                                @enderror
-                                            </p>
+                                            <label for="classCode" class="form-label">Nhập mã lớp</label>
+                                            <input name="classCode" type="text"
+                                                class="form-control @error('classCode') is-invalid @enderror" id="classCode"
+                                                placeholder="Vd: ABC123" value="{{ old('classCode') }}">
+                                            @error('classCode')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
                                         </div>
+                                        
+
                                         <div class="col-md-12">
-                                            <label for="validationCustom01" class="form-label">Nhập mô tả</label>
+                                            <label for="className" class="form-label">Nhập tên lớp</label>
+                                            <input name="className" type="text"
+                                                class="form-control @error('className') is-invalid @enderror" id="className"
+                                                placeholder="Vd: Lớp bá đạo" value="{{ old('className') }}">
+                                            @error('className')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                        
+                                        <div class="col-md-12">
+                                            <label for="classDescription" class="form-label">Nhập mô tả</label>
                                             <input name="classDescription" type="text"
                                                 class="form-control @error('classDescription') is-invalid @enderror"
-                                                id="validationCustom01" placeholder="Vd: Hơn 30 học sinh giỏi"
+                                                id="classDescription" placeholder="Vd: Hơn 30 học sinh giỏi"
                                                 value="{{ old('classDescription') }}">
-                                            <p class="fs-6 text-danger">
-                                                @error('classDescription')
-                                                    {{ $message }}
-                                                @enderror
-                                            </p>
+                                            @error('classDescription')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
                                         </div>
+                        
                                         <div class="col-md-12">
-                                            <label for="validationCustom04" class="form-label">Thêm giảng viên</label>
+                                            <label for="teacherID" class="form-label">Thêm giảng viên</label>
                                             <select name="teacherID"
-                                                class="form-select @error('teacherID') is-invalid @enderror"
-                                                id="validationCustom04">
+                                                class="form-select @error('teacherID') is-invalid @enderror" id="teacherID">
                                                 <option selected disabled value="">Chọn giảng viên</option>
                                                 @foreach ($teachersNotInClass as $teacher)
-                                                    <option value="{{ $teacher->id }}">{{ $teacher->name }}</option>
+                                                    <option value="{{ $teacher->id }}" {{ old('teacherID') == $teacher->id ? 'selected' : '' }}>{{ $teacher->name }}</option>
                                                 @endforeach
                                             </select>
-                                            <p class="fs-6 text-danger">
-                                                @error('teacherID')
-                                                    {{ $message }}
-                                                @enderror
-                                            </p>
+                                            @error('teacherID')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
                                         </div>
+                        
                                         <div class="col-12">
                                             <button class="btn btn-primary" type="submit">Tạo</button>
                                         </div>
-                                    </form>
+                                    </div>
                                 </div>
+                        
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
                                 </div>
                             </div>
-                        </form>
+                        </form>                        
                     </div>
                 </div>
             </div>
+
             <!-- DataTales Example -->
             @foreach ($classes as $class)
                 <div class="card shadow my-4">
                     <div class="card-header py-3 d-flex justify-content-between">
-                        <div class="d-flex align    ">
+                        <div class="d-flex align-items-center">
                             <h6 class="m-0 font-weight-bold text-primary">Lớp - {{ $class->class_name }}</h6>
+                            <h6 class="m-0 font-weight-bold text-primary mx-4">Mã lớp - {{ $class->class_code }}</h6>
                             <h6 class="m-0 font-weight-bold text-primary mx-4">Giảng viên - {{ $class->teacher->name }}
                             </h6>
-                            <a href="{{ route('classes.assignments.byClass', ['class_id' => $class->id]) }}"
-                                class="btn btn-info">Bài tập</a>
                         </div>
 
                         <div>
+                            <button type="button" class="btn btn-warning">
+                                <a href="{{ route('classes.editClass', $class->id) }}" class="text-white text-decoration-none">Sửa</a>
+                            </button>                            
+                            
                             @if ($class->status === 1)
                                 <a class="btn btn-danger"
                                     onclick="event.preventDefault(); if (confirm('Bạn chắc chắn muốn ẩn lớp {{ $class->name }} chứ?')) { window.location.href = '{{ route('classes.hideClass', ['class_id' => $class->id]) }}'; }"
@@ -106,7 +118,8 @@
                                 Thêm học sinh
                             </button>
                         </div>
-                        <!-- Modal -->
+
+                        <!-- Modal thêm học sinh -->
                         <div class="modal fade" id="add-student-to-class-{{ Str::slug($class->class_name) }}"
                             tabindex="-1" aria-labelledby="modal-title-{{ Str::slug($class->class_name) }}"
                             aria-hidden="true">
@@ -144,6 +157,7 @@
                             </div>
                         </div>
                     </div>
+
                     @if ($class->students->isNotEmpty())
                         <div class="card-body">
                             <div class="table-responsive">

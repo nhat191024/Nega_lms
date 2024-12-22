@@ -10,6 +10,8 @@ class Answer extends Model
         'question_id',
         'user_id',
         'choice_id',
+        'homework_id',
+        'link',
     ];
 
     public function question()

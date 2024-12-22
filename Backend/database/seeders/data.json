@@ -14,17 +14,20 @@
         {
             "class_name": "Php",
             "class_description": "Php class",
-            "teacher_id": 2
+            "teacher_id": 2,
+            "class_code": "php2024"
         },
         {
             "class_name": "Java",
             "class_description": "Java class",
-            "teacher_id": 2
+            "teacher_id": 2,
+            "class_code": "java2024"
         },
         {
             "class_name": "C#",
             "class_description": "C# class",
-            "teacher_id": 3
+            "teacher_id": 3,
+            "class_code": "csharp2024"
         }
     ],
     "enrollment": [
@@ -53,9 +56,8 @@
             "class_id": 3
         }
     ],
-    "assignment": [
+    "homework": [
         {
-
             "creator_id": 1,
             "title": "Lập trình php",
             "description": "Làm bài tập lập trình php cơ bản",
@@ -65,11 +67,6 @@
             "specialized": "Web",
             "subject": "php cơ bản",
             "topic": "php"
-
-        },
-        {
-
-            "creator_id": 1,
             "title": "Lập trình php 2",
             "description": "Làm bài tập lập trình php nâng cao",
             "status": "published",
@@ -80,7 +77,6 @@
             "topic": "php"
         },
         {
-
             "creator_id": 1,
             "title": "Lập trình Java",
             "description": "Làm bài tập lập trình Java cơ bản",
@@ -92,7 +88,6 @@
             "topic": "Java"
         },
         {
-
             "creator_id": 1,
             "title": "Lập trình Java 2",
             "description": "Làm bài tập lập trình Java nâng cao",
@@ -104,7 +99,6 @@
             "topic": "Java"
         },
         {
-
             "creator_id": 1,
             "title": "Lập trình C#",
             "description": "Làm bài tập lập trình C# cơ bản",
@@ -116,10 +110,9 @@
             "topic": "C#"
         },
         {
-
             "creator_id": 1,
             "title": "Lập trình C# 2",
-            "description":  "Làm bài tập lập trình C# nâng cao",
+            "description": "Làm bài tập lập trình C# nâng cao",
             "status": "published",
             "level": "Cao đẳng",
             "totalScore": 1,
