@@ -130,6 +130,13 @@ class ClassDetailScreen extends GetView<ClassDetailController> {
       context: context,
       pageBuilder: (context, animation, secondaryAnimation) {
         return PopScope(
+          canPop: true,
+          onPopInvokedWithResult: (didPop, result) {
+            if (didPop) {
+              controller.linkSubmit.clear();
+              Get.back();
+            }
+          },
           child: Center(
             child: Material(
               color: Colors.transparent,
