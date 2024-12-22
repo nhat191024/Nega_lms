@@ -79,7 +79,6 @@ class UserController extends Controller
     {
         $users = User::findOrFail($id);
 
-        // Kiểm tra duy nhất email và username trừ chính người đó
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $id,
@@ -98,7 +97,7 @@ class UserController extends Controller
 
         if ($validator->fails()) {
             return redirect()->route('users.edit', ['id' => $users->id])
-                ->withErrors($validator) // Trả về các lỗi thực tế
+                ->withErrors($validator)
                 ->withInput();
         }
 
