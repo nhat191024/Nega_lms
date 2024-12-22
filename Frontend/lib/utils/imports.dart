@@ -49,6 +49,7 @@ export 'package:nega_lms/components/dialog.dart';
 
 //model imports
 export 'package:nega_lms/models/class_model.dart';
+export 'package:nega_lms/models/homework_model.dart';
 export 'package:nega_lms/models/assignment_model.dart';
 export 'package:nega_lms/models/question_model.dart';
 export 'package:nega_lms/models/answer_model.dart';
