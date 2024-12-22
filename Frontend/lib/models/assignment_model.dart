@@ -1,49 +1,45 @@
 class AssignmentModel {
   int? id;
-  String? creatorName;
   String? name;
   String? description;
-  int? duration;
-  String? startDate;
-  String? dueDate;
-  String? type;
-  bool? isSubmitted;
+  String? level;
+  double? totalScore;
+  String? specialized;
+  String? subject;
+  String? topic;
 
   AssignmentModel({
     required this.id,
-    required this.creatorName,
     required this.name,
     required this.description,
-    required this.duration,
-    required this.startDate,
-    required this.dueDate,
-    required this.type,
-    required this.isSubmitted,
+    required this.level,
+    required this.totalScore,
+    required this.specialized,
+    required this.subject,
+    required this.topic,
   });
 
   Map<String, dynamic> toMap() {
     return {
       'id': id,
-      'creatorName': creatorName,
       'name': name,
       'description': description,
-      'duration': duration,
-      'startDate': startDate,
-      'dueDate': dueDate,
-      'type': type,
-      'isSubmitted': isSubmitted,
+      'level': level,
+      'totalScore': totalScore,
+      'specialized': specialized,
+      'subject': subject,
+      'topic': topic,
     };
   }
 
   AssignmentModel.fromMap(Map<String, dynamic> map) {
     id = map['id'];
-    creatorName = map['creatorName'];
     name = map['name'];
     description = map['description'];
-    duration = map['duration'];
-    startDate = map['startDate'];
-    dueDate = map['dueDate'];
-    type = map['type'];
-    isSubmitted = map['isSubmitted'];
+    level = map['level'];
+    totalScore = map['totalScore'];
+    specialized = map['specialized'];
+    subject = map['subject'];
+    topic = map['topic'];
   }
 }
