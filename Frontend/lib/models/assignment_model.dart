@@ -7,6 +7,10 @@ class AssignmentModel {
   String? specialized;
   String? subject;
   String? topic;
+  String? creator;
+  bool? isCreator;
+  String? createAt;
+  int? totalQuestion;
 
   AssignmentModel({
     required this.id,
@@ -17,6 +21,10 @@ class AssignmentModel {
     required this.specialized,
     required this.subject,
     required this.topic,
+    required this.creator,
+    required this.isCreator,
+    required this.createAt,
+    required this.totalQuestion,
   });
 
   Map<String, dynamic> toMap() {
@@ -29,6 +37,10 @@ class AssignmentModel {
       'specialized': specialized,
       'subject': subject,
       'topic': topic,
+      'creator': creator,
+      'isCreator': isCreator,
+      'createAt': createAt,
+      'totalQuestion': totalQuestion,
     };
   }
 
@@ -41,5 +53,9 @@ class AssignmentModel {
     specialized = map['specialized'];
     subject = map['subject'];
     topic = map['topic'];
+    creator = map['creator'];
+    isCreator = map['isCreator'];
+    createAt = map['createdAt'];
+    totalQuestion = map['numberOfQuestions'];
   }
 }
