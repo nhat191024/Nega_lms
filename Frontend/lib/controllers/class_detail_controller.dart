@@ -244,7 +244,7 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
         assignmentDueDateError.value = "Ngày kết thúc không được để trống";
       }
 
-      if (assignmentType.value == 'quiz' || assignmentType.value == 'quiz-bank') {
+      if (assignmentType.value == 'quiz' || assignmentType.value == 'quiz_bank') {
         if (assignmentAutoGrade.value.isEmpty) {
           error.value = true;
           isAssignmentAutoGrade.value = true;
@@ -269,12 +269,6 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
         assignmentSubjectError.value = "Chủ đề chỉ chứa ký tự chữ và số";
       }
 
-      if (assignmentStatus.value.isEmpty) {
-        error.value = true;
-        isAssignmentStatusError.value = true;
-        assignmentStatusError.value = "Trạng thái không được để trống";
-      }
-
       if (assignmentLevel.value.isEmpty) {
         error.value = true;
         isAssignmentLevelError.value = true;
@@ -291,6 +285,14 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
         error.value = true;
         isAssignmentTopicError.value = true;
         assignmentTopicError.value = "Chủ đề không được để trống";
+      }
+    }
+
+    if (assignmentType.value == 'quiz' || assignmentType.value == 'quiz_bank') {
+      if (assignmentStatus.value.isEmpty) {
+        error.value = true;
+        isAssignmentStatusError.value = true;
+        assignmentStatusError.value = "Trạng thái không được để trống";
       }
     }
 
@@ -325,14 +327,14 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
     }
 
     //for link type homework only
-    if (assignmentType.value == 'link') {
+    if (assignmentType.value == 'link' || assignmentType.value == 'quiz_bank') {
       if (homeworkScore.text.trim().isEmpty) {
         error.value = true;
-        isAssignmentDescriptionError.value = true;
+        isHomeworkScoreError.value = true;
         homeworkScoreError.value = "Điểm số không được để trống";
       } else if (!RegExp(r'^\d*\.?\d+$').hasMatch(homeworkScore.text.trim())) {
         error.value = true;
-        isAssignmentDescriptionError.value = true;
+        isHomeworkScoreError.value = true;
         homeworkScoreError.value = "Điểm số phải là số dương";
       }
     }
@@ -448,27 +450,27 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
     if (createAssignmentThenPushToClass.value || assignmentType.value == 'link') {
       response.fields['class_id'] = classId.value.toString();
       response.fields['type'] = assignmentType.value;
-      if (assignmentType.value == 'link') response.fields['title'] = assignmentName.text.trim();
-      if (assignmentType.value == 'link') response.fields['score'] = homeworkScore.text.trim();
-      if (assignmentType.value == 'link') response.fields['description'] = assignmentDescription.text.trim();
+      if (assignmentType.value == 'link' || assignmentType.value == 'quiz_bank') response.fields['title'] = assignmentName.text.trim();
+      if (assignmentType.value == 'link' || assignmentType.value == 'quiz_bank') response.fields['score'] = homeworkScore.text.trim();
+      if (assignmentType.value == 'link' || assignmentType.value == 'quiz_bank') response.fields['description'] = assignmentDescription.text.trim();
       response.fields['start_datetime'] = assignmentStartDate.text.trim();
       response.fields['due_datetime'] = assignmentDueDate.text.trim();
       response.fields['duration'] = assignmentDuration.text.trim();
-      if (assignmentType.value == 'quiz') response.fields['auto_grade'] = assignmentAutoGrade.value;
+      if (assignmentType.value == 'quiz' || assignmentType.value == 'quiz_bank') response.fields['auto_grade'] = assignmentAutoGrade.value;
       response.fields['homework_status'] = 1.toString();
     }
 
-    var streamedResponse = await response.send();
-    if (streamedResponse.statusCode == 201) {
-      clear();
-      Get.back();
-      fetchClassAssignment(classId.value);
-      Get.snackbar("Thành công", "Tạo bài tập thành công", maxWidth: Get.width * 0.2);
-    } else {
-      var data = await streamedResponse.stream.bytesToString();
-      print(jsonEncode(data));
-      Get.snackbar("Lỗi", "Đã có lỗi xảy ra", maxWidth: Get.width * 0.2);
-    }
+    // var streamedResponse = await response.send();
+    // if (streamedResponse.statusCode == 201) {
+    //   clear();
+    //   Get.back();
+    //   fetchClassAssignment(classId.value);
+    //   Get.snackbar("Thành công", "Tạo bài tập thành công", maxWidth: Get.width * 0.2);
+    // } else {
+    //   var data = await streamedResponse.stream.bytesToString();
+    //   print(jsonEncode(data));
+    //   Get.snackbar("Lỗi", "Đã có lỗi xảy ra", maxWidth: Get.width * 0.2);
+    // }
   }
 
   void clear() {
@@ -499,6 +501,7 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
     linkSubmit.clear();
     isLinkSubmitError.value = false;
     assignmentType.value = '';
+    createAssignmentThenPushToClass.value = false;
     questions.clear();
     addNewQuestion();
   }
