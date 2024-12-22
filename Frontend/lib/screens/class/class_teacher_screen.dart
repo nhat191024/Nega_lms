@@ -14,13 +14,16 @@ class ClassTeacherScreen extends GetView<ClassDetailController> {
             child: PopupMenuButton<String>(
               onSelected: (value) {
                 if (value == 'Bộ câu hỏi (Quiz)') {
+                  controller.clear();
                   controller.assignmentType.value = 'quiz';
                   _showAddQuizModal(context);
                 } else if (value == 'Bài tập 1 câu trả lời') {
+                  controller.clear();
                   controller.assignmentType.value = 'link';
                   _showAddLinkHomeworkModal(context);
                   controller.createAssignmentThenPushToClass.value = true;
                 } else {
+                  controller.clear();
                   controller.assignmentType.value = 'quiz_bank';
                   _showAddQuizFromBankModal(context);
                   controller.createAssignmentThenPushToClass.value = true;
@@ -77,6 +80,7 @@ class ClassTeacherScreen extends GetView<ClassDetailController> {
                         itemCount: controller.assignmentsList.length,
                         itemBuilder: (context, index) {
                           return classCardBuilder(
+                            context,
                             controller.assignmentsList[index].name ?? '',
                             controller.assignmentsList[index].description ?? '',
                             [
@@ -86,6 +90,8 @@ class ClassTeacherScreen extends GetView<ClassDetailController> {
                             10,
                             index == controller.assignmentsList.length - 1,
                             controller.assignmentsList[index].id.toString(),
+                            controller.assignmentsList[index].homeworkId.toString(),
+                            controller.assignmentsList[index].type ?? '',
                           );
                         },
                       ),
@@ -98,7 +104,17 @@ class ClassTeacherScreen extends GetView<ClassDetailController> {
   }
 
   //class card builder
-  Widget classCardBuilder(String title, String description, List<String> tags, double verticalPadding, bool isLast, String id) {
+  Widget classCardBuilder(
+    context,
+    String title,
+    String description,
+    List<String> tags,
+    double verticalPadding,
+    bool isLast,
+    String id,
+    String homeworkId,
+    String type,
+  ) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: verticalPadding),
       child: Column(
@@ -155,7 +171,10 @@ class ClassTeacherScreen extends GetView<ClassDetailController> {
               ),
               const SizedBox(width: 20),
               CustomButton(
-                onTap: () {},
+                onTap: () async {
+                  await controller.loadDataToEdit(homeworkId, type);
+                  type == "quiz" ? _showAddQuizFromBankModal(context, isEdit: true) : _showAddLinkHomeworkModal(context, isEdit: true);
+                },
                 btnText: 'Chỉnh sửa',
                 btnColor: CustomColors.primary,
                 width: 140,
@@ -640,7 +659,7 @@ class ClassTeacherScreen extends GetView<ClassDetailController> {
     );
   }
 
-  Future _showAddLinkHomeworkModal(context) {
+  Future _showAddLinkHomeworkModal(context, {isEdit = false}) {
     return showGeneralDialog(
       context: context,
       barrierColor: Colors.black.withOpacity(0.5),
@@ -669,9 +688,9 @@ class ClassTeacherScreen extends GetView<ClassDetailController> {
                 child: Obx(
                   () => Column(
                     children: [
-                      const Text(
-                        "Tạo bài tập 1 câu trả lời",
-                        style: TextStyle(
+                      Text(
+                        isEdit ? "Chỉnh sửa bài tập 1 câu trả lời" : "Tạo bài tập 1 câu trả lời",
+                        style: const TextStyle(
                           fontSize: 22,
                           color: CustomColors.primary,
                           fontFamily: FontStyleTextStrings.medium,
@@ -808,7 +827,12 @@ class ClassTeacherScreen extends GetView<ClassDetailController> {
                         },
                       ),
                       const Spacer(),
-                      CustomButton(onTap: () => controller.createQuiz(), btnText: 'Tạo bài tập', btnColor: CustomColors.primary, width: 200),
+                      CustomButton(
+                        onTap: () => controller.createQuiz(),
+                        btnText: isEdit ? 'Chỉnh sửa bài tập' : 'Tạo bài tập',
+                        btnColor: CustomColors.primary,
+                        width: 200,
+                      ),
                     ],
                   ),
                 ),
@@ -820,7 +844,7 @@ class ClassTeacherScreen extends GetView<ClassDetailController> {
     );
   }
 
-  Future _showAddQuizFromBankModal(context) {
+  Future _showAddQuizFromBankModal(context, {isEdit = false}) {
     return showGeneralDialog(
       context: context,
       barrierColor: Colors.black.withOpacity(0.5),
@@ -831,7 +855,6 @@ class ClassTeacherScreen extends GetView<ClassDetailController> {
           canPop: true,
           onPopInvokedWithResult: (didPop, result) {
             if (didPop) {
-              controller.clear();
               Get.back();
             }
           },
@@ -852,13 +875,13 @@ class ClassTeacherScreen extends GetView<ClassDetailController> {
                       children: [
                         Stack(
                           children: [
-                            const Align(
+                            Align(
                               alignment: Alignment.center,
                               child: Padding(
-                                padding: EdgeInsets.only(top: 15),
+                                padding: const EdgeInsets.only(top: 15),
                                 child: Text(
-                                  "Tạo bài tập từ kho quiz",
-                                  style: TextStyle(
+                                  isEdit ? "Chỉnh sửa bài tập" : "Tạo bài tập từ kho quiz",
+                                  style: const TextStyle(
                                     fontSize: 22,
                                     color: CustomColors.primary,
                                     fontFamily: FontStyleTextStrings.medium,
@@ -869,8 +892,8 @@ class ClassTeacherScreen extends GetView<ClassDetailController> {
                             Align(
                               alignment: Alignment.centerRight,
                               child: CustomButton(
-                                onTap: () => controller.createQuiz(),
-                                btnText: 'Tạo bài tập',
+                                onTap: () => isEdit ? controller.updateQuiz() : controller.createQuiz(),
+                                btnText: isEdit ? 'Sửa bài tập' : 'Tạo bài tập',
                                 btnColor: CustomColors.primary,
                                 width: 200,
                               ),
@@ -908,7 +931,7 @@ class ClassTeacherScreen extends GetView<ClassDetailController> {
                               errorText: controller.assignmentAutoGradeError.value,
                               isError: controller.isAssignmentAutoGrade.value.obs,
                               width: Get.width * 0.3,
-                              value: null,
+                              value: controller.assignmentAutoGrade.value,
                               items: const [
                                 DropdownMenuItem(value: 'true', child: Text('Bật')),
                                 DropdownMenuItem(value: 'false', child: Text('Tắt')),
@@ -976,7 +999,7 @@ class ClassTeacherScreen extends GetView<ClassDetailController> {
                               errorText: controller.assignmentStatusError.value,
                               isError: controller.isAssignmentStatusError.value.obs,
                               width: Get.width * 0.3,
-                              value: null,
+                              value: controller.assignmentStatus.value,
                               items: const [
                                 DropdownMenuItem(value: 'true', child: Text('Hiện')),
                                 DropdownMenuItem(value: 'false', child: Text('Ẩn')),
