@@ -6,6 +6,7 @@ class AssignmentModel {
   int? duration;
   String? startDate;
   String? dueDate;
+  String? type;
 
   AssignmentModel({
     required this.id,
@@ -15,6 +16,7 @@ class AssignmentModel {
     required this.duration,
     required this.startDate,
     required this.dueDate,
+    required this.type,
   });
 
   Map<String, dynamic> toMap() {
@@ -26,6 +28,7 @@ class AssignmentModel {
       'duration': duration,
       'startDate': startDate,
       'dueDate': dueDate,
+      'type': type,
     };
   }
 
@@ -37,5 +40,6 @@ class AssignmentModel {
     duration = map['duration'];
     startDate = map['startDate'];
     dueDate = map['dueDate'];
+    type = map['type'];
   }
 }
