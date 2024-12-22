@@ -503,10 +503,10 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
     }
 
     //homework data
+    response.fields['type'] = assignmentType.value == 'link' ? 'link' : 'quiz';
     if (createAssignmentThenPushToClass.value || assignmentType.value == 'link') {
       if (selectedAssignment.value.isNotEmpty) response.fields['assignment_id'] = selectedAssignment.value;
       response.fields['class_id'] = classId.value.toString();
-      response.fields['type'] = assignmentType.value == 'link' ? 'link' : 'quiz';
       if (assignmentType.value == 'link') response.fields['title'] = assignmentName.text.trim();
       if (assignmentType.value == 'link') response.fields['score'] = homeworkScore.text.trim();
       if (assignmentType.value == 'link') response.fields['description'] = assignmentDescription.text.trim();
@@ -522,6 +522,8 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
       clear();
       Get.back();
       fetchClassAssignment(classId.value);
+      fetchAllClassAssignment(classId.value);
+      fetchAssignmentForTeacher();
       Get.snackbar("Thành công", "Tạo bài tập thành công", maxWidth: Get.width * 0.2);
     } else {
       RxString errors = ''.obs;
@@ -534,6 +536,8 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
       Get.snackbar("Lỗi", errors.value, maxWidth: Get.width * 0.2);
     }
   }
+
+  void loadDataToEdit() {}
 
   void clear() {
     assignmentName.clear();
