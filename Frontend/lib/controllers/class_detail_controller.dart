@@ -362,7 +362,7 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
         }
 
         var answers = questions[i]['answers'] as RxList<Map<String, dynamic>>;
-        
+
         if (answers.length < 2) {
           Get.dialog(
             NotificationDialogWithoutButton(
@@ -412,6 +412,7 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
     response.headers['Authorization'] = 'Bearer $token';
     response.headers['Content-Type'] = 'application/json';
     response.headers['Accept'] = 'application/json';
+    response.fields['create_homework'] = createAssignmentThenPushToClass.value.toString();
 
     if (assignmentType.value == 'quiz') {
       double totalScore = 0.0;
@@ -457,17 +458,17 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
       response.fields['homework_status'] = 1.toString();
     }
 
-    print(response.fields);
-
-    // var streamedResponse = await response.send();
-    // if (streamedResponse.statusCode == 201) {
-    //   clear();
-    //   Get.back();
-    //   fetchClassAssignment(classId.value);
-    //   Get.snackbar("Thành công", "Tạo bài tập thành công", maxWidth: Get.width * 0.2);
-    // } else {
-    //   Get.snackbar("Lỗi", "Đã có lỗi xảy ra", maxWidth: Get.width * 0.2);
-    // }
+    var streamedResponse = await response.send();
+    if (streamedResponse.statusCode == 201) {
+      clear();
+      Get.back();
+      fetchClassAssignment(classId.value);
+      Get.snackbar("Thành công", "Tạo bài tập thành công", maxWidth: Get.width * 0.2);
+    } else {
+      var data = await streamedResponse.stream.bytesToString();
+      print(jsonEncode(data));
+      Get.snackbar("Lỗi", "Đã có lỗi xảy ra", maxWidth: Get.width * 0.2);
+    }
   }
 
   void clear() {
