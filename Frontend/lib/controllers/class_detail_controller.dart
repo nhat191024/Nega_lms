@@ -567,6 +567,7 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
     isLinkSubmitError.value = false;
     assignmentType.value = '';
     createAssignmentThenPushToClass.value = false;
+    selectedAssignment.value = '';
     questions.clear();
     addNewQuestion();
   }
