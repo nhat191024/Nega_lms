@@ -17,7 +17,7 @@ class ClassController extends Controller
         $user = Auth::user();
         $enrolledClassIds = $user->enrollments->pluck('class_id')->toArray();
 
-        $classes = Classes::with('teacher')->get();
+        $classes = Classes::with('teacher')->where('status', 1)->get();
 
         $classes = $classes->map(function ($class) use ($enrolledClassIds) {
             return [
