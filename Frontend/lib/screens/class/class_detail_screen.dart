@@ -26,7 +26,10 @@ class ClassDetailScreen extends GetView<ClassDetailController> {
                             return classCardBuilder(
                               controller.assignmentList[index].name ?? '',
                               controller.assignmentList[index].description ?? '',
-                              ["Lập trình"],
+                              [
+                                "Lập trình",
+                                controller.assignmentList[index].type ?? '',
+                              ],
                               10,
                               index == controller.assignmentList.length - 1,
                               controller.assignmentList[index].id.toString(),
