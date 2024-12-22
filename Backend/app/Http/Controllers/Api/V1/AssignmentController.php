@@ -23,15 +23,7 @@ class AssignmentController extends Controller
         $homeworks = Homework::where('class_id', $class_id)->where('status', 1)->with('assignment')->get();
 
         $assignments = $homeworks->map(function ($homework) {
-            // dd($homework->assignment->answers);
-            $submit = false;
-            if ($homework->type == 'link') {
-                $submit =  $homework->answers->where('user_id', Auth::user()->id)->count() > 0;
-            } else {
-                $homework->assignment->answers == null ? $submit = false : $homework->assignment->answers->where('user_id', Auth::user()->id)->count() > 0;
-            }
             $answers = Answer::where('user_id', Auth::user()->id)->where('assignment_id', $homework->assignment ? $homework->assignment->id : $homework->id)->get();
-            dd($answers);
             return [
                 'id' => $homework->assignment ? $homework->assignment->id : $homework->id,
                 'name' => $homework->assignment ? $homework->assignment->title : $homework->title,
@@ -42,7 +34,7 @@ class AssignmentController extends Controller
                 'subject' => $homework->assignment ?  $homework->assignment->subject : "Không có",
                 'topic' => $homework->assignment ? $homework->assignment->topic : "Không có",
                 'type' => $homework->type,
-                'isSubmitted' => $submit,
+                'isSubmitted' => $answers->count() > 1 ? true : false,
             ];
         });
 
@@ -54,6 +46,7 @@ class AssignmentController extends Controller
     public function CreateAssignment(Request $request)
     {
         $rules = [
+            'create_homework' => 'required|String',
             //assignment
             'title' => 'string',
             'description' => 'string',
@@ -65,24 +58,23 @@ class AssignmentController extends Controller
             'topic' => 'string',
             //question
             'questions' => 'json',
-            // 'questions.*.question' => 'string',
-            // 'questions.*.score' => 'integer',
-            // 'questions.*.choices' => 'array',
-            // 'questions.*.choices.*.choice' => 'string',
-            // 'questions.*.choices.*.is_correct' => 'boolean',
-            //homework
-            'class_id' => 'required|integer',
-            'type' => 'required|in:link,quiz',
-            'title' => 'string',
-            'score' => 'integer',
-            'start_datetime' => 'required|String',
-            'due_datetime' => 'required|String',
-            'duration' => 'required|integer',
-            'auto_grade' => 'String',
-            'homework_status' => 'required|integer',
         ];
 
+        if ($request->create_homework == 'true') {
+            $rules['class_id'] = 'required|integer';
+            $rules['type'] = 'required|in:link,quiz';
+            $rules['title'] = 'required|string';
+            $rules['score'] = 'required|integer';
+            $rules['start_datetime'] = 'required|string';
+            $rules['due_datetime'] = 'required|string';
+            $rules['duration'] = 'required|integer';
+            $rules['auto_grade'] = 'required|string';
+            $rules['homework_status'] = 'required|integer';
+        }
+
         $messages = [
+            'create_homework.required' => 'only_assignment không được để trống',
+            'create_homework.string' => 'only_assignment phải là chuỗi',
             'title.string' => 'title phải là chuỗi',
             'description.string' => 'description phải là chuỗi',
             'status.in' => 'status phải là closed, published, private hoặc draft',
@@ -92,11 +84,6 @@ class AssignmentController extends Controller
             'subject.string' => 'subject phải là chuỗi',
             'topic.string' => 'topic phải là chuỗi',
             'questions.json' => 'questions phải là json',
-            // 'questions.*.question.string' => 'questions.*.question phải là chuỗi',
-            // 'questions.*.score.integer' => 'questions.*.score phải là số nguyên',
-            // 'questions.*.choices.array' => 'questions.*.choices phải là mảng',
-            // 'questions.*.choices.*.choice.string' => 'questions.*.choices.*.choice phải là chuỗi',
-            // 'questions.*.choices.*.is_correct.boolean' => 'questions.*.choices.*.is_correct phải là boolean',
             'class_id.required' => 'class_id không được để trống',
             'class_id.integer' => 'class_id phải là số nguyên',
             'type.required' => 'type không được để trống',
@@ -155,23 +142,25 @@ class AssignmentController extends Controller
             }
         }
 
-        $homework = new Homework();
-        $homework->class_id = $request->class_id;
-        $homework->assignment_id = $request->type == 'link' ? null : $assignment->id;
-        $homework->type = $request->type;
-        $homework->title = $request->type == 'link' ? $request->title : null;
-        $homework->score = $request->type == 'link' ? $request->score : null;
-        $homework->description = $request->type == 'link' ? $request->description : null;
-        $homework->start_datetime = $request->start_datetime;
-        $homework->due_datetime = $request->due_datetime;
-        $homework->duration = $request->duration;
-        if ($request->type != 'link') {
-            $homework->auto_grade = $request->auto_grade == 'true' ? true : false;
-        } else {
-            $homework->auto_grade = false;
+        if ($request->create_homework == 'true') {
+            $homework = new Homework();
+            $homework->class_id = $request->class_id;
+            $homework->assignment_id = $request->type == 'link' ? null : $assignment->id;
+            $homework->type = $request->type;
+            $homework->title = $request->type == 'link' ? $request->title : null;
+            $homework->score = $request->type == 'link' ? $request->score : null;
+            $homework->description = $request->type == 'link' ? $request->description : null;
+            $homework->start_datetime = $request->start_datetime;
+            $homework->due_datetime = $request->due_datetime;
+            $homework->duration = $request->duration;
+            if ($request->type != 'link') {
+                $homework->auto_grade = $request->auto_grade == 'true' ? true : false;
+            } else {
+                $homework->auto_grade = false;
+            }
+            $homework->status = $request->homework_status;
+            $homework->save();
         }
-        $homework->status = $request->homework_status;
-        $homework->save();
 
         return response()->json([
             'message' => 'Tạo đề thi thành công',
