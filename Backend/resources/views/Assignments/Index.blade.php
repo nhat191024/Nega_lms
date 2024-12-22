@@ -7,99 +7,83 @@
             <!-- Kiểm tra xem có bài tập nào không -->
             @if ($assignments->isNotEmpty())
                 {{-- @foreach ($assignmentsGroupBy as $classId => $assignments) --}}
-                    <div class="card shadow my-4">
-                        <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                <div class="card shadow my-4">
+                    <div class="card-header py-3 d-flex justify-content-between align-items-center">
 
-                            <a href="{{ route('assignments.create') }}" class="btn btn-primary">Tạo bài tập</a>
-                        </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table  class="table table-bordered class-table" data-class-table="table-users" id="table-users"
-                                    width="100%" cellspacing="0">
-                                    <thead>
+                        <a href="{{ route('assignments.create') }}" class="btn btn-primary">Tạo bài tập</a>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered class-table" data-class-table="table-users" id="table-users"
+                                width="100%" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">STT</th>
+                                        <th class="text-center">Tạo bởi</th>
+                                        <th class="text-center">Tiêu đề</th>
+                                        <th class="text-center">Mô tả</th>
+                                        <th class="text-center">trạng thái</th>
+                                        <th class="text-center">Cấp bậc</th>
+                                        <th class="text-center">tổng điểm</th>
+                                        <th class="text-center">Chuyên môn</th>
+                                        <th class="text-center">Môn học</th>
+                                        <th class="text-center">Chủ đề học tập</th>
+                                        <th class="text-center">Trạng thái</th>
+                                        <th class="text-center">Tác vụ</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($assignments as $index => $assignment)
                                         <tr>
-                                            <th class="text-center">STT</th>
-                                            <th class="text-center">Tạo bởi</th>
-                                            <th class="text-center">Tiêu đề</th>
-                                            <th class="text-center">Mô tả</th>
-                                            <th class="text-center">trạng thái</th>
-                                            <th class="text-center">Cấp bậc</th>
-                                            <th class="text-center">tổng điểm</th>
-                                            <th class="text-center">Chuyên môn</th>
-                                            <th class="text-center">Môn học</th>
-                                            <th class="text-center">Chủ đề học tập</th>
-                                            <th class="text-center">Trạng thái</th>
-                                            <th class="text-center">Tác vụ</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($assignments as $index => $assignment)
-                                            <tr>
-                                                <td class="text-center">{{ $index + 1 }}</td>
-                                                <td class="text-center">{{ $assignment->creator->name ?? 'Không xác định' }}
-                                                </td>
-                                                <td class="text-center">{{ $assignment->title }}</td>
-                                                <td class="text-center">{{ $assignment->description }}</td>
-                                                <td class="text-center">{{ $assignment->status }}</td>
-                                                <td class="text-center">{{ $assignment->level }}</td>
-                                                <td class="text-center">{{ $assignment->totalScore }}</td>
-                                                <td class="text-center">{{ $assignment->specialized }}</td>
-                                                <td class="text-center">{{ $assignment->subject }}</td>
-                                                <td class="text-center">{{ $assignment->topic }}</td>
-                                                </td>
-                                                <td>
-                                                    <!-- Trạng thái hiển thị -->
-                                                    @if ($assignment->visibility == 1)
-                                                        <span class="badge badge-success fs-6">Hiển thị</span>
+                                            <td class="text-center">{{ $index + 1 }}</td>
+                                            <td class="text-center">{{ $assignment->creator->name ?? 'Không xác định' }}
+                                            </td>
+                                            <td class="text-center">{{ $assignment->title }}</td>
+                                            <td class="text-center">{{ $assignment->description }}</td>
+                                            <td class="text-center">{{ $assignment->status }}</td>
+                                            <td class="text-center">{{ $assignment->level }}</td>
+                                            <td class="text-center">{{ $assignment->totalScore }}</td>
+                                            <td class="text-center">{{ $assignment->specialized }}</td>
+                                            <td class="text-center">{{ $assignment->subject }}</td>
+                                            <td class="text-center">{{ $assignment->topic }}</td>
+                                            <td class="text-center">{{ $assignment->status }}</td>
+                                            <td class="text-center">
+                                                <a href="{{ route('assignments.edit', $assignment->id) }}"
+                                                    class="btn btn-warning btn-sm">Sửa</a>
+                                                <a href="{{ route('assignments.assignments.visibility', ['id' => $assignment->id]) }}"
+                                                    class="btn {{ $assignment->status == 'published' ? 'btn-danger' : 'btn-success' }} btn-sm">
+                                                    @if ($assignment->status == 'published')
+                                                        Ẩn
                                                     @else
-                                                        <span class="badge badge-danger fs-6">Ẩn</span>
+                                                        Hiển thị
                                                     @endif
-                                                </td>
-                                                <td class="text-center">
-                                                    <a href="{{ route('assignments.edit', $assignment->id) }}"
-                                                        class="btn btn-warning btn-sm">Sửa</a>
-                                                    <form action="{{ route('assignments.destroy', $assignment->id) }}"
-                                                        method="POST" style="display:inline;">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button type="submit" class="btn btn-danger btn-sm"
-                                                            onclick="return confirm('Bạn có chắc chắn muốn xóa bài tập này?')">Xóa</button>
-                                                    </form>
+                                                </a>
+                                            </td>
 
-                                                     <a href="{{ route('assignments.assignments.visibility', ['id' => $assignment->id]) }}"
-                                                        class="btn {{ $assignment->visibility ? 'btn-danger' : 'btn-success' }} btn-sm">
-                                                         @if ($assignment->visibility)
-                                                             Ẩn
-                                                         @else
-                                                             Hiển thị
-                                                         @endif
-                                                     </a>
-                                                </td>
-
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                    <tfoot>
-                                        <tr>
-                                            <th class="text-center">STT</th>
-                                            <th class="text-center">Tạo bởi</th>
-                                            <th class="text-center">Tiêu đề</th>
-                                            <th class="text-center">Mô tả</th>
-                                            <th class="text-center">trạng thái</th>
-                                            <th class="text-center">Cấp bậc</th>
-                                            <th class="text-center">tổng điểm</th>
-                                            <th class="text-center">Chuyên môn</th>
-                                            <th class="text-center">Môn học</th>
-                                            <th class="text-center">Chủ đề học tập</th>
-                                            <th class="text-center">Trạng thái</th>
-                                            <th class="text-center">Tác vụ</th>
                                         </tr>
-                                    </tfoot>
+                                    @endforeach
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th class="text-center">STT</th>
+                                        <th class="text-center">Tạo bởi</th>
+                                        <th class="text-center">Tiêu đề</th>
+                                        <th class="text-center">Mô tả</th>
+                                        <th class="text-center">trạng thái</th>
+                                        <th class="text-center">Cấp bậc</th>
+                                        <th class="text-center">tổng điểm</th>
+                                        <th class="text-center">Chuyên môn</th>
+                                        <th class="text-center">Môn học</th>
+                                        <th class="text-center">Chủ đề học tập</th>
+                                        <th class="text-center">Trạng thái</th>
+                                        <th class="text-center">Tác vụ</th>
+                                    </tr>
+                                </tfoot>
 
-                                </table>
-                            </div>
+                            </table>
                         </div>
                     </div>
+                </div>
                 {{-- @endforeach --}}
             @else
                 <p>Chưa có bài tập nào.</p>
@@ -107,4 +91,3 @@
         </div>
     </div>
 @endsection
-
