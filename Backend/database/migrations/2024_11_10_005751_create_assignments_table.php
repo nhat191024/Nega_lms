@@ -22,7 +22,6 @@ return new class extends Migration
             $table->string('specialized');
             $table->string('subject');
             $table->string('topic');
-            $table->boolean('visibility')->default(1);
             $table->timestamps();
         });
 

@@ -16,7 +16,6 @@ class Assignment extends Model
         'specialized',
         'subject',
         'topic',
-        'visibility',
     ];
 
     public function homeworks()
