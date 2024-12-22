@@ -8,7 +8,7 @@ class AssignmentController extends GetxController {
   RxString assignmentTitle = 'test'.obs;
   RxInt assignmentDuration = 0.obs;
   RxInt currentQuestion = 0.obs;
-  Rx<AssignmentModel> assignment = AssignmentModel(
+  Rx<HomeworkModel> assignment = HomeworkModel(
     id: 0,
     creatorName: '',
     name: '',
@@ -47,7 +47,7 @@ class AssignmentController extends GetxController {
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body)['assignment'];
         var question = data['questions'];
-        assignment.value = AssignmentModel.fromMap(data);
+        assignment.value = HomeworkModel.fromMap(data);
         questionList.value = (question as List).map((e) => QuestionModel.fromMap(e)).toList();
         assignmentDuration.value = assignment.value.duration!;
         loadChoiceToAnswerList();
@@ -143,7 +143,7 @@ class AssignmentController extends GetxController {
     assignmentTitle.value = 'test';
     assignmentDuration.value = 0;
     currentQuestion.value = 0;
-    assignment.value = AssignmentModel(
+    assignment.value = HomeworkModel(
       id: 0,
       creatorName: '',
       name: '',
