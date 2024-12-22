@@ -517,8 +517,6 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
       response.fields['homework_status'] = 1.toString();
     }
 
-    print(response.fields);
-
     var streamedResponse = await response.send();
     if (streamedResponse.statusCode == 201) {
       clear();
@@ -529,7 +527,6 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
       RxString errors = ''.obs;
       var responseString = await streamedResponse.stream.bytesToString();
       var data = jsonDecode(responseString);
-      print(data);
       for (var error in data['error']) {
         errors.value += '${error.value}\n';
       }
