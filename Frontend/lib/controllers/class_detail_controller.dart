@@ -42,6 +42,8 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
   TextEditingController assignmentDescription = TextEditingController();
   RxList<Map<String, dynamic>> questions = <Map<String, dynamic>>[].obs;
 
+  TextEditingController homeworkScore = TextEditingController();
+
   RxBool isAssignmentNameError = false.obs;
   RxBool isAssignmentSubjectError = false.obs;
   RxBool isAssignmentStatusError = false.obs;
@@ -54,6 +56,8 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
   RxBool isAssignmentTopicError = false.obs;
   RxBool isAssignmentDescriptionError = false.obs;
 
+  RxBool isHomeworkScoreError = false.obs;
+
   RxString assignmentNameError = ''.obs;
   RxString assignmentSubjectError = ''.obs;
   RxString assignmentStatusError = ''.obs;
@@ -65,6 +69,8 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
   RxString assignmentSpecializedError = ''.obs;
   RxString assignmentTopicError = ''.obs;
   RxString assignmentDescriptionError = ''.obs;
+
+  RxString homeworkScoreError = ''.obs;
 
   @override
   void onInit() {
@@ -172,28 +178,83 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
 
   bool validateQuiz() {
     RxBool error = false.obs;
+    var vietnameseRegex = RegExp(
+        r'^[a-zA-ZÃ€ÃÃ‚ÃƒÃˆÃ‰ÃŠÃŒÃÃ’Ã“Ã”Ã•Ã™ÃšÄ‚ÄÄ¨Å¨Æ Ã Ã¡Ã¢Ã£Ã¨Ã©ÃªÃ¬Ã­Ã²Ã³Ã´ÃµÃ¹ÃºÄƒÄ‘Ä©Å©Æ¡Æ¯Ä‚áº áº¢áº¤áº¦áº¨áºªáº¬áº®áº°áº²áº´áº¶áº¸áººáº¼á»€á»€á»‚áº¾Æ°Äƒáº¡áº£áº¥áº§áº©áº«áº­áº¯áº±áº³áºµáº·áº¹áº»áº½á»á»á»ƒáº¿á»„á»†á»ˆá»Šá»Œá»Žá»á»’á»”á»–á»˜á»šá»œá»žá» á»¢á»¤á»¦á»¨á»ªá»…á»‡á»‰á»‹á»á»á»‘á»“á»•á»—á»™á»›á»á»Ÿá»¡á»£á»¥á»§á»©á»«á»¬á»®á»°á»²á»´Ãá»¶á»¸á»­á»¯á»±á»³á»µá»·á»¹\s\W|_]+$');
+
+    if (assignmentType.value == 'quiz') {
+      if (assignmentSubject.text.trim().isEmpty) {
+        error.value = true;
+        isAssignmentSubjectError = true.obs;
+        assignmentSubjectError.value = "Chủ đề không được để trống";
+      } else if (assignmentSubject.text.trim().length > 255) {
+        error.value = true;
+        isAssignmentSubjectError = true.obs;
+        assignmentSubjectError.value = "Chủ đề không được quá 255 ký tự";
+      } else if (!vietnameseRegex.hasMatch(assignmentSubject.text.trim())) {
+        error.value = true;
+        isAssignmentSubjectError = true.obs;
+        assignmentSubjectError.value = "Chủ đề chỉ chứa ký tự chữ và số";
+      }
+
+      if (assignmentStatus.value.isEmpty) {
+        error.value = true;
+        isAssignmentStatusError = true.obs;
+        assignmentStatusError.value = "Trạng thái không được để trống";
+      }
+
+      if (assignmentLevel.value.isEmpty) {
+        error.value = true;
+        isAssignmentLevelError = true.obs;
+        assignmentLevelError.value = "Cấp độ không được để trống";
+      }
+
+      if (assignmentSpecialized.value.isEmpty) {
+        error.value = true;
+        isAssignmentSpecializedError = true.obs;
+        assignmentSpecializedError.value = "Chuyên ngành không được để trống";
+      }
+
+      if (assignmentTopic.value.isEmpty) {
+        error.value = true;
+        isAssignmentTopicError = true.obs;
+        assignmentTopicError.value = "Chủ đề không được để trống";
+      }
+    }
+
     if (assignmentName.text.trim().isEmpty) {
       error.value = true;
       isAssignmentNameError = true.obs;
       assignmentNameError.value = "Tên bài tập không được để trống";
+    } else if (assignmentName.text.trim().length > 255) {
+      error.value = true;
+      isAssignmentNameError = true.obs;
+      assignmentNameError.value = "Tên bài tập không được quá 255 ký tự";
+    } else if (!vietnameseRegex.hasMatch(assignmentName.text.trim())) {
+      error.value = true;
+      isAssignmentNameError = true.obs;
+      assignmentNameError.value = "Tên bài tập chỉ chứa ký tự chữ và số";
     }
 
-    if (assignmentSubject.text.trim().isEmpty) {
+    if (assignmentDuration.text.trim().isEmpty) {
       error.value = true;
-      isAssignmentSubjectError = true.obs;
-      assignmentSubjectError.value = "Môn học không được để trống";
+      isAssignmentDurationError = true.obs;
+      assignmentDurationError.value = "Thời lượng không được để trống";
+    } else if (!RegExp(r'^\d+$').hasMatch(assignmentDuration.text.trim())) {
+      error.value = true;
+      isAssignmentDurationError = true.obs;
+      assignmentDurationError.value = "Thời lượng phải là số dương";
     }
 
-    if (assignmentStatus.value.isEmpty) {
-      error.value = true;
-      isAssignmentStatusError = true.obs;
-      assignmentStatusError.value = "Trạng thái không được để trống";
-    }
-
-    if (assignmentLevel.value.isEmpty) {
-      error.value = true;
-      isAssignmentLevelError = true.obs;
-      assignmentLevelError.value = "Cấp độ không được để trống";
+    if (assignmentType.value == 'link') {
+      if (homeworkScore.text.trim().isEmpty) {
+        error.value = true;
+        isHomeworkScoreError = true.obs;
+        homeworkScoreError.value = "Điểm số không được để trống";
+      } else if (!RegExp(r'^\d*\.?\d+$').hasMatch(homeworkScore.text.trim())) {
+        error.value = true;
+        isHomeworkScoreError = true.obs;
+        homeworkScoreError.value = "Điểm số phải là số dương";
+      }
     }
 
     if (assignmentStartDate.text.trim().isEmpty) {
@@ -208,96 +269,101 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
       assignmentDueDateError.value = "Ngày kết thúc không được để trống";
     }
 
-    if (assignmentSpecialized.value.isEmpty) {
-      error.value = true;
-      isAssignmentSpecializedError = true.obs;
-      assignmentSpecializedError.value = "Chuyên ngành không được để trống";
-    }
-
-    if (assignmentTopic.value.isEmpty) {
-      error.value = true;
-      isAssignmentTopicError = true.obs;
-      assignmentTopicError.value = "Chủ đề không được để trống";
+    if (assignmentType.value == 'quiz' || assignmentType.value == 'quiz-bank') {
+      if (assignmentAutoGrade.value.isEmpty) {
+        error.value = true;
+        isAssignmentAutoGrade = true.obs;
+        assignmentAutoGradeError.value = "Tự động chấm điểm không được để trống";
+      }
     }
 
     if (assignmentDescription.text.trim().isEmpty) {
       error.value = true;
       isAssignmentDescriptionError = true.obs;
       assignmentDescriptionError.value = "Mô tả không được để trống";
+    } else if (assignmentDescription.text.trim().length > 255) {
+      error.value = true;
+      isAssignmentDescriptionError = true.obs;
+      assignmentDescriptionError.value = "Mô tả không được quá 255 ký tự";
+    } else if (!vietnameseRegex.hasMatch(assignmentDescription.text.trim())) {
+      error.value = true;
+      isAssignmentDescriptionError = true.obs;
+      assignmentDescriptionError.value = "Mô tả chỉ chứa ký tự chữ và số";
     }
 
     if (error.value) return false;
 
-    if (questions.isEmpty) {
-      Get.dialog(
-        const NotificationDialogWithoutButton(
-          title: "Lỗi",
-          message: "Bài tập phải có ít nhất 1 câu hỏi",
-        ),
-      );
-      return false;
-    }
-
-    for (int i = 0; i < questions.length; i++) {
-      if (questions[i]['question'].text.trim().isEmpty) {
+    if (assignmentType.value == 'quiz') {
+      if (questions.isEmpty) {
         Get.dialog(
-          NotificationDialogWithoutButton(
+          const NotificationDialogWithoutButton(
             title: "Lỗi",
-            message: "Câu hỏi ${i + 1} không được để trống",
+            message: "Bài tập phải có ít nhất 1 câu hỏi",
           ),
         );
         return false;
       }
 
-      // Replace duration validation with score validation
-      String scoreText = questions[i]['score'].text.trim();
-      if (scoreText.isEmpty || !RegExp(r'^\d*\.?\d+$').hasMatch(scoreText)) {
-        Get.dialog(
-          NotificationDialogWithoutButton(
-            title: "Lỗi",
-            message: "Điểm số của câu hỏi ${i + 1} phải là số dương",
-          ),
-        );
-        return false;
-      }
-
-      var answers = questions[i]['answers'] as RxList<Map<String, dynamic>>;
-
-      if (answers.length < 2) {
-        Get.dialog(
-          NotificationDialogWithoutButton(
-            title: "Lỗi",
-            message: "Câu hỏi ${i + 1} phải có ít nhất 2 câu trả lời",
-          ),
-        );
-        return false;
-      }
-
-      bool hasCorrectAnswer = false;
-      for (int j = 0; j < answers.length; j++) {
-        if (answers[j]['controller'].text.trim().isEmpty) {
+      for (int i = 0; i < questions.length; i++) {
+        if (questions[i]['question'].text.trim().isEmpty) {
           Get.dialog(
             NotificationDialogWithoutButton(
               title: "Lỗi",
-              message: "Câu trả lời ${j + 1} của câu hỏi ${i + 1} không được để trống",
+              message: "Câu hỏi ${i + 1} không được để trống",
             ),
           );
           return false;
         }
 
-        if ((answers[j]['isCorrect'] as RxBool).value) {
-          hasCorrectAnswer = true;
+        String scoreText = questions[i]['score'].text.trim();
+        if (scoreText.isEmpty || !RegExp(r'^\d*\.?\d+$').hasMatch(scoreText)) {
+          Get.dialog(
+            NotificationDialogWithoutButton(
+              title: "Lỗi",
+              message: "Điểm số của câu hỏi ${i + 1} phải là số dương",
+            ),
+          );
+          return false;
         }
-      }
 
-      if (!hasCorrectAnswer) {
-        Get.dialog(
-          NotificationDialogWithoutButton(
-            title: "Lỗi",
-            message: "Câu hỏi ${i + 1} phải có ít nhất 1 câu trả lời đúng",
-          ),
-        );
-        return false;
+        var answers = questions[i]['answers'] as RxList<Map<String, dynamic>>;
+
+        if (answers.length < 2) {
+          Get.dialog(
+            NotificationDialogWithoutButton(
+              title: "Lỗi",
+              message: "Câu hỏi ${i + 1} phải có ít nhất 2 câu trả lời",
+            ),
+          );
+          return false;
+        }
+
+        bool hasCorrectAnswer = false;
+        for (int j = 0; j < answers.length; j++) {
+          if (answers[j]['controller'].text.trim().isEmpty) {
+            Get.dialog(
+              NotificationDialogWithoutButton(
+                title: "Lỗi",
+                message: "Câu trả lời ${j + 1} của câu hỏi ${i + 1} không được để trống",
+              ),
+            );
+            return false;
+          }
+
+          if ((answers[j]['isCorrect'] as RxBool).value) {
+            hasCorrectAnswer = true;
+          }
+        }
+
+        if (!hasCorrectAnswer) {
+          Get.dialog(
+            NotificationDialogWithoutButton(
+              title: "Lỗi",
+              message: "Câu hỏi ${i + 1} phải có ít nhất 1 câu trả lời đúng",
+            ),
+          );
+          return false;
+        }
       }
     }
 
@@ -346,11 +412,12 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
     response.fields['class_id'] = classId.value.toString();
     response.fields['type'] = assignmentType.value;
     if (assignmentType.value == 'link') response.fields['title'] = assignmentName.text.trim();
-    if (assignmentType.value == 'link') response.fields['link'] = '';
+    if (assignmentType.value == 'link') response.fields['score'] = homeworkScore.text.trim();
+    if (assignmentType.value == 'link') response.fields['description'] = assignmentDescription.text.trim();
     response.fields['start_datetime'] = assignmentStartDate.text.trim();
     response.fields['due_datetime'] = assignmentDueDate.text.trim();
     response.fields['duration'] = assignmentDuration.text.trim();
-    response.fields['auto_grade'] = assignmentAutoGrade.value;
+    if (assignmentType.value == 'quiz') response.fields['auto_grade'] = assignmentAutoGrade.value;
     response.fields['homework_status'] = 1.toString();
 
     var streamedResponse = await response.send();
