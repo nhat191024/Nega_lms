@@ -3,15 +3,15 @@
 @section('title', ' Thêm Người dùng')
 
 @section('content')
-    <div class="container vh-100">
-        <h2 class="my-4">Tạo người dùng mới</h2>
-
-        <a href="{{ route('users.index') }}" class="btn btn-secondary mb-4">
-            <i class="fas fa-arrow-left"></i> Quay lại
-        </a>
+    <div class="container min-vh-100 d-flex flex-column">
+        <h2 class="my-4">Tạo người dùng mới</h2> 
 
         <form action="{{ route('users.store') }}" method="POST">
             @csrf
+
+            <a href="{{ route('users.index') }}" class="btn btn-secondary mb-4">
+                <i class="fas fa-arrow-left"></i> Quay lại
+            </a>
 
             <div class="form-group">
                 <label for="name">Tên người dùng</label>
@@ -64,5 +64,6 @@
 
             <button type="submit" class="btn btn-primary" onclick="if(confirm('Bạn có muốn tạo người dùng mới không?')) {document.submit()}">Tạo</button>
         </form>
+        <br>
     </div>
 @endsection
