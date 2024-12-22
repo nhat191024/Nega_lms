@@ -26,6 +26,7 @@ class CustomTextField extends StatelessWidget {
   final Color backgroundColor;
   final String? suffixText;
   final double? width;
+  final bool disable;
 
   const CustomTextField({
     super.key,
@@ -54,6 +55,7 @@ class CustomTextField extends StatelessWidget {
     this.backgroundColor = CustomColors.background,
     this.suffixText,
     this.width,
+    this.disable = false,
   });
 
   @override
@@ -88,6 +90,7 @@ class CustomTextField extends StatelessWidget {
             width: width,
             child: Obx(
               () => TextField(
+                enabled: !disable,
                 maxLines: maxLines,
                 minLines: minLines,
                 obscureText: obscureText.value,
@@ -137,8 +140,12 @@ class CustomTextField extends StatelessWidget {
                     borderSide: BorderSide(color: isError.value ? CustomColors.errorMain : CustomColors.primaryText, width: 1),
                     borderRadius: BorderRadius.circular(14),
                   ),
-                  filled: backgroundColor == CustomColors.background ? isError.value : true,
-                  fillColor: isError.value ? CustomColors.errorLight : backgroundColor,
+                  filled: backgroundColor == CustomColors.background ? isError.value || disable : true,
+                  fillColor: disable 
+                      ? CustomColors.disable.withOpacity(0.1)
+                      : isError.value 
+                          ? CustomColors.errorLight 
+                          : backgroundColor,
                   suffixIcon: suffixIcon != null ? IconButton(onPressed: onPress, icon: suffixIcon!) : null,
                   suffix: Text(
                     suffixText ?? '',
@@ -301,7 +308,7 @@ class CheckBoxField extends StatelessWidget {
               scale: 1.4,
               child: Checkbox(
                 value: value.value,
-                onChanged: (bool? newValue) {},
+                onChanged: onChanged,
                 activeColor: activeColor,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(5),

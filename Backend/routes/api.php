@@ -7,7 +7,6 @@ use App\Http\Controllers\Api\V1\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\V1\LoginController;
 use App\Http\Controllers\Api\v1\ClassController;
-use GuzzleHttp\Middleware;
 
 // Public routes
 Route::post('/login', [LoginController::class, 'login']);
@@ -39,7 +38,7 @@ Route::group(['middleware' => ['auth:sanctum', 'ability:student']], function () 
 
 Route::prefix('assignment')->group(function () {
     Route::middleware(['auth:sanctum', 'ability:teacher'])->group(function () {
-        Route::post('/create', [AssignmentController::class, 'CreateAssignment'])->name('create');
+        Route::post('/create', [AssignmentController::class, 'CreateAssignment']);
     });
     Route::middleware(['auth:sanctum', 'ability:student'])->group(function () {
         Route::get('{class_id}', [AssignmentController::class, 'GetAssignmentByClassId']);
