@@ -38,7 +38,7 @@
                     <form action="{{ route('assignments.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="form-group">
-                            <label for="creator_id">Creator_id</label>
+                            <label for="creator_id">Người tạo</label>
                             <select name="creator_id" id="creator_id" class="form-control" >
                                 <option value="">Chọn người tạo</option>
                                 @foreach($users as $user)
@@ -47,17 +47,17 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="title">title</label>
+                            <label for="title">Tiêu đề</label>
                             <input type="text" name="title" id="title" class="form-control" placeholder="Enter assignment title" >
                         </div>
 
                         <div class="form-group">
-                            <label for="description">Description</label>
+                            <label for="description">Mô tả</label>
                             <textarea name="description" id="description" class="form-control" placeholder="Enter assignment description" rows="3" ></textarea>
                         </div>
 
                         <div class="form-group">
-                            <label for="status">Status</label>
+                            <label for="status">Trạng thái</label>
                             <select name="status" id="status" class="form-control">
                                 <option value="closed">Closed</option>
                                 <option value="published">Published</option>
@@ -67,7 +67,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="level">Level</label>
+                            <label for="level">Cấp độ</label>
                             <select name="level" id="level" class="form-control" >
                                 <option value="Cao đẳng">Cao đẳng</option>
                                 <option value="Đại học">Đại học</option>
@@ -75,22 +75,22 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="totalScore">Total Score</label>
+                            <label for="totalScore">Tổng điểm</label>
                             <input type="number" name="totalScore" id="totalScore" class="form-control" placeholder="Enter total score" min="0" >
                         </div>
 
                         <div class="form-group">
-                            <label for="specialized">Specialized</label>
+                            <label for="specialized">Chuyên môn</label>
                             <input type="text" name="specialized" id="specialized" class="form-control" placeholder="Enter specialization" >
                         </div>
 
                         <div class="form-group">
-                            <label for="subject">Subject</label>
+                            <label for="subject">Môn học</label>
                             <input type="text" name="subject" id="subject" class="form-control" placeholder="Enter subject" >
                         </div>
 
                         <div class="form-group">
-                            <label for="topic">Topic</label>
+                            <label for="topic">Chủ đề học tập</label>
                             <input type="text" name="topic" id="topic" class="form-control" placeholder="Enter topic" >
                         </div>
 

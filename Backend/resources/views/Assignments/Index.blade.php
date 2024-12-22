@@ -15,9 +15,6 @@
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table  class="table table-bordered class-table" data-class-table="table-users" id="table-users"
-
-                                    {{-- data-class-table="table-{{ Str::slug($assignments->first()->class->class_name) }}"
-                                    id="table-{{ Str::slug($assignments->first()->class->class_name) }}" --}}
                                     width="100%" cellspacing="0">
                                     <thead>
                                         <tr>
@@ -25,12 +22,12 @@
                                             <th class="text-center">Tạo bởi</th>
                                             <th class="text-center">Tiêu đề</th>
                                             <th class="text-center">Mô tả</th>
-                                            <th class="text-center">status</th>
+                                            <th class="text-center">trạng thái</th>
                                             <th class="text-center">Cấp bậc</th>
-                                            <th class="text-center">totalScore</th>
-                                            <th class="text-center">specialized</th>
-                                            <th class="text-center">subject</th>
-                                            <th class="text-center">topic</th>
+                                            <th class="text-center">tổng điểm</th>
+                                            <th class="text-center">Chuyên môn</th>
+                                            <th class="text-center">Môn học</th>
+                                            <th class="text-center">Chủ đề học tập</th>
                                             <th class="text-center">Trạng thái</th>
                                             <th class="text-center">Tác vụ</th>
                                         </tr>
@@ -88,12 +85,12 @@
                                             <th class="text-center">Tạo bởi</th>
                                             <th class="text-center">Tiêu đề</th>
                                             <th class="text-center">Mô tả</th>
-                                            <th class="text-center">status</th>
-                                            <th class="text-center">level</th>
-                                            <th class="text-center">totalScore</th>
-                                            <th class="text-center">specialized</th>
-                                            <th class="text-center">subject</th>
-                                            <th class="text-center">topic</th>
+                                            <th class="text-center">trạng thái</th>
+                                            <th class="text-center">Cấp bậc</th>
+                                            <th class="text-center">tổng điểm</th>
+                                            <th class="text-center">Chuyên môn</th>
+                                            <th class="text-center">Môn học</th>
+                                            <th class="text-center">Chủ đề học tập</th>
                                             <th class="text-center">Trạng thái</th>
                                             <th class="text-center">Tác vụ</th>
                                         </tr>

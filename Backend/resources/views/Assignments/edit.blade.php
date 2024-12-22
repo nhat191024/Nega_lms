@@ -5,7 +5,7 @@
         <div class="container-fluid">
             <!-- Page Heading -->
             <h1 class="h3 mb-2 text-gray-800">Edit Assignment</h1>
-            <p class="mb-4">Use this form to edit an existing assignment.</p>
+
 
             <!-- Edit Assignment Form -->
             <div class="card shadow mb-4">
@@ -20,7 +20,7 @@
                         <!-- Select Class -->
                         <!-- Creator ID -->
                         <div class="form-group">
-                            <label for="creator_id">Creator</label>
+                            <label for="creator_id">Người tạo</label>
                             <select name="creator_id" id="creator_id" class="form-control" required>
                                 @foreach($users as $user)
                                 <option value="{{ $user->id }}" {{ ($user->id === $assignment->creator_id) ? 'selected' : '' }}>
@@ -32,19 +32,19 @@
 
                         <!-- Name -->
                         <div class="form-group">
-                            <label for="name">title</label>
+                            <label for="name">Tiêu đề</label>
                             <input type="text" name="title" id="title" class="form-control" value="{{ $assignment->title }}" required>
                         </div>
 
                         <!-- Description -->
                         <div class="form-group">
-                            <label for="description">Description</label>
+                            <label for="description">Mô tả</label>
                             <textarea name="description" id="description" class="form-control" rows="3" required>{{ $assignment->description }}</textarea>
                         </div>
 
                         <!-- Status -->
                         <div class="form-group">
-                            <label for="status">Status</label>
+                            <label for="status">Trạng thái</label>
                             <select name="status" id="status" class="form-control" required>
                                 <option value="published" {{ $assignment->status == 'published' ? 'selected' : '' }}>Published</option>
                                 <option value="ongoing" {{ $assignment->status == 'ongoing' ? 'selected' : '' }}>Ongoing</option>
@@ -53,7 +53,7 @@
 
                         <!-- Level -->
                         <div class="form-group">
-                            <label for="level">Level</label>
+                            <label for="level">Cấp độ</label>
                             <select name="level" id="level" class="form-control" required>
                                 <option value="Cao đẳng" {{ $assignment->level == 'college' ? 'selected' : '' }}>Cao đẳng</option>
                                 <option value="Đại học" {{ $assignment->level == 'university' ? 'selected' : '' }}>Đại học</option>
@@ -62,25 +62,25 @@
 
                         <!-- Total Score -->
                         <div class="form-group">
-                            <label for="totalScore">Total Score</label>
+                            <label for="totalScore">Tổng điểm</label>
                             <input type="number" name="totalScore" id="totalScore" class="form-control" value="{{ $assignment->totalScore }}" min="0" required>
                         </div>
 
                         <!-- Specialized -->
                         <div class="form-group">
-                            <label for="specialized">Specialized</label>
+                            <label for="specialized">Chuyên môn</label>
                             <input type="text" name="specialized" id="specialized" class="form-control" value="{{ $assignment->specialized }}" required>
                         </div>
 
                         <!-- Subject -->
                         <div class="form-group">
-                            <label for="subject">Subject</label>
+                            <label for="subject">Môn học</label>
                             <input type="text" name="subject" id="subject" class="form-control" value="{{ $assignment->subject }}" required>
                         </div>
 
                         <!-- Topic -->
                         <div class="form-group">
-                            <label for="topic">Topic</label>
+                            <label for="topic">Chủ đề học tập</label>
                             <input type="text" name="topic" id="topic" class="form-control" value="{{ $assignment->topic }}" required>
                         </div>
 

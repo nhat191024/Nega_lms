@@ -75,10 +75,12 @@ class AssignmentController extends Controller
                 'topic' => $request->topic,
 
             ]);
-            return redirect()->back()->with('success', 'Assignment created successfully.');
+            return redirect()->route('assignments.index')->with('success', 'Assignment created successfully.');
         } catch (\Throwable $th) {
-            return redirect()->back()->with('error', 'Failed to create assignment.');
+            return redirect()->route('assignments.index')->with('error', 'Failed to create assignment.');
         }
+
+
     }
 
 
@@ -132,14 +134,7 @@ class AssignmentController extends Controller
 
         return redirect()->route('assignments.index')->with('success', 'Assignment deleted successfully.');
     }
-    // public function getAssignmentsByClass($class_id)
-    // {
-    //     // Lấy danh sách bài tập theo class_id và nhóm theo class_id
-    //     $assignments = Assignment::where('class_id', $class_id)->with(['class', 'creator'])->get();
-    //     $assignmentsGroupBy = $assignments->groupBy('class_id');
 
-    //     return view('assignments.index', compact('assignmentsGroupBy'));
-    // }
     public function toggleVisibility($id)
     {
         $assignment = Assignment::findOrFail($id);
