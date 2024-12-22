@@ -10,6 +10,7 @@ class AssignmentController extends GetxController {
   RxInt currentQuestion = 0.obs;
   Rx<HomeworkModel> assignment = HomeworkModel(
     id: 0,
+    homeworkId: 0,
     creatorName: '',
     name: '',
     description: '',
@@ -145,6 +146,7 @@ class AssignmentController extends GetxController {
     currentQuestion.value = 0;
     assignment.value = HomeworkModel(
       id: 0,
+      homeworkId: 0,
       creatorName: '',
       name: '',
       description: '',
