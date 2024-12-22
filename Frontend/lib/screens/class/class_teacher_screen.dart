@@ -206,6 +206,16 @@ class ClassTeacherScreen extends GetView<ClassDetailController> {
                                 value: controller.createAssignmentThenPushToClass.value.obs,
                                 onChanged: (value) {
                                   controller.createAssignmentThenPushToClass.value = value!;
+                                  if (value == false) {
+                                    controller.isAssignmentDurationError.value = false;
+                                    controller.isAssignmentAutoGrade.value = false;
+                                    controller.isAssignmentStartDateError.value = false;
+                                    controller.isAssignmentDueDateError.value = false;
+                                    controller.assignmentDuration.text = '';
+                                    controller.assignmentAutoGrade.value = '';
+                                    controller.assignmentStartDate.text = '';
+                                    controller.assignmentDueDate.text = '';
+                                  }
                                 },
                               ),
                             ),
