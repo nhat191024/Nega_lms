@@ -422,15 +422,12 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
 
     var streamedResponse = await response.send();
     if (streamedResponse.statusCode == 201) {
-      Get.snackbar("Thành công", "Tạo bài tập thành công");
-      fetchClassAssignment(classId.value);
-      Get.back();
       clear();
+      Get.back();
+      fetchClassAssignment(classId.value);
+      Get.snackbar("Thành công", "Tạo bài tập thành công", maxWidth: Get.width * 0.2);
     } else {
-      const NotificationDialogWithoutButton(
-        title: "Lỗi",
-        message: "Đã có lỗi xảy ra",
-      );
+      Get.snackbar("Lỗi", "Đã có lỗi xảy ra", maxWidth: Get.width * 0.2);
     }
   }
 
