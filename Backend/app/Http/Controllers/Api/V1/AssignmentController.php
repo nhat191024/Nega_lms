@@ -95,18 +95,18 @@ class AssignmentController extends Controller
             'subject' => 'string',
             'topic' => 'string',
             //question
-            'questions' => 'json',
+            // 'questions' => 'json',
         ];
 
         if ($request->create_homework == 'true') {
             $rules['class_id'] = 'required|integer';
             $rules['type'] = 'required|in:link,quiz';
             $rules['title'] = 'required|string';
-            $rules['score'] = 'required|integer';
+            $request->type != "link" ?? $rules['score'] = 'required|integer';
             $rules['start_datetime'] = 'required|string';
             $rules['due_datetime'] = 'required|string';
             $rules['duration'] = 'required|integer';
-            $rules['auto_grade'] = 'required|string';
+            $request->type != "link" ?? $rules['auto_grade'] = 'required|string';
             $rules['homework_status'] = 'required|integer';
         }
 
