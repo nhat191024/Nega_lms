@@ -74,18 +74,18 @@ class ClassTeacherScreen extends GetView<ClassDetailController> {
                     : ListView.builder(
                         shrinkWrap: true,
                         physics: const AlwaysScrollableScrollPhysics(),
-                        itemCount: controller.assignmentList.length,
+                        itemCount: controller.assignmentsList.length,
                         itemBuilder: (context, index) {
                           return classCardBuilder(
-                            controller.assignmentList[index].name ?? '',
-                            controller.assignmentList[index].description ?? '',
+                            controller.assignmentsList[index].name ?? '',
+                            controller.assignmentsList[index].description ?? '',
                             [
                               "Lập trình",
-                              controller.assignmentList[index].type ?? '',
+                              controller.assignmentsList[index].type ?? '',
                             ],
                             10,
-                            index == controller.assignmentList.length - 1,
-                            controller.assignmentList[index].id.toString(),
+                            index == controller.assignmentsList.length - 1,
+                            controller.assignmentsList[index].id.toString(),
                           );
                         },
                       ),
