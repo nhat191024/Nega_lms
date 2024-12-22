@@ -1,5 +1,6 @@
 class HomeworkModel {
   int? id;
+  int? homeworkId;
   String? creatorName;
   String? name;
   String? description;
@@ -11,6 +12,7 @@ class HomeworkModel {
 
   HomeworkModel({
     required this.id,
+    required this.homeworkId,
     required this.creatorName,
     required this.name,
     required this.description,
@@ -24,6 +26,7 @@ class HomeworkModel {
   Map<String, dynamic> toMap() {
     return {
       'id': id,
+      'homeworkId': homeworkId,
       'creatorName': creatorName,
       'name': name,
       'description': description,
@@ -37,6 +40,7 @@ class HomeworkModel {
 
   HomeworkModel.fromMap(Map<String, dynamic> map) {
     id = map['id'];
+    homeworkId = map['homeworkId'];
     creatorName = map['creatorName'];
     name = map['name'];
     description = map['description'];
