@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Laravel\Passport\Passport;
 
 class LoginController extends Controller
 {
@@ -28,14 +27,21 @@ class LoginController extends Controller
         }
 
         /** @var \App\Models\User $user **/  $user = Auth::user();
+        if ($user->tokens()->count() > 0) {
+            $user->tokens()->delete();
+        }
+
         if ($user->role_id == 1) {
-            $token = $user->createToken('authToken', ["*"], now()->addDay())->plainTextToken;
+            $token = $user->createToken('authToken', ["*"])->plainTextToken;
         } else {
-            $token = $user->createToken('authToken', [$user->role->name], now()->addDay())->plainTextToken;
+            $token = $user->createToken('authToken', [$user->role->name])->plainTextToken;
         }
 
         return response()->json([
             'message' => 'Đăng nhập thành công.',
+            'username' => $user->username,
+            'avatar' => asset($user->avatar),
+            'role' => $user->role->name,
             'token' => $token
         ], 200);
     }
@@ -48,5 +54,18 @@ class LoginController extends Controller
         return response()->json([
             'message' => 'Đăng xuất thành công.'
         ], 200);
+    }
+
+    public function tokenCheck()
+    {
+        if (Auth::check()) {
+            return response()->json([
+                'message' => 'Token hợp lệ.'
+            ], 200);
+        } else {
+            return response()->json([
+                'message' => 'Token không hợp lệ.'
+            ], 401);
+        }
     }
 }

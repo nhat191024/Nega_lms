@@ -9,7 +9,7 @@ class DoAssignmentScreen extends GetView<AssignmentController> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: const NavBar(),
+        title: NavBar(),
       ),
       backgroundColor: CustomColors.background,
       body: Obx(
@@ -84,7 +84,9 @@ class DoAssignmentScreen extends GetView<AssignmentController> {
                                     children: [
                                       CustomButton(
                                         width: 100,
-                                        onTap: () {},
+                                        onTap: () {
+                                          Get.back();
+                                        },
                                         btnText: "Quay lại",
                                         btnColor: CustomColors.errorMain,
                                         borderColor: CustomColors.errorMain,

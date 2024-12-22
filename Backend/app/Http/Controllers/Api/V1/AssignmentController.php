@@ -9,29 +9,30 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 //model
+use App\Models\Homework;
 use App\Models\Assignment;
 use App\Models\Choice;
 use App\Models\Question;
 use App\Models\Answer;
+use App\Models\Classes;
 
 class AssignmentController extends Controller
 {
     public function GetAssignmentByClassId($class_id)
     {
-        $assignments = Assignment::where('class_id', $class_id)->where('status', 'published')->get();
+        $homeworks = Homework::where('class_id', $class_id)->where('status', 1)->with('assignment')->get();
 
-        $assignments = $assignments->map(function ($assignment) {
+        $assignments = $homeworks->map(function ($homework) {
             return [
-                'id' => $assignment->id,
-                'name' => $assignment->title,
-                'description' => $assignment->description,
-                'level' => $assignment->level,
-                'duration' => $assignment->duration,
-                'totalScore' => $assignment->totalScore,
-                'specialized' => $assignment->specialized,
-                'subject' => $assignment->subject,
-                'topic' => $assignment->topic,
-                'dueDate' => $assignment->due_date,
+                'id' => $homework->assignment ? $homework->assignment->id : $homework->id,
+                'name' => $homework->assignment ? $homework->assignment->title : $homework->title,
+                'description' => $homework->assignment ? $homework->assignment->description : $homework->description,
+                'level' => $homework->assignment ? $homework->assignment->level : "Không có",
+                'totalScore' => $homework->assignment ? $homework->assignment->totalScore : $homework->score,
+                'specialized' => $homework->assignment ? $homework->assignment->specialized : "Không có",
+                'subject' => $homework->assignment ?  $homework->assignment->subject : "Không có",
+                'topic' => $homework->assignment ? $homework->assignment->topic : "Không có",
+                'type' => $homework->type,
             ];
         });
 
@@ -43,71 +44,64 @@ class AssignmentController extends Controller
     public function CreateAssignment(Request $request)
     {
         $rules = [
+            //assignment
+            'title' => 'string',
+            'description' => 'string',
+            'status' => 'in:closed,published,private,draft',
+            'level' => 'string',
+            'totalScore' => 'integer',
+            'specialized' => 'string',
+            'subject' => 'string',
+            'topic' => 'string',
+            //question
+            'questions' => 'json',
+            // 'questions.*.question' => 'string',
+            // 'questions.*.score' => 'integer',
+            // 'questions.*.choices' => 'array',
+            // 'questions.*.choices.*.choice' => 'string',
+            // 'questions.*.choices.*.is_correct' => 'boolean',
+            //homework
             'class_id' => 'required|integer',
-            'creator_id' => 'required|integer',
-            'name' => 'required|string',
-            'description' => 'nullable|string',
-            'status' => 'required|in:closed,published,private,draft',
-            'level' => 'required|string',
-            'duration' => 'required|date_format:H:i:s',
-            'totalScore' => 'required|integer',
-            'specialized' => 'required|string',
-            'subject' => 'required|string',
-            'topic' => 'required|string',
-            'start_date' => 'required|date_format:Y-m-d H:i:s',
-            'due_date' => 'required|date_format:Y-m-d H:i:s',
-            'auto_grade' => 'required|boolean',
-            'questions' => 'required|array',
-            'questions.*.question' => 'required|string',
-            'questions.*.duration' => 'required|string',
-            'questions.*.score' => 'required|integer',
-            'questions.*.choices' => 'required|array',
-            'questions.*.choices.*.choice' => 'required|string',
-            'questions.*.choices.*.is_correct' => 'required|boolean',
+            'type' => 'required|in:link,quiz',
+            'title' => 'string',
+            'score' => 'integer',
+            'start_datetime' => 'required|String',
+            'due_datetime' => 'required|String',
+            'duration' => 'required|integer',
+            'auto_grade' => 'String',
+            'homework_status' => 'required|integer',
         ];
 
         $messages = [
-            'class_id.required' => 'Trường class_id là bắt buộc.',
-            'class_id.integer' => 'Trường class_id phải là một số nguyên.',
-            'creator_id.required' => 'Trường creator_id là bắt buộc.',
-            'creator_id.integer' => 'Trường creator_id phải là một số nguyên.',
-            'name.required' => 'Trường tên là bắt buộc.',
-            'name.string' => 'Trường tên phải là chuỗi ký tự.',
-            'description.string' => 'Trường mô tả phải là chuỗi ký tự.',
-            'status.required' => 'Trường trạng thái là bắt buộc.',
-            'status.in' => 'Trường trạng thái phải là một trong các giá trị: closed, published, private, draft.',
-            'level.required' => 'Trường cấp độ là bắt buộc.',
-            'level.string' => 'Trường cấp độ phải là chuỗi ký tự.',
-            'duration.required' => 'Trường thời lượng là bắt buộc.',
-            'duration.date_format' => 'Trường thời lượng phải theo định dạng HH:mm:ss.',
-            'totalScore.required' => 'Trường tổng điểm là bắt buộc.',
-            'totalScore.integer' => 'Trường tổng điểm phải là một số nguyên.',
-            'specialized.required' => 'Trường chuyên ngành là bắt buộc.',
-            'specialized.string' => 'Trường chuyên ngành phải là chuỗi ký tự.',
-            'subject.required' => 'Trường môn học là bắt buộc.',
-            'subject.string' => 'Trường môn học phải là chuỗi ký tự.',
-            'topic.required' => 'Trường chủ đề là bắt buộc.',
-            'topic.string' => 'Trường chủ đề phải là chuỗi ký tự.',
-            'start_date.required' => 'Trường ngày bắt đầu là bắt buộc.',
-            'start_date.date_format' => 'Trường ngày bắt đầu phải theo định dạng Y-m-d H:i:s.',
-            'due_date.required' => 'Trường ngày kết thúc là bắt buộc.',
-            'due_date.date_format' => 'Trường ngày kết thúc phải theo định dạng Y-m-d H:i:s.',
-            'auto_grade.required' => 'Trường tự động chấm điểm là bắt buộc.',
-            'auto_grade.boolean' => 'Trường tự động chấm điểm phải là giá trị boolean.',
-            'questions.required' => 'Trường câu hỏi là bắt buộc.',
-            'questions.array' => 'Trường câu hỏi phải là một mảng.',
-            'questions.*.question.required' => 'Câu hỏi là bắt buộc.',
-            'questions.*.question.string' => 'Câu hỏi phải là chuỗi ký tự.',
-            'questions.*.duration.required' => 'Thời lượng câu hỏi là bắt buộc.',
-            'questions.*.duration.string' => 'Thời lượng câu hỏi phải là chuỗi ký tự.',
-            'questions.*.score.required' => 'Điểm câu hỏi là bắt buộc.',
-            'questions.*.score.integer' => 'Điểm câu hỏi phải là một số nguyên.',
-            'questions.*.choices.required' => 'Danh sách các lựa chọn là bắt buộc.',
-            'questions.*.choices.array' => 'Danh sách các lựa chọn phải là một mảng.',
-            'questions.*.choices.*.choice.required' => 'Nội dung lựa chọn là bắt buộc.',
-            'questions.*.choices.*.choice.string' => 'Nội dung lựa chọn phải là chuỗi ký tự.',
-            'questions.*.choices.*.is_correct.required' => 'Trạng thái đúng/sai của lựa chọn là bắt buộc.',
-            'questions.*.choices.*.is_correct.boolean' => 'Trạng thái đúng/sai của lựa chọn phải là giá trị boolean.',
+            'title.string' => 'title phải là chuỗi',
+            'description.string' => 'description phải là chuỗi',
+            'status.in' => 'status phải là closed, published, private hoặc draft',
+            'level.string' => 'level phải là chuỗi',
+            'totalScore.integer' => 'totalScore phải là số nguyên',
+            'specialized.string' => 'specialized phải là chuỗi',
+            'subject.string' => 'subject phải là chuỗi',
+            'topic.string' => 'topic phải là chuỗi',
+            'questions.json' => 'questions phải là json',
+            // 'questions.*.question.string' => 'questions.*.question phải là chuỗi',
+            // 'questions.*.score.integer' => 'questions.*.score phải là số nguyên',
+            // 'questions.*.choices.array' => 'questions.*.choices phải là mảng',
+            // 'questions.*.choices.*.choice.string' => 'questions.*.choices.*.choice phải là chuỗi',
+            // 'questions.*.choices.*.is_correct.boolean' => 'questions.*.choices.*.is_correct phải là boolean',
+            'class_id.required' => 'class_id không được để trống',
+            'class_id.integer' => 'class_id phải là số nguyên',
+            'type.required' => 'type không được để trống',
+            'type.in' => 'type phải là link hoặc quiz',
+            'title.string' => 'title phải là chuỗi',
+            'score.integer' => 'score phải là số nguyên',
+            'start_datetime.required' => 'start_datetime không được để trống',
+            'start_datetime.string' => 'start_datetime phải là chuỗi',
+            'due_datetime.required' => 'due_datetime không được để trống',
+            'due_datetime.string' => 'due_datetime phải là chuỗi',
+            'duration.required' => 'duration không được để trống',
+            'duration.integer' => 'duration phải là số nguyên',
+            'auto_grade.string' => 'auto_grade phải là boolean',
+            'homework_status.required' => 'status không được để trống',
+            'homework_status.integer' => 'status phải là số nguyên',
         ];
 
         $validated = Validator::make($request->all(), $rules, $messages);
@@ -116,44 +110,61 @@ class AssignmentController extends Controller
                 'error' => $validated->errors(),
             ], Response::HTTP_BAD_REQUEST);
         }
+        $user = Auth::user();
+        $assignment = $request->type == 'quiz' ? new Assignment() : null;
+        if ($request->type == 'quiz') {
+            $assignment->creator_id = $user->id;
+            $assignment->title = $request->title;
+            $assignment->description = $request->description;
+            $assignment->status = $request->status;
+            $assignment->level = $request->level;
+            $assignment->totalScore = $request->totalScore;
+            $assignment->specialized = $request->specialized;
+            $assignment->subject = $request->subject;
+            $assignment->topic = $request->topic;
+            $assignment->save();
 
-        $assignment = Assignment::create([
-            'class_id' => $request->input('class_id'),
-            'creator_id' => $request->input('creator_id'),
-            'name' => $request->input('name'),
-            'description' => $request->input('description'),
-            'status' => $request->input('status'),
-            'level' => $request->input('level'),
-            'duration' => $request->input('duration'),
-            'totalScore' => $request->input('totalScore'),
-            'specialized' => $request->input('specialized'),
-            'subject' => $request->input('subject'),
-            'topic' => $request->input('topic'),
-            'start_date' => $request->input('start_date'),
-            'due_date' => $request->input('due_date'),
-            'auto_grade' => $request->input('auto_grade'),
-        ]);
+            //convert question to array
+            $questions = json_decode($request->questions, true);
 
-        foreach ($request->input('questions') as $questionData) {
-            $question = Question::create([
-                'assignment_id' => $assignment->id,
-                'question' => $questionData['question'],
-                'duration' => $questionData['duration'],
-                'score' => $questionData['score'],
-            ]);
-
-            foreach ($questionData['choices'] as $choiceData) {
-                Choice::create([
-                    'question_id' => $question->id,
-                    'choice' => $choiceData['choice'],
-                    'is_correct' => $choiceData['is_correct'],
+            foreach ($questions as $questionData) {
+                $question = Question::create([
+                    'assignment_id' => $assignment->id,
+                    'question' => $questionData['question'],
+                    'duration' => "00:00:00",
+                    'score' => $questionData['score'],
                 ]);
+
+                foreach ($questionData['choices'] as $choiceData) {
+                    Choice::create([
+                        'question_id' => $question->id,
+                        'choice' => $choiceData['choice'],
+                        'is_correct' => $choiceData['is_correct'],
+                    ]);
+                }
             }
         }
 
+        $homework = new Homework();
+        $homework->class_id = $request->class_id;
+        $homework->assignment_id = $request->type == 'link' ? null : $assignment->id;
+        $homework->type = $request->type;
+        $homework->title = $request->type == 'link' ? $request->title : null;
+        $homework->score = $request->type == 'link' ? $request->score : null;
+        $homework->description = $request->type == 'link' ? $request->description : null;
+        $homework->start_datetime = $request->start_datetime;
+        $homework->due_datetime = $request->due_datetime;
+        $homework->duration = $request->duration;
+        if ($request->type != 'link') {
+            $homework->auto_grade = $request->auto_grade == 'true' ? true : false;
+        } else {
+            $homework->auto_grade = false;
+        }
+        $homework->status = $request->homework_status;
+        $homework->save();
+
         return response()->json([
             'message' => 'Tạo đề thi thành công',
-            'data' => $assignment,
         ], Response::HTTP_CREATED);
     }
 
@@ -180,9 +191,10 @@ class AssignmentController extends Controller
         // ], Response::HTTP_OK);
     }
 
-    public function getAssignment($id)
+    public function getAssignment($id, $class_id)
     {
-        $assignment = Assignment::with(['creator', 'questions.choices'])->find($id);
+        $class = Classes::find($class_id)::with('homeworks', 'homeworks.assignment', 'homeworks.assignment.questions', 'homeworks.assignment.questions.choices')->first();
+        $assignment = $class->homeworks->where('assignment_id', $id)->first();
 
         if (!$assignment) {
             return response()->json(
@@ -195,13 +207,13 @@ class AssignmentController extends Controller
 
         $response = [
             'id' => $assignment->id,
-            'creatorName' => $assignment->creator ? $assignment->creator->name : null,
-            'name' => $assignment->title,
-            'description' => $assignment->description,
+            'creatorName' => $assignment->assignment->creator ? $assignment->assignment->creator->name : null,
+            'name' => $assignment->assignment->title,
+            'description' => $assignment->assignment->description,
             'duration' => $assignment->duration,
-            'startDate' => $assignment->start_date,
-            'dueDate' => $assignment->due_date,
-            'questions' => $assignment->questions->map(function ($question) {
+            'startDate' => $assignment->start_datetime,
+            'dueDate' => $assignment->due_datetime,
+            'questions' => $assignment->assignment->questions->map(function ($question) {
                 return [
                     'id' => $question->id,
                     'question' => $question->question,

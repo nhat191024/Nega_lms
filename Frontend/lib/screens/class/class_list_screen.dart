@@ -5,6 +5,8 @@ class ClassListScreen extends GetView<ClassController> {
     controller.searchController.addListener(() {
       if (controller.searchController.text.isNotEmpty) {
         controller.classFilter(controller.searchController.text);
+      } else {
+        controller.filteredList.value = controller.classList;
       }
     });
   }
@@ -15,7 +17,8 @@ class ClassListScreen extends GetView<ClassController> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: const NavBar(),
+        toolbarHeight: 80,
+        title: NavBar(),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -52,7 +55,7 @@ class ClassListScreen extends GetView<ClassController> {
                       ),
                       Obx(
                         () => Text(
-                          '${controller.classList.length} Kết quả',
+                          '${controller.filteredList.length} Kết quả',
                           style: const TextStyle(
                             fontSize: 14,
                             color: CustomColors.primary,
@@ -102,27 +105,31 @@ class ClassListScreen extends GetView<ClassController> {
                       Expanded(
                         child: Column(
                           children: [
-                            Obx(() => SizedBox(
-                                  height: Get.height * 0.7,
-                                  child: controller.isLoading.value
-                                      ? const Center(
-                                          child: CircularProgressIndicator(),
-                                        )
-                                      : ListView.builder(
-                                          shrinkWrap: true,
-                                          physics: const AlwaysScrollableScrollPhysics(),
-                                          itemCount: controller.classList.length,
-                                          itemBuilder: (context, index) {
-                                            return classCardBuilder(
-                                              controller.classList[index].name ?? '',
-                                              controller.classList[index].description ?? '',
-                                              ["Lập trình"],
-                                              10,
-                                              index == controller.classList.length - 1,
-                                            );
-                                          },
-                                        ),
-                                )),
+                            Obx(
+                              () => SizedBox(
+                                height: Get.height * 0.8,
+                                child: controller.isLoading.value
+                                    ? const Center(
+                                        child: CircularProgressIndicator(),
+                                      )
+                                    : ListView.builder(
+                                        shrinkWrap: true,
+                                        physics: const AlwaysScrollableScrollPhysics(),
+                                        itemCount: controller.filteredList.length,
+                                        itemBuilder: (context, index) {
+                                          return classCardBuilder(
+                                            controller.filteredList[index].name ?? '',
+                                            controller.filteredList[index].description ?? '',
+                                            controller.filteredList[index].id ?? 0,
+                                            controller.filteredList[index].isJoined ?? false,
+                                            ["Lập trình"],
+                                            10,
+                                            index == controller.filteredList.length - 1,
+                                          );
+                                        },
+                                      ),
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -139,69 +146,76 @@ class ClassListScreen extends GetView<ClassController> {
   }
 
   //class card builder
-  Widget classCardBuilder(String title, String description, List<String> tags, double verticalPadding, bool isLast) {
+  Widget classCardBuilder(String title, String description, int id, bool isJoined, List<String> tags, double verticalPadding, bool isLast) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: verticalPadding),
       child: Column(
         children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        color: CustomColors.primaryText,
-                        fontFamily: FontStyleTextStrings.medium,
+          GestureDetector(
+            onTap: () => Get.toNamed(Routes.classDetailScreen, arguments: id),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        title,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          color: CustomColors.primaryText,
+                          fontFamily: FontStyleTextStrings.medium,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 5),
-                    Text(
-                      description,
-                      style: const TextStyle(
-                        fontSize: 14,
-                        color: CustomColors.secondaryText,
-                        fontFamily: FontStyleTextStrings.regular,
+                      const SizedBox(height: 5),
+                      Text(
+                        description,
+                        style: const TextStyle(
+                          fontSize: 14,
+                          color: CustomColors.secondaryText,
+                          fontFamily: FontStyleTextStrings.regular,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 20),
-                    Wrap(
-                      children: tags
-                          .map(
-                            (tag) => Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                              margin: const EdgeInsets.only(right: 10),
-                              decoration: BoxDecoration(
-                                color: CustomColors.primary,
-                                borderRadius: BorderRadius.circular(50),
-                              ),
-                              child: Text(
-                                tag,
-                                style: const TextStyle(
-                                  fontSize: 12,
-                                  color: CustomColors.background,
-                                  fontFamily: FontStyleTextStrings.medium,
+                      const SizedBox(height: 20),
+                      Wrap(
+                        children: tags
+                            .map(
+                              (tag) => Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                                margin: const EdgeInsets.only(right: 10),
+                                decoration: BoxDecoration(
+                                  color: CustomColors.primary,
+                                  borderRadius: BorderRadius.circular(50),
+                                ),
+                                child: Text(
+                                  tag,
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    color: CustomColors.background,
+                                    fontFamily: FontStyleTextStrings.medium,
+                                  ),
                                 ),
                               ),
-                            ),
-                          )
-                          .toList(),
-                    ),
-                  ],
+                            )
+                            .toList(),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              const SizedBox(width: 20),
-              CustomButton(
-                onTap: () {},
-                btnText: 'Tham gia',
-                btnColor: CustomColors.primary,
-                width: 140,
-              ),
-            ],
+                const SizedBox(width: 20),
+                CustomButton(
+                  onTap: () {
+                    controller.joinClass(id);
+                  },
+                  isLoading: controller.isJoinBtnLoading.value,
+                  btnText: isJoined ? 'Đã tham gia' : 'Tham gia',
+                  btnColor: CustomColors.primary,
+                  isDisabled: isJoined,
+                  width: 140,
+                ),
+              ],
+            ),
           ),
           const SizedBox(height: 20),
           if (!isLast) const Divider(),

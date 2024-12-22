@@ -9,6 +9,7 @@ use App\Models\Enrollment;
 use App\Models\Question;
 use App\Models\Choice;
 use App\Models\Assignment;
+use App\Models\Homework;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -56,6 +57,10 @@ class DatabaseSeeder extends Seeder
                     'is_correct' => $choice['is_correct'],
                 ]);
             }
+        }
+
+        foreach ($data['homework'] as $row) {
+            Homework::create($row);
         }
     }
 }

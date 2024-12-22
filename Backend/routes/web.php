@@ -6,11 +6,14 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ClassController;
 use App\Http\Controllers\AdminAuthController;
 use App\Http\Controllers\AssignmentController;
+use App\Http\Controllers\DashboardController;
 
 Route::get('/', [AdminAuthController::class, 'showLoginForm'])->name('admin.login');
 Route::post('/login', [AdminAuthController::class, 'login'])->name('admin.login.submit');
 
-Route::get('master', [AdminAuthController::class, 'showMaster'])->name('master');
+Route::prefix('/dashboard')->name('dashboard.')->group(function () {
+    Route::get('/', [DashboardController::class, 'index'])->name('index');
+});
 
 Route::prefix('/users')->name('users.')->group(function () {
     Route::get('/', [UserController::class, 'index'])->name('index');

@@ -1,7 +1,8 @@
 import 'package:nega_lms/utils/imports.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  setUrlStrategy(PathUrlStrategy());
+  // setUrlStrategy(PathUrlStrategy());
+  await GetStorage.init();
   runApp(const MyApp());
 }
