@@ -257,39 +257,39 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
     if (assignmentType.value == 'quiz') {
       if (assignmentSubject.text.trim().isEmpty) {
         error.value = true;
-        isAssignmentSubjectError = true.obs;
+        isAssignmentSubjectError.value = true;
         assignmentSubjectError.value = "Chủ đề không được để trống";
       } else if (assignmentSubject.text.trim().length > 255) {
         error.value = true;
-        isAssignmentSubjectError = true.obs;
+        isAssignmentSubjectError.value = true;
         assignmentSubjectError.value = "Chủ đề không được quá 255 ký tự";
       } else if (!vietnameseRegex.hasMatch(assignmentSubject.text.trim())) {
         error.value = true;
-        isAssignmentSubjectError = true.obs;
+        isAssignmentSubjectError.value = true;
         assignmentSubjectError.value = "Chủ đề chỉ chứa ký tự chữ và số";
       }
 
       if (assignmentStatus.value.isEmpty) {
         error.value = true;
-        isAssignmentStatusError = true.obs;
+        isAssignmentStatusError.value = true;
         assignmentStatusError.value = "Trạng thái không được để trống";
       }
 
       if (assignmentLevel.value.isEmpty) {
         error.value = true;
-        isAssignmentLevelError = true.obs;
+        isAssignmentLevelError.value = true;
         assignmentLevelError.value = "Cấp độ không được để trống";
       }
 
       if (assignmentSpecialized.value.isEmpty) {
         error.value = true;
-        isAssignmentSpecializedError = true.obs;
+        isAssignmentSpecializedError.value = true;
         assignmentSpecializedError.value = "Chuyên ngành không được để trống";
       }
 
       if (assignmentTopic.value.isEmpty) {
         error.value = true;
-        isAssignmentTopicError = true.obs;
+        isAssignmentTopicError.value = true;
         assignmentTopicError.value = "Chủ đề không được để trống";
       }
     }
@@ -297,30 +297,30 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
     //for both quiz and link type homework
     if (assignmentName.text.trim().isEmpty) {
       error.value = true;
-      isAssignmentNameError = true.obs;
+      isAssignmentNameError.value = true;
       assignmentNameError.value = "Tên bài tập không được để trống";
     } else if (assignmentName.text.trim().length > 255) {
       error.value = true;
-      isAssignmentNameError = true.obs;
+      isAssignmentNameError.value = true;
       assignmentNameError.value = "Tên bài tập không được quá 255 ký tự";
     } else if (!vietnameseRegex.hasMatch(assignmentName.text.trim())) {
       error.value = true;
-      isAssignmentNameError = true.obs;
+      isAssignmentNameError.value = true;
       assignmentNameError.value = "Tên bài tập chỉ chứa ký tự chữ và số";
     }
 
     //for both quiz and link type homework
     if (assignmentDescription.text.trim().isEmpty) {
       error.value = true;
-      isAssignmentDescriptionError = true.obs;
+      isAssignmentDescriptionError.value = true;
       assignmentDescriptionError.value = "Mô tả không được để trống";
     } else if (assignmentDescription.text.trim().length > 255) {
       error.value = true;
-      isAssignmentDescriptionError = true.obs;
+      isAssignmentDescriptionError.value = true;
       assignmentDescriptionError.value = "Mô tả không được quá 255 ký tự";
     } else if (!vietnameseRegex.hasMatch(assignmentDescription.text.trim())) {
       error.value = true;
-      isAssignmentDescriptionError = true.obs;
+      isAssignmentDescriptionError.value = true;
       assignmentDescriptionError.value = "Mô tả chỉ chứa ký tự chữ và số";
     }
 
@@ -328,11 +328,11 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
     if (assignmentType.value == 'link') {
       if (homeworkScore.text.trim().isEmpty) {
         error.value = true;
-        isHomeworkScoreError = true.obs;
+        isAssignmentDescriptionError.value = true;
         homeworkScoreError.value = "Điểm số không được để trống";
       } else if (!RegExp(r'^\d*\.?\d+$').hasMatch(homeworkScore.text.trim())) {
         error.value = true;
-        isHomeworkScoreError = true.obs;
+        isAssignmentDescriptionError.value = true;
         homeworkScoreError.value = "Điểm số phải là số dương";
       }
     }
@@ -362,8 +362,7 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
         }
 
         var answers = questions[i]['answers'] as RxList<Map<String, dynamic>>;
-        // Removed score validation since it's now automatically managed
-
+        
         if (answers.length < 2) {
           Get.dialog(
             NotificationDialogWithoutButton(
