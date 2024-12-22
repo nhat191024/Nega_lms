@@ -13,19 +13,19 @@ class ClassTeacherScreen extends GetView<ClassDetailController> {
             padding: const EdgeInsets.fromLTRB(10, 10, 0, 0),
             child: PopupMenuButton<String>(
               onSelected: (value) {
-                if (value == 'Quiz') {
+                if (value == 'Bộ câu hỏi (Quiz)') {
                   controller.assignmentType.value = 'quiz';
                   _showAddQuizModal(context);
-                } else if (value == 'Link') {
+                } else if (value == 'Bài tập 1 câu trả lời') {
                   controller.assignmentType.value = 'link';
                   _showAddLinkHomeworkModal(context);
                 } else {
-                  controller.assignmentType.value = 'quiz-bank';
+                  controller.assignmentType.value = 'quiz_bank';
                   // _showAddQuizFromBankModal(context);
                 }
               },
               itemBuilder: (BuildContext context) {
-                return {'Quiz', 'Link', 'Kho Quiz'}.map((String choice) {
+                return {'Bộ câu hỏi (Quiz)', 'Bài tập 1 câu trả lời', 'Bài tập từ kho quiz'}.map((String choice) {
                   return PopupMenuItem<String>(
                     value: choice,
                     textStyle: const TextStyle(
@@ -197,13 +197,46 @@ class ClassTeacherScreen extends GetView<ClassDetailController> {
                   child: Obx(
                     () => Column(
                       children: [
-                        const Text(
-                          "Tạo bài tập",
-                          style: TextStyle(
-                            fontSize: 22,
-                            color: CustomColors.primary,
-                            fontFamily: FontStyleTextStrings.medium,
-                          ),
+                        Row(
+                          children: [
+                            Expanded(
+                              flex: 1,
+                              child: Obx(
+                                () => CheckBoxField(
+                                  title: "Tạo thành bài tập và đẩy lên lớp",
+                                  value: controller.createAssignmentThenPushToClass.value.obs,
+                                  onChanged: (value) {
+                                    controller.createAssignmentThenPushToClass.value = value!;
+                                  },
+                                ),
+                              ),
+                            ),
+                            const Expanded(
+                              flex: 1,
+                              child: Center(
+                                child: Text(
+                                  "Tạo bộ câu hỏi",
+                                  style: TextStyle(
+                                    fontSize: 22,
+                                    color: CustomColors.primary,
+                                    fontFamily: FontStyleTextStrings.medium,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              flex: 1,
+                              child: Align(
+                                alignment: Alignment.centerRight,
+                                child: CustomButton(
+                                  onTap: () => controller.createQuiz(),
+                                  btnText: 'Tạo bài tập',
+                                  btnColor: CustomColors.primary,
+                                  width: 200,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                         const SizedBox(height: 20),
                         Row(
@@ -509,6 +542,7 @@ class ClassTeacherScreen extends GetView<ClassDetailController> {
                                             obscureText: false.obs,
                                             controller: controller.questions[qIndex]['score'],
                                             keyboardType: TextInputType.number,
+                                            disable: true,
                                             onChanged: (value) {},
                                           ),
                                           IconButton(
@@ -579,13 +613,6 @@ class ClassTeacherScreen extends GetView<ClassDetailController> {
                               ),
                             ],
                           ),
-                        ),
-                        const SizedBox(height: 20),
-                        CustomButton(
-                          onTap: () => controller.createQuiz(),
-                          btnText: 'Tạo bài tập',
-                          btnColor: CustomColors.primary,
-                          width: 200,
                         ),
                       ],
                     ),
