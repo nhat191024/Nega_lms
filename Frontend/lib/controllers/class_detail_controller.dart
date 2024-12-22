@@ -3,6 +3,7 @@ import 'package:nega_lms/utils/imports.dart';
 class ClassDetailController extends GetxController with GetSingleTickerProviderStateMixin {
   late TabController tabController;
   RxBool isLoading = true.obs;
+  RxBool isSubmitButtonLoading = false.obs;
   RxInt classId = 0.obs;
   RxString token = "".obs;
   RxString classCode = ''.obs;
@@ -22,6 +23,7 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
     startDate: '',
     dueDate: '',
     type: '',
+    isSubmitted: false,
   ).obs;
 
   RxList<QuestionModel> questionList = <QuestionModel>[].obs;
@@ -121,10 +123,33 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
         var data = jsonDecode(response.body);
         var assignmentData = data['assignments'];
         assignmentList.value = (assignmentData as List).map((e) => AssignmentModel.fromMap(e)).toList();
-        print(assignmentList.toJson());
       }
     } finally {
       isLoading(false);
+    }
+  }
+
+  void submitAssignment(String type, String id) async {
+    isSubmitButtonLoading.value = true;
+    var uri = Uri.parse("${Api.server}assignment/submit");
+    var request = MultipartRequest('POST', uri);
+    request.headers['Authorization'] = 'Bearer $token';
+    request.headers['Content-Type'] = 'application/json';
+    request.headers['Accept'] = 'application/json';
+
+    request.fields['type'] = type;
+    request.fields['assignment_id'] = id;
+    request.fields['link'] = linkSubmit.text.trim();
+
+    var streamedResponse = await request.send();
+    if (streamedResponse.statusCode == 200) {
+      isSubmitButtonLoading.value = false;
+      Get.back();
+      fetchClassAssignment(classId.value);
+      Get.snackbar("Thành công", "Nộp bài thành công", maxWidth: Get.width * 0.2);
+    } else {
+      isSubmitButtonLoading.value = false;
+      Get.snackbar("Lỗi", "Đã có lỗi xảy ra", maxWidth: Get.width * 0.2);
     }
   }
 
@@ -183,7 +208,7 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
   bool validateQuiz() {
     RxBool error = false.obs;
     var vietnameseRegex = RegExp(
-        r'^[a-zA-ZÃ€ÃÃ‚ÃƒÃˆÃ‰ÃŠÃŒÃÃ’Ã“Ã”Ã•Ã™ÃšÄ‚ÄÄ¨Å¨Æ Ã Ã¡Ã¢Ã£Ã¨Ã©ÃªÃ¬Ã­Ã²Ã³Ã´ÃµÃ¹ÃºÄƒÄ‘Ä©Å©Æ¡Æ¯Ä‚áº áº¢áº¤áº¦áº¨áºªáº¬áº®áº°áº²áº´áº¶áº¸áººáº¼á»€á»€á»‚áº¾Æ°Äƒáº¡áº£áº¥áº§áº©áº«áº­áº¯áº±áº³áºµáº·áº¹áº»áº½á»á»á»ƒáº¿á»„á»†á»ˆá»Šá»Œá»Žá»á»’á»”á»–á»˜á»šá»œá»žá» á»¢á»¤á»¦á»¨á»ªá»…á»‡á»‰á»‹á»á»á»‘á»“á»•á»—á»™á»›á»á»Ÿá»¡á»£á»¥á»§á»©á»«á»¬á»®á»°á»²á»´Ãá»¶á»¸á»­á»¯á»±á»³á»µá»·á»¹\s\W|_]+$');
+        r'^[a-zA-ZÃ€ÃÃ‚ÃƒÃˆÃ‰ÃŠÃŒÃÃ’Ã“Ã”Ã•Ã™ÃšÄ‚ÄÄ¨Å¨Æ Ã Ã¡Ã¢Ã£Ã¨Ã©ÃªÃ¬Ã­Ã²Ã³Ã´ÃµÃ¹ÃºÄƒÄ‘Ä©Å©Æ¡Æ¯Ä‚áº áº¢áº¤áº¦áº¨áºªáº¬áº®áº°áº²áº´áº¶áº¸áººáº¼á»€á»€á»‚áº¾Æ°Äƒáº¡áº£áº¥áº§áº©áº«áº­áº¯áº±áº³áºµáº·áº¹áº»áº½á»á»á»ƒáº¿á»„á»†á»ˆá»Šá»Œá»Žá»á»’á»”á»–á»˜á»šá»œá»žá» á»¢á»¤á»¦á»¨á»ªá»…á»‡á»‰á»‹á»á»á»‘á»“á»•á»—á»™á»›á»á»Ÿá»¡á»£á»¥á»§á»©á»«á»¬á»®á»°á»²á»´Ãá»¶á»¸á»­á»¯á»±á»³á»µá»·á»¹\s\W|_\d]+$');
 
     if (assignmentType.value == 'quiz') {
       if (assignmentSubject.text.trim().isEmpty) {
@@ -454,6 +479,15 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
     isAssignmentTopicError.value = false;
     assignmentDescription.clear();
     isAssignmentDescriptionError.value = false;
+    assignmentDuration.clear();
+    isAssignmentDurationError.value = false;
+    assignmentAutoGrade.value = '';
+    isAssignmentAutoGrade.value = false;
+    homeworkScore.clear();
+    isHomeworkScoreError.value = false;
+    linkSubmit.clear();
+    isLinkSubmitError.value = false;
+    assignmentType.value = '';
     questions.clear();
     addNewQuestion();
   }
