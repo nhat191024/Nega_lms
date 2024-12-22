@@ -23,6 +23,7 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
   RxString timeLeft = '00:00:00'.obs;
 
   RxString assignmentType = ''.obs;
+  RxString selectedAssignment = ''.obs;
 
   TextEditingController assignmentName = TextEditingController();
   TextEditingController assignmentSubject = TextEditingController();
