@@ -16,6 +16,7 @@ class AssignmentController extends GetxController {
     duration: 0,
     startDate: '',
     dueDate: '',
+    type: '',
   ).obs;
   RxList<QuestionModel> questionList = <QuestionModel>[].obs;
   RxList<AnswerModel> answerList = <AnswerModel>[].obs;
