@@ -47,9 +47,9 @@ class ClassDetailTab extends GetView<ClassDetailController> {
                         indicatorColor: CustomColors.primary,
                         indicatorSize: TabBarIndicatorSize.label,
                         tabs: const [
-                          Tab(text: 'Tổng quan'),
-                          Tab(text: 'Bài giảng'),
-                          Tab(text: 'Thảo luận'),
+                          Tab(text: 'Bài tập'),
+                          Tab(text: 'Giảng viên'),
+                          Tab(text: 'Thành viên'),
                         ],
                       ),
                     ),
@@ -109,16 +109,13 @@ class ClassDetailTab extends GetView<ClassDetailController> {
                   ],
                 ),
                 Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(60, 20, 60, 0),
-                    child: TabBarView(
-                      controller: controller.tabController,
-                      children: const [
-                        ClassDetailScreen(),
-                        ClassDetailScreen(),
-                        ClassDetailScreen(),
-                      ],
-                    ),
+                  child: TabBarView(
+                    controller: controller.tabController,
+                    children: const [
+                      ClassDetailScreen(),
+                      ClassTeacherScreen(),
+                      ClassDetailScreen(),
+                    ],
                   ),
                 )
               ],
