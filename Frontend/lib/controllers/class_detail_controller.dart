@@ -14,8 +14,8 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
   RxString assignmentTitle = 'test'.obs;
   RxInt currentQuestion = 0.obs;
 
-  RxList<AssignmentModel> assignmentList = <AssignmentModel>[].obs;
-  Rx<AssignmentModel> assignment = AssignmentModel(
+  RxList<HomeworkModel> assignmentList = <HomeworkModel>[].obs;
+  Rx<HomeworkModel> assignment = HomeworkModel(
     id: 0,
     creatorName: '',
     name: '',
@@ -25,6 +25,18 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
     dueDate: '',
     type: '',
     isSubmitted: false,
+  ).obs;
+
+  RxList<AssignmentModel> assignmentListForTeacher = <AssignmentModel>[].obs;
+  Rx<AssignmentModel> assignmentForTeacher = AssignmentModel(
+    id: 0,
+    name: '',
+    description: '',
+    level: '',
+    totalScore: 0.0,
+    specialized: '',
+    subject: '',
+    topic: '',
   ).obs;
 
   RxList<QuestionModel> questionList = <QuestionModel>[].obs;
@@ -123,7 +135,7 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
         var assignmentData = data['assignments'];
-        assignmentList.value = (assignmentData as List).map((e) => AssignmentModel.fromMap(e)).toList();
+        assignmentList.value = (assignmentData as List).map((e) => HomeworkModel.fromMap(e)).toList();
       }
     } finally {
       isLoading(false);
