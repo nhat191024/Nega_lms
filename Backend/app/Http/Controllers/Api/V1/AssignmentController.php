@@ -18,14 +18,19 @@ use App\Models\Classes;
 
 class AssignmentController extends Controller
 {
-    public function GetAssignmentByClassId($class_id)
+    public function GetAssignmentByClassId($class_id, $role)
     {
-        $homeworks = Homework::where('class_id', $class_id)->where('status', 1)->with('assignment')->get();
-
+        $homeworks = null;
+        if ($role == 1) {
+            $homeworks = Homework::where('class_id', $class_id)->with('assignment')->get();
+        } else {
+            $homeworks = Homework::where('class_id', $class_id)->where('status', 1)->with('assignment')->get();
+        }
         $assignments = $homeworks->map(function ($homework) {
             $answers = Answer::where('user_id', Auth::user()->id)->where('assignment_id', $homework->assignment ? $homework->assignment->id : $homework->id)->get();
             return [
                 'id' => $homework->assignment ? $homework->assignment->id : $homework->id,
+                'creatorName' => $homework->assignment ? $homework->assignment->creator->name : null,
                 'name' => $homework->assignment ? $homework->assignment->title : $homework->title,
                 'description' => $homework->assignment ? $homework->assignment->description : $homework->description,
                 'level' => $homework->assignment ? $homework->assignment->level : "Không có",
@@ -40,6 +45,38 @@ class AssignmentController extends Controller
 
         return response()->json([
             'assignments' => $assignments,
+        ], Response::HTTP_OK);
+    }
+
+    public function GetAssignmentForTeacher()
+    {
+        $user = Auth::user();
+        $assignments = Assignment::where('status', 'published')
+            ->orWhere(function ($query) use ($user) {
+                $query->where('status', 'private')
+                    ->where('creator_id', $user->id);
+            })
+            ->get();
+
+        $assignmentsFormatted = $assignments->map(function ($assignment) {
+            return [
+                'id' => $assignment->id,
+                'name' => $assignment->title,
+                'description' => $assignment->description,
+                'level' => $assignment->level,
+                'totalScore' => $assignment->totalScore,
+                'specialized' => $assignment->specialized,
+                'subject' => $assignment->subject,
+                'topic' => $assignment->topic,
+                'creator' => $assignment->creator->name,
+                'isCreator' => $assignment->creator_id == Auth::user()->id ? true : false,
+                'createdAt' => $assignment->created_at->format('H:i d:m:Y'),
+                'numberOfQuestions' => $assignment->questions->count(),
+            ];
+        });
+
+        return response()->json([
+            'assignments' => $assignmentsFormatted,
         ], Response::HTTP_OK);
     }
 
