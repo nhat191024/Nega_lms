@@ -65,14 +65,28 @@ class AssignmentController extends GetxController {
     try {
       isLoading(true);
       String url = "${Api.server}assignment/submit";
-      var response = await post(Uri.parse(url), headers: {
-        'Authorization': 'Bearer ${Api.testToken}',
-      }, body: {
-        'assignment_id': id,
-        'answers': jsonEncode(answerList.map((e) => e.toMap()).toList()),
-      }).timeout(const Duration(seconds: 10));
+      var request = MultipartRequest('POST', Uri.parse(url));
+      request.headers['Authorization'] = 'Bearer $token';
+      request.headers['Content-Type'] = 'application/json';
+      request.headers['Accept'] = 'application/json';
+      request.fields['assignment_id'] = id;
+      request.fields['answers'] = jsonEncode(answerList.map((e) => e.toMap()).toList());
+      var response = await request.send().timeout(const Duration(seconds: 10));
+
       if (response.statusCode == 200) {
-        Get.toNamed(Routes.classListPage);
+        Get.toNamed(Routes.classDetailScreen);
+        clear();
+        Get.snackbar(
+          'Success',
+          'Assignment submitted successfully',
+        );
+      } else {
+        Get.toNamed(Routes.classDetailScreen);
+        clear();
+        Get.snackbar(
+          'Error',
+          'Failed to submit assignment',
+        );
       }
     } finally {
       isLoading(false);
@@ -119,6 +133,31 @@ class AssignmentController extends GetxController {
             '${secs.toString().padLeft(2, '0')}';
       }
     });
+  }
+
+  void clear() {
+    _timer?.cancel();
+    assignmentId.value = '';
+    classId.value = '';
+    token.value = '';
+    assignmentTitle.value = 'test';
+    assignmentDuration.value = 0;
+    currentQuestion.value = 0;
+    assignment.value = AssignmentModel(
+      id: 0,
+      creatorName: '',
+      name: '',
+      description: '',
+      duration: 0,
+      startDate: '',
+      dueDate: '',
+      type: '',
+      isSubmitted: false,
+    );
+    questionList.clear();
+    answerList.clear();
+    timeLeft.value = '00:00:00';
+    Get.delete<AssignmentController>();
   }
 
   @override
