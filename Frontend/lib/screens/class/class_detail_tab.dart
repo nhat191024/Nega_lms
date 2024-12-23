@@ -49,7 +49,7 @@ class ClassDetailTab extends GetView<ClassDetailController> {
                         tabs: const [
                           Tab(text: 'Bài tập'),
                           Tab(text: 'Giảng viên'),
-                          Tab(text: 'Thành viên'),
+                          Tab(text: 'Điểm'),
                         ],
                       ),
                     ),
@@ -114,7 +114,7 @@ class ClassDetailTab extends GetView<ClassDetailController> {
                     children: const [
                       ClassDetailScreen(),
                       ClassTeacherScreen(),
-                      ClassDetailScreen(),
+                      ClassPointScreen(),
                     ],
                   ),
                 )
