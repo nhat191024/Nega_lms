@@ -25,6 +25,8 @@ class AssignmentController extends GetxController {
   RxString timeLeft = '00:00:00'.obs;
   Timer? _timer;
 
+  ClassDetailController classDetailController = Get.find<ClassDetailController>();
+
   @override
   void onInit() async {
     super.onInit();
@@ -62,7 +64,7 @@ class AssignmentController extends GetxController {
     }
   }
 
-  submitAssignment(String id) async {
+  submitAssignment() async {
     try {
       isLoading(true);
       String url = "${Api.server}assignment/submit";
@@ -70,19 +72,20 @@ class AssignmentController extends GetxController {
       request.headers['Authorization'] = 'Bearer $token';
       request.headers['Content-Type'] = 'application/json';
       request.headers['Accept'] = 'application/json';
-      request.fields['assignment_id'] = id;
+      request.fields['assignment_id'] = assignmentId.value;
       request.fields['answers'] = jsonEncode(answerList.map((e) => e.toMap()).toList());
       var response = await request.send().timeout(const Duration(seconds: 10));
 
       if (response.statusCode == 200) {
-        Get.toNamed(Routes.classDetailScreen);
+        classDetailController.fetchClassAssignment(classId.value);
+        Get.back();
         clear();
         Get.snackbar(
           'Success',
           'Assignment submitted successfully',
         );
       } else {
-        Get.toNamed(Routes.classDetailScreen);
+        Get.back();
         clear();
         Get.snackbar(
           'Error',
@@ -159,7 +162,6 @@ class AssignmentController extends GetxController {
     questionList.clear();
     answerList.clear();
     timeLeft.value = '00:00:00';
-    Get.delete<AssignmentController>();
   }
 
   @override
