@@ -11,6 +11,7 @@ export 'package:nega_lms/screens/class/class_list_screen.dart';
 export 'package:nega_lms/screens/class/class_detail_screen.dart';
 export 'package:nega_lms/screens/class/class_detail_tab.dart';
 export 'package:nega_lms/screens/class/class_teacher_screen.dart';
+export 'package:nega_lms/screens/class/class_point_screen.dart';
 export 'package:nega_lms/screens/assignment/assignment_detail_screen.dart';
 export 'package:nega_lms/screens/assignment/do_assignment_screen.dart';
 
