@@ -95,7 +95,7 @@ class DoAssignmentScreen extends GetView<AssignmentController> {
                                       CustomButton(
                                         width: 100,
                                         onTap: () {
-                                          controller.submitAssignment("1");
+                                          controller.submitAssignment();
                                         },
                                         btnText: "Kết thúc bài thi",
                                       ),
