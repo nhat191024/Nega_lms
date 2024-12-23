@@ -110,5 +110,22 @@ class ClassController extends Controller
         ], Response::HTTP_OK);
     }
 
-    public function getClassAssignmentPost($id) {}
+    public function getClassAssignmentPoint($id)
+    {
+        $user = Auth::user();
+        $submissions = Submission::where('class_id', $id)->with('assignment', 'student')->get();
+
+        $submissions = $submissions->map(function ($submission) {
+            return [
+                'assignment_name' => $submission->assignment->title,
+                'student_name' => $submission->student->name,
+                'total_score' => $submission->total_score,
+                'created_at' => $submission->created_at->format('H:i d:m:Y'),
+            ];
+        });
+
+        return response()->json([
+            'submissions' => $submissions,
+        ], Response::HTTP_OK);
+    }
 }
