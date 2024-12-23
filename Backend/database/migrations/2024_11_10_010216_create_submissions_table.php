@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('submissions', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('assignment_id');
+            $table->unsignedBigInteger('assignment_id')->nullable();
             $table->unsignedBigInteger('student_id');
             $table->float('total_score')->nullable();
             $table->timestamps();
