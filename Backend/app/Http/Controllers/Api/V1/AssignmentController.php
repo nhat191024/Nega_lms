@@ -259,6 +259,7 @@ class AssignmentController extends Controller
             Submission::create([
                 'student_id' => $user->id,
                 'total_score' => 0,
+                'class_id' => $request->class_id,
             ]);
 
             return response()->json([
@@ -288,6 +289,7 @@ class AssignmentController extends Controller
                 'assignment_id' => $request->assignment_id,
                 'student_id' => $user->id,
                 'total_score' => $totalScore,
+                'class_id' => $request->class_id,
             ]);
 
             return response()->json([
