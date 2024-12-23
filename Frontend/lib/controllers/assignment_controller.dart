@@ -73,6 +73,7 @@ class AssignmentController extends GetxController {
       request.headers['Content-Type'] = 'application/json';
       request.headers['Accept'] = 'application/json';
       request.fields['assignment_id'] = assignmentId.value;
+      request.fields['class_id'] = classId.value;
       request.fields['answers'] = jsonEncode(answerList.map((e) => e.toMap()).toList());
       var response = await request.send().timeout(const Duration(seconds: 10));
 

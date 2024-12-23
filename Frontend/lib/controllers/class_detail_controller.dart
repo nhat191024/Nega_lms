@@ -170,6 +170,7 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
     request.fields['type'] = type;
     request.fields['assignment_id'] = id;
     request.fields['link'] = linkSubmit.text.trim();
+    request.fields['class_id'] = classId.value.toString();
 
     var streamedResponse = await request.send();
     if (streamedResponse.statusCode == 200) {
