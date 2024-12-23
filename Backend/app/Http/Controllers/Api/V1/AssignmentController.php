@@ -15,6 +15,7 @@ use App\Models\Choice;
 use App\Models\Question;
 use App\Models\Answer;
 use App\Models\Classes;
+use App\Models\Submission;
 
 class AssignmentController extends Controller
 {
@@ -255,11 +256,18 @@ class AssignmentController extends Controller
                 'link' => $request->link,
             ]);
 
+            Submission::create([
+                'student_id' => $user->id,
+                'total_score' => 0,
+            ]);
+
             return response()->json([
                 'message' => 'Nộp bài thành công',
             ], Response::HTTP_OK);
         } else {
             $answers = json_decode($request->answers, true);
+            $totalScore = 0;
+
             foreach ($answers as $answer) {
                 Answer::create([
                     'user_id' => $user->id,
@@ -267,10 +275,24 @@ class AssignmentController extends Controller
                     'question_id' => $answer['question_id'],
                     'choice_id' => $answer['choice_id'],
                 ]);
+
+                $question = Question::find($answer['question_id']);
+                $choice = Choice::find($answer['choice_id']);
+
+                if ($choice && $choice->is_correct == 1) {
+                    $totalScore += $question->score;
+                }
             }
+
+            Submission::create([
+                'assignment_id' => $request->assignment_id,
+                'student_id' => $user->id,
+                'total_score' => $totalScore,
+            ]);
 
             return response()->json([
                 'message' => 'Nộp bài thành công',
+                'score' => $totalScore
             ], Response::HTTP_OK);
         }
     }
