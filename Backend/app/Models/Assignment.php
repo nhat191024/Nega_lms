@@ -7,25 +7,20 @@ use Illuminate\Database\Eloquent\Model;
 class Assignment extends Model
 {
     protected $fillable = [
-        'class_id',
         'creator_id',
-        'name',
+        'title',
         'description',
         'status',
         'level',
-        'duration',
         'totalScore',
         'specialized',
         'subject',
         'topic',
-        'start_date',
-        'due_date',
-        'auto_grade',
     ];
 
-    public function class()
+    public function homeworks()
     {
-        return $this->belongsTo(Classes::class, 'class_id');
+        return $this->hasMany(Homework::class);
     }
 
     public function creator()
@@ -41,5 +36,10 @@ class Assignment extends Model
     public function questions()
     {
         return $this->hasMany(Question::class);
+    }
+
+    public function answers()
+    {
+        return $this->hasMany(Answer::class);
     }
 }

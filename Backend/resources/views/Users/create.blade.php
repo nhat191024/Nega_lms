@@ -3,18 +3,16 @@
 @section('title', ' Thêm Người dùng')
 
 @section('content')
-    <div class="container vh-100">
-        <h2 class="my-4">Tạo người dùng mới</h2>
+    <div class="container min-vh-100 d-flex flex-column">
+        <h2 class="my-4">Tạo người dùng mới</h2> 
 
-        <a href="{{ route('users.index') }}" class="btn btn-secondary mb-4">
-            <i class="fas fa-arrow-left"></i> Quay lại
-        </a>
-
-        <!-- Form tạo người dùng -->
         <form action="{{ route('users.store') }}" method="POST">
             @csrf
 
-            <!-- Tên -->
+            <a href="{{ route('users.index') }}" class="btn btn-secondary mb-4">
+                <i class="fas fa-arrow-left"></i> Quay lại
+            </a>
+
             <div class="form-group">
                 <label for="name">Tên người dùng</label>
                 <input type="text" name="name" id="name" class="form-control" value="{{ old('name') }}">
@@ -23,7 +21,6 @@
                 @enderror
             </div>
 
-            <!-- Email -->
             <div class="form-group">
                 <label for="email">Email</label>
                 <input type="email" name="email" id="email" class="form-control" value="{{ old('email') }}">
@@ -32,7 +29,6 @@
                 @enderror
             </div>
 
-            <!-- Username -->
             <div class="form-group">
                 <label for="username">Tên đăng nhập</label>
                 <input type="text" name="username" id="username" class="form-control" value="{{ old('username') }}">
@@ -41,7 +37,6 @@
                 @enderror
             </div>
 
-            <!-- Password -->
             <div class="form-group">
                 <label for="password">Mật khẩu</label>
                 <input type="password" name="password" id="password" class="form-control">
@@ -50,13 +45,11 @@
                 @enderror
             </div>
 
-            <!-- Confirm Password -->
             <div class="form-group">
                 <label for="password_confirmation">Xác nhận mật khẩu</label>
                 <input type="password" name="password_confirmation" id="password_confirmation" class="form-control">
             </div>
 
-            <!-- Role -->
             <div class="form-group">
                 <label for="role_id">Vai trò</label>
                 <select name="role_id" id="role_id" class="form-control">
@@ -69,8 +62,8 @@
                 @enderror
             </div>
 
-            <!-- Submit Button -->
-            <button type="submit" class="btn btn-primary">Tạo</button>
+            <button type="submit" class="btn btn-primary" onclick="if(confirm('Bạn có muốn tạo người dùng mới không?')) {document.submit()}">Tạo</button>
         </form>
+        <br>
     </div>
 @endsection

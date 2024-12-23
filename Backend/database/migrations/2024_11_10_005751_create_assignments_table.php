@@ -13,23 +13,18 @@ return new class extends Migration
     {
         Schema::create('assignments', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('class_id')->constrained()->onDelete('cascade');
-            $table->foreignId('creator_id')->constrained()->onDelete('cascade');
+            $table->unsignedBigInteger('creator_id');
             $table->string('title');
             $table->text('description');
             $table->enum('status', ['closed', 'published', 'private', 'draft']);
             $table->string('level');
-            $table->integer('duration');
             $table->integer('totalScore');
             $table->string('specialized');
             $table->string('subject');
             $table->string('topic');
-            $table->date('start_date');
-            $table->date('due_date');
-            $table->boolean('auto_grade');
             $table->timestamps();
         });
-        
+
     }
 
     /**
@@ -38,5 +33,8 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('assignments');
+        Schema::table('assignments', function (Blueprint $table) {
+            $table->dropColumn('visibility');
+        });
     }
 };

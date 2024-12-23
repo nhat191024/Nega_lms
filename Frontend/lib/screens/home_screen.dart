@@ -7,12 +7,12 @@ class HomeScreen extends GetView<HomeController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.transparent,
         elevation: 0,
-        title: const NavBar(),
+        toolbarHeight: 80,
+        title: NavBar(),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
+      body: SingleChildScrollView(
         child: Column(
           children: [
             Padding(
@@ -134,11 +134,11 @@ class HomeScreen extends GetView<HomeController> {
                   ),
                 ],
               ),
-            )
+            ),
+            const Footer(),
           ],
         ),
       ),
     );
   }
 }
-    

@@ -1,100 +1,399 @@
 import 'package:nega_lms/utils/imports.dart';
 
 class NavBar extends StatelessWidget {
-  const NavBar({super.key});
+  final VoidCallback? onMenuPressed;
+  final bool showMenuButton;
+
+  NavBar({super.key, this.onMenuPressed, this.showMenuButton = false});
+  final controllers = Get.put(NavController());
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-      child: Row(
+    return Container(
+      decoration: const BoxDecoration(
+        border: Border(
+          bottom: BorderSide(
+            color: CustomColors.border,
+            width: 1,
+          ),
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 10),
+        child: Row(
+          children: [
+            if (showMenuButton)
+              IconButton(
+                icon: const Icon(Icons.menu, color: CustomColors.primaryText),
+                onPressed: onMenuPressed,
+              ),
+            const CircleAvatar(
+              radius: 20,
+              backgroundImage: AssetImage(Images.logoNoBg),
+              backgroundColor: Colors.transparent,
+            ),
+            const Spacer(),
+            TextButton(
+              onPressed: () {},
+              child: const Text(
+                'Trang chủ',
+                style: TextStyle(
+                  color: CustomColors.primaryText,
+                  fontSize: 16,
+                  fontFamily: FontStyleTextStrings.regular,
+                ),
+              ),
+            ),
+            const SizedBox(width: 10),
+            TextButton(
+              onPressed: () {
+                Get.toNamed(Routes.classListPage);
+              },
+              child: const Text(
+                'Lớp học',
+                style: TextStyle(
+                  color: CustomColors.primaryText,
+                  fontSize: 16,
+                  fontFamily: FontStyleTextStrings.regular,
+                ),
+              ),
+            ),
+            const SizedBox(width: 10),
+            TextButton(
+              onPressed: () {},
+              child: const Text(
+                'Giảng viên',
+                style: TextStyle(
+                  color: CustomColors.primaryText,
+                  fontSize: 16,
+                  fontFamily: FontStyleTextStrings.regular,
+                ),
+              ),
+            ),
+            const SizedBox(width: 10),
+            if (!controllers.isLogin.value)
+              CustomButton(
+                btnText: "Đăng nhập",
+                onTap: () {
+                  Get.toNamed(Routes.loginPage);
+                },
+                rightPadding: 0,
+                leftPadding: 0,
+                borderRadius: 24,
+                width: Get.width * 0.07,
+              )
+            else
+              Container(
+                height: 64,
+                width: 64,
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  shape: BoxShape.circle,
+                ),
+                clipBehavior: Clip.antiAlias,
+                child: const Icon(Icons.person),
+              ),
+            const SizedBox(width: 20),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class SideBar extends StatelessWidget {
+  final bool isCollapsed;
+
+  const SideBar({super.key, required this.isCollapsed});
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 300),
+      width: isCollapsed ? 80 : 250,
+      height: double.infinity,
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        border: Border(
+          right: BorderSide(
+            color: CustomColors.border,
+            width: 1,
+          ),
+        ),
+      ),
+      child: Column(
         children: [
-          const CircleAvatar(
-            radius: 20,
-            backgroundImage: AssetImage(Images.logoNoBg),
-            backgroundColor: Colors.transparent,
-          ),
-          const Spacer(),
-          TextButton(
-            onPressed: () {},
-            child: const Text(
-              'Trang chủ',
-              style: TextStyle(
-                color: CustomColors.primaryText,
-                fontSize: 16,
-                fontFamily: FontStyleTextStrings.regular,
-              ),
+          Expanded(
+            child: ListView(
+              padding: EdgeInsets.zero,
+              children: [
+                _buildListTile(Icons.home, 'Trang chủ', Routes.homePage),
+                _buildListTile(Icons.class_, 'Lớp học', Routes.classListPage),
+                _buildListTile(Icons.person, 'Giảng viên', null),
+                _buildListTile(Icons.login, 'Đăng nhập', Routes.loginPage),
+              ],
             ),
           ),
-          const SizedBox(width: 10),
-          TextButton(
-            onPressed: () {},
-            child: const Text(
-              'Tìm kiếm đề thi',
-              style: TextStyle(
-                color: CustomColors.primaryText,
-                fontSize: 16,
-                fontFamily: FontStyleTextStrings.regular,
+        ],
+      ),
+    );
+  }
+
+  Widget _buildListTile(IconData icon, String title, String? route) {
+    return ListTile(
+      leading: Icon(icon, color: CustomColors.primary),
+      title: isCollapsed ? null : Text(title),
+      onTap: () {
+        if (route != null) {
+          Get.toNamed(route);
+        }
+      },
+    );
+  }
+}
+
+class Footer extends StatelessWidget {
+  const Footer({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: Get.width,
+      padding: const EdgeInsets.fromLTRB(150, 60, 200, 20),
+      margin: const EdgeInsets.only(top: 20),
+      decoration: const BoxDecoration(
+        color: CustomColors.footer,
+        // borderRadius: BorderRadius.,
+      ),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const CircleAvatar(
+                    radius: 20,
+                    backgroundImage: AssetImage(Images.logoNoBg),
+                    backgroundColor: Colors.transparent,
+                  ),
+                  const Text(
+                    'NegaLMS',
+                    style: TextStyle(
+                      color: CustomColors.primary,
+                      fontSize: 16,
+                      fontFamily: FontStyleTextStrings.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  const Text(
+                    'Nền tảng thi trắc nghiệm\nonline tốt nhất',
+                    style: TextStyle(
+                      color: CustomColors.white,
+                      fontSize: 18,
+                      fontFamily: FontStyleTextStrings.regular,
+                    ),
+                  ),
+                  const SizedBox(height: 40),
+                  const Text(
+                    "Tải xuống",
+                    style: TextStyle(
+                      color: CustomColors.white,
+                      fontSize: 18,
+                      fontFamily: FontStyleTextStrings.regular,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    children: [
+                      Image.asset(
+                        Images.appleStore,
+                        width: 160,
+                      ),
+                      const SizedBox(width: 15),
+                      Image.asset(
+                        Images.googlePlay,
+                        width: 160,
+                      ),
+                    ],
+                  ),
+                ],
               ),
+              const Spacer(),
+              const Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Khám phá",
+                    style: TextStyle(
+                      color: CustomColors.white,
+                      fontSize: 25,
+                      fontFamily: FontStyleTextStrings.bold,
+                    ),
+                  ),
+                  SizedBox(height: 35),
+                  Text(
+                    "Dành cho sinh viên",
+                    style: TextStyle(
+                      color: CustomColors.white,
+                      fontSize: 18,
+                      fontFamily: FontStyleTextStrings.light,
+                    ),
+                  ),
+                  SizedBox(height: 25),
+                  Text(
+                    "Dành cho trung tâm, trường học",
+                    style: TextStyle(
+                      color: CustomColors.white,
+                      fontSize: 18,
+                      fontFamily: FontStyleTextStrings.light,
+                    ),
+                  ),
+                  SizedBox(height: 25),
+                  Text(
+                    "Dành cho doanh nghiệp",
+                    style: TextStyle(
+                      color: CustomColors.white,
+                      fontSize: 18,
+                      fontFamily: FontStyleTextStrings.light,
+                    ),
+                  ),
+                  SizedBox(height: 25),
+                  Text(
+                    "Dành cho học viên",
+                    style: TextStyle(
+                      color: CustomColors.white,
+                      fontSize: 18,
+                      fontFamily: FontStyleTextStrings.light,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(width: 80),
+              const Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Tài nguyên",
+                    style: TextStyle(
+                      color: CustomColors.white,
+                      fontSize: 25,
+                      fontFamily: FontStyleTextStrings.bold,
+                    ),
+                  ),
+                  SizedBox(height: 35),
+                  Text(
+                    "Tin tức",
+                    style: TextStyle(
+                      color: CustomColors.white,
+                      fontSize: 18,
+                      fontFamily: FontStyleTextStrings.light,
+                    ),
+                  ),
+                  SizedBox(height: 25),
+                  Text(
+                    "Giới thiệu",
+                    style: TextStyle(
+                      color: CustomColors.white,
+                      fontSize: 18,
+                      fontFamily: FontStyleTextStrings.light,
+                    ),
+                  ),
+                  SizedBox(height: 25),
+                  Text(
+                    "Hướng dẫn",
+                    style: TextStyle(
+                      color: CustomColors.white,
+                      fontSize: 18,
+                      fontFamily: FontStyleTextStrings.light,
+                    ),
+                  ),
+                  SizedBox(height: 25),
+                  Text(
+                    "Câu hỏi thường gặp",
+                    style: TextStyle(
+                      color: CustomColors.white,
+                      fontSize: 18,
+                      fontFamily: FontStyleTextStrings.light,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(width: 80),
+              const Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Chính sách",
+                    style: TextStyle(
+                      color: CustomColors.white,
+                      fontSize: 25,
+                      fontFamily: FontStyleTextStrings.bold,
+                    ),
+                  ),
+                  SizedBox(height: 35),
+                  Text(
+                    "Điều khoản sử dụng",
+                    style: TextStyle(
+                      color: CustomColors.white,
+                      fontSize: 18,
+                      fontFamily: FontStyleTextStrings.light,
+                    ),
+                  ),
+                  SizedBox(height: 25),
+                  Text(
+                    "Chính sách bảo mật",
+                    style: TextStyle(
+                      color: CustomColors.white,
+                      fontSize: 18,
+                      fontFamily: FontStyleTextStrings.light,
+                    ),
+                  ),
+                  SizedBox(height: 25),
+                  Text(
+                    "Chính sách sử dụng",
+                    style: TextStyle(
+                      color: CustomColors.white,
+                      fontSize: 18,
+                      fontFamily: FontStyleTextStrings.light,
+                    ),
+                  ),
+                  SizedBox(height: 25),
+                  Text(
+                    "Hướng dẫn sử dụng",
+                    style: TextStyle(
+                      color: CustomColors.white,
+                      fontSize: 18,
+                      fontFamily: FontStyleTextStrings.light,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+          Center(
+            child: Column(
+              children: [
+                SizedBox(
+                  width: Get.width * 0.4,
+                  child: const Divider(
+                    color: CustomColors.primary,
+                    thickness: 1,
+                  ),
+                ),
+                const SizedBox(height: 20),
+                const Text(
+                  '© 2024 NegaLMS. All rights reserved.',
+                  style: TextStyle(
+                    color: CustomColors.white,
+                    fontSize: 14,
+                    fontFamily: FontStyleTextStrings.regular,
+                  ),
+                ),
+              ],
             ),
           ),
-          const SizedBox(width: 10),
-          TextButton(
-            onPressed: () {},
-            child: const Text(
-              'Tạo đề thi',
-              style: TextStyle(
-                color: CustomColors.primaryText,
-                fontSize: 16,
-                fontFamily: FontStyleTextStrings.regular,
-              ),
-            ),
-          ),
-          const SizedBox(width: 10),
-          TextButton(
-            onPressed: () {},
-            child: const Text(
-              'Khám phá',
-              style: TextStyle(
-                color: CustomColors.primaryText,
-                fontSize: 16,
-                fontFamily: FontStyleTextStrings.regular,
-              ),
-            ),
-          ),
-          const SizedBox(width: 10),
-          TextButton(
-            onPressed: () {},
-            child: const Text(
-              'Tin tức',
-              style: TextStyle(
-                color: CustomColors.primaryText,
-                fontSize: 16,
-                fontFamily: FontStyleTextStrings.regular,
-              ),
-            ),
-          ),
-          const SizedBox(width: 10),
-          TextButton(
-            onPressed: () {},
-            child: const Text(
-              'Liên hệ',
-              style: TextStyle(
-                color: CustomColors.primaryText,
-                fontSize: 16,
-                fontFamily: FontStyleTextStrings.regular,
-              ),
-            ),
-          ),
-          const SizedBox(width: 10),
-          CustomButton(
-            btnText: "Đăng nhập",
-            onTap: () {},
-            rightPadding: 0,
-            leftPadding: 0,
-            borderRadius: 24,
-            width: Get.width * 0.07,
-          )
         ],
       ),
     );

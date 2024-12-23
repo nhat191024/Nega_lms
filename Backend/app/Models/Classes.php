@@ -8,6 +8,7 @@ class Classes extends Model
 {
     protected $fillable = [
         'class_name',
+        'class_code',
         'class_description',
         'teacher_id',
         'status',
@@ -28,8 +29,13 @@ class Classes extends Model
         return $this->hasMany(Enrollment::class, 'class_id');
     }
 
-    public function assignments()
+    public function homeworks()
     {
-        return $this->hasMany(Assignment::class);
+        return $this->hasMany(Homework::class, 'class_id');
+    }
+
+    public function submissions()
+    {
+        return $this->hasMany(Submission::class, 'class_id');
     }
 }

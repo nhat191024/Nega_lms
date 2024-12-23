@@ -13,5 +13,25 @@ class Pages {
       page: () => const HomeScreen(),
       binding: HomeBinding(),
     ),
+    GetPage(
+      name: _Paths.loginPage,
+      page: () => const LoginScreen(),
+      binding: LoginBinding(),
+    ),
+    GetPage(
+      name: _Paths.classListPage,
+      page: () => ClassListScreen(),
+      binding: ClassBinding(),
+    ),
+    GetPage(
+      name: _Paths.classDetailScreen,
+      page: () => const ClassDetailTab(),
+      binding: ClassDetailBinding(),
+    ),
+    GetPage(
+      name: _Paths.doAssignmentScreen,
+      page: () => const DoAssignmentScreen(),
+      binding: AssignmentBinding(),
+    ),
   ];
 }

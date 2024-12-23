@@ -10,6 +10,7 @@ class Submission extends Model
         'assignment_id',
         'student_id',
         'total_score',
+        'class_id',
     ];
 
     public function assignment()
@@ -20,5 +21,10 @@ class Submission extends Model
     public function student()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function class()
+    {
+        return $this->belongsTo(Classes::class);
     }
 }
