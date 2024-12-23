@@ -17,6 +17,7 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
   RxList<HomeworkModel> assignmentList = <HomeworkModel>[].obs;
   RxList<HomeworkModel> assignmentsList = <HomeworkModel>[].obs;
   RxList<AssignmentModel> assignmentListForTeacher = <AssignmentModel>[].obs;
+  RxList classPointList = [].obs;
 
   RxList<QuestionModel> questionList = <QuestionModel>[].obs;
   RxList<AnswerModel> answerList = <AnswerModel>[].obs;
@@ -83,6 +84,7 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
       await fetchClassAssignment(classId.value);
       await fetchAllClassAssignment(classId.value);
       await fetchAssignmentForTeacher();
+      await fetchClassPoint(classId.value);
     });
     addNewQuestion();
   }
@@ -156,6 +158,22 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
       }
     } catch (e) {
       Get.snackbar("Error", "Failed to fetch assignment for teacher");
+    }
+  }
+
+  fetchClassPoint(id) async {
+    try {
+      String url = "${Api.server}classes/point/$id";
+      var response = await get(Uri.parse(url), headers: {
+        'Authorization': 'Bearer $token',
+      }).timeout(const Duration(seconds: 10));
+
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body);
+        classPointList.value = data['submissions'];
+      }
+    } catch (e) {
+      Get.snackbar("Error", "Failed to fetch class info");
     }
   }
 
