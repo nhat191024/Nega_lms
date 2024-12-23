@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\v1;
 
 use App\Models\Classes;
 use App\Models\Enrollment;
+use App\Models\Submission;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -108,4 +109,6 @@ class ClassController extends Controller
             'classes' => [$data],
         ], Response::HTTP_OK);
     }
+
+    public function getClassAssignmentPost($id) {}
 }
