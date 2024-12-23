@@ -29,6 +29,7 @@ Route::group(['middleware' => ['auth:sanctum', 'ability:student']], function () 
         Route::get('/student-class', [ClassController::class, 'getStudentClasses']);
         Route::get('/join/{classId}', [ClassController::class, 'joinClass']);
         Route::get('/search/{classCode}', [ClassController::class, 'searchClassByCode']);
+        Route::get('/point/{classId}', [ClassController::class, 'getClassAssignmentPoint']);
     });
 
     Route::get('/user', [ProfileController::class, 'showProfile'])->name('user.profile.show');
