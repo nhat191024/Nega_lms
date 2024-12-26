@@ -11,14 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('answers', function (Blueprint $table) {
+        Schema::create('notification_comments', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('question_id')->nullable();
+            $table->unsignedBigInteger('notification_id');
             $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('choice_id')->nullable();
-            $table->unsignedBigInteger('assignment_id')->nullable();
-            $table->unsignedBigInteger('homework_id')->nullable();
-            $table->string('link')->nullable();
+            $table->text('content');
             $table->timestamps();
         });
     }
@@ -28,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('answers');
+        Schema::dropIfExists('notification_comments');
     }
 };

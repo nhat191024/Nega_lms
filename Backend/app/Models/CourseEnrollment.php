@@ -4,14 +4,18 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Notification extends Model
+class CourseEnrollment extends Model
 {
     protected $fillable = [
+        'course_id',
         'user_id',
-        'title',
-        'content',
-        'is_read',
+        'status',
     ];
+
+    public function course()
+    {
+        return $this->belongsTo(Course::class);
+    }
 
     public function user()
     {

@@ -7,18 +7,18 @@ use Illuminate\Database\Eloquent\Model;
 class Choice extends Model
 {
     protected $fillable = [
-        'question_id',
+        'quiz_id',
         'choice',
-        'is_correct',
+        'is_correct'
     ];
 
-    public function question()
+    public function quiz()
     {
-        return $this->belongsTo(Question::class);
+        return $this->belongsTo(Quiz::class);
     }
 
-    public function answers()
+    public function classAnswers()
     {
-        return $this->hasMany(Answer::class);
+        return $this->hasMany(ClassAnswer::class);
     }
 }

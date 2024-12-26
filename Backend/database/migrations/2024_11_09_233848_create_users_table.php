@@ -13,16 +13,13 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('avatar')->default('upload/avt/default.png');
             $table->string('email')->unique();
-            $table->string('phone')->unique()->nullable();
-            $table->string('gender')->nullable();
-            $table->string('birthday')->nullable();
-            $table->string('username')->unique();
+            $table->string('avatar')->default('upload/avt/default.png');
             $table->string('password');
-            $table->enum('role_id', [1, 2, 3]); // 1 = admin, 2 = teacher, 3 = user
-            $table->tinyInteger('status')->default(1); // 1 là hiển thị, 0 là ẩn
+            $table->string('name');
+            $table->string('gender')->nullable();
+            $table->enum('role_id', [1, 2, 3]); // 1 = admin, 2 = teacher, 3 = user, 4 = class Supervisor
+            $table->tinyInteger('status')->default(1); // 1 là hoạt động, 0 là vô hiệu hóa
             $table->rememberToken();
             $table->timestamps();
         });

@@ -11,12 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('submissions', function (Blueprint $table) {
+        Schema::create('classes', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('assignment_id')->nullable();
-            $table->unsignedBigInteger('class_id')->nullable();
-            $table->unsignedBigInteger('student_id');
-            $table->float('total_score')->nullable();
+            $table->unsignedBigInteger('category_id');
+            $table->string('code');
+            $table->string('name');
+            $table->text('description');
+            $table->unsignedInteger('teacher_id');
+            $table->enum('status', ['published', 'closed']);
             $table->timestamps();
         });
     }
@@ -26,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('submissions');
+        Schema::dropIfExists('classes');
     }
 };

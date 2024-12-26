@@ -19,16 +19,13 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
-        'avatar',
         'email',
-        'phone',
-        'gender',
-        'birthday',
-        'username',
+        'avatar',
         'password',
+        'name',
+        'gender',
         'role_id',
-        'status'
+        'status',
     ];
 
     /**
@@ -59,43 +56,23 @@ class User extends Authenticatable
         return $this->belongsTo(Role::class);
     }
 
+    public function enrollments()
+    {
+        return $this->hasMany(Enrollment::class, 'student_id');
+    }
+
+    public function notifications()
+    {
+        return $this->hasMany(NotificationComment::class, 'user_id');
+    }
+
     public function classes()
     {
         return $this->hasMany(Classes::class, 'teacher_id');
     }
 
-    public function assignments()
+    public function quiz_packages()
     {
-        return $this->hasMany(Assignment::class, 'creator_id');
-    }
-
-    public function enrollments()
-    {
-        return $this->hasMany(Enrollment::class,'student_id');
-    }
-
-    public function notifications()
-    {
-        return $this->hasMany(Notification::class);
-    }
-
-    public function messages()
-    {
-        return $this->hasMany(Message::class, 'sender_id');
-    }
-
-    public function receivedMessages()
-    {
-        return $this->hasMany(Message::class, 'receiver_id');
-    }
-
-    public function submissions()
-    {
-        return $this->hasMany(Submission::class, 'student_id');
-    }
-
-    public function answers()
-    {
-        return $this->hasMany(Answer::class);
+        return $this->hasMany(ClassAssignment::class, 'teacher_id');
     }
 }
