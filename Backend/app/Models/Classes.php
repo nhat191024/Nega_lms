@@ -7,35 +7,37 @@ use Illuminate\Database\Eloquent\Model;
 class Classes extends Model
 {
     protected $fillable = [
-        'class_name',
-        'class_code',
-        'class_description',
+        'name',
         'teacher_id',
+        'category_id',
+        'description',
+        'start_date',
+        'end_date',
         'status',
     ];
 
     public function teacher()
     {
-        return $this->belongsTo(User::class, 'teacher_id');
+        return $this->belongsTo(User::class);
     }
 
-    public function students()
+    public function category()
     {
-        return $this->belongsToMany(User::class, 'enrollments', 'class_id', 'student_id');
+        return $this->belongsTo(Category::class);
+    }
+
+    public function assignments()
+    {
+        return $this->hasMany(ClassAssignment::class);
     }
 
     public function enrollments()
     {
-        return $this->hasMany(Enrollment::class, 'class_id');
+        return $this->hasMany(Enrollment::class);
     }
 
-    public function homeworks()
+    public function notifications()
     {
-        return $this->hasMany(Homework::class, 'class_id');
-    }
-
-    public function submissions()
-    {
-        return $this->hasMany(Submission::class, 'class_id');
+        return $this->hasMany(ClassNotification::class);
     }
 }
