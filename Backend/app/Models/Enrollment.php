@@ -6,23 +6,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class Enrollment extends Model
 {
-    protected $fillable = [
-        'student_id',
-        'class_id',
-    ];
+    protected $fillable = ['class_id', 'student_id',];
 
-    public function user()
+    public function class()
     {
-        return $this->belongsTo(User::class, 'student_id');
+        return $this->belongsTo(Classes::class);
     }
 
     public function student()
     {
-        return $this->belongsTo(User::class, 'student_id');
-    }
-
-    public function class()
-    {
-        return $this->belongsTo(Classes::class, 'class_id');
+        return $this->belongsTo(User::class);
     }
 }
