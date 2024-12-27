@@ -9,7 +9,6 @@ class Classes extends Model
     protected $fillable = [
         'name',
         'teacher_id',
-        'category_id',
         'description',
         'start_date',
         'end_date',
