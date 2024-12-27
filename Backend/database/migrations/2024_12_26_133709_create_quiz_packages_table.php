@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('quiz_packages', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('creator_id');
-            $table->unsignedBigInteger('category_id');
             $table->string('title');
             $table->string('description');
             $table->string('quiz_id_range');

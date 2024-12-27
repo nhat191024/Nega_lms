@@ -8,7 +8,6 @@ class QuizPackage extends Model
 {
     protected $fillable = [
         'creator_id',
-        'category_id',
         'title',
         'description',
         'quiz_id_range',
