@@ -24,12 +24,12 @@ class UserFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
-            'username' => fake()->unique()->userName(),
+            'avatar' => 'upload/avt/default.png',
             'password' => static::$password ??= Hash::make('password'),
-            'role_id' => fake()->randomElement([1, 2, 3]),
-            'remember_token' => Str::random(10),
+            'name' => fake()->firstName(),
+            'gender' => fake()->randomElement(['male', 'female']),
+            'role_id' => 3,
         ];
     }
 
@@ -38,7 +38,7 @@ class UserFactory extends Factory
      *
      * @return $this
      */
-    public function admin(): self
+    public function IT(): self
     {
         return $this->state(fn (): array => ['role_id' => 1]);
     }
@@ -60,8 +60,8 @@ class UserFactory extends Factory
      * @return $this
      */
 
-    public function user(): self
+    public function class_supervisor(): self
     {
-        return $this->state(fn (): array => ['role_id' => 3]);
+        return $this->state(fn (): array => ['role_id' => 4]);
     }
 }
