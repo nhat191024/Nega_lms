@@ -1,461 +1,1685 @@
 {
     "role": [
         {
-            "name": "admin"
+            "name": "IT"
         },
         {
             "name": "teacher"
         },
         {
             "name": "student"
+        },
+        {
+            "name": "class supervisor"
+        }
+    ],
+    "category": [
+        {
+            "id": 1,
+            "name": "Lập trình"
+        },
+        {
+            "id": 2,
+            "name": "Mạng"
+        },
+        {
+            "id": 3,
+            "name": "Cơ sở dữ liệu"
+        },
+        {
+            "id": 4,
+            "name": "Hệ điều hành"
+        },
+        {
+            "id": 5,
+            "name": "Web",
+            "parent_id": 1
+        },
+        {
+            "id": 6,
+            "name": "App",
+            "parent_id": 1
+        },
+        {
+            "id": 7,
+            "name": "Cấu trúc mạng",
+            "parent_id": 2
+        },
+        {
+            "id": 8,
+            "name": "Bảo mật mạng",
+            "parent_id": 2
+        },
+        {
+            "id": 9,
+            "name": "SQL",
+            "parent_id": 3
+        },
+        {
+            "id": 10,
+            "name": "NoSQL",
+            "parent_id": 3
+        },
+        {
+            "id": 11,
+            "name": "Linux",
+            "parent_id": 4
+        },
+        {
+            "id": 12,
+            "name": "Windows",
+            "parent_id": 4
+        },
+        {
+            "id": 13,
+            "name": "HTML",
+            "parent_id": 5
+        },
+        {
+            "id": 14,
+            "name": "CSS",
+            "parent_id": 5
+        },
+        {
+            "id": 15,
+            "name": "JavaScript",
+            "parent_id": 5
+        },
+        {
+            "id": 16,
+            "name": "PHP",
+            "parent_id": 5
+        },
+        {
+            "id": 17,
+            "name": "Java",
+            "parent_id": 6
+        },
+        {
+            "id": 18,
+            "name": "C#",
+            "parent_id": 6
+        },
+        {
+            "id": 19,
+            "name": "C",
+            "parent_id": 6
+        },
+        {
+            "id": 20,
+            "name": "Swift",
+            "parent_id": 7
+        },
+        {
+            "id": 21,
+            "name": "Kotlin",
+            "parent_id": 7
+        },
+        {
+            "id": 22,
+            "name": "Objective-C",
+            "parent_id": 7
+        },
+        {
+            "id": 23,
+            "name": "MySQL",
+            "parent_id": 9
+        },
+        {
+            "id": 24,
+            "name": "PostgreSQL",
+            "parent_id": 9
+        },
+        {
+            "id": 25,
+            "name": "MongoDB",
+            "parent_id": 10
+        },
+        {
+            "id": 26,
+            "name": "Cassandra",
+            "parent_id": 10
+        }
+    ],
+    "quiz_package": [
+        {
+            "creator_id": 1,
+            "title": "Php cơ bản",
+            "description": "Bộ câu hỏi về lập trình php cơ bản",
+            "status": "published",
+            "quiz_id_range": "1-30",
+            "categories": [
+                {
+                    "category_id": 5
+                },
+                {
+                    "category_id": 16
+                }
+            ],
+            "quizzes": [
+                {
+                    "question": "Làm thế nào để kết nối đến một cơ sở dữ liệu MySQL bằng PHP?",
+                    "choices": [
+                        {
+                            "choice": "connect(\"localhost\", \"username\", \"password\", \"database_name\");",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "db_connect(\"localhost\", \"username\", \"password\", \"database_name\");",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "mysqli_connect(\"localhost\", \"username\", \"password\", \"database_name\");",
+                            "is_correct": true
+                        },
+                        {
+                            "choice": "database_connect(\"localhost\", \"username\", \"password\", \"database_name\");",
+                            "is_correct": false
+                        }
+                    ]
+                },
+                {
+                    "question": "Làm thế nào để kiểm tra một biến có tồn tại trong PHP?",
+                    "choices": [
+                        {
+                            "choice": "isset($variable);",
+                            "is_correct": true
+                        },
+                        {
+                            "choice": "exists($variable);",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "check($variable);",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "var_exists($variable);",
+                            "is_correct": false
+                        }
+                    ]
+                },
+                {
+                    "question": "Làm thế nào để khai báo một biến trong PHP?",
+                    "choices": [
+                        {
+                            "choice": "$variable;",
+                            "is_correct": true
+                        },
+                        {
+                            "choice": "var $variable;",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "declare $variable;",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "let $variable;",
+                            "is_correct": false
+                        }
+                    ]
+                },
+                {
+                    "question": "Làm thế nào để khai báo một hằng số trong PHP?",
+                    "choices": [
+                        {
+                            "choice": "define('CONSTANT', 'value');",
+                            "is_correct": true
+                        },
+                        {
+                            "choice": "const CONSTANT = 'value';",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "constant('CONSTANT', 'value');",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "set_constant('CONSTANT', 'value');",
+                            "is_correct": false
+                        }
+                    ]
+                },
+                {
+                    "question": "Làm thế nào để kiểm tra kiểu dữ liệu của một biến trong PHP?",
+                    "choices": [
+                        {
+                            "choice": "gettype($variable);",
+                            "is_correct": true
+                        },
+                        {
+                            "choice": "typeof($variable);",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "type($variable);",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "checktype($variable);",
+                            "is_correct": false
+                        }
+                    ]
+                },
+                {
+                    "question": "Làm thế nào để chuyển đổi một chuỗi thành một số nguyên trong PHP?",
+                    "choices": [
+                        {
+                            "choice": "intval($string);",
+                            "is_correct": true
+                        },
+                        {
+                            "choice": "to_int($string);",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "parseInt($string);",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "convert_to_int($string);",
+                            "is_correct": false
+                        }
+                    ]
+                },
+                {
+                    "question": "Làm thế nào để nối hai chuỗi trong PHP?",
+                    "choices": [
+                        {
+                            "choice": "$string1 . $string2;",
+                            "is_correct": true
+                        },
+                        {
+                            "choice": "concat($string1, $string2);",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "$string1 + $string2;",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "join($string1, $string2);",
+                            "is_correct": false
+                        }
+                    ]
+                },
+                {
+                    "question": "Làm thế nào để kiểm tra một giá trị có phải là số nguyên trong PHP?",
+                    "choices": [
+                        {
+                            "choice": "is_int($value);",
+                            "is_correct": true
+                        },
+                        {
+                            "choice": "is_integer($value);",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "check_int($value);",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "is_number($value);",
+                            "is_correct": false
+                        }
+                    ]
+                },
+                {
+                    "question": "Làm thế nào để kiểm tra một giá trị có phải là chuỗi trong PHP?",
+                    "choices": [
+                        {
+                            "choice": "is_string($value);",
+                            "is_correct": true
+                        },
+                        {
+                            "choice": "is_str($value);",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "check_string($value);",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "is_text($value);",
+                            "is_correct": false
+                        }
+                    ]
+                },
+                {
+                    "question": "Làm thế nào để kiểm tra một giá trị có phải là mảng trong PHP?",
+                    "choices": [
+                        {
+                            "choice": "is_array($value);",
+                            "is_correct": true
+                        },
+                        {
+                            "choice": "is_arr($value);",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "check_array($value);",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "is_list($value);",
+                            "is_correct": false
+                        }
+                    ]
+                },
+                {
+                    "question": "Làm thế nào để kiểm tra một giá trị có phải là boolean trong PHP?",
+                    "choices": [
+                        {
+                            "choice": "is_bool($value);",
+                            "is_correct": true
+                        },
+                        {
+                            "choice": "is_boolean($value);",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "check_bool($value);",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "is_true($value);",
+                            "is_correct": false
+                        }
+                    ]
+                },
+                {
+                    "question": "Làm thế nào để kiểm tra một giá trị có phải là null trong PHP?",
+                    "choices": [
+                        {
+                            "choice": "is_null($value);",
+                            "is_correct": true
+                        },
+                        {
+                            "choice": "is_none($value);",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "check_null($value);",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "is_empty($value);",
+                            "is_correct": false
+                        }
+                    ]
+                },
+                {
+                    "question": "Làm thế nào để kiểm tra một giá trị có phải là đối tượng trong PHP?",
+                    "choices": [
+                        {
+                            "choice": "is_object($value);",
+                            "is_correct": true
+                        },
+                        {
+                            "choice": "is_obj($value);",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "check_object($value);",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "is_instance($value);",
+                            "is_correct": false
+                        }
+                    ]
+                },
+                {
+                    "question": "Làm thế nào để kiểm tra một giá trị có phải là tài nguyên trong PHP?",
+                    "choices": [
+                        {
+                            "choice": "is_resource($value);",
+                            "is_correct": true
+                        },
+                        {
+                            "choice": "is_res($value);",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "check_resource($value);",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "is_handle($value);",
+                            "is_correct": false
+                        }
+                    ]
+                },
+                {
+                    "question": "Làm thế nào để kiểm tra một giá trị có phải là callable trong PHP?",
+                    "choices": [
+                        {
+                            "choice": "is_callable($value);",
+                            "is_correct": true
+                        },
+                        {
+                            "choice": "is_function($value);",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "check_callable($value);",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "is_invokable($value);",
+                            "is_correct": false
+                        }
+                    ]
+                },
+                {
+                    "question": "Làm thế nào để kiểm tra một giá trị có phải là iterable trong PHP?",
+                    "choices": [
+                        {
+                            "choice": "is_iterable($value);",
+                            "is_correct": true
+                        },
+                        {
+                            "choice": "is_loopable($value);",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "check_iterable($value);",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "is_traversable($value);",
+                            "is_correct": false
+                        }
+                    ]
+                },
+                {
+                    "question": "Làm thế nào để kiểm tra một giá trị có phải là số thực trong PHP?",
+                    "choices": [
+                        {
+                            "choice": "is_float($value);",
+                            "is_correct": true
+                        },
+                        {
+                            "choice": "is_double($value);",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "check_float($value);",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "is_real($value);",
+                            "is_correct": false
+                        }
+                    ]
+                },
+                {
+                    "question": "Làm thế nào để kiểm tra một giá trị có phải là số nguyên trong PHP?",
+                    "choices": [
+                        {
+                            "choice": "is_int($value);",
+                            "is_correct": true
+                        },
+                        {
+                            "choice": "is_integer($value);",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "check_int($value);",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "is_number($value);",
+                            "is_correct": false
+                        }
+                    ]
+                },
+                {
+                    "question": "Làm thế nào để kiểm tra một giá trị có phải là số nguyên trong PHP?",
+                    "choices": [
+                        {
+                            "choice": "is_int($value);",
+                            "is_correct": true
+                        },
+                        {
+                            "choice": "is_integer($value);",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "check_int($value);",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "is_number($value);",
+                            "is_correct": false
+                        }
+                    ]
+                },
+                {
+                    "question": "Làm thế nào để kiểm tra một giá trị có phải là số nguyên trong PHP?",
+                    "choices": [
+                        {
+                            "choice": "is_int($value);",
+                            "is_correct": true
+                        },
+                        {
+                            "choice": "is_integer($value);",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "check_int($value);",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "is_number($value);",
+                            "is_correct": false
+                        }
+                    ]
+                },
+                {
+                    "question": "Làm thế nào để kiểm tra một giá trị có phải là số nguyên trong PHP?",
+                    "choices": [
+                        {
+                            "choice": "is_int($value);",
+                            "is_correct": true
+                        },
+                        {
+                            "choice": "is_integer($value);",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "check_int($value);",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "is_number($value);",
+                            "is_correct": false
+                        }
+                    ]
+                },
+                {
+                    "question": "Làm thế nào để kiểm tra một giá trị có phải là số nguyên trong PHP?",
+                    "choices": [
+                        {
+                            "choice": "is_int($value);",
+                            "is_correct": true
+                        },
+                        {
+                            "choice": "is_integer($value);",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "check_int($value);",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "is_number($value);",
+                            "is_correct": false
+                        }
+                    ]
+                },
+                {
+                    "question": "Làm thế nào để kiểm tra một giá trị có phải là số nguyên trong PHP?",
+                    "choices": [
+                        {
+                            "choice": "is_int($value);",
+                            "is_correct": true
+                        },
+                        {
+                            "choice": "is_integer($value);",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "check_int($value);",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "is_number($value);",
+                            "is_correct": false
+                        }
+                    ]
+                },
+                {
+                    "question": "Làm thế nào để kiểm tra một giá trị có phải là số nguyên trong PHP?",
+                    "choices": [
+                        {
+                            "choice": "is_int($value);",
+                            "is_correct": true
+                        },
+                        {
+                            "choice": "is_integer($value);",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "check_int($value);",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "is_number($value);",
+                            "is_correct": false
+                        }
+                    ]
+                },
+                {
+                    "question": "Làm thế nào để kiểm tra một giá trị có phải là số nguyên trong PHP?",
+                    "choices": [
+                        {
+                            "choice": "is_int($value);",
+                            "is_correct": true
+                        },
+                        {
+                            "choice": "is_integer($value);",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "check_int($value);",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "is_number($value);",
+                            "is_correct": false
+                        }
+                    ]
+                },
+                {
+                    "question": "Làm thế nào để kiểm tra một giá trị có phải là số nguyên trong PHP?",
+                    "choices": [
+                        {
+                            "choice": "is_int($value);",
+                            "is_correct": true
+                        },
+                        {
+                            "choice": "is_integer($value);",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "check_int($value);",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "is_number($value);",
+                            "is_correct": false
+                        }
+                    ]
+                },
+                {
+                    "question": "Làm thế nào để kiểm tra một giá trị có phải là số nguyên trong PHP?",
+                    "choices": [
+                        {
+                            "choice": "is_int($value);",
+                            "is_correct": true
+                        },
+                        {
+                            "choice": "is_integer($value);",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "check_int($value);",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "is_number($value);",
+                            "is_correct": false
+                        }
+                    ]
+                },
+                {
+                    "question": "Làm thế nào để kiểm tra một giá trị có phải là số nguyên trong PHP?",
+                    "choices": [
+                        {
+                            "choice": "is_int($value);",
+                            "is_correct": true
+                        },
+                        {
+                            "choice": "is_integer($value);",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "check_int($value);",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "is_number($value);",
+                            "is_correct": false
+                        }
+                    ]
+                },
+                {
+                    "question": "Làm thế nào để kiểm tra một giá trị có phải là số nguyên trong PHP?",
+                    "choices": [
+                        {
+                            "choice": "is_int($value);",
+                            "is_correct": true
+                        },
+                        {
+                            "choice": "is_integer($value);",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "check_int($value);",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "is_number($value);",
+                            "is_correct": false
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "creator_id": 1,
+            "title": "Php nâng cao",
+            "description": "Bộ câu hỏi về lập trình php nâng cao",
+            "status": "published",
+            "quiz_id_range": "31-50",
+            "categories": [
+                {
+                    "category_id": 5
+                },
+                {
+                    "category_id": 16
+                }
+            ],
+            "quizzes": [
+                {
+                    "question": "Làm thế nào để lấy số hàng trong một bảng trong MySQL bằng PHP?",
+                    "choices": [
+                        {
+                            "choice": "$result = mysqli_query($con, \"SELECT * FROM table\");",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "$result = mysqli_query($con, \"SELECT * FROM table\") or die(mysqli_error($con));",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "$result = mysqli_query(\"SELECT * FROM table\") or die(mysqli_error());",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "$result = mysqli_query($con, \"SELECT * FROM table\"); $row = mysqli_num_rows($result);",
+                            "is_correct": true
+                        }
+                    ]
+                },
+                {
+                    "question": "Làm thế nào để sử dụng PDO để kết nối đến một cơ sở dữ liệu MySQL trong PHP?",
+                    "choices": [
+                        {
+                            "choice": "$pdo = new PDO('mysql:host=localhost;dbname=test', 'username', 'password');",
+                            "is_correct": true
+                        },
+                        {
+                            "choice": "$pdo = new PDO('mysql:host=localhost;database=test', 'username', 'password');",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "$pdo = new PDO('mysql:server=localhost;dbname=test', 'username', 'password');",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "$pdo = new PDO('mysql:host=localhost;db=test', 'username', 'password');",
+                            "is_correct": false
+                        }
+                    ]
+                },
+                {
+                    "question": "Làm thế nào để bắt ngoại lệ trong PHP?",
+                    "choices": [
+                        {
+                            "choice": "try { // code } catch (Exception $e) { // handle exception }",
+                            "is_correct": true
+                        },
+                        {
+                            "choice": "try { // code } catch (Error $e) { // handle exception }",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "try { // code } catch (Throwable $e) { // handle exception }",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "try { // code } catch (Exception $e) { // handle error }",
+                            "is_correct": false
+                        }
+                    ]
+                },
+                {
+                    "question": "Làm thế nào để sử dụng prepared statements trong PHP?",
+                    "choices": [
+                        {
+                            "choice": "$stmt = $pdo->prepare('SELECT * FROM users WHERE id = :id'); $stmt->execute(['id' => $id]);",
+                            "is_correct": true
+                        },
+                        {
+                            "choice": "$stmt = $pdo->prepare('SELECT * FROM users WHERE id = ?'); $stmt->execute([$id]);",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "$stmt = $pdo->prepare('SELECT * FROM users WHERE id = :id'); $stmt->execute([$id]);",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "$stmt = $pdo->prepare('SELECT * FROM users WHERE id = ?'); $stmt->execute(['id' => $id]);",
+                            "is_correct": false
+                        }
+                    ]
+                },
+                {
+                    "question": "Làm thế nào để sử dụng transactions trong PHP?",
+                    "choices": [
+                        {
+                            "choice": "$pdo->beginTransaction(); // code $pdo->commit();",
+                            "is_correct": true
+                        },
+                        {
+                            "choice": "$pdo->startTransaction(); // code $pdo->commit();",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "$pdo->beginTransaction(); // code $pdo->endTransaction();",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "$pdo->startTransaction(); // code $pdo->endTransaction();",
+                            "is_correct": false
+                        }
+                    ]
+                },
+                {
+                    "question": "Làm thế nào để sử dụng namespaces trong PHP?",
+                    "choices": [
+                        {
+                            "choice": "namespace MyNamespace; // code",
+                            "is_correct": true
+                        },
+                        {
+                            "choice": "namespace = MyNamespace; // code",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "namespace: MyNamespace; // code",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "namespace MyNamespace: // code",
+                            "is_correct": false
+                        }
+                    ]
+                },
+                {
+                    "question": "Làm thế nào để sử dụng traits trong PHP?",
+                    "choices": [
+                        {
+                            "choice": "trait MyTrait { // code } class MyClass { use MyTrait; }",
+                            "is_correct": true
+                        },
+                        {
+                            "choice": "trait MyTrait { // code } class MyClass { include MyTrait; }",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "trait MyTrait { // code } class MyClass { require MyTrait; }",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "trait MyTrait { // code } class MyClass { import MyTrait; }",
+                            "is_correct": false
+                        }
+                    ]
+                },
+                {
+                    "question": "Làm thế nào để sử dụng anonymous functions trong PHP?",
+                    "choices": [
+                        {
+                            "choice": "$func = function() { // code };",
+                            "is_correct": true
+                        },
+                        {
+                            "choice": "$func = anonymous() { // code };",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "$func = function() => { // code };",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "$func = function { // code };",
+                            "is_correct": false
+                        }
+                    ]
+                },
+                {
+                    "question": "Làm thế nào để sử dụng closures trong PHP?",
+                    "choices": [
+                        {
+                            "choice": "$func = function() use ($var) { // code };",
+                            "is_correct": true
+                        },
+                        {
+                            "choice": "$func = closure() use ($var) { // code };",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "$func = function() with ($var) { // code };",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "$func = function() include ($var) { // code };",
+                            "is_correct": false
+                        }
+                    ]
+                },
+                {
+                    "question": "Làm thế nào để sử dụng generators trong PHP?",
+                    "choices": [
+                        {
+                            "choice": "function gen() { yield 1; yield 2; }",
+                            "is_correct": true
+                        },
+                        {
+                            "choice": "function gen() { return 1; return 2; }",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "function gen() { yield 1; return 2; }",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "function gen() { return 1; yield 2; }",
+                            "is_correct": false
+                        }
+                    ]
+                },
+                {
+                    "question": "Làm thế nào để sử dụng type hinting trong PHP?",
+                    "choices": [
+                        {
+                            "choice": "function myFunc(int $var) { // code }",
+                            "is_correct": true
+                        },
+                        {
+                            "choice": "function myFunc(integer $var) { // code }",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "function myFunc($var: int) { // code }",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "function myFunc($var integer) { // code }",
+                            "is_correct": false
+                        }
+                    ]
+                },
+                {
+                    "question": "Làm thế nào để sử dụng return type declarations trong PHP?",
+                    "choices": [
+                        {
+                            "choice": "function myFunc(): int { return 1; }",
+                            "is_correct": true
+                        },
+                        {
+                            "choice": "function myFunc(): integer { return 1; }",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "function myFunc() int { return 1; }",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "function myFunc() integer { return 1; }",
+                            "is_correct": false
+                        }
+                    ]
+                },
+                {
+                    "question": "Làm thế nào để sử dụng null coalescing operator trong PHP?",
+                    "choices": [
+                        {
+                            "choice": "$value = $var ?? 'default';",
+                            "is_correct": true
+                        },
+                        {
+                            "choice": "$value = $var ?: 'default';",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "$value = $var ? 'default' : null;",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "$value = isset($var) ? $var : 'default';",
+                            "is_correct": false
+                        }
+                    ]
+                },
+                {
+                    "question": "Làm thế nào để sử dụng spaceship operator trong PHP?",
+                    "choices": [
+                        {
+                            "choice": "$result = $a <=> $b;",
+                            "is_correct": true
+                        },
+                        {
+                            "choice": "$result = $a <=> $b ? 1 : -1;",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "$result = $a <=> $b ? 0 : 1;",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "$result = $a <=> $b ? -1 : 0;",
+                            "is_correct": false
+                        }
+                    ]
+                },
+                {
+                    "question": "Làm thế nào để sử dụng array destructuring trong PHP?",
+                    "choices": [
+                        {
+                            "choice": "[$a, $b] = [1, 2];",
+                            "is_correct": true
+                        },
+                        {
+                            "choice": "list($a, $b) = [1, 2];",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "array($a, $b) = [1, 2];",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "[$a, $b] = array(1, 2);",
+                            "is_correct": false
+                        }
+                    ]
+                },
+                {
+                    "question": "Làm thế nào để sử dụng variadic functions trong PHP?",
+                    "choices": [
+                        {
+                            "choice": "function myFunc(...$args) { // code }",
+                            "is_correct": true
+                        },
+                        {
+                            "choice": "function myFunc($args...) { // code }",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "function myFunc(...$args[]) { // code }",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "function myFunc($args[]...) { // code }",
+                            "is_correct": false
+                        }
+                    ]
+                },
+                {
+                    "question": "Làm thế nào để sử dụng argument unpacking trong PHP?",
+                    "choices": [
+                        {
+                            "choice": "myFunc(...$args);",
+                            "is_correct": true
+                        },
+                        {
+                            "choice": "myFunc($args...);",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "myFunc(...$args[]);",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "myFunc($args[]...);",
+                            "is_correct": false
+                        }
+                    ]
+                },
+                {
+                    "question": "Làm thế nào để sử dụng array_map trong PHP?",
+                    "choices": [
+                        {
+                            "choice": "$result = array_map(function($item) { return $item * 2; }, $array);",
+                            "is_correct": true
+                        },
+                        {
+                            "choice": "$result = array_map(function($item) { return $item * 2; }, $array[]);",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "$result = array_map(function($item) { return $item * 2; }, ...$array);",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "$result = array_map(function($item) { return $item * 2; }, $array...);",
+                            "is_correct": false
+                        }
+                    ]
+                },
+                {
+                    "question": "Làm thế nào để sử dụng array_filter trong PHP?",
+                    "choices": [
+                        {
+                            "choice": "$result = array_filter($array, function($item) { return $item > 2; });",
+                            "is_correct": true
+                        },
+                        {
+                            "choice": "$result = array_filter($array, function($item) { return $item > 2; }, ARRAY_FILTER_USE_KEY);",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "$result = array_filter($array, function($item) { return $item > 2; }, ARRAY_FILTER_USE_BOTH);",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "$result = array_filter($array, function($item) { return $item > 2; }, ARRAY_FILTER_USE_VALUE);",
+                            "is_correct": false
+                        }
+                    ]
+                },
+                {
+                    "question": "Làm thế nào để sử dụng array_reduce trong PHP?",
+                    "choices": [
+                        {
+                            "choice": "$result = array_reduce($array, function($carry, $item) { return $carry + $item; }, 0);",
+                            "is_correct": true
+                        },
+                        {
+                            "choice": "$result = array_reduce($array, function($carry, $item) { return $carry + $item; });",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "$result = array_reduce($array, function($carry, $item) { return $carry + $item; }, 0, ARRAY_REDUCE_USE_KEY);",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "$result = array_reduce($array, function($carry, $item) { return $carry + $item; }, 0, ARRAY_REDUCE_USE_BOTH);",
+                            "is_correct": false
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "creator_id": 1,
+            "title": "Java cơ bản",
+            "description": "Bộ câu hỏi về lập trình Java cơ bản",
+            "status": "published",
+            "quiz_id_range": "51-65",
+            "categories": [
+                {
+                    "category_id": 6
+                },
+                {
+                    "category_id": 17
+                }
+            ],
+            "quizzes": [
+                {
+                    "question": "Làm thế nào để khai báo một biến trong Java?",
+                    "choices": [
+                        {
+                            "choice": "int x;",
+                            "is_correct": true
+                        },
+                        {
+                            "choice": "x int;",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "x = int;",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "int = x;",
+                            "is_correct": false
+                        }
+                    ]
+                },
+                {
+                    "question": "Làm thế nào để khai báo một hằng số trong Java?",
+                    "choices": [
+                        {
+                            "choice": "final int PI = 3.14;",
+                            "is_correct": true
+                        },
+                        {
+                            "choice": "int final PI = 3.14;",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "int PI = 3.14;",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "final PI = 3.14;",
+                            "is_correct": false
+                        }
+                    ]
+                },
+                {
+                    "question": "Làm thế nào để khai báo một mảng trong Java?",
+                    "choices": [
+                        {
+                            "choice": "int[] arr;",
+                            "is_correct": true
+                        },
+                        {
+                            "choice": "arr[] int;",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "arr int[];",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "int arr[];",
+                            "is_correct": false
+                        }
+                    ]
+                },
+                {
+                    "question": "Làm thế nào để khai báo một mảng 2 chiều trong Java?",
+                    "choices": [
+                        {
+                            "choice": "int[][] arr;",
+                            "is_correct": true
+                        },
+                        {
+                            "choice": "arr[][] int;",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "arr int[][];",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "int arr[][];",
+                            "is_correct": false
+                        }
+                    ]
+                },
+                {
+                    "question": "Làm thế nào để khai báo một chuỗi trong Java?",
+                    "choices": [
+                        {
+                            "choice": "String str;",
+                            "is_correct": true
+                        },
+                        {
+                            "choice": "str String;",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "String = str;",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "str = String;",
+                            "is_correct": false
+                        }
+                    ]
+                },
+                {
+                    "question": "Làm thế nào để khai báo một phương thức trong Java?",
+                    "choices": [
+                        {
+                            "choice": "public void myMethod() {}",
+                            "is_correct": true
+                        },
+                        {
+                            "choice": "void public myMethod() {}",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "public myMethod() void {}",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "myMethod() public void {}",
+                            "is_correct": false
+                        }
+                    ]
+                },
+                {
+                    "question": "Làm thế nào để khai báo một lớp trong Java?",
+                    "choices": [
+                        {
+                            "choice": "public class MyClass {}",
+                            "is_correct": true
+                        },
+                        {
+                            "choice": "class public MyClass {}",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "public MyClass class {}",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "MyClass public class {}",
+                            "is_correct": false
+                        }
+                    ]
+                },
+                {
+                    "question": "Làm thế nào để tạo một đối tượng trong Java?",
+                    "choices": [
+                        {
+                            "choice": "MyClass obj = new MyClass();",
+                            "is_correct": true
+                        },
+                        {
+                            "choice": "MyClass obj = MyClass();",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "obj = new MyClass();",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "new MyClass() = obj;",
+                            "is_correct": false
+                        }
+                    ]
+                },
+                {
+                    "question": "Làm thế nào để kế thừa một lớp trong Java?",
+                    "choices": [
+                        {
+                            "choice": "class SubClass extends SuperClass {}",
+                            "is_correct": true
+                        },
+                        {
+                            "choice": "class SubClass inherits SuperClass {}",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "class SubClass implements SuperClass {}",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "class SubClass extends SuperClass() {}",
+                            "is_correct": false
+                        }
+                    ]
+                },
+                {
+                    "question": "Làm thế nào để triển khai một interface trong Java?",
+                    "choices": [
+                        {
+                            "choice": "class MyClass implements MyInterface {}",
+                            "is_correct": true
+                        },
+                        {
+                            "choice": "class MyClass extends MyInterface {}",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "class MyClass inherits MyInterface {}",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "class MyClass implements MyInterface() {}",
+                            "is_correct": false
+                        }
+                    ]
+                },
+                {
+                    "question": "Làm thế nào để sử dụng vòng lặp for trong Java?",
+                    "choices": [
+                        {
+                            "choice": "for (int i = 0; i < 10; i++) {}",
+                            "is_correct": true
+                        },
+                        {
+                            "choice": "for (i = 0; i < 10; i++) {}",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "for (int i = 0; i < 10; i++)",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "for (int i = 0; i < 10; i++) {}",
+                            "is_correct": false
+                        }
+                    ]
+                },
+                {
+                    "question": "Làm thế nào để sử dụng vòng lặp while trong Java?",
+                    "choices": [
+                        {
+                            "choice": "while (condition) {}",
+                            "is_correct": true
+                        },
+                        {
+                            "choice": "while condition {}",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "while (condition) {}",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "while (condition) {}",
+                            "is_correct": false
+                        }
+                    ]
+                },
+                {
+                    "question": "Làm thế nào để sử dụng vòng lặp do-while trong Java?",
+                    "choices": [
+                        {
+                            "choice": "do {} while (condition);",
+                            "is_correct": true
+                        },
+                        {
+                            "choice": "do while (condition) {}",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "do {} while condition;",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "do while condition {}",
+                            "is_correct": false
+                        }
+                    ]
+                },
+                {
+                    "question": "Làm thế nào để sử dụng câu lệnh if-else trong Java?",
+                    "choices": [
+                        {
+                            "choice": "if (condition) {} else {}",
+                            "is_correct": true
+                        },
+                        {
+                            "choice": "if condition {} else {}",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "if (condition) {} else",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "if (condition) else {}",
+                            "is_correct": false
+                        }
+                    ]
+                },
+                {
+                    "question": "Làm thế nào để sử dụng câu lệnh switch-case trong Java?",
+                    "choices": [
+                        {
+                            "choice": "switch (variable) { case value: break; }",
+                            "is_correct": true
+                        },
+                        {
+                            "choice": "switch variable { case value: break; }",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "switch (variable) case value: break;",
+                            "is_correct": false
+                        },
+                        {
+                            "choice": "switch (variable) { case value break; }",
+                            "is_correct": false
+                        }
+                    ]
+                }
+            ]
         }
     ],
     "class": [
         {
-            "class_name": "Php",
-            "class_description": "Php class",
+            "code": "php-basic",
+            "name": "Php cơ bản",
+            "description": "Lớp học về lập trình php cơ bản",
             "teacher_id": 2,
-            "class_code": "php2024"
+            "status": "published",
+            "categories": [
+                {
+                    "category_id": 1
+                },
+                {
+                    "category_id": 5
+                },
+                {
+                    "category_id": 16
+                }
+            ],
+            "assignments": [
+                {
+                    "type": "lab",
+                    "title": "Lab 1",
+                    "description": "Làm bài tập lab 1",
+                    "duration": null,
+                    "start_datetime": "2024-12-31 09:00:00",
+                    "due_datetime": "2024-12-31 10:00:00",
+                    "status": "published"
+                },
+                {
+                    "type": "quiz",
+                    "title": "Lập trình php",
+                    "description": "Làm bài tập lập trình php cơ bản",
+                    "duration": 30,
+                    "start_datetime": "2024-12-31 09:00:00",
+                    "due_datetime": "2024-12-31 10:00:00",
+                    "status": "published",
+                    "quiz": [
+                        {
+                            "quiz_id": 30
+                        },
+                        {
+                            "quiz_id": 2
+                        },
+                        {
+                            "quiz_id": 11
+                        },
+                        {
+                            "quiz_id": 20
+                        },
+                        {
+                            "quiz_id": 25
+                        },
+                        {
+                            "quiz_id": 13
+                        }
+                    ]
+                }
+            ]
         },
         {
-            "class_name": "Java",
-            "class_description": "Java class",
+            "code": "php-advanced",
+            "name": "Php nâng cao",
+            "description": "Lớp học về lập trình php nâng cao",
             "teacher_id": 2,
-            "class_code": "java2024"
-        },
-        {
-            "class_name": "C#",
-            "class_description": "C# class",
-            "teacher_id": 3,
-            "class_code": "csharp2024"
+            "status": "published",
+            "categories": [
+                {
+                    "category_id": 1
+                },
+                {
+                    "category_id": 5
+                },
+                {
+                    "category_id": 16
+                }
+            ],
+            "assignments": [
+                {
+                    "type": "lab",
+                    "title": "Lab 1",
+                    "description": "Làm bài tập lab 1",
+                    "duration": null,
+                    "start_datetime": "2024-12-31 09:00:00",
+                    "due_datetime": "2024-12-31 10:00:00",
+                    "status": "published"
+                },
+                {
+                    "type": "quiz",
+                    "title": "Lập trình php",
+                    "description": "Làm bài tập lập trình php cơ bản",
+                    "duration": 30,
+                    "start_datetime": "2024-12-31 09:00:00",
+                    "due_datetime": "2024-12-31 10:00:00",
+                    "status": "published",
+                    "quiz": [
+                        {
+                            "quiz_id": 33
+                        },
+                        {
+                            "quiz_id": 50
+                        },
+                        {
+                            "quiz_id": 41
+                        },
+                        {
+                            "quiz_id": 20
+                        },
+                        {
+                            "quiz_id": 34
+                        },
+                        {
+                            "quiz_id": 45
+                        }
+                    ]
+                }
+            ]
         }
     ],
     "enrollment": [
         {
-            "student_id": 6,
+            "student_id": 4,
             "class_id": 1
+        },
+        {
+            "student_id": 5,
+            "class_id": 1
+        },
+        {
+            "student_id": 6,
+            "class_id": 2
         },
         {
             "student_id": 7,
-            "class_id": 1
+            "class_id": 2
         },
         {
             "student_id": 8,
-            "class_id": 2
+            "class_id": 3
         },
         {
             "student_id": 9,
-            "class_id": 2
-        },
-        {
-            "student_id": 10,
             "class_id": 3
-        },
-        {
-            "student_id": 11,
-            "class_id": 3
-        }
-    ],
-    "homework": [
-        {
-            "class_id": 1,
-            "type": "quiz",
-            "assignment_id": 1,
-            "link": null,
-            "start_datetime": "2024-12-31 09:00:00",
-            "due_datetime": "2024-12-31 10:00:00",
-            "duration": 30,
-            "auto_grade": true,
-            "status": 1
-        },
-        {
-            "class_id": 1,
-            "type": "quiz",
-            "assignment_id": 2,
-            "link": null,
-            "start_datetime": "2024-12-31 09:00:00",
-            "due_datetime": "2024-12-31 10:00:00",
-            "duration": 30,
-            "auto_grade": true,
-            "status": 1
-        },
-        {
-            "class_id": 2,
-            "type": "quiz",
-            "assignment_id": 3,
-            "link": null,
-            "start_datetime": "2024-12-31 09:00:00",
-            "due_datetime": "2024-12-31 10:00:00",
-            "duration": 30,
-            "auto_grade": true,
-            "status": 1
-        },
-        {
-            "class_id": 2,
-            "type": "quiz",
-            "assignment_id": 4,
-            "link": null,
-            "start_datetime": "2024-12-31 09:00:00",
-            "due_datetime": "2024-12-31 10:00:00",
-            "duration": 30,
-            "auto_grade": true,
-            "status": 1
-        },
-        {
-            "class_id": 3,
-            "type": "quiz",
-            "assignment_id": 5,
-            "link": null,
-            "start_datetime": "2024-12-31 09:00:00",
-            "due_datetime": "2024-12-31 10:00:00",
-            "duration": 30,
-            "auto_grade": true,
-            "status": 1
-        },
-        {
-            "class_id": 3,
-            "type": "quiz",
-            "assignment_id": 6,
-            "link": null,
-            "start_datetime": "2024-12-31 09:00:00",
-            "due_datetime": "2024-12-31 10:00:00",
-            "duration": 30,
-            "auto_grade": true,
-            "status": 1
-        }
-    ],
-    "assignment": [
-        {
-            "creator_id": 1,
-            "title": "Lập trình php",
-            "description": "Làm bài tập lập trình php cơ bản",
-            "status": "published",
-            "level": "Cao đẳng",
-            "totalScore": 1,
-            "specialized": "Web",
-            "subject": "php cơ bản",
-            "topic": "php"
-        },
-        {
-            "creator_id": 1,
-            "title": "Lập trình php 2",
-            "description": "Làm bài tập lập trình php nâng cao",
-            "status": "published",
-            "level": "Cao đẳng",
-            "totalScore": 1,
-            "specialized": "Web",
-            "subject": "php nâng cao",
-            "topic": "php"
-        },
-        {
-            "creator_id": 1,
-            "title": "Lập trình Java",
-            "description": "Làm bài tập lập trình Java cơ bản",
-            "status": "published",
-            "level": "Cao đẳng",
-            "totalScore": 1,
-            "specialized": "App",
-            "subject": "Java cơ bản",
-            "topic": "Java"
-        },
-        {
-            "creator_id": 1,
-            "title": "Lập trình Java 2",
-            "description": "Làm bài tập lập trình Java nâng cao",
-            "status": "published",
-            "level": "Cao đẳng",
-            "totalScore": 1,
-            "specialized": "App",
-            "subject": "Java nâng cao",
-            "topic": "Java"
-        },
-        {
-            "creator_id": 1,
-            "title": "Lập trình C#",
-            "description": "Làm bài tập lập trình C# cơ bản",
-            "status": "published",
-            "level": "Cao đẳng",
-            "totalScore": 1,
-            "specialized": "App",
-            "subject": "C# cơ bản",
-            "topic": "C#"
-        },
-        {
-            "creator_id": 1,
-            "title": "Lập trình C# 2",
-            "description": "Làm bài tập lập trình C# nâng cao",
-            "status": "published",
-            "level": "Cao đẳng",
-            "totalScore": 1,
-            "specialized": "App",
-            "subject": "C# nâng cao",
-            "topic": "C#"
-        }
-    ],
-    "questions": [
-        {
-            "assignment_id": 1,
-            "question": "Làm thế nào để kết nối đến một cơ sở dữ liệu MySQL bằng PHP?",
-            "duration": "00:00:30",
-            "score": 1,
-            "choices": [
-                {
-                    "choice": "connect(\"localhost\", \"username\", \"password\", \"database_name\");",
-                    "is_correct": false
-                },
-                {
-                    "choice": "db_connect(\"localhost\", \"username\", \"password\", \"database_name\");",
-                    "is_correct": false
-                },
-                {
-                    "choice": "mysqli_connect(\"localhost\", \"username\", \"password\", \"database_name\");",
-                    "is_correct": true
-                },
-                {
-                    "choice": "database_connect(\"localhost\", \"username\", \"password\", \"database_name\");",
-                    "is_correct": false
-                }
-            ]
-        },
-        {
-            "assignment_id": 1,
-            "question": "Làm thế nào để lấy dữ liệu từ một bảng trong MySQL bằng PHP?",
-            "duration": "00:00:30",
-            "score": 1,
-            "choices": [
-                {
-                    "choice": "$result = mysqli_query($con, \"SELECT * FROM table\");",
-                    "is_correct": true
-                },
-                {
-                    "choice": "$result = mysqli_query(\"SELECT * FROM table\");",
-                    "is_correct": false
-                },
-                {
-                    "choice": "$result = mysqli_query($con, \"SELECT * FROM table\") or die(mysqli_error($con));",
-                    "is_correct": false
-                },
-                {
-                    "choice": "$result = mysqli_query(\"SELECT * FROM table\") or die(mysqli_error());",
-                    "is_correct": false
-                }
-            ]
-        },
-        {
-            "assignment_id": 2,
-            "question": "Làm thế nào để lấy số hàng trong một bảng trong MySQL bằng PHP?",
-            "duration": "00:00:30",
-            "score": 1,
-            "choices": [
-                {
-                    "choice": "$result = mysqli_query($con, \"SELECT * FROM table\");",
-                    "is_correct": false
-                },
-                {
-                    "choice": "$result = mysqli_query($con, \"SELECT * FROM table\") or die(mysqli_error($con));",
-                    "is_correct": false
-                },
-                {
-                    "choice": "$result = mysqli_query(\"SELECT * FROM table\") or die(mysqli_error());",
-                    "is_correct": false
-                },
-                {
-                    "choice": "$result = mysqli_query($con, \"SELECT * FROM table\"); $row = mysqli_num_rows($result);",
-                    "is_correct": true
-                }
-            ]
-        },
-        {
-            "assignment_id": 2,
-            "question": "Làm thế nào để lấy số cột trong một bảng trong MySQL bằng PHP?",
-            "duration": "00:00:30",
-            "score": 1,
-            "choices": [
-                {
-                    "choice": "$result = mysqli_query($con, \"SELECT * FROM table\");",
-                    "is_correct": false
-                },
-                {
-                    "choice": "$result = mysqli_query($con, \"SELECT * FROM table\") or die(mysqli_error($con));",
-                    "is_correct": false
-                },
-                {
-                    "choice": "$result = mysqli_query(\"SELECT * FROM table\") or die(mysqli_error());",
-                    "is_correct": false
-                },
-                {
-                    "choice": "$result = mysqli_query($con, \"SELECT * FROM table\"); $col = mysqli_num_fields($result);",
-                    "is_correct": true
-                }
-            ]
-        },
-        {
-            "assignment_id": 3,
-            "question": "Làm thế nào để khai báo một biến trong Java?",
-            "duration": "00:00:30",
-            "score": 1,
-            "choices": [
-                {
-                    "choice": "String name;",
-                    "is_correct": true
-                },
-                {
-                    "choice": "name String;",
-                    "is_correct": false
-                },
-                {
-                    "choice": "name = String;",
-                    "is_correct": false
-                },
-                {
-                    "choice": "String name = new String();",
-                    "is_correct": false
-                }
-            ]
-        },
-        {
-            "assignment_id": 3,
-            "question": "Làm thế nào để khai báo một hằng số trong Java?",
-            "duration": "00:00:30",
-            "score": 1,
-            "choices": [
-                {
-                    "choice": "final int PI = 3.14;",
-                    "is_correct": true
-                },
-                {
-                    "choice": "int final PI = 3.14;",
-                    "is_correct": false
-                },
-                {
-                    "choice": "int PI = 3.14;",
-                    "is_correct": false
-                },
-                {
-                    "choice": "final PI = 3.14;",
-                    "is_correct": false
-                }
-            ]
-        },
-        {
-            "assignment_id": 4,
-            "question": "Làm thế nào để khai báo một mảng trong Java?",
-            "duration": "00:00:30",
-            "score": 1,
-            "choices": [
-                {
-                    "choice": "int[] arr;",
-                    "is_correct": true
-                },
-                {
-                    "choice": "arr[] int;",
-                    "is_correct": false
-                },
-                {
-                    "choice": "arr int[];",
-                    "is_correct": false
-                },
-                {
-                    "choice": "int arr[];",
-                    "is_correct": false
-                }
-            ]
-        },
-        {
-            "assignment_id": 4,
-            "question": "Làm thế nào để khai báo một mảng 2 chiều trong Java?",
-            "duration": "00:00:30",
-            "score": 1,
-            "choices": [
-                {
-                    "choice": "int[][] arr;",
-                    "is_correct": true
-                },
-                {
-                    "choice": "arr[][] int;",
-                    "is_correct": false
-                },
-                {
-                    "choice": "arr int[][];",
-                    "is_correct": false
-                },
-                {
-                    "choice": "int arr[][];",
-                    "is_correct": false
-                }
-            ]
-        },
-        {
-            "assignment_id": 5,
-            "question": "Làm thế nào để khai báo một biến trong C#?",
-            "duration": "00:00:30",
-            "score": 1,
-            "choices": [
-                {
-                    "choice": "int name;",
-                    "is_correct": true
-                },
-                {
-                    "choice": "name int;",
-                    "is_correct": false
-                },
-                {
-                    "choice": "name = int;",
-                    "is_correct": false
-                },
-                {
-                    "choice": "int name = new int();",
-                    "is_correct": false
-                }
-            ]
-        },
-        {
-            "assignment_id": 5,
-            "question": "Làm thế nào để khai báo một hằng số trong C#?",
-            "duration": "00:00:30",
-            "score": 1,
-            "choices": [
-                {
-                    "choice": "const int PI = 3.14;",
-                    "is_correct": true
-                },
-                {
-                    "choice": "int const PI = 3.14;",
-                    "is_correct": false
-                },
-                {
-                    "choice": "int PI = 3.14;",
-                    "is_correct": false
-                },
-                {
-                    "choice": "const PI = 3.14;",
-                    "is_correct": false
-                }
-            ]
-        },
-        {
-            "assignment_id": 6,
-            "question": "Làm thế nào để khai báo một mảng trong C#?",
-            "duration": "00:00:30",
-            "score": 1,
-            "choices": [
-                {
-                    "choice": "int[] arr;",
-                    "is_correct": true
-                },
-                {
-                    "choice": "arr[] int;",
-                    "is_correct": false
-                },
-                {
-                    "choice": "arr int[];",
-                    "is_correct": false
-                },
-                {
-                    "choice": "int arr[];",
-                    "is_correct": false
-                }
-            ]
         }
     ]
 }
