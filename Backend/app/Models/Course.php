@@ -7,16 +7,15 @@ use Illuminate\Database\Eloquent\Model;
 class Course extends Model
 {
     protected $fillable = [
-        'category_id',
         'code',
         'name',
         'description',
         'status',
     ];
 
-    public function category()
+    public function categories()
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsToMany(Category::class, 'course_categories');
     }
 
     public function enrollments()

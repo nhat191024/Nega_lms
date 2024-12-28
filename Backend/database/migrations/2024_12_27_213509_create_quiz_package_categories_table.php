@@ -11,13 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('quiz_packages', function (Blueprint $table) {
+        Schema::create('quiz_package_categories', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('creator_id');
-            $table->string('title');
-            $table->string('description');
-            $table->string('quiz_id_range');
-            $table->enum('status', ['published', 'private', 'closed']);
+            $table->unsignedBigInteger('quiz_package_id');
+            $table->unsignedBigInteger('category_id');
             $table->timestamps();
         });
     }
@@ -27,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('quiz_packages');
+        Schema::dropIfExists('quiz_package_categories');
     }
 };

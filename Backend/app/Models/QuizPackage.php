@@ -8,7 +8,6 @@ class QuizPackage extends Model
 {
     protected $fillable = [
         'creator_id',
-        'category_id',
         'title',
         'description',
         'quiz_id_range',
@@ -20,9 +19,9 @@ class QuizPackage extends Model
         return $this->belongsTo(User::class, 'creator_id');
     }
 
-    public function category()
+    public function categories()
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsToMany(Category::class, 'quiz_package_categories');
     }
 
     public function quizzes()

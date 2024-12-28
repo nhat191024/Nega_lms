@@ -9,7 +9,6 @@ class Classes extends Model
     protected $fillable = [
         'name',
         'teacher_id',
-        'category_id',
         'description',
         'start_date',
         'end_date',
@@ -21,9 +20,9 @@ class Classes extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function category()
+    public function categories()
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsToMany(Category::class, 'class_categories');
     }
 
     public function assignments()

@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('password');
             $table->string('name');
             $table->string('gender')->nullable();
-            $table->enum('role_id', [1, 2, 3]); // 1 = admin, 2 = teacher, 3 = user, 4 = class Supervisor
+            $table->enum('role_id', [1, 2, 3, 4]); // 1 = admin, 2 = teacher, 3 = user, 4 = class Supervisor
             $table->tinyInteger('status')->default(1); // 1 là hoạt động, 0 là vô hiệu hóa
             $table->rememberToken();
             $table->timestamps();
