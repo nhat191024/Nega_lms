@@ -21,9 +21,9 @@ class DashboardController extends Controller
                 ->whereHas('student', function ($query) {
                     $query->where('role_id', 3);
                 })
-                ->whereNotNull('created_at')
-                ->orderBy('total_score', 'desc')
+                ->orderBy('score', 'desc') // Thay vì 'total_score', dùng 'score' từ bảng
                 ->get();
+
 
             // Tính điểm trung bình cho mỗi bài quiz
             $averageScoreForAssignments = $this->getAverageScoreForAssignments($submissions);

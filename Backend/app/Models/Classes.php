@@ -39,4 +39,5 @@ class Classes extends Model
     {
         return $this->hasMany(ClassNotification::class);
     }
+    
 }

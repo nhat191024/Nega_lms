@@ -5,15 +5,14 @@
         <!-- Begin Page Content -->
         <div class="container-fluid">
             <!-- Page Heading -->
-            <div class="d-flex justify-content-between">
+            <div class="d-flex justify-content-between mb-3">
                 <h1 class="h3 mb-2 text-gray-800">Quản lý lớp học</h1>
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-class-modal">
                     Thêm lớp học
                 </button>
 
                 <!-- Modal thêm lớp học -->
-                <div class="modal fade" id="add-class-modal" tabindex="-1" aria-labelledby="modal-new-class"
-                    aria-hidden="true">
+                <div class="modal fade" id="add-class-modal" tabindex="-1" aria-labelledby="modal-new-class" aria-hidden="true">
                     <div class="modal-dialog">
                         <form action="{{ route('classes.addClass') }}" method="post">
                             @csrf
@@ -25,51 +24,33 @@
                                 
                                 <div class="modal-body">
                                     <div class="row g-3 needs-validation" novalidate>
-
                                         <div class="col-md-12">
                                             <label for="classCode" class="form-label">Nhập mã lớp</label>
-                                            <input name="classCode" type="text"
-                                                class="form-control @error('classCode') is-invalid @enderror" id="classCode"
-                                                placeholder="Vd: ABC123" value="{{ old('classCode') }}">
-                                            @error('classCode')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
+                                            <input name="classCode" type="text" class="form-control @error('classCode') is-invalid @enderror" id="classCode" placeholder="Vd: ABC123" value="{{ old('classCode') }}">
+                                            @error('classCode') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                         </div>
-                                        
 
                                         <div class="col-md-12">
                                             <label for="className" class="form-label">Nhập tên lớp</label>
-                                            <input name="className" type="text"
-                                                class="form-control @error('className') is-invalid @enderror" id="className"
-                                                placeholder="Vd: Lớp bá đạo" value="{{ old('className') }}">
-                                            @error('className')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
+                                            <input name="className" type="text" class="form-control @error('className') is-invalid @enderror" id="className" placeholder="Vd: Lớp bá đạo" value="{{ old('className') }}">
+                                            @error('className') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                         </div>
                         
                                         <div class="col-md-12">
                                             <label for="classDescription" class="form-label">Nhập mô tả</label>
-                                            <input name="classDescription" type="text"
-                                                class="form-control @error('classDescription') is-invalid @enderror"
-                                                id="classDescription" placeholder="Vd: Hơn 30 học sinh giỏi"
-                                                value="{{ old('classDescription') }}">
-                                            @error('classDescription')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
+                                            <input name="classDescription" type="text" class="form-control @error('classDescription') is-invalid @enderror" id="classDescription" placeholder="Vd: Hơn 30 học sinh giỏi" value="{{ old('classDescription') }}">
+                                            @error('classDescription') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                         </div>
                         
                                         <div class="col-md-12">
                                             <label for="teacherID" class="form-label">Thêm giảng viên</label>
-                                            <select name="teacherID"
-                                                class="form-select @error('teacherID') is-invalid @enderror" id="teacherID">
+                                            <select name="teacherID" class="form-select @error('teacherID') is-invalid @enderror" id="teacherID">
                                                 <option selected disabled value="">Chọn giảng viên</option>
                                                 @foreach ($teachersNotInClass as $teacher)
                                                     <option value="{{ $teacher->id }}" {{ old('teacherID') == $teacher->id ? 'selected' : '' }}>{{ $teacher->name }}</option>
                                                 @endforeach
                                             </select>
-                                            @error('teacherID')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
+                                            @error('teacherID') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                         </div>
                         
                                         <div class="col-12">
@@ -87,22 +68,21 @@
                 </div>
             </div>
 
-            <!-- DataTales Example -->
+            <!-- Lớp học -->
             @foreach ($classes as $class)
                 <div class="card shadow my-4">
                     <div class="card-header py-3 d-flex justify-content-between">
                         <div class="d-flex align-items-center">
-                            <h6 class="m-0 font-weight-bold text-primary">Lớp - {{ $class->class_name }}</h6>
-                            <h6 class="m-0 font-weight-bold text-primary mx-4">Mã lớp - {{ $class->class_code }}</h6>
-                            <h6 class="m-0 font-weight-bold text-primary mx-4">Giảng viên - {{ $class->teacher->name }}
-                            </h6>
+                            <h6 class="m-0 font-weight-bold text-primary">Lớp - {{ $class->name }}</h6>
+                            <h6 class="m-0 font-weight-bold text-primary mx-4">Mã lớp - {{ $class->code }}</h6>
+                            <h6 class="m-0 font-weight-bold text-primary mx-4">Giảng viên - {{ $class->teacher->name }}</h6>
                         </div>
 
                         <div>
                             <button type="button" class="btn btn-warning">
                                 <a href="{{ route('classes.editClass', $class->id) }}" class="text-white text-decoration-none">Sửa</a>
                             </button>                            
-                            
+
                             @if ($class->status === 1)
                                 <a class="btn btn-danger"
                                     onclick="event.preventDefault(); if (confirm('Bạn chắc chắn muốn ẩn lớp {{ $class->name }} chứ?')) { window.location.href = '{{ route('classes.hideClass', ['class_id' => $class->id]) }}'; }"
@@ -120,36 +100,27 @@
                         </div>
 
                         <!-- Modal thêm học sinh -->
-                        <div class="modal fade" id="add-student-to-class-{{ Str::slug($class->class_name) }}"
-                            tabindex="-1" aria-labelledby="modal-title-{{ Str::slug($class->class_name) }}"
-                            aria-hidden="true">
+                        <div class="modal fade" id="add-student-to-class-{{ Str::slug($class->class_name) }}" tabindex="-1" aria-labelledby="modal-title-{{ Str::slug($class->class_name) }}" aria-hidden="true">
                             <div class="modal-dialog">
                                 <form action="{{ route('classes.addStudent') }}" method="post">
                                     @csrf
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h1 class="modal-title fs-5"
-                                                id="modal-title-{{ Str::slug($class->class_name) }}">Thêm học sinh vào
-                                                Lớp
-                                                {{ $class->class_name }}</h1>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                aria-label="Close"></button>
+                                            <h1 class="modal-title fs-5" id="modal-title-{{ Str::slug($class->class_name) }}">Thêm học sinh vào Lớp {{ $class->class_name }}</h1>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
                                         <input type="hidden" name="class_id" value="{{ $class->id }}">
                                         <div class="modal-body">
-                                            <select name="student_id" class="selectpicker" data-live-search="true"
-                                                data-width="100%" title="Chọn học sinh...">
+                                            <select name="student_id" class="selectpicker" data-live-search="true" data-width="100%" title="Chọn học sinh...">
                                                 @foreach ($studentsNotInClass($class->id) as $student)
-                                                    <option value="{{ $student->id }}"
-                                                        data-tokens="{{ $student->name }}">
+                                                    <option value="{{ $student->id }}" data-tokens="{{ $student->name }}">
                                                         {{ $student->name }}
                                                     </option>
                                                 @endforeach
                                             </select>
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary"
-                                                data-bs-dismiss="modal">Hủy</button>
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
                                             <button type="submit" class="btn btn-primary">Lưu</button>
                                         </div>
                                     </div>
@@ -158,12 +129,10 @@
                         </div>
                     </div>
 
-                    @if ($class->students->isNotEmpty())
+                    @if ($class->students && $class->students->isNotEmpty())
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table class="table table-bordered class-table"
-                                    data-class-table="table-{{ Str::slug($class->class_name) }}"
-                                    id="table-{{ Str::slug($class->class_name) }}" width="100%" cellspacing="0">
+                                <table class="table table-bordered" id="table-{{ Str::slug($class->class_name) }}" width="100%" cellspacing="0">
                                     <thead>
                                         <tr>
                                             <th class="text-center">STT</th>
@@ -179,13 +148,10 @@
                                                 <td class="text-center">{{ $student->name }}</td>
                                                 <td class="text-center">{{ $student->email }}</td>
                                                 <th class="text-center">
-                                                    <form id="delete-form-{{ $class->id }}-{{ $student->id }}"
-                                                        action="{{ route('classes.removeStudent', ['class_id' => $class->id, 'student_id' => $student->id]) }}"
-                                                        method="POST">
+                                                    <form id="delete-form-{{ $class->id }}-{{ $student->id }}" action="{{ route('classes.removeStudent', ['class_id' => $class->id, 'student_id' => $student->id]) }}" method="POST">
                                                         @csrf
                                                         @method('DELETE')
-                                                        <button type="button" class="btn btn-danger"
-                                                            onclick="if(confirm('Bạn có chắc chắn muốn xóa học sinh {{ $student->name }} khỏi lớp {{ $class->class_name }}?')) { document.getElementById('delete-form-{{ $class->id }}-{{ $student->id }}').submit(); }">
+                                                        <button type="button" class="btn btn-danger" onclick="if(confirm('Bạn có chắc chắn muốn xóa học sinh {{ $student->name }} khỏi lớp {{ $class->class_name }}?')) { document.getElementById('delete-form-{{ $class->id }}-{{ $student->id }}').submit(); }">
                                                             Xóa
                                                         </button>
                                                     </form>
@@ -193,14 +159,6 @@
                                             </tr>
                                         @endforeach
                                     </tbody>
-                                    <tfoot>
-                                        <tr>
-                                            <th class="text-center">STT</th>
-                                            <th class="text-center">Tên học sinh</th>
-                                            <th class="text-center">Email</th>
-                                            <th class="text-center">Tác vụ</th>
-                                        </tr>
-                                    </tfoot>
                                 </table>
                             </div>
                         </div>

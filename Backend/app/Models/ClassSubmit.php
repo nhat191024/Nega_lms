@@ -10,7 +10,7 @@ class ClassSubmit extends Model
 
     public function assignment()
     {
-        return $this->belongsTo(ClassAssignment::class);
+        return $this->belongsTo(ClassAssignment::class, 'class_assignment_id');
     }
 
     public function user()
@@ -25,6 +25,6 @@ class ClassSubmit extends Model
 
     public function student()
     {
-        return $this->belongsTo(User::class, 'student_id'); // 'student_id' là cột khóa ngoại trong bảng ClassSubmit trỏ đến bảng User
+        return $this->belongsTo(User::class, 'student_id');
     }
 }
