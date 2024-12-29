@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Models\Assignment;
+use App\Models\ClassAssignment;
 use App\Models\Classes;
 use App\Models\Enrollment;
-use App\Models\Submission;
+use App\Models\ClassSubmit;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -17,7 +17,7 @@ class DashboardController extends Controller
     public function index()
     {
         if (Auth::check() && Auth::user()->role_id == 1) {
-            $submissions = Submission::with(['assignment', 'student'])
+            $submissions = ClassSubmit::with(['assignment', 'student'])
                 ->whereHas('student', function ($query) {
                     $query->where('role_id', 3);
                 })
@@ -37,7 +37,7 @@ class DashboardController extends Controller
                 'classes' => Classes::all(),
                 'submissions' => $submissions,
                 'enrollments' => Enrollment::all(),
-                'assignments' => Assignment::all(),
+                'assignments' => ClassAssignment::all(),
                 'averageScoreForAssignments' => $averageScoreForAssignments,
                 'dates' => $participationData['dates'],
                 'participantsCount' => $participationData['participantsCount'],
@@ -87,10 +87,10 @@ class DashboardController extends Controller
     public function getCompletionRate($assignmentId)
     {
         // Lấy bài quiz từ bảng assignments
-        $assignment = Assignment::findOrFail($assignmentId);
+        $assignment = ClassAssignment::findOrFail($assignmentId);
 
         // Lấy số lượng học sinh đã hoàn thành bài quiz (tức là đã có submission)
-        $completedCount = Submission::where('assignment_id', $assignmentId)->distinct('student_id')->count('student_id'); // Đếm số học sinh duy nhất nộp bài
+        $completedCount = ClassSubmit::where('assignment_id', $assignmentId)->distinct('student_id')->count('student_id'); // Đếm số học sinh duy nhất nộp bài
 
         // Lấy tổng số học sinh đã đăng ký lớp học có bài quiz
         $classId = $assignment->class_id;
