@@ -159,4 +159,10 @@ class ClassController extends Controller
 
         return redirect()->route('classes.index')->with('success', 'Lớp học đã được cập nhật.');
     }
+
+    public function show($id)
+    {
+        $class = Classes::with('teacher', 'students')->findOrFail($id);
+        return view('classes.show', compact('class'));
+    }
 }
