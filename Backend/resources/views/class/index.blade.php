@@ -18,7 +18,6 @@
                         </div>
                         <div class="modal-body">
                             <div class="row g-3 needs-validation" novalidate>
-                                <!-- Mã lớp -->
                                 <div class="col-md-12">
                                     <label for="code" class="form-label">Nhập mã lớp</label>
                                     <input name="code" type="text" class="form-control @error('code') is-invalid @enderror" id="code" placeholder="Vd: ABC123" value="{{ old('code') }}">
@@ -26,7 +25,6 @@
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
-                                <!-- Tên lớp -->
                                 <div class="col-md-12">
                                     <label for="name" class="form-label">Nhập tên lớp</label>
                                     <input name="name" type="text" class="form-control @error('name') is-invalid @enderror" id="name" placeholder="Vd: Lớp bá đạo" value="{{ old('name') }}">
@@ -34,7 +32,6 @@
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
-                                <!-- Mô tả lớp -->
                                 <div class="col-md-12">
                                     <label for="description" class="form-label">Nhập mô tả</label>
                                     <input name="description" type="text" class="form-control @error('description') is-invalid @enderror" id="description" placeholder="Vd: Hơn 30 học sinh giỏi" value="{{ old('description') }}">
@@ -42,7 +39,6 @@
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
-                                <!-- Giảng viên -->
                                 <div class="col-md-12">
                                     <label for="teacher_id" class="form-label">Thêm giảng viên</label>
                                     <select name="teacher_id" class="form-select @error('teacher_id') is-invalid @enderror" id="teacher_id">

@@ -163,6 +163,6 @@ class ClassController extends Controller
     public function show($id)
     {
         $class = Classes::with('teacher', 'students')->findOrFail($id);
-        return view('classes.show', compact('class'));
+        return view('class.show', compact('class'));
     }
 }
