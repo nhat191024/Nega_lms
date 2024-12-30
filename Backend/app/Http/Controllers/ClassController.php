@@ -158,16 +158,17 @@ class ClassController extends Controller
     }
 
     public function show($id, $assignment_id = null)
-    {
-        $class = Classes::with('teacher', 'students', 'assignments.quizzes.choices', 'assignments.submits.student')->findOrFail($id);
-        $studentsNotInClass = User::where('role_id', 3)
-            ->whereDoesntHave('enrollments', function ($query) use ($class) {
-                $query->where('class_id', $class->id);
-            })
-            ->get();
+{
+    $class = Classes::with(['teacher', 'students', 'assignments.quizzes.choices', 'assignments.submits.student'])->findOrFail($id);
+    $studentsNotInClass = User::where('role_id', 3)
+        ->whereDoesntHave('enrollments', function ($query) use ($class) {
+            $query->where('class_id', $class->id);
+        })
+        ->get();
 
-        $assignment = $assignment_id ? ClassAssignment::with('quizzes.choices', 'submits.student')->findOrFail($assignment_id) : null;
+    $assignment = $assignment_id ? ClassAssignment::with('quizzes.choices', 'submits.student')->findOrFail($assignment_id) : null;
 
-        return view('class.show', compact('class', 'studentsNotInClass', 'assignment'));
-    }
+    return view('class.show', compact('class', 'studentsNotInClass', 'assignment'));
+}
+
 }

@@ -36,7 +36,7 @@ class Classes extends Model
     // Quan hệ với bài tập
     public function assignments()
     {
-        return $this->hasMany(ClassAssignment::class);
+        return $this->hasMany(ClassAssignment::class, 'class_id'); // Sử dụng đúng cột 'class_id'
     }
 
     // Quan hệ với ghi danh
