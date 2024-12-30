@@ -7,6 +7,7 @@ use App\Http\Controllers\ClassController;
 use App\Http\Controllers\AdminAuthController;
 use App\Http\Controllers\AssignmentController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\CategoryController;
 
 Route::get('/', [AdminAuthController::class, 'showLoginForm'])->name('admin.login');
 Route::post('/login', [AdminAuthController::class, 'login'])->name('admin.login.submit');
@@ -45,3 +46,9 @@ Route::prefix('/assignment')->name('assignments.')->group(function () {
     Route::get('/assignments/visibility/{id}', [AssignmentController::class, 'toggleVisibility'])
     ->name('assignments.visibility');
 });
+
+Route::get('categories/{id}/toggle-status', [CategoryController::class, 'toggleStatus'])->name('categories.toggleStatus');
+Route::resource('categories', CategoryController::class)->except(['destroy']);
+Route::get('/categories/create', [CategoryController::class, 'create'])->name('categories.create');
+Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
+
