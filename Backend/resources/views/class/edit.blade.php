@@ -11,33 +11,33 @@
                 @method('PUT')
 
                 <div class="mb-3">
-                    <label for="classCode" class="form-label">Mã lớp</label>
-                    <input type="text" class="form-control" id="classCode" name="classCode"
-                        value="{{ $class->class_code }}">
+                    <label for="ccode" class="form-label">Mã lớp</label>
+                    <input type="text" class="form-control" id="code" name="ccode"
+                        value="{{ $class->code }}">
                     <p class="fs-6 text-danger">
-                        @error('classCode')
+                        @error('code')
                             {{ $message }}
                         @enderror
                     </p>
                 </div>
 
                 <div class="mb-3">
-                    <label for="className" class="form-label">Tên lớp</label>
-                    <input type="text" class="form-control" id="className" name="className"
-                        value="{{ $class->class_name }}">
+                    <label for="nname" class="form-label">Tên lớp</label>
+                    <input type="text" class="form-control" id="name" name="name"
+                        value="{{ $class->name }}">
                     <p class="fs-6 text-danger">
-                        @error('className')
+                        @error('name')
                             {{ $message }}
                         @enderror
                     </p>
                 </div>
 
                 <div class="mb-3">
-                    <label for="classDescription" class="form-label">Mô tả lớp</label>
-                    <input type="text" class="form-control" id="classDescription" name="classDescription"
-                        value="{{ $class->class_description }}">
+                    <label for="description" class="form-label">Mô tả lớp</label>
+                    <input type="text" class="form-control" id="description" name="description"
+                        value="{{ $class->description }}">
                     <p class="fs-6 text-danger">
-                        @error('classDescription')
+                        @error('description')
                             {{ $message }}
                         @enderror
                     </p>
