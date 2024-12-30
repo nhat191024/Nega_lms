@@ -57,7 +57,6 @@ class ClassController extends Controller
         }
     }
 
-
     public function removeStudentFromAClass($class_id, $student_id)
     {
         $enrollment = Enrollment::where('class_id', $class_id)->where('student_id', $student_id)->first();
@@ -73,32 +72,27 @@ class ClassController extends Controller
     {
         $request->validate(
             [
-                'classCode' => 'required|string|max:10|unique:classes,class_code',
-                'className' => 'required|string|max:255|unique:classes,class_name',
-                'classDescription' => 'required|string|max:500',
-                'teacherID' => 'required|integer|exists:users,id',
+                'code' => 'required|string|max:255|unique:classes,code',
+                'name' => 'required|string|max:255|unique:classes,name',
+                'description' => 'required|string|max:500',
+                'teacher_id' => 'required|integer|exists:users,id',
             ],
             [
-                'classCode.required' => 'Vui lòng nhập mã lớp',
-                'classCode.unique' => 'Mã lớp đã tồn tại, vui lòng chọn mã khác',
-                'className.required' => 'Vui lòng nhập tên lớp!',
-                'className.unique' => 'Lớp học đã tồn tại, vui lòng nhập tên khác',
-                'classDescription.required' => 'Vui lòng nhập mô tả lớp!',
-                'teacherID.required' => 'Vui lòng chọn giảng viên!',
-                'teacherID.exists' => 'Giảng viên không tồn tại!',
+                'code.required' => 'Vui lòng nhập mã lớp',
+                'code.unique' => 'Mã lớp đã tồn tại, vui lòng chọn mã khác',
+                'name.required' => 'Vui lòng nhập tên lớp!',
+                'name.unique' => 'Lớp học đã tồn tại, vui lòng nhập tên khác',
+                'description.required' => 'Vui lòng nhập mô tả lớp!',
+                'teacher_id.required' => 'Vui lòng chọn giảng viên!',
+                'teacher_id.exists' => 'Giảng viên không tồn tại!',
             ]
         );
 
-        $classCode = $request->classCode;
-        $className = $request->className;
-        $classDescription = $request->classDescription;
-        $teacherID = $request->teacherID;
-
         $class = Classes::create([
-            'class_code' => $classCode,
-            'class_name' => $className,
-            'class_description' => $classDescription,
-            'teacher_id' => $teacherID,
+            'code' => $request->code,
+            'name' => $request->name,
+            'description' => $request->description,
+            'teacher_id' => $request->teacher_id,
         ]);
 
         return redirect()->route('classes.index')->with('success', 'Thêm lớp học thành công');
@@ -107,18 +101,19 @@ class ClassController extends Controller
     public function hideClass(Request $request)
     {
         $class_id = $request->class_id;
-        $updateStatus = Classes::find($class_id);
+        $class = Classes::find($class_id);
 
-        if (!$updateStatus) {
+        if (!$class) {
             return redirect()->back()->with('error', 'Lớp không tồn tại');
         }
 
-        $newStatus = $updateStatus->status ? 0 : 1;
-        $updateStatus->update(['status' => $newStatus]);
+        $newStatus = $class->status === 'published' ? 'closed' : 'published';
+        $class->update(['status' => $newStatus]);
 
-        $message = $newStatus === 0 ? 'Đã ẩn lớp học!' : 'Đã hiển thị lớp học!';
+        $message = $newStatus === 'closed' ? 'Đã ẩn lớp học!' : 'Đã hiển thị lớp học!';
         return redirect()->back()->with('success', $message);
     }
+
     public function editClass($class_id)
     {
         $class = Classes::findOrFail($class_id);
@@ -130,28 +125,32 @@ class ClassController extends Controller
     {
         $request->validate(
             [
-                'classCode' => 'required|string|max:10|unique:classes,class_code,' . $class_id,
-                'className' => 'required|string|max:255|unique:classes,class_name,' . $class_id,
-                'classDescription' => 'required|string|max:500',
-                'teacherID' => 'required|integer|exists:users,id',
+                'code' => 'required|string|max:255|unique:classes,code,' . $class_id,
+                'name' => 'required|string|max:255|unique:classes,name,' . $class_id,
+                'description' => 'required|string|max:500',
+                'teacher_id' => 'required|integer|exists:users,id',
+                'status' => 'required|in:published,closed',
             ],
             [
-                'classCode.required' => 'Vui lòng nhập mã lớp!',
-                'classCode.unique' => 'Mã lớp đã tồn tại, vui lòng chọn mã khác',
-                'className.required' => 'Vui lòng nhập tên lớp!',
-                'className.unique' => 'Lớp học đã tồn tại, vui lòng nhập tên khác',
-                'classDescription.required' => 'Vui lòng nhập mô tả lớp!',
-                'teacherID.required' => 'Vui lòng chọn giảng viên!',
-                'teacherID.exists' => 'Giảng viên không tồn tại!',
+                'code.required' => 'Vui lòng nhập mã lớp!',
+                'code.unique' => 'Mã lớp đã tồn tại, vui lòng chọn mã khác',
+                'name.required' => 'Vui lòng nhập tên lớp!',
+                'name.unique' => 'Lớp học đã tồn tại, vui lòng nhập tên khác',
+                'description.required' => 'Vui lòng nhập mô tả lớp!',
+                'teacher_id.required' => 'Vui lòng chọn giảng viên!',
+                'teacher_id.exists' => 'Giảng viên không tồn tại!',
+                'status.required' => 'Vui lòng chọn trạng thái lớp học!',
+                'status.in' => 'Trạng thái lớp học không hợp lệ!',
             ]
         );
 
         $class = Classes::findOrFail($class_id);
         $class->update([
-            'class_code' => $request->classCode,
-            'class_name' => $request->className,
-            'class_description' => $request->classDescription,
-            'teacher_id' => $request->teacherID,
+            'code' => $request->code,
+            'name' => $request->name,
+            'description' => $request->description,
+            'teacher_id' => $request->teacher_id,
+            'status' => $request->status,
         ]);
 
         return redirect()->route('classes.index')->with('success', 'Lớp học đã được cập nhật.');

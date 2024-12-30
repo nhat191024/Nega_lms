@@ -21,36 +21,48 @@
                                     <h1 class="modal-title fs-5" id="modal-new-class">Thêm lớp học mới</h1>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
-                                
+                        
                                 <div class="modal-body">
                                     <div class="row g-3 needs-validation" novalidate>
+                                        <!-- Mã lớp -->
                                         <div class="col-md-12">
-                                            <label for="classCode" class="form-label">Nhập mã lớp</label>
-                                            <input name="classCode" type="text" class="form-control @error('classCode') is-invalid @enderror" id="classCode" placeholder="Vd: ABC123" value="{{ old('classCode') }}">
-                                            @error('classCode') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                                        </div>
-
-                                        <div class="col-md-12">
-                                            <label for="className" class="form-label">Nhập tên lớp</label>
-                                            <input name="className" type="text" class="form-control @error('className') is-invalid @enderror" id="className" placeholder="Vd: Lớp bá đạo" value="{{ old('className') }}">
-                                            @error('className') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                            <label for="code" class="form-label">Nhập mã lớp</label>
+                                            <input name="code" type="text" class="form-control @error('code') is-invalid @enderror" id="code" placeholder="Vd: ABC123" value="{{ old('code') }}">
+                                            @error('code') 
+                                                <div class="invalid-feedback">{{ $message }}</div> 
+                                            @enderror
                                         </div>
                         
+                                        <!-- Tên lớp -->
                                         <div class="col-md-12">
-                                            <label for="classDescription" class="form-label">Nhập mô tả</label>
-                                            <input name="classDescription" type="text" class="form-control @error('classDescription') is-invalid @enderror" id="classDescription" placeholder="Vd: Hơn 30 học sinh giỏi" value="{{ old('classDescription') }}">
-                                            @error('classDescription') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                            <label for="name" class="form-label">Nhập tên lớp</label>
+                                            <input name="name" type="text" class="form-control @error('name') is-invalid @enderror" id="name" placeholder="Vd: Lớp bá đạo" value="{{ old('name') }}">
+                                            @error('name') 
+                                                <div class="invalid-feedback">{{ $message }}</div> 
+                                            @enderror
                                         </div>
                         
+                                        <!-- Mô tả lớp -->
                                         <div class="col-md-12">
-                                            <label for="teacherID" class="form-label">Thêm giảng viên</label>
-                                            <select name="teacherID" class="form-select @error('teacherID') is-invalid @enderror" id="teacherID">
+                                            <label for="description" class="form-label">Nhập mô tả</label>
+                                            <input name="description" type="text" class="form-control @error('description') is-invalid @enderror" id="description" placeholder="Vd: Hơn 30 học sinh giỏi" value="{{ old('description') }}">
+                                            @error('description') 
+                                                <div class="invalid-feedback">{{ $message }}</div> 
+                                            @enderror
+                                        </div>
+                        
+                                        <!-- Giảng viên -->
+                                        <div class="col-md-12">
+                                            <label for="teacher_id" class="form-label">Thêm giảng viên</label>
+                                            <select name="teacher_id" class="form-select @error('teacher_id') is-invalid @enderror" id="teacher_id">
                                                 <option selected disabled value="">Chọn giảng viên</option>
                                                 @foreach ($teachersNotInClass as $teacher)
-                                                    <option value="{{ $teacher->id }}" {{ old('teacherID') == $teacher->id ? 'selected' : '' }}>{{ $teacher->name }}</option>
+                                                    <option value="{{ $teacher->id }}" {{ old('teacher_id') == $teacher->id ? 'selected' : '' }}>{{ $teacher->name }}</option>
                                                 @endforeach
                                             </select>
-                                            @error('teacherID') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                            @error('teacher_id') 
+                                                <div class="invalid-feedback">{{ $message }}</div> 
+                                            @enderror
                                         </div>
                         
                                         <div class="col-12">
@@ -63,7 +75,7 @@
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
                                 </div>
                             </div>
-                        </form>                        
+                        </form>                                          
                     </div>
                 </div>
             </div>
