@@ -15,14 +15,15 @@
                 @if ($users->isNotEmpty())
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table class="table table-bordered class-table" data-class-table="table-users" id="table-users"
-                                width="100%" cellspacing="0">
+                            <table class="table table-bordered class-table" id="table-users" width="100%" cellspacing="0">
                                 <thead>
                                     <tr>
                                         <th class="text-center">STT</th>
-                                        <th class="text-center">Tên</th>
                                         <th class="text-center">Email</th>
-                                        <th class="text-center">Tên người dùng</th>
+                                        <th class="text-center">Avatar</th>
+                                        <th class="text-center">Mật khẩu</th>
+                                        <th class="text-center">Tên</th>
+                                        <th class="text-center">Giới tính</th>
                                         <th class="text-center">Vai trò</th>
                                         <th class="text-center">Trạng thái</th>
                                         <th class="text-center">Hành động</th>
@@ -32,10 +33,22 @@
                                     @foreach ($users as $user)
                                         <tr>
                                             <td class="text-center">{{ $loop->iteration }}</td>
-                                            <td class="text-center">{{ $user->name }}</td>
                                             <td class="text-center">{{ $user->email }}</td>
-                                            <td class="text-center">{{ $user->username }}</td>
-                                            <td class="text-center">{{ $roles[$user->role_id] }}</td>
+                                            <td class="text-center">
+                                                <img src="{{ $user->avatar }}" alt="Avatar" class="img-thumbnail" width="50">
+                                            </td>
+                                            <td class="text-center">********</td>
+                                            <td class="text-center">{{ $user->name }}</td>
+                                            <td class="text-center">
+                                                @if ($user->gender == 'male')
+                                                    Nam
+                                                @elseif ($user->gender == 'female')
+                                                    Nữ
+                                                @else
+                                                    Không xác định
+                                                @endif
+                                            </td>
+                                            <td class="text-center">{{ $roles[$user->role_id] ?? 'Chưa gán' }}</td>
                                             <td class="text-center">
                                                 @if ($user->status == 1)
                                                     <span class="badge badge-success fs-6">Hiển thị</span>
@@ -43,11 +56,9 @@
                                                     <span class="badge badge-danger fs-6">Ẩn</span>
                                                 @endif
                                             </td>
-                                            <th class="text-center">
+                                            <td class="text-center">
                                                 <a href="{{ route('users.edit', ['id' => $user->id]) }}"
-                                                    class="btn btn-warning btn-sm">
-                                                    Sửa
-                                                </a>
+                                                    class="btn btn-warning btn-sm">Sửa</a>
                                                 <a href="{{ route('users.status', ['id' => $user->id]) }}"
                                                     class="btn {{ $user->status ? 'btn-danger' : 'btn-success' }} btn-sm">
                                                     @if ($user->status)
@@ -56,16 +67,18 @@
                                                         Hiển thị
                                                     @endif
                                                 </a>
-                                            </th>
+                                            </td>
                                         </tr>
                                     @endforeach
                                 </tbody>
                                 <tfoot>
                                     <tr>
                                         <th class="text-center">STT</th>
-                                        <th class="text-center">Tên</th>
                                         <th class="text-center">Email</th>
-                                        <th class="text-center">Tên người dùng</th>
+                                        <th class="text-center">Avatar</th>
+                                        <th class="text-center">Mật khẩu</th>
+                                        <th class="text-center">Tên</th>
+                                        <th class="text-center">Giới tính</th>
                                         <th class="text-center">Vai trò</th>
                                         <th class="text-center">Trạng thái</th>
                                         <th class="text-center">Hành động</th>
@@ -75,7 +88,7 @@
                         </div>
                     </div>
                 @else
-                    <div>Không có học sinh nào</div>
+                    <div>Không có người dùng nào</div>
                 @endif
             </div>
         </div>
