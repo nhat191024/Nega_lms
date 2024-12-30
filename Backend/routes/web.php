@@ -33,6 +33,7 @@ Route::prefix('class')->name('classes.')->group(function () {
     Route::get('/edit-class/{class_id}', [ClassController::class, 'editClass'])->name('editClass');
     Route::put('/update-class/{class_id}', [ClassController::class, 'updateClass'])->name('updateClass');
     Route::get('/{id}', [ClassController::class, 'show'])->name('show');
+    Route::get('/{id}/assignment/{assignment_id}', [ClassController::class, 'show'])->name('assignmentDetails');
 });
 
 Route::prefix('/assignment')->name('assignments.')->group(function () {

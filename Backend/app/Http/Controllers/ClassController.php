@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Classes;
+use App\Models\ClassAssignment;
 use App\Models\Enrollment;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -118,22 +119,21 @@ class ClassController extends Controller
         return redirect()->back()->with('success', $message);
     }
 
-    public function editClass($class_id)
+    public function editClass($id)
     {
-        $class = Classes::findOrFail($class_id);
+        $class = Classes::findOrFail($id);
         $teachersNotInClass = User::where('role_id', 2)->get();
         return view('class.edit', compact('class', 'teachersNotInClass'));
     }
 
-    public function updateClass(Request $request, $class_id)
+    public function updateClass(Request $request, $id)
     {
         $request->validate(
             [
-                'code' => 'required|string|max:255|unique:classes,code,' . $class_id,
-                'name' => 'required|string|max:255|unique:classes,name,' . $class_id,
+                'code' => 'required|string|max:255|unique:classes,code,' . $id,
+                'name' => 'required|string|max:255|unique:classes,name,' . $id,
                 'description' => 'required|string|max:500',
                 'teacher_id' => 'required|integer|exists:users,id',
-                'status' => 'required|in:published,closed',
             ],
             [
                 'code.required' => 'Vui lòng nhập mã lớp!',
@@ -143,26 +143,31 @@ class ClassController extends Controller
                 'description.required' => 'Vui lòng nhập mô tả lớp!',
                 'teacher_id.required' => 'Vui lòng chọn giảng viên!',
                 'teacher_id.exists' => 'Giảng viên không tồn tại!',
-                'status.required' => 'Vui lòng chọn trạng thái lớp học!',
-                'status.in' => 'Trạng thái lớp học không hợp lệ!',
             ]
         );
 
-        $class = Classes::findOrFail($class_id);
+        $class = Classes::findOrFail($id);
         $class->update([
             'code' => $request->code,
             'name' => $request->name,
             'description' => $request->description,
             'teacher_id' => $request->teacher_id,
-            'status' => $request->status,
         ]);
 
         return redirect()->route('classes.index')->with('success', 'Lớp học đã được cập nhật.');
     }
 
-    public function show($id)
+    public function show($id, $assignment_id = null)
     {
-        $class = Classes::with('teacher', 'students')->findOrFail($id);
-        return view('class.show', compact('class'));
+        $class = Classes::with('teacher', 'students', 'assignments.quizzes.choices', 'assignments.submits.student')->findOrFail($id);
+        $studentsNotInClass = User::where('role_id', 3)
+            ->whereDoesntHave('enrollments', function ($query) use ($class) {
+                $query->where('class_id', $class->id);
+            })
+            ->get();
+
+        $assignment = $assignment_id ? ClassAssignment::with('quizzes.choices', 'submits.student')->findOrFail($assignment_id) : null;
+
+        return view('class.show', compact('class', 'studentsNotInClass', 'assignment'));
     }
 }
