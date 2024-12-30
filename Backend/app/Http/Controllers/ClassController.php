@@ -12,13 +12,17 @@ class ClassController extends Controller
     public function index()
     {
         $classes = Classes::all();
-        $studentsNotInClass = function ($classID) {
-            return User::where('role_id', 3)
-                ->whereDoesntHave('enrollments', function ($query) use ($classID) {
-                    $query->where('class_id', $classID);
+        $studentsNotInClass = [];
+
+        // Lấy danh sách học sinh chưa có trong lớp
+        foreach ($classes as $class) {
+            $studentsNotInClass[$class->id] = User::where('role_id', 3)
+                ->whereDoesntHave('enrollments', function ($query) use ($class) {
+                    $query->where('class_id', $class->id);
                 })
                 ->get();
-        };
+        }
+
         $teachersNotInClass = User::where('role_id', 2)->get();
 
         return view('class.index', compact('classes', 'studentsNotInClass', 'teachersNotInClass'));
