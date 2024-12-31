@@ -41,8 +41,6 @@
                                     onclick="event.preventDefault(); if (confirm('Bạn chắc chắn muốn hiện Lớp {{ $class->name }} chứ?')) { window.location.href = '{{ route('classes.hideClass', ['class_id' => $class->id]) }}'; }">Hiển
                                     thị</button>
                             @endif
-                            <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                data-bs-target="#add-student-to-class-{{ Str::slug($class->name) }}">Thêm học sinh</button>
                         </div>
                     </div>
                 </div>
