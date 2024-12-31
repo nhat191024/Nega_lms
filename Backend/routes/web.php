@@ -7,6 +7,7 @@ use App\Http\Controllers\ClassController;
 use App\Http\Controllers\AdminAuthController;
 use App\Http\Controllers\AssignmentController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\QuizBankController;
 
 Route::get('/', [AdminAuthController::class, 'showLoginForm'])->name('admin.login');
 Route::post('/login', [AdminAuthController::class, 'login'])->name('admin.login.submit');
@@ -44,4 +45,11 @@ Route::prefix('/assignment')->name('assignments.')->group(function () {
     Route::delete('/delete/{id}', [AssignmentController::class, 'destroy'])->name('destroy');
     Route::get('/assignments/visibility/{id}', [AssignmentController::class, 'toggleVisibility'])
     ->name('assignments.visibility');
+});
+
+Route::prefix('/quiz-bank')->name('quiz-bank.')->group(function() {
+    Route::get('/', [QuizBankController::class, 'index'])->name('index');
+    Route::get('/create', [QuizBankController::class, 'createQuizBank'])->name('create');
+    Route::post('/add', [QuizBankController::class, 'addQuestion'])->name('add');
+    Route::get('/hidden', [QuizBankController::class, 'hidden'])->name('hidden');
 });
