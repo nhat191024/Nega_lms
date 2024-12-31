@@ -34,6 +34,7 @@ Route::prefix('class')->name('classes.')->group(function () {
     Route::put('/update-class/{class_id}', [ClassController::class, 'updateClass'])->name('updateClass');
     Route::get('/{id}', [ClassController::class, 'show'])->name('show');
     Route::get('/{id}/assignment/{assignment_id}', [ClassController::class, 'show'])->name('assignmentDetails');
+    Route::get('/assignment/{assignment_id}/details', [ClassController::class, 'assignmentDetailsJson'])->name('assignmentDetailsJson');
 });
 
 Route::prefix('/assignment')->name('assignments.')->group(function () {

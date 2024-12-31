@@ -41,6 +41,8 @@
                                     onclick="event.preventDefault(); if (confirm('Bạn chắc chắn muốn hiện Lớp {{ $class->name }} chứ?')) { window.location.href = '{{ route('classes.hideClass', ['class_id' => $class->id]) }}'; }">Hiển
                                     thị</button>
                             @endif
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                data-bs-target="#add-student-to-class-{{ Str::slug($class->name) }}">Thêm học sinh</button>
                         </div>
                     </div>
                 </div>
@@ -96,11 +98,11 @@
                     <div class="card-body">
                         <h3 class="card-title">Bài tập</h3>
                         <ul class="list-group">
-                            @foreach ($class->assignments as $assignment)
+                            @foreach ($class->assignments as $assignmentItem)
                                 <li class="list-group-item d-flex justify-content-between align-items-center">
-                                    <span>{{ $assignment->title }}</span>
+                                    <span>{{ $assignmentItem->title }}</span>
                                     <button class="btn btn-primary btn-sm"
-                                        onclick="showAssignmentDetails('{{ $assignment->id }}')">Xem chi tiết</button>
+                                        onclick="showAssignmentDetails({{ $assignmentItem->id }})">Xem chi tiết</button>
                                 </li>
                             @endforeach
                         </ul>
@@ -126,107 +128,81 @@
                             <div class="tab-pane fade show active" id="Questions" role="tabpanel"
                                 aria-labelledby="questions-tab">
                                 <div class="mt-3">
-                                    <h3>Danh sách câu hỏi</h3>
-                                    <ul class="list-group">
-                                        @foreach ($class->assignments->first()->quizzes as $quiz)
-                                            {{-- Thay đổi nếu cần --}}
-                                            <li class="list-group-item">
-                                                <h5>{{ $quiz->question }}</h5>
-                                                <ul>
-                                                    @foreach ($quiz->choices as $choice)
-                                                        <li>{{ $choice->choice }} @if ($choice->is_correct)
-                                                                <span class="badge bg-success">Đúng</span>
-                                                            @endif
-                                                        </li>
-                                                    @endforeach
-                                                </ul>
-                                            </li>
-                                        @endforeach
+                                    <ul class="list-group" id="questionsContent">
+                                        <!-- Nội dung chi tiết câu hỏi sẽ được tải vào đây -->
                                     </ul>
                                 </div>
                             </div>
                             <div class="tab-pane fade" id="Scores" role="tabpanel" aria-labelledby="scores-tab">
                                 <div class="mt-3">
                                     <h3>Điểm của học sinh</h3>
-                                    <div class="table-responsive">
-                                        <table class="table table-hover table-bordered table-striped">
-                                            <thead class="thead-dark">
-                                                <tr>
-                                                    <th class="text-center">STT</th>
-                                                    <th class="text-center">Tên học sinh</th>
-                                                    <th class="text-center">Điểm</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @foreach ($class->assignments->first()->submits as $submit) {{-- Thay đổi nếu cần --}}
-                                                <tr>
-                                                    <td class="text-center">{{ $loop->iteration }}</td>
-                                                    <td>{{ $submit->student->name }}</td>
-                                                    <td class="text-center">{{ $submit->score }}</td>
-                                                </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
+                                    <div class="table-responsive" id="scoresContent">
+                                        <!-- Nội dung chi tiết điểm sẽ được tải vào đây -->
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
     </div>
-</div>
 
-<!-- Modal thêm học sinh -->
-<div class="modal fade" id="add-student-to-class-{{ Str::slug($class->name) }}" tabindex="-1" aria-labelledby="modal-title-{{ Str::slug($class->name) }}" aria-hidden="true">
-    <div class="modal-dialog">
-        <form action="{{ route('classes.addStudent') }}" method="post">
-            @csrf
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modal-title-{{ Str::slug($class->name) }}">Thêm học sinh vào Lớp {{ $class->name }}</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <!-- Modal thêm học sinh -->
+    <div class="modal fade" id="add-student-to-class-{{ Str::slug($class->name) }}" tabindex="-1"
+        aria-labelledby="modal-title-{{ Str::slug($class->name) }}" aria-hidden="true">
+        <div class="modal-dialog">
+            <form action="{{ route('classes.addStudent') }}" method="post">
+                @csrf
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modal-title-{{ Str::slug($class->name) }}">Thêm học sinh vào Lớp
+                            {{ $class->name }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <input type="hidden" name="class_id" value="{{ $class->id }}">
+                    <div class="modal-body">
+                        <select name="student_id" class="form-select" data-live-search="true" data-width="100%"
+                            title="Chọn học sinh...">
+                            @foreach ($studentsNotInClass as $student)
+                                <option value="{{ $student->id }}" data-tokens="{{ $student->name }}">
+                                    {{ $student->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                        <button type="submit" class="btn btn-primary">Lưu</button>
+                    </div>
                 </div>
-                <input type="hidden" name="class_id" value="{{ $class->id }}">
-                <div class="modal-body">
-                    <select name="student_id" class="form-select" data-live-search="true" data-width="100%" title="Chọn học sinh...">
-                        @foreach ($studentsNotInClass as $student)
-                            <option value="{{ $student->id }}" data-tokens="{{ $student->name }}">{{ $student->name }}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                    <button type="submit" class="btn btn-primary">Lưu</button>
-                </div>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
-</div>
 
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-<script>
-    function showAssignmentDetails(assignmentId) {
-        document.getElementById('assignment-list').classList.add('d-none');
-        document.getElementById('assignment-details').classList.remove('d-none');
+    <script>
+        function showAssignmentDetails(assignmentId) {
+            document.getElementById('assignment-list').classList.add('d-none');
+            document.getElementById('assignment-details').classList.remove('d-none');
 
-        // Lấy chi tiết bài tập và cập nhật nội dung
-        fetch(`/class/${assignmentId}/details`)
-            .then(response => response.json())
-            .then(data => {
-                // Cập nhật nội dung chi tiết bài tập
-                document.getElementById('Questions').innerHTML = data.questionsHtml;
-                document.getElementById('Scores').innerHTML = data.scoresHtml;
-            })
-            .catch(error => console.error('Error fetching assignment details:', error));
-    }
+            // Lấy chi tiết bài tập và cập nhật nội dung
+            fetch(`/class/assignment/${assignmentId}/details`)
+                .then(response => response.json())
+                .then(data => {
+                    // Cập nhật nội dung chi tiết bài tập
+                    document.getElementById('questionsContent').innerHTML = data.questionsHtml;
+                    document.getElementById('scoresContent').innerHTML = data.scoresHtml;
+                })
+                .catch(error => console.error('Error fetching assignment details:', error));
+        }
 
-    function hideAssignmentDetails() {
-        document.getElementById('assignment-list').classList.remove('d-none');
-        document.getElementById('assignment-details').classList.add('d-none');
-    }
-</script>
+        function hideAssignmentDetails() {
+            document.getElementById('assignment-list').classList.remove('d-none');
+            document.getElementById('assignment-details').classList.add('d-none');
+        }
+    </script>
 @endsection

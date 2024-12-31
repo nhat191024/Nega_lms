@@ -16,11 +16,6 @@ class Quiz extends Model
         return $this->belongsTo(QuizPackage::class);
     }
 
-    public function assignments()
-    {
-        return $this->belongsToMany(ClassAssignment::class, 'assignment_quizzes');
-    }
-
     public function courseAssignment()
     {
         return $this->hasMany(CourseQuiz::class);
@@ -28,6 +23,10 @@ class Quiz extends Model
 
     public function choices()
     {
-        return $this->hasMany(Choice::class);
+        return $this->hasMany(Choice::class, 'quiz_id');
+    }
+    public function assignments()
+    {
+        return $this->belongsToMany(ClassAssignment::class, 'assignment_quizzes', 'quiz_id', 'assignment_id');
     }
 }
