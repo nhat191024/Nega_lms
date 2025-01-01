@@ -216,7 +216,6 @@
             document.getElementById('assignment-list').classList.add('d-none');
             document.getElementById('assignment-details').classList.remove('d-none');
 
-            // Lấy chi tiết bài tập và cập nhật nội dung
             fetch(`/class/assignment/${assignmentId}/details`)
                 .then(response => response.json())
                 .then(data => {
