@@ -60,7 +60,7 @@
                 <button type="submit" class="btn btn-primary"
                     onclick="if(confirm('Bạn có chắc chắn muốn cập nhật thông tin lớp học này không?')) { document.submit()}">Cập
                     nhật</button>
-                <a href="{{ route('classes.index') }}" class="btn btn-secondary">Hủy</a>
+                    <a href="{{ route('classes.show', $class->id) }}" class="btn btn-secondary">Hủy</a>
             </form>
         </div>
     </div>

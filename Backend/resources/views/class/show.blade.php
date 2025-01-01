@@ -37,7 +37,7 @@
                                 {{ $class->status === 'published' ? 'Mở khóa' : 'Khóa' }}
                             </span>
                         </p>
-                        
+
                         <!-- Danh mục lớp học -->
                         <div class="mt-3">
                             <strong>Danh mục lớp học:</strong>
@@ -53,7 +53,7 @@
                         </div>
 
                         <div class="d-flex justify-content-start mt-3">
-                            <a href="{{ route('classes.editClass', $class->id) }}" class="btn btn-warning me-2">Sửa</a>
+                            <a href="{{ route('classes.editClass', $class->id) }}" class="btn btn-warning me-2" style="color: white;">Sửa</a>
 
                             <form action="{{ route('classes.toggleStatus', $class->id) }}" method="POST" class="d-inline">
                                 @csrf
