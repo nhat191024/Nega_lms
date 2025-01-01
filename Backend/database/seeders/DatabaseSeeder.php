@@ -56,13 +56,13 @@ class DatabaseSeeder extends Seeder
                 ]);
             }
 
-            foreach ($row['quizzes'] as $quiz) {
+            foreach ($row['quizzes'] as $quizzes) {
                 $quiz = Quiz::create([
                     'quiz_package_id' => $quizPackage->id,
-                    'question' => $quiz['question'],
+                    'question' => $quizzes['question'],
                 ]);
 
-                foreach ($quiz['choices'] as $choice) {
+                foreach ($quizzes['choices'] as $choice) {
                     Choice::create([
                         'quiz_id' => $quiz->id,
                         'choice' => $choice['choice'],
