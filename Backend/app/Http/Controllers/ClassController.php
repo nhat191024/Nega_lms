@@ -183,4 +183,24 @@ class ClassController extends Controller
             'scoresHtml' => $scoresHtml,
         ]);
     }
+
+    public function lockClass($class_id)
+    {
+        $class = Classes::find($class_id);
+        if ($class) {
+            $class->status = 'locked';
+            $class->save();
+            return redirect()->back()->with('success', 'Lớp đã được khóa.');
+        }
+        return redirect()->back()->with('error', 'Lớp không tồn tại.');
+    }
+
+
+    public function unlockClass($class_id)
+    {
+        $class = Classes::findOrFail($class_id);
+        $class->status = 'published';
+        $class->save();
+        return redirect()->back()->with('success', 'Lớp đã được mở khóa.');
+    }
 }

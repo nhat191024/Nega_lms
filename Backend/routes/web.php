@@ -35,6 +35,8 @@ Route::prefix('class')->name('classes.')->group(function () {
     Route::get('/{id}', [ClassController::class, 'show'])->name('show');
     Route::get('/{id}/assignment/{assignment_id}', [ClassController::class, 'show'])->name('assignmentDetails');
     Route::get('/assignment/{assignment_id}/details', [ClassController::class, 'assignmentDetailsJson'])->name('assignmentDetailsJson');
+    Route::get('/{class_id}/lock', [ClassController::class, 'lockClass'])->name('class.lockClass');
+    Route::get('/{class_id}/unlock', [ClassController::class, 'unlockClass'])->name('class.unlockClass');
 });
 
 Route::prefix('/assignment')->name('assignments.')->group(function () {
@@ -46,5 +48,5 @@ Route::prefix('/assignment')->name('assignments.')->group(function () {
     Route::put('/{id}', [AssignmentController::class, 'update'])->name('update');
     Route::delete('/delete/{id}', [AssignmentController::class, 'destroy'])->name('destroy');
     Route::get('/assignments/visibility/{id}', [AssignmentController::class, 'toggleVisibility'])
-    ->name('assignments.visibility');
+        ->name('assignments.visibility');
 });

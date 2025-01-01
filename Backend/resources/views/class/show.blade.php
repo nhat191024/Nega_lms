@@ -135,7 +135,6 @@
                             </div>
                             <div class="tab-pane fade" id="Scores" role="tabpanel" aria-labelledby="scores-tab">
                                 <div class="mt-3">
-                                    <h3>Điểm của học sinh</h3>
                                     <div class="table-responsive" id="scoresContent">
                                         <!-- Nội dung chi tiết điểm sẽ được tải vào đây -->
                                     </div>
