@@ -184,23 +184,18 @@ class ClassController extends Controller
         ]);
     }
 
-    public function lockClass($class_id)
+    public function toggleClassStatus(Request $request, $id)
     {
-        $class = Classes::find($class_id);
-        if ($class) {
-            $class->status = 'locked';
-            $class->save();
-            return redirect()->back()->with('success', 'Lớp đã được khóa.');
+        $class = Classes::findOrFail($id);
+    
+        $newStatus = $request->input('status');
+        if (!in_array($newStatus, ['locked', 'published'])) {
+            return redirect()->back()->with('error', 'Trạng thái không hợp lệ!');
         }
-        return redirect()->back()->with('error', 'Lớp không tồn tại.');
-    }
-
-
-    public function unlockClass($class_id)
-    {
-        $class = Classes::findOrFail($class_id);
-        $class->status = 'published';
-        $class->save();
-        return redirect()->back()->with('success', 'Lớp đã được mở khóa.');
-    }
+    
+        $class->update(['status' => $newStatus]);
+    
+        $message = $newStatus === 'locked' ? 'Lớp đã được khóa.' : 'Lớp đã được mở khóa.';
+        return redirect()->back()->with('success', $message);
+    }    
 }

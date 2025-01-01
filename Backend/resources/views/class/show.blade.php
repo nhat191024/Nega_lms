@@ -2,6 +2,10 @@
 @section('title', 'Chi tiết lớp học')
 @section('content')
     <div class="container mt-5">
+        <a href="{{ route('classes.index') }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Quay lại danh sách lớp học
+        </a>        
+        
         <h1 class="text-center mb-4">Chi tiết lớp học: {{ $class->name }}</h1>
         <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item">
@@ -27,22 +31,30 @@
                         <p class="card-text"><strong>Tên lớp:</strong> {{ $class->name }}</p>
                         <p class="card-text"><strong>Mã lớp:</strong> {{ $class->code }}</p>
                         <p class="card-text"><strong>Giảng viên:</strong> {{ $class->teacher->name }}</p>
-                        <p class="card-text"><strong>Trạng thái:</strong>
-                            {{ $class->status === 'published' ? 'Hiển thị' : 'Ẩn' }}</p>
+                        <p class="card-text">
+                            <strong>Trạng thái:</strong>
+                            <span class="badge {{ $class->status === 'published' ? 'bg-success' : 'bg-danger' }}">
+                                {{ $class->status === 'published' ? 'Mở khóa' : 'Khóa' }}
+                            </span>
+                        </p>                        
 
                         <div class="d-flex justify-content-start mt-3">
                             <a href="{{ route('classes.editClass', $class->id) }}" class="btn btn-warning me-2">Sửa</a>
-                            @if ($class->status === 'published')
-                                <a class="btn btn-danger me-2"
-                                    onclick="event.preventDefault(); if (confirm('Bạn chắc chắn muốn ẩn lớp {{ $class->name }} chứ?')) { window.location.href = '{{ route('classes.hideClass', ['class_id' => $class->id]) }}'; }">Ẩn
-                                    lớp</a>
-                            @else
-                                <button class="btn btn-secondary me-2"
-                                    onclick="event.preventDefault(); if (confirm('Bạn chắc chắn muốn hiện Lớp {{ $class->name }} chứ?')) { window.location.href = '{{ route('classes.hideClass', ['class_id' => $class->id]) }}'; }">Hiển
-                                    thị</button>
-                            @endif
-                            <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                data-bs-target="#add-student-to-class-{{ Str::slug($class->name) }}">Thêm học sinh</button>
+
+                            <form action="{{ route('classes.toggleStatus', $class->id) }}" method="POST" class="d-inline">
+                                @csrf
+                                <input type="hidden" name="status" value="{{ $class->status === 'published' ? 'locked' : 'published' }}">
+                                @if($class->status === 'published')
+                                    <button type="submit" class="btn btn-danger">
+                                        <i class="fas fa-lock"></i> Khóa lớp
+                                    </button>
+                                @else
+                                    <button type="submit" class="btn btn-success">
+                                        <i class="fas fa-unlock"></i> Mở khóa lớp
+                                    </button>
+                                @endif
+                            </form>                            
+
                         </div>
                     </div>
                 </div>
@@ -112,7 +124,7 @@
                 <!-- Chi tiết bài tập -->
                 <div class="card mt-3 d-none" id="assignment-details">
                     <div class="card-body">
-                        <button class="btn btn-secondary mb-3" onclick="hideAssignmentDetails()">Quay lại danh sách bài
+                        <button class="btn btn-secondary mb-3" onclick="hideAssignmentDetails()"><i class="fas fa-arrow-left me-2"></i>Quay lại danh sách bài
                             tập</button>
                         <ul class="nav nav-tabs" id="assignmentDetailsTab" role="tablist">
                             <li class="nav-item">

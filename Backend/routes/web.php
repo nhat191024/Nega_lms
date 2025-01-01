@@ -35,8 +35,7 @@ Route::prefix('class')->name('classes.')->group(function () {
     Route::get('/{id}', [ClassController::class, 'show'])->name('show');
     Route::get('/{id}/assignment/{assignment_id}', [ClassController::class, 'show'])->name('assignmentDetails');
     Route::get('/assignment/{assignment_id}/details', [ClassController::class, 'assignmentDetailsJson'])->name('assignmentDetailsJson');
-    Route::get('/{class_id}/lock', [ClassController::class, 'lockClass'])->name('class.lockClass');
-    Route::get('/{class_id}/unlock', [ClassController::class, 'unlockClass'])->name('class.unlockClass');
+    Route::post('/{id}/toggle-status', [ClassController::class, 'toggleClassStatus'])->name('toggleStatus');
 });
 
 Route::prefix('/assignment')->name('assignments.')->group(function () {
