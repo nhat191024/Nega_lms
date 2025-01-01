@@ -4,13 +4,13 @@
     <div class="container mt-5">
         <a href="{{ route('classes.index') }}" class="btn btn-secondary">
             <i class="fas fa-arrow-left me-2"></i>Quay lại danh sách lớp học
-        </a>        
-        
+        </a>
+
         <h1 class="text-center mb-4">Chi tiết lớp học: {{ $class->name }}</h1>
         <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item">
-                <a class="nav-link active" id="info-tab" data-toggle="tab" href="#Info" role="tab" aria-controls="Info"
-                    aria-selected="true">Thông tin lớp học</a>
+                <a class="nav-link active" id="info-tab" data-toggle="tab" href="#Info" role="tab"
+                    aria-controls="Info" aria-selected="true">Thông tin lớp học</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" id="students-tab" data-toggle="tab" href="#Students" role="tab"
@@ -36,15 +36,30 @@
                             <span class="badge {{ $class->status === 'published' ? 'bg-success' : 'bg-danger' }}">
                                 {{ $class->status === 'published' ? 'Mở khóa' : 'Khóa' }}
                             </span>
-                        </p>                        
+                        </p>
+                        
+                        <!-- Danh mục lớp học -->
+                        <div class="mt-3">
+                            <strong>Danh mục lớp học:</strong>
+                            @if ($class->categories->isEmpty())
+                                <p>Không có danh mục cho lớp học này.</p>
+                            @else
+                                <div class="d-flex flex-wrap">
+                                    @foreach ($class->categories as $category)
+                                        <span class="badge bg-info me-2 mb-2">{{ $category->name }}</span>
+                                    @endforeach
+                                </div>
+                            @endif
+                        </div>
 
                         <div class="d-flex justify-content-start mt-3">
                             <a href="{{ route('classes.editClass', $class->id) }}" class="btn btn-warning me-2">Sửa</a>
 
                             <form action="{{ route('classes.toggleStatus', $class->id) }}" method="POST" class="d-inline">
                                 @csrf
-                                <input type="hidden" name="status" value="{{ $class->status === 'published' ? 'locked' : 'published' }}">
-                                @if($class->status === 'published')
+                                <input type="hidden" name="status"
+                                    value="{{ $class->status === 'published' ? 'locked' : 'published' }}">
+                                @if ($class->status === 'published')
                                     <button type="submit" class="btn btn-danger">
                                         <i class="fas fa-lock"></i> Khóa lớp
                                     </button>
@@ -53,7 +68,7 @@
                                         <i class="fas fa-unlock"></i> Mở khóa lớp
                                     </button>
                                 @endif
-                            </form>                            
+                            </form>
 
                         </div>
                     </div>
@@ -124,7 +139,8 @@
                 <!-- Chi tiết bài tập -->
                 <div class="card mt-3 d-none" id="assignment-details">
                     <div class="card-body">
-                        <button class="btn btn-secondary mb-3" onclick="hideAssignmentDetails()"><i class="fas fa-arrow-left me-2"></i>Quay lại danh sách bài
+                        <button class="btn btn-secondary mb-3" onclick="hideAssignmentDetails()"><i
+                                class="fas fa-arrow-left me-2"></i>Quay lại danh sách bài
                             tập</button>
                         <ul class="nav nav-tabs" id="assignmentDetailsTab" role="tablist">
                             <li class="nav-item">

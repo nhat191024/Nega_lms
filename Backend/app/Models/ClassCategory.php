@@ -11,9 +11,9 @@ class ClassCategory extends Model
         'category_id',
     ];
 
-    public function class()
+    public function classes()
     {
-        return $this->belongsTo(Classes::class);
+        return $this->belongsToMany(Classes::class, 'class_categories', 'category_id', 'class_id');
     }
 
     public function category()
