@@ -49,7 +49,10 @@ Route::prefix('/assignment')->name('assignments.')->group(function () {
 
 Route::prefix('/quiz-bank')->name('quiz-bank.')->group(function() {
     Route::get('/', [QuizBankController::class, 'index'])->name('index');
-    Route::get('/create', [QuizBankController::class, 'createQuizBank'])->name('create');
-    Route::post('/add', [QuizBankController::class, 'addQuestion'])->name('add');
-    Route::get('/hidden', [QuizBankController::class, 'hidden'])->name('hidden');
+    Route::get('/createQuizBank', [QuizBankController::class, 'createQuizBank'])->name('createQuizBank');
+    Route::post('/addQuestion', [QuizBankController::class, 'addQuestion'])->name('addQuestion');
+    Route::post('/updateQuestion', [QuizBankController::class, 'updateQuestion'])->name('updateQuestion');
+    Route::post('/updateQuizBank', [QuizBankController::class, 'updateQuizBank'])->name('updateQuizBank');
+    Route::get('/hiddenQuizBank/{id}', [QuizBankController::class, 'hiddenQuizBank'])->name('hiddenQuizBank');
+    Route::get('/showQuizBank/{id}', [QuizBankController::class, 'showQuizBank'])->name('showQuizBank');
 });
