@@ -26,51 +26,31 @@
                         <td class="text-center">{{ $index + 1 }}</td>
                         <td class="text-center">{{ $category->name }}</td>
                         <td class="text-center">
-                            <div class="accordion" id="accordionParent{{ $category->id }}">
-                                <div class="accordion-item">
-                                    <h2 class="accordion-header" id="headingParent{{ $category->id }}">
-                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                                data-bs-target="#collapseParent{{ $category->id }}"
-                                                aria-expanded="false" aria-controls="collapseParent{{ $category->id }}">
-                                            {{ $category->name }}
-                                        </button>
-                                    </h2>
-                                    <div id="collapseParent{{ $category->id }}" class="accordion-collapse collapse"
-                                         aria-labelledby="headingParent{{ $category->id }}"
-                                         data-bs-parent="#accordionParent{{ $category->id }}">
-                                        <div class="accordion-body">
-
-
-                                            <!-- Danh sách các danh mục con -->
-                                            @if ($category->children->isNotEmpty())
-                                                <p><strong>Danh mục con:</strong></p>
-                                                <ul>
-                                                    @foreach ($category->children as $child)
-                                                        <li>{{ $child->name }} (ID: {{ $child->id }})</li>
-                                                    @endforeach
-                                                </ul>
-                                            @else
-                                                <p>Không có danh mục con.</p>
-                                            @endif
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            @if ($category->parent)
+                                {{ $category->parent->name }} (ID: {{ $category->parent->id }})
+                            @else
+                                Không có danh mục cha
+                            @endif
                         </td>
-
                         <td class="text-center">
-                            <span class="badge {{ $category->status ? 'bg-success' : 'bg-danger' }}">
-                                {{ $category->status ? 'Hiển Thị' : 'Ẩn' }}
+                            <span class="badge {{ $category->status === 'active' ? 'bg-success' : 'bg-danger' }}">
+                                {{ $category->status === 'active' ? 'Hiển Thị' : 'Ẩn' }}
                             </span>
                         </td>
                         <td class="text-center">
                             <a href="{{ route('categories.edit', $category->id) }}" class="btn btn-warning btn-sm">
                                 Sửa
                             </a>
-                            <a href="{{ route('categories.toggleStatus', $category->id) }}"
-                               class="btn {{ $category->status ? 'btn-danger' : 'btn-success' }} btn-sm">
-                                {{ $category->status ? 'Ẩn' : 'Hiển Thị' }}
+                            <a href="{{ route('categories.status', $category->id) }}"
+                               class="btn {{ $category->status === 'active' ? 'btn-danger' : 'btn-success' }} btn-sm">
+                                {{ $category->status === 'active' ? 'Ẩn' : 'Hiển Thị' }}
                             </a>
+                            <form action="{{ route('categories.destroy', $category->id) }}" method="POST" style="display: inline-block;"
+                                  onsubmit="return confirm('Bạn có chắc chắn muốn xóa danh mục này không?');">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger btn-sm">Xóa</button>
+                            </form>
                         </td>
                     </tr>
                 @endforeach
