@@ -21,7 +21,6 @@
                                         <th class="text-center">STT</th>
                                         <th class="text-center">Email</th>
                                         <th class="text-center">Avatar</th>
-                                        <th class="text-center">Mật khẩu</th>
                                         <th class="text-center">Tên</th>
                                         <th class="text-center">Giới tính</th>
                                         <th class="text-center">Vai trò</th>
@@ -35,9 +34,8 @@
                                             <td class="text-center">{{ $loop->iteration }}</td>
                                             <td class="text-center">{{ $user->email }}</td>
                                             <td class="text-center">
-                                                <img src="{{ url('storage/app/public/'. $user->avatar) }}" alt="Avatar" class="img-thumbnail" width="50">
+                                                <img src="{{ asset($user->avatar) }}" alt="Avatar" class="img-thumbnail" width="50">
                                             </td>
-                                            <td class="text-center">********</td>
                                             <td class="text-center">{{ $user->name }}</td>
                                             <td class="text-center">
                                                 @if ($user->gender == 'male')
@@ -76,7 +74,6 @@
                                         <th class="text-center">STT</th>
                                         <th class="text-center">Email</th>
                                         <th class="text-center">Avatar</th>
-                                        <th class="text-center">Mật khẩu</th>
                                         <th class="text-center">Tên</th>
                                         <th class="text-center">Giới tính</th>
                                         <th class="text-center">Vai trò</th>
