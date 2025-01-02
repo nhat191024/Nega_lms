@@ -53,7 +53,8 @@
                         </div>
 
                         <div class="d-flex justify-content-start mt-3">
-                            <a href="{{ route('classes.editClass', $class->id) }}" class="btn btn-warning me-2" style="color: white;">Sửa</a>
+                            <a href="{{ route('classes.editClass', $class->id) }}" class="btn btn-warning me-2"
+                                style="color: white;">Sửa</a>
 
                             <form action="{{ route('classes.toggleStatus', $class->id) }}" method="POST" class="d-inline">
                                 @csrf
@@ -125,11 +126,11 @@
                     <div class="card-body">
                         <h3 class="card-title">Bài tập</h3>
                         <ul class="list-group">
-                            @foreach ($class->assignments as $assignmentItem)
+                            @foreach ($class->assignments as $assignment)
                                 <li class="list-group-item d-flex justify-content-between align-items-center">
-                                    <span>{{ $assignmentItem->title }}</span>
+                                    <span>{{ $assignment->title }}</span>
                                     <button class="btn btn-primary btn-sm"
-                                        onclick="showAssignmentDetails({{ $assignmentItem->id }})">Xem chi tiết</button>
+                                        onclick="showAssignmentDetails({{ $assignment->id }})">Xem chi tiết</button>
                                 </li>
                             @endforeach
                         </ul>
@@ -138,40 +139,33 @@
 
                 <!-- Chi tiết bài tập -->
                 <div class="card mt-3 d-none" id="assignment-details">
-                    <div class="card-body">
-                        <button class="btn btn-secondary mb-3" onclick="hideAssignmentDetails()"><i
-                                class="fas fa-arrow-left me-2"></i>Quay lại danh sách bài
-                            tập</button>
+                    <div class="card-body"> <button class="btn btn-secondary mb-3" onclick="hideAssignmentDetails()"> <i
+                                class="fas fa-arrow-left me-2"></i> Quay lại danh sách bài tập </button>
                         <ul class="nav nav-tabs" id="assignmentDetailsTab" role="tablist">
-                            <li class="nav-item">
-                                <a class="nav-link active" id="questions-tab" data-toggle="tab" href="#Questions"
-                                    role="tab" aria-controls="Questions" aria-selected="true">Câu hỏi</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" id="scores-tab" data-toggle="tab" href="#Scores" role="tab"
-                                    aria-controls="Scores" aria-selected="false">Điểm</a>
-                            </li>
+                            <li class="nav-item"> <a class="nav-link active" id="questions-tab" data-toggle="tab"
+                                    href="#Questions" role="tab" aria-controls="Questions" aria-selected="true">Câu
+                                    hỏi</a> </li>
+                            <li class="nav-item d-none" id="scores-tab-container"> <a class="nav-link" id="scores-tab"
+                                    data-toggle="tab" href="#Scores" role="tab" aria-controls="Scores"
+                                    aria-selected="false">Điểm</a> </li>
                         </ul>
                         <div class="tab-content" id="assignmentDetailsTabContent">
                             <div class="tab-pane fade show active" id="Questions" role="tabpanel"
                                 aria-labelledby="questions-tab">
                                 <div class="mt-3">
-                                    <ul class="list-group" id="questionsContent">
-                                        <!-- Nội dung chi tiết câu hỏi sẽ được tải vào đây -->
-                                    </ul>
+                                    <div id="questionsContent"> <!-- Nội dung chi tiết câu hỏi sẽ được tải vào đây -->
+                                    </div>
                                 </div>
                             </div>
                             <div class="tab-pane fade" id="Scores" role="tabpanel" aria-labelledby="scores-tab">
                                 <div class="mt-3">
                                     <div class="table-responsive" id="scoresContent">
-                                        <!-- Nội dung chi tiết điểm sẽ được tải vào đây -->
-                                    </div>
+                                        <!-- Nội dung chi tiết điểm sẽ được tải vào đây --> </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
@@ -212,23 +206,31 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
     <script>
-        function showAssignmentDetails(assignmentId) {
-            document.getElementById('assignment-list').classList.add('d-none');
-            document.getElementById('assignment-details').classList.remove('d-none');
+function showAssignmentDetails(assignmentId) {
+    document.getElementById('assignment-list').classList.add('d-none');
+    document.getElementById('assignment-details').classList.remove('d-none');
 
-            fetch(`/class/assignment/${assignmentId}/details`)
-                .then(response => response.json())
-                .then(data => {
-                    // Cập nhật nội dung chi tiết bài tập
-                    document.getElementById('questionsContent').innerHTML = data.questionsHtml;
-                    document.getElementById('scoresContent').innerHTML = data.scoresHtml;
-                })
-                .catch(error => console.error('Error fetching assignment details:', error));
-        }
+    fetch(`/class/assignment/${assignmentId}/details`)
+        .then(response => response.json())
+        .then(data => {
+            let questionsHtml = '';
+            if (data.assignment.type === 'lab') {
+                questionsHtml = `<p>${data.description}</p>`;
+                document.getElementById('scores-tab-container').classList.add('d-none');
+            } else if (data.assignment.type === 'quiz') {
+                questionsHtml = data.questionsHtml;
+                document.getElementById('scoresContent').innerHTML = data.scoresHtml;
+                document.getElementById('scores-tab-container').classList.remove('d-none');
+            }
+            document.getElementById('questionsContent').innerHTML = questionsHtml;
+        })
+        .catch(error => console.error('Error fetching assignment details:', error));
+}
 
-        function hideAssignmentDetails() {
-            document.getElementById('assignment-list').classList.remove('d-none');
-            document.getElementById('assignment-details').classList.add('d-none');
-        }
+function hideAssignmentDetails() {
+    document.getElementById('assignment-list').classList.remove('d-none');
+    document.getElementById('assignment-details').classList.add('d-none');
+}
+
     </script>
 @endsection
