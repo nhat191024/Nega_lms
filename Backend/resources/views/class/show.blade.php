@@ -46,17 +46,21 @@
                             @else
                                 <div class="d-flex flex-wrap">
                                     @foreach ($class->categories as $category)
-                                        <span class="badge bg-info me-2 mb-2">{{ $category->name }}</span>
+                                        <!-- Badge với kích thước vừa phải -->
+                                        <span class="badge bg-info me-2 mb-2 fs-6 py-2 px-3">{{ $category->name }}</span>
                                     @endforeach
                                 </div>
                             @endif
                         </div>
 
+
+
                         <div class="d-flex justify-content-start mt-3">
                             <a href="{{ route('classes.editClass', $class->id) }}" class="btn btn-warning me-2"
                                 style="color: white;">Sửa</a>
 
-                            <form action="{{ route('classes.toggleStatus', $class->id) }}" method="POST" class="d-inline me-2">
+                            <form action="{{ route('classes.toggleStatus', $class->id) }}" method="POST"
+                                class="d-inline me-2">
                                 @csrf
                                 <input type="hidden" name="status"
                                     value="{{ $class->status === 'published' ? 'locked' : 'published' }}">
@@ -74,7 +78,6 @@
                             <a href="{{ route('classes.export', $class->id) }}" class="btn btn-success me-2">
                                 <i class="fas fa-download me-2"></i>Xuất thông tin lớp học
                             </a>
-
                         </div>
                     </div>
                 </div>
@@ -133,6 +136,38 @@
                 </div>
             </div>
 
+            <!-- Modal thêm học sinh -->
+            <div class="modal fade" id="add-student-to-class-{{ Str::slug($class->name) }}" tabindex="-1"
+                aria-labelledby="modal-title-{{ Str::slug($class->name) }}" aria-hidden="true">
+                <div class="modal-dialog">
+                    <form action="{{ route('classes.addStudent') }}" method="post">
+                        @csrf
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modal-title-{{ Str::slug($class->name) }}">Thêm học sinh
+                                    vào Lớp {{ $class->name }}</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <input type="hidden" name="class_id" value="{{ $class->id }}">
+                            <div class="modal-body">
+                                <select name="student_id" class="form-select" data-live-search="true" data-width="100%"
+                                    title="Chọn học sinh...">
+                                    @foreach ($studentsNotInClass as $student)
+                                        <option value="{{ $student->id }}" data-tokens="{{ $student->name }}">
+                                            {{ $student->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                                <button type="submit" class="btn btn-primary">Lưu</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
             <!-- Tab Bài tập -->
             <div class="tab-pane fade" id="Assignments" role="tabpanel" aria-labelledby="assignments-tab">
                 <div class="card mt-3" id="assignment-list">
@@ -141,77 +176,44 @@
                         <ul class="list-group">
                             @foreach ($class->assignments as $assignment)
                                 <li class="list-group-item d-flex justify-content-between align-items-center">
-                                    <span>{{ $assignment->title }}</span>
-                                    <button class="btn btn-primary btn-sm"
+                                    <span>{{ $assignment->title }}</span> <button class="btn btn-primary btn-sm"
                                         onclick="showAssignmentDetails({{ $assignment->id }})">Xem chi tiết</button>
                                 </li>
                             @endforeach
                         </ul>
                     </div>
                 </div>
+            </div>
 
-                <!-- Chi tiết bài tập -->
-                <div class="card mt-3 d-none" id="assignment-details">
-                    <div class="card-body"> <button class="btn btn-secondary mb-3" onclick="hideAssignmentDetails()"> <i
-                                class="fas fa-arrow-left me-2"></i> Quay lại danh sách bài tập </button>
-                        <ul class="nav nav-tabs" id="assignmentDetailsTab" role="tablist">
-                            <li class="nav-item"> <a class="nav-link active" id="questions-tab" data-toggle="tab"
-                                    href="#Questions" role="tab" aria-controls="Questions" aria-selected="true">Câu
-                                    hỏi</a> </li>
-                            <li class="nav-item d-none" id="scores-tab-container"> <a class="nav-link" id="scores-tab"
-                                    data-toggle="tab" href="#Scores" role="tab" aria-controls="Scores"
-                                    aria-selected="false">Điểm</a> </li>
-                        </ul>
-                        <div class="tab-content" id="assignmentDetailsTabContent">
-                            <div class="tab-pane fade show active" id="Questions" role="tabpanel"
-                                aria-labelledby="questions-tab">
-                                <div class="mt-3">
-                                    <div id="questionsContent"> <!-- Nội dung chi tiết câu hỏi sẽ được tải vào đây -->
-                                    </div>
-                                </div>
+            <!-- Chi tiết bài tập -->
+            <div class="card mt-3 d-none" id="assignment-details">
+                <div class="card-body"> <button class="btn btn-secondary mb-3" onclick="hideAssignmentDetails()"> <i
+                            class="fas fa-arrow-left me-2"></i> Quay lại danh sách bài tập </button>
+                    <ul class="nav nav-tabs" id="assignmentDetailsTab" role="tablist">
+                        <li class="nav-item"> <a class="nav-link active" id="questions-tab" data-toggle="tab"
+                                href="#Questions" role="tab" aria-controls="Questions" aria-selected="true">Câu
+                                hỏi</a> </li>
+                        <li class="nav-item d-none" id="scores-tab-container"> <a class="nav-link" id="scores-tab"
+                                data-toggle="tab" href="#Scores" role="tab" aria-controls="Scores"
+                                aria-selected="false">Điểm</a> </li>
+                    </ul>
+                    <div class="tab-content" id="assignmentDetailsTabContent">
+                        <div class="tab-pane fade show active" id="Questions" role="tabpanel"
+                            aria-labelledby="questions-tab">
+                            <div class="mt-3">
+                                <div id="questionsContent"> <!-- Nội dung chi tiết câu hỏi sẽ được tải vào đây --> </div>
                             </div>
-                            <div class="tab-pane fade" id="Scores" role="tabpanel" aria-labelledby="scores-tab">
-                                <div class="mt-3">
-                                    <div class="table-responsive" id="scoresContent">
-                                        <!-- Nội dung chi tiết điểm sẽ được tải vào đây -->
-                                    </div>
+                        </div>
+                        <div class="tab-pane fade" id="Scores" role="tabpanel" aria-labelledby="scores-tab">
+                            <div class="mt-3">
+                                <div class="table-responsive" id="scoresContent">
+                                    <!-- Nội dung chi tiết điểm sẽ được tải vào đây -->
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-
-    <!-- Modal thêm học sinh -->
-    <div class="modal fade" id="add-student-to-class-{{ Str::slug($class->name) }}" tabindex="-1"
-        aria-labelledby="modal-title-{{ Str::slug($class->name) }}" aria-hidden="true">
-        <div class="modal-dialog">
-            <form action="{{ route('classes.addStudent') }}" method="post">
-                @csrf
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="modal-title-{{ Str::slug($class->name) }}">Thêm học sinh vào Lớp
-                            {{ $class->name }}</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <input type="hidden" name="class_id" value="{{ $class->id }}">
-                    <div class="modal-body">
-                        <select name="student_id" class="form-select" data-live-search="true" data-width="100%"
-                            title="Chọn học sinh...">
-                            @foreach ($studentsNotInClass as $student)
-                                <option value="{{ $student->id }}" data-tokens="{{ $student->name }}">
-                                    {{ $student->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                        <button type="submit" class="btn btn-primary">Lưu</button>
-                    </div>
-                </div>
-            </form>
         </div>
     </div>
 
@@ -228,15 +230,19 @@
                 .then(response => response.json())
                 .then(data => {
                     let questionsHtml = '';
+                    let scoresHtml = '';
+
                     if (data.assignment.type === 'lab') {
-                        questionsHtml = `<p>${data.description}</p>`;
+                        questionsHtml = `<p>${data.assignment.description}</p>`;
                         document.getElementById('scores-tab-container').classList.add('d-none');
                     } else if (data.assignment.type === 'quiz') {
                         questionsHtml = data.questionsHtml;
-                        document.getElementById('scoresContent').innerHTML = data.scoresHtml;
+                        scoresHtml = data.scoresHtml;
                         document.getElementById('scores-tab-container').classList.remove('d-none');
                     }
+
                     document.getElementById('questionsContent').innerHTML = questionsHtml;
+                    document.getElementById('scoresContent').innerHTML = scoresHtml;
                 })
                 .catch(error => console.error('Error fetching assignment details:', error));
         }
@@ -245,5 +251,10 @@
             document.getElementById('assignment-list').classList.remove('d-none');
             document.getElementById('assignment-details').classList.add('d-none');
         }
+
+        document.getElementById('class-info-tab').addEventListener('click', function() {
+            hideAssignmentDetails();
+        });
     </script>
+
 @endsection

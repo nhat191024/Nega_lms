@@ -24,7 +24,7 @@ class ClassController extends Controller
                 });
         }
 
-        $perPage = $request->get('per_page', 25);  // Số lượng lớp học hiển thị mỗi trang, mặc định là 25
+        $perPage = $request->get('per_page', 25);
         $classes = $query->paginate($perPage);
 
         $studentsNotInClass = [];
@@ -159,7 +159,6 @@ class ClassController extends Controller
             'description' => $request->description,
             'teacher_id' => $request->teacher_id,
         ]);
-
         return redirect()->route('classes.index')->with('success', 'Lớp học đã được cập nhật.');
     }
 
@@ -167,7 +166,6 @@ class ClassController extends Controller
     {
         $class = Classes::with(['assignments.quizzes.choices'])->findOrFail($id);
 
-        // Lấy danh sách học sinh chưa có trong lớp
         $studentsNotInClass = User::where('role_id', 3)
             ->whereDoesntHave('enrollments', function ($query) use ($class) {
                 $query->where('class_id', $class->id);
@@ -180,12 +178,15 @@ class ClassController extends Controller
 
     public function assignmentDetailsJson($assignment_id)
     {
-        $assignment = ClassAssignment::with('quizzes.choices')->findOrFail($assignment_id);
+        $assignment = ClassAssignment::with(['quizzes.choices', 'submits.student'])->findOrFail($assignment_id);
+
+        $questionsHtml = view('partials.assignment_questions', compact('assignment'))->render();
+        $scoresHtml = view('partials.assignment_scores', compact('assignment'))->render();
 
         return response()->json([
             'assignment' => $assignment,
-            'questionsHtml' => $assignment->type == 'quiz' ? view('partials.assignment_questions', compact('assignment'))->render() : null,
-            'description' => $assignment->type == 'lab' ? $assignment->description : null,
+            'questionsHtml' => $questionsHtml,
+            'scoresHtml' => $scoresHtml,
         ]);
     }
 
@@ -209,7 +210,6 @@ class ClassController extends Controller
         $class = Classes::with(['assignments'])->findOrFail($id);
         $students = $class->students()->where('role_id', 3)->get();
 
-        // Chuẩn bị dữ liệu
         $data = [
             ['Thông tin lớp học'],
             ['Tên lớp', $class->name],
@@ -241,10 +241,8 @@ class ClassController extends Controller
             ];
         }
 
-        // Sử dụng Excel::download() thay vì Excel::raw()
         $fileName = 'class-' . $class->id . '-details.xlsx';
 
-        // Tạo và trả về file Excel
         return Excel::download(new class($data) implements FromArray {
             protected $data;
 
@@ -268,22 +266,19 @@ class ClassController extends Controller
 
         $class = Classes::findOrFail($id);
 
-        // Đọc dữ liệu từ file Excel
         $path = $request->file('file')->getRealPath();
         $data = Excel::toArray([], $path);
 
         if (!empty($data[0])) {
             foreach ($data[0] as $row) {
                 if (isset($row[1], $row[2])) {
-                    // Thêm học sinh vào lớp (nếu chưa có)
                     $user = User::where('email', $row[2])->where('role_id', 3)->first();
                     if ($user) {
-                        $class->users()->syncWithoutDetaching([$user->id]); // Liên kết học sinh với lớp
+                        $class->users()->syncWithoutDetaching([$user->id]);
                     }
                 }
             }
         }
-
         return back()->with('success', 'Danh sách học sinh đã được nhập thành công!');
     }
 }

@@ -20,7 +20,7 @@ class ClassAssignment extends Model
 
     public function class()
     {
-        return $this->belongsTo(Classes::class, 'class_id'); // Sử dụng đúng cột 'class_id'
+        return $this->belongsTo(Classes::class, 'class_id'); 
     }
 
     public function submits()
