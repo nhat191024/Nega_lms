@@ -472,12 +472,23 @@
                                                                                                 </script>
 
                                                                                                 <!-- Nút xóa -->
-                                                                                                <a class="btn btn-danger btn-sm"
-                                                                                                    title="Xóa câu hỏi"
-                                                                                                    href="#">
-                                                                                                    <i
-                                                                                                        class="fas fa-trash"></i>
-                                                                                                </a>
+                                                                                                <form action="{{ route('quiz-bank.deleteQuestion') }}" method="post" id="deleteForm_{{ $question->id }}">
+                                                                                                    @csrf
+                                                                                                    <input type="hidden" name="question_id" value="{{ $question->id }}">
+                                                                                                    <button class="btn btn-danger btn-sm" title="Xóa câu hỏi" type="button" onclick="confirmDelete({{ $question->id }})">
+                                                                                                        <i class="fas fa-trash"></i>
+                                                                                                    </button>
+                                                                                                </form>
+                                                                                                
+                                                                                                <script>
+                                                                                                    function confirmDelete(questionId) {
+                                                                                                        // Hiển thị hộp thoại xác nhận
+                                                                                                        if (confirm('Bạn có chắc chắn muốn xóa câu hỏi này không?')) {
+                                                                                                            // Nếu người dùng chọn OK, gửi form
+                                                                                                            document.getElementById('deleteForm_' + questionId).submit();
+                                                                                                        }
+                                                                                                    }
+                                                                                                </script>
                                                                                             </td>
                                                                                         </tr>
                                                                                     @endforeach
@@ -1056,12 +1067,23 @@
                                                                                                 </script>
 
                                                                                                 <!-- Nút xóa -->
-                                                                                                <a class="btn btn-danger btn-sm"
-                                                                                                    title="Xóa câu hỏi"
-                                                                                                    href="#">
-                                                                                                    <i
-                                                                                                        class="fas fa-trash"></i>
-                                                                                                </a>
+                                                                                                <form action="{{ route('quiz-bank.deleteQuestion') }}" method="post" id="deleteForm_{{ $question->id }}">
+                                                                                                    @csrf
+                                                                                                    <input type="hidden" name="question_id" value="{{ $question->id }}">
+                                                                                                    <button class="btn btn-danger btn-sm" title="Xóa câu hỏi" type="button" onclick="confirmDelete({{ $question->id }})">
+                                                                                                        <i class="fas fa-trash"></i>
+                                                                                                    </button>
+                                                                                                </form>
+                                                                                                
+                                                                                                <script>
+                                                                                                    function confirmDelete(questionId) {
+                                                                                                        // Hiển thị hộp thoại xác nhận
+                                                                                                        if (confirm('Bạn có chắc chắn muốn xóa câu hỏi này không?')) {
+                                                                                                            // Nếu người dùng chọn OK, gửi form
+                                                                                                            document.getElementById('deleteForm_' + questionId).submit();
+                                                                                                        }
+                                                                                                    }
+                                                                                                </script>
                                                                                             </td>
                                                                                         </tr>
                                                                                     @endforeach
@@ -1630,12 +1652,23 @@
                                                                                                 </script>
 
                                                                                                 <!-- Nút xóa -->
-                                                                                                <a class="btn btn-danger btn-sm"
-                                                                                                    title="Xóa câu hỏi"
-                                                                                                    href="#">
-                                                                                                    <i
-                                                                                                        class="fas fa-trash"></i>
-                                                                                                </a>
+                                                                                                <form action="{{ route('quiz-bank.deleteQuestion') }}" method="post" id="deleteForm_{{ $question->id }}">
+                                                                                                    @csrf
+                                                                                                    <input type="hidden" name="question_id" value="{{ $question->id }}">
+                                                                                                    <button class="btn btn-danger btn-sm" title="Xóa câu hỏi" type="button" onclick="confirmDelete({{ $question->id }})">
+                                                                                                        <i class="fas fa-trash"></i>
+                                                                                                    </button>
+                                                                                                </form>
+                                                                                                
+                                                                                                <script>
+                                                                                                    function confirmDelete(questionId) {
+                                                                                                        // Hiển thị hộp thoại xác nhận
+                                                                                                        if (confirm('Bạn có chắc chắn muốn xóa câu hỏi này không?')) {
+                                                                                                            // Nếu người dùng chọn OK, gửi form
+                                                                                                            document.getElementById('deleteForm_' + questionId).submit();
+                                                                                                        }
+                                                                                                    }
+                                                                                                </script>
                                                                                             </td>
                                                                                         </tr>
                                                                                     @endforeach

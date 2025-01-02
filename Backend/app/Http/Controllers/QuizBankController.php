@@ -230,4 +230,23 @@ class QuizBankController extends Controller
 
         return redirect()->route('login')->with('error', 'Bạn cần đăng nhập để thực hiện hành động này');
     }
+
+    public function deleteQuestion(Request $request) {
+        if(Auth::check()) {
+            $id = $request->question_id;
+            $deleteQuestion = Quiz::findOrFail($id);
+            if ($deleteQuestion) {
+                $deleteQuestion->delete();
+                $choices = Choice::where('quiz_id', $deleteQuestion->id)->get();
+                if ($choices) {
+                    foreach ($choices as $choice) {
+                        $choice->delete();
+                    }
+                    return redirect()->route('quiz-bank.index')->with('success', 'Xóa câu hỏi thành công!');
+                }
+            }
+            return redirect()->route('quiz-bank.index')->with('error', 'Xóa câu hỏi thất bại!');
+        }
+        return redirect()->route('login')->with('error', 'Bạn cần đăng nhập để thực hiện hành động này');
+    }
 }
