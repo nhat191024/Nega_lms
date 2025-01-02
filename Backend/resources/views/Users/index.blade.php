@@ -46,7 +46,7 @@
                                                     Không xác định
                                                 @endif
                                             </td>
-                                            <td class="text-center">{{ $roles[$user->role_id] ?? 'Chưa gán' }}</td>
+                                            <td class="text-center">{{ $user->role->name }}</td>
                                             <td class="text-center">
                                                 @if ($user->status == 1)
                                                     <span class="badge badge-success fs-6">Hiển thị</span>
