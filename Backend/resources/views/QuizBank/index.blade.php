@@ -3,15 +3,6 @@
 @section('title', 'Quản lý kho quiz')
 
 @section('content')
-    <style>
-        .modal-backdrop {
-            z-index: 1040 !important;
-        }
-
-        .modal {
-            z-index: 1050 !important;
-        }
-    </style>
     <section class="controller px-3">
         <ul class="nav nav-tabs" id="myTabs" role="tablist">
             <li class="nav-item" role="presentation">
@@ -122,7 +113,7 @@
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table class="table table-striped">
+                                <table id="quiz" class="table table-striped">
                                     <thead>
                                         <tr>
                                             <th>STT</th>
@@ -316,7 +307,7 @@
                                                                         </div>
                                                                         <!-- Table Câu Hỏi -->
                                                                         <div class="table-responsive">
-                                                                            <table class="table table-striped table-hover">
+                                                                            <table id="question" class="table table-striped table-hover">
                                                                                 <thead>
                                                                                     <tr>
                                                                                         <th>STT</th>
@@ -900,7 +891,7 @@
                                                                         </div>
                                                                         <!-- Table Câu Hỏi -->
                                                                         <div class="table-responsive">
-                                                                            <table class="table table-striped table-hover">
+                                                                            <table id="question" class="table table-striped table-hover">
                                                                                 <thead>
                                                                                     <tr>
                                                                                         <th>STT</th>
@@ -1473,7 +1464,7 @@
                                                                         </div>
                                                                         <!-- Table Câu Hỏi -->
                                                                         <div class="table-responsive">
-                                                                            <table class="table table-striped table-hover">
+                                                                            <table id="question" class="table table-striped table-hover">
                                                                                 <thead>
                                                                                     <tr>
                                                                                         <th>STT</th>

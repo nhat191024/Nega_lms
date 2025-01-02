@@ -103,5 +103,24 @@
                 }
             }
         });
+
+        $('#quiz, #quiz-published, #quiz-private, #quiz-close, #question').DataTable({
+            "pageLength": 5,
+            "language": {
+                "lengthMenu": "Hiển thị _MENU_ bản ghi mỗi trang",
+                "zeroRecords": "Không tìm thấy dữ liệu",
+                "info": "Hiển thị _START_ đến _END_ trong tổng số _TOTAL_ bản ghi",
+                "infoEmpty": "Không có dữ liệu",
+                "infoFiltered": "(được lọc từ _MAX_ tổng số bản ghi)",
+                "search": "Tìm kiếm:",
+                "paginate": {
+                    "first": "Đầu tiên",
+                    "previous": "Trước",
+                    "next": "Tiếp theo",
+                    "last": "Cuối cùng"
+                }
+            }
+        });
+        
     }
 })(jQuery);
