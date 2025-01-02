@@ -310,7 +310,7 @@
                                                                             <table id="question" class="table table-striped table-hover">
                                                                                 <thead>
                                                                                     <tr>
-                                                                                        <th>STT</th>
+                                                                                        <th class="text-right" style="width: 15px !important;">STT</th>
                                                                                         <th>Câu hỏi</th>
                                                                                         <th>Tác vụ</th>
                                                                                     </tr>
@@ -322,7 +322,7 @@
                                                                                                 $index++;
                                                                                                 $indexRender++;
                                                                                             @endphp
-                                                                                            <td>{{ $index }}</td>
+                                                                                            <td class="text-start" style="width: 15px !important;">{{ $index }}</td>
                                                                                             <td>{{ $question->question }}
                                                                                             </td>
                                                                                             <td class="text-right">
@@ -347,14 +347,14 @@
                                                                                                 <!-- Modal chỉnh sửa câu hỏi -->
                                                                                                 <div hidden
                                                                                                     class="text-start"
-                                                                                                    style="position: fixed; width: 90%; height: 90%; top: 50%; left: 50%; transform: translate(-50%, -50%);"
+                                                                                                    style="position: fixed; width: 90%; height: 90%; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 9999;"
                                                                                                     id="editQuestion_{{ $indexRender }}">
                                                                                                     <form
                                                                                                         action="{{ route('quiz-bank.updateQuestion') }}"
                                                                                                         method="post">
                                                                                                         @csrf
                                                                                                         <div
-                                                                                                            class="card">
+                                                                                                            class="card" style="z-index: 9999;">
                                                                                                             <div
                                                                                                                 class="card-header">
                                                                                                                 <div
@@ -894,7 +894,7 @@
                                                                             <table id="question" class="table table-striped table-hover">
                                                                                 <thead>
                                                                                     <tr>
-                                                                                        <th>STT</th>
+                                                                                        <th class="text-right" style="width: 15px !important;">STT</th>
                                                                                         <th>Câu hỏi</th>
                                                                                         <th>Tác vụ</th>
                                                                                     </tr>
@@ -906,7 +906,7 @@
                                                                                                 $index++;
                                                                                                 $indexRender++;
                                                                                             @endphp
-                                                                                            <td>{{ $index }}</td>
+                                                                                            <td class="text-right">{{ $index }}</td>
                                                                                             <td>{{ $question->question }}
                                                                                             </td>
                                                                                             <td class="text-right">
@@ -931,7 +931,7 @@
                                                                                                 <!-- Modal chỉnh sửa câu hỏi -->
                                                                                                 <div hidden
                                                                                                     class="text-start"
-                                                                                                    style="position: fixed; width: 90%; height: 90%; top: 50%; left: 50%; transform: translate(-50%, -50%);"
+                                                                                                    style="position: fixed; width: 90%; height: 90%; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 9999;"
                                                                                                     id="editQuestion_{{ $indexRender }}">
                                                                                                     <form
                                                                                                         action="{{ route('quiz-bank.updateQuestion') }}"
@@ -1467,7 +1467,7 @@
                                                                             <table id="question" class="table table-striped table-hover">
                                                                                 <thead>
                                                                                     <tr>
-                                                                                        <th>STT</th>
+                                                                                        <th class="text-right" style="width: 15px !important;">STT</th>
                                                                                         <th>Câu hỏi</th>
                                                                                         <th>Tác vụ</th>
                                                                                     </tr>
@@ -1479,7 +1479,7 @@
                                                                                                 $index++;
                                                                                                 $indexRender++;
                                                                                             @endphp
-                                                                                            <td>{{ $loop->iteration }}
+                                                                                            <td class="text-right">{{ $index }}
                                                                                             </td>
                                                                                             <td>{{ $question->question }}
                                                                                             </td>
@@ -1505,7 +1505,7 @@
                                                                                                 <!-- Modal chỉnh sửa câu hỏi -->
                                                                                                 <div hidden
                                                                                                     class="text-start"
-                                                                                                    style="position: fixed; width: 90%; height: 90%; top: 50%; left: 50%; transform: translate(-50%, -50%);"
+                                                                                                    style="position: fixed; width: 90%; height: 90%; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 9999;"
                                                                                                     id="editQuestion_{{ $indexRender }}">
                                                                                                     <form
                                                                                                         action="{{ route('quiz-bank.updateQuestion') }}"
