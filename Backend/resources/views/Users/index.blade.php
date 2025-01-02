@@ -35,7 +35,7 @@
                                             <td class="text-center">{{ $loop->iteration }}</td>
                                             <td class="text-center">{{ $user->email }}</td>
                                             <td class="text-center">
-                                                <img src="{{ $user->avatar }}" alt="Avatar" class="img-thumbnail" width="50">
+                                                <img src="{{ url('storage/app/public/'. $user->avatar) }}" alt="Avatar" class="img-thumbnail" width="50">
                                             </td>
                                             <td class="text-center">********</td>
                                             <td class="text-center">{{ $user->name }}</td>

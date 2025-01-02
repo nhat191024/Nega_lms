@@ -1,15 +1,9 @@
 @extends('master')
-@section('title', 'Thêm Danh Mục')
+@section('title', 'Chỉnh Sửa Danh Mục')
 
 @section('content')
 <div class="container-fluid">
-    <h2 class="my-4">Thêm Danh Mục</h2>
-
-    @if (session('error'))
-        <div class="alert alert-danger">
-            {{ session('error') }}
-        </div>
-    @endif
+    <h2 class="my-4">Chỉnh Sửa Danh Mục</h2>
 
     @if ($errors->any())
         <div class="alert alert-danger">
@@ -21,19 +15,21 @@
         </div>
     @endif
 
-    <form action="{{ route('categories.store') }}" method="POST">
+    <form action="{{ route('categories.update', $category->id) }}" method="POST">
         @csrf
+        @method('PUT')
         <div class="form-group">
             <label for="name">Tên danh mục:</label>
-            <input type="text" name="name" id="name" class="form-control" value="{{ old('name') }}" required>
+            <input type="text" name="name" id="name" class="form-control" value="{{ $category->name }}" required>
         </div>
         <div class="form-group">
             <label for="parent_id">Danh mục cha:</label>
             <select name="parent_id" id="parent_id" class="form-control">
                 <option value="">Không có</option>
-                @foreach ($categories as $category)
-                    <option value="{{ $category->id }}" {{ old('parent_id') == $category->id ? 'selected' : '' }}>
-                        {{ $category->name }}
+                @foreach ($categories as $parent)
+                    <option value="{{ $parent->id }}"
+                        {{ $category->parent_id == $parent->id ? 'selected' : '' }}>
+                        {{ $parent->name }}
                     </option>
                 @endforeach
             </select>
@@ -41,12 +37,12 @@
         <div class="form-group">
             <label for="status">Trạng thái:</label>
             <select name="status" id="status" class="form-control">
-                <option value="active" {{ old('status') == 'active' ? 'selected' : '' }}>Hiển thị</option>
-                <option value="inactive" {{ old('status') == 'inactive' ? 'selected' : '' }}>Ẩn</option>
+                <option value="active" {{ $category->status == 'active' ? 'selected' : '' }}>Hiển thị</option>
+                <option value="inactive" {{ $category->status == 'inactive' ? 'selected' : '' }}>Ẩn</option>
             </select>
         </div>
         <a href="{{ route('categories.index') }}" class="btn btn-secondary">Hủy</a>
-        <button type="submit" class="btn btn-primary">Lưu</button>
+        <button type="submit" class="btn btn-primary">Cập Nhật</button>
     </form>
 </div>
 @endsection
