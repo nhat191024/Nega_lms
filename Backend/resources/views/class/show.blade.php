@@ -56,7 +56,7 @@
                             <a href="{{ route('classes.editClass', $class->id) }}" class="btn btn-warning me-2"
                                 style="color: white;">Sửa</a>
 
-                            <form action="{{ route('classes.toggleStatus', $class->id) }}" method="POST" class="d-inline">
+                            <form action="{{ route('classes.toggleStatus', $class->id) }}" method="POST" class="d-inline me-2">
                                 @csrf
                                 <input type="hidden" name="status"
                                     value="{{ $class->status === 'published' ? 'locked' : 'published' }}">
@@ -71,6 +71,10 @@
                                 @endif
                             </form>
 
+                            <a href="{{ route('classes.export', $class->id) }}" class="btn btn-success me-2">
+                                <i class="fas fa-download me-2"></i>Xuất thông tin lớp học
+                            </a>
+
                         </div>
                     </div>
                 </div>
@@ -84,6 +88,15 @@
                             <h3 class="card-title mb-0">Danh sách học sinh</h3>
                             <button type="button" class="btn btn-primary" data-bs-toggle="modal"
                                 data-bs-target="#add-student-to-class-{{ Str::slug($class->name) }}">Thêm học sinh</button>
+                            <form action="{{ route('classes.import', $class->id) }}" method="POST"
+                                enctype="multipart/form-data" class="d-inline-block">
+                                @csrf
+                                <label for="file" class="btn btn-primary">
+                                    <i class="fas fa-upload me-2"></i>Nhập danh sách học sinh
+                                </label>
+                                <input type="file" id="file" name="file" class="d-none"
+                                    onchange="this.form.submit()">
+                            </form>
                         </div>
                         <div class="table-responsive mt-3">
                             <table class="table table-hover table-bordered table-striped">
@@ -160,7 +173,8 @@
                             <div class="tab-pane fade" id="Scores" role="tabpanel" aria-labelledby="scores-tab">
                                 <div class="mt-3">
                                     <div class="table-responsive" id="scoresContent">
-                                        <!-- Nội dung chi tiết điểm sẽ được tải vào đây --> </div>
+                                        <!-- Nội dung chi tiết điểm sẽ được tải vào đây -->
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -206,31 +220,30 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
     <script>
-function showAssignmentDetails(assignmentId) {
-    document.getElementById('assignment-list').classList.add('d-none');
-    document.getElementById('assignment-details').classList.remove('d-none');
+        function showAssignmentDetails(assignmentId) {
+            document.getElementById('assignment-list').classList.add('d-none');
+            document.getElementById('assignment-details').classList.remove('d-none');
 
-    fetch(`/class/assignment/${assignmentId}/details`)
-        .then(response => response.json())
-        .then(data => {
-            let questionsHtml = '';
-            if (data.assignment.type === 'lab') {
-                questionsHtml = `<p>${data.description}</p>`;
-                document.getElementById('scores-tab-container').classList.add('d-none');
-            } else if (data.assignment.type === 'quiz') {
-                questionsHtml = data.questionsHtml;
-                document.getElementById('scoresContent').innerHTML = data.scoresHtml;
-                document.getElementById('scores-tab-container').classList.remove('d-none');
-            }
-            document.getElementById('questionsContent').innerHTML = questionsHtml;
-        })
-        .catch(error => console.error('Error fetching assignment details:', error));
-}
+            fetch(`/class/assignment/${assignmentId}/details`)
+                .then(response => response.json())
+                .then(data => {
+                    let questionsHtml = '';
+                    if (data.assignment.type === 'lab') {
+                        questionsHtml = `<p>${data.description}</p>`;
+                        document.getElementById('scores-tab-container').classList.add('d-none');
+                    } else if (data.assignment.type === 'quiz') {
+                        questionsHtml = data.questionsHtml;
+                        document.getElementById('scoresContent').innerHTML = data.scoresHtml;
+                        document.getElementById('scores-tab-container').classList.remove('d-none');
+                    }
+                    document.getElementById('questionsContent').innerHTML = questionsHtml;
+                })
+                .catch(error => console.error('Error fetching assignment details:', error));
+        }
 
-function hideAssignmentDetails() {
-    document.getElementById('assignment-list').classList.remove('d-none');
-    document.getElementById('assignment-details').classList.add('d-none');
-}
-
+        function hideAssignmentDetails() {
+            document.getElementById('assignment-list').classList.remove('d-none');
+            document.getElementById('assignment-details').classList.add('d-none');
+        }
     </script>
 @endsection

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Maatwebsite\Excel\Facades\Excel;
+use Maatwebsite\Excel\Concerns\FromArray;
 use App\Models\Classes;
 use App\Models\ClassAssignment;
 use App\Models\Enrollment;
@@ -200,5 +202,88 @@ class ClassController extends Controller
 
         $message = $newStatus === 'locked' ? 'Lớp đã được khóa.' : 'Lớp đã được mở khóa.';
         return redirect()->back()->with('success', $message);
+    }
+
+    public function export($id)
+    {
+        $class = Classes::with(['assignments'])->findOrFail($id);
+        $students = $class->students()->where('role_id', 3)->get();
+
+        // Chuẩn bị dữ liệu
+        $data = [
+            ['Thông tin lớp học'],
+            ['Tên lớp', $class->name],
+            ['Mã lớp', $class->code],
+            ['Trạng thái', $class->status === 'published' ? 'Mở khóa' : 'Khóa'],
+            ['Giảng viên', $class->teacher->name],
+            [],
+            ['Danh sách học sinh'],
+            ['STT', 'Tên học sinh', 'Email'],
+        ];
+
+        foreach ($students as $key => $student) {
+            $data[] = [
+                $key + 1,
+                $student->name,
+                $student->email,
+            ];
+        }
+
+        $data[] = [];
+        $data[] = ['Bài tập'];
+        $data[] = ['STT', 'Tên bài tập', 'Loại bài tập'];
+
+        foreach ($class->assignments as $key => $assignment) {
+            $data[] = [
+                $key + 1,
+                $assignment->title,
+                $assignment->type,
+            ];
+        }
+
+        // Sử dụng Excel::download() thay vì Excel::raw()
+        $fileName = 'class-' . $class->id . '-details.xlsx';
+
+        // Tạo và trả về file Excel
+        return Excel::download(new class($data) implements FromArray {
+            protected $data;
+
+            public function __construct($data)
+            {
+                $this->data = $data;
+            }
+
+            public function array(): array
+            {
+                return $this->data;
+            }
+        }, $fileName);
+    }
+
+    public function import(Request $request, $id)
+    {
+        $request->validate([
+            'file' => 'required|file|mimes:xlsx,xls',
+        ]);
+
+        $class = Classes::findOrFail($id);
+
+        // Đọc dữ liệu từ file Excel
+        $path = $request->file('file')->getRealPath();
+        $data = Excel::toArray([], $path);
+
+        if (!empty($data[0])) {
+            foreach ($data[0] as $row) {
+                if (isset($row[1], $row[2])) {
+                    // Thêm học sinh vào lớp (nếu chưa có)
+                    $user = User::where('email', $row[2])->where('role_id', 3)->first();
+                    if ($user) {
+                        $class->users()->syncWithoutDetaching([$user->id]); // Liên kết học sinh với lớp
+                    }
+                }
+            }
+        }
+
+        return back()->with('success', 'Danh sách học sinh đã được nhập thành công!');
     }
 }
