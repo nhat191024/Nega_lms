@@ -26,7 +26,7 @@ class CategoryController extends Controller
     {
         // Kiểm tra dữ liệu đầu vào
         $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|max:255|unique:categories,name', // Thêm kiểm tra không trùng tên
             'parent_id' => 'nullable|exists:categories,id',
             'status' => 'required|in:active,inactive',
         ]);
@@ -40,15 +40,21 @@ class CategoryController extends Controller
         }
 
         // Lưu danh mục mới vào cơ sở dữ liệu
-        Category::create([
-            'name' => $request->name,
-            'parent_id' => $request->parent_id,
-            'status' => $request->status,
-        ]);
+        try {
+            Category::create([
+                'name' => $request->name,
+                'parent_id' => $request->parent_id,
+                'status' => $request->status,
+            ]);
 
-        // Chuyển hướng với thông báo thành công
-        return redirect()->route('categories.index')->with('success', 'Danh mục đã được thêm thành công!');
+            // Chuyển hướng với thông báo thành công
+            return redirect()->route('categories.index')->with('success', 'Danh mục đã được thêm thành công!');
+        } catch (\Exception $e) {
+            // Xử lý lỗi bất ngờ
+            return redirect()->back()->with('error', 'Đã xảy ra lỗi trong quá trình thêm danh mục. Vui lòng thử lại.');
+        }
     }
+
 
     // Phương thức update: Cập nhật danh mục
     public function update(Request $request, $id)

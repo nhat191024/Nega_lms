@@ -8,7 +8,7 @@
             <h1 class="h3 mb-2 text-gray-800">Quản lý Danh Mục</h1>
             <div class="card shadow my-4">
                 <div class="card-header py-3">
-                    <a href="{{ route('category.create') }}" class="btn btn-primary">
+                    <a href="{{ route('categories.create') }}" class="btn btn-primary">
                         <span class="text">Thêm Danh Mục</span>
                     </a>
                 </div>
@@ -43,14 +43,14 @@
                                                 </span>
                                             </td>
                                             <td class="text-center">
-                                                <a href="{{ route('category.edit', $category->id) }}" class="btn btn-warning btn-sm">
+                                                <a href="{{ route('categories.edit', $category->id) }}" class="btn btn-warning btn-sm">
                                                     Sửa
                                                 </a>
-                                                <a href="{{ route('category.status', $category->id) }}"
+                                                <a href="{{ route('categories.status', $category->id) }}"
                                                     class="btn {{ $category->status === 'active' ? 'btn-danger' : 'btn-success' }} btn-sm">
                                                     {{ $category->status === 'active' ? 'Ẩn' : 'Hiển Thị' }}
                                                 </a>
-                                                <form action="{{ route('category.destroy', $category->id) }}" method="POST"
+                                                <form action="{{ route('categories.destroy', $category->id) }}" method="POST"
                                                     style="display: inline-block;"
                                                     onsubmit="return confirm('Bạn có chắc chắn muốn xóa danh mục này không?');">
                                                     @csrf

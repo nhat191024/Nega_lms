@@ -21,7 +21,7 @@
         </div>
     @endif
 
-    <form action="{{ route('category.store') }}" method="POST">
+    <form action="{{ route('categories.store') }}" method="POST"> <!-- Sửa lại route cho đúng -->
         @csrf
         <div class="form-group">
             <label for="name">Tên danh mục:</label>
@@ -45,7 +45,7 @@
                 <option value="inactive" {{ old('status') == 'inactive' ? 'selected' : '' }}>Ẩn</option>
             </select>
         </div>
-        <a href="{{ route('category.index') }}" class="btn btn-secondary">Hủy</a>
+        <a href="{{ route('categories.index') }}" class="btn btn-secondary">Hủy</a> <!-- Sửa lại route -->
         <button type="submit" class="btn btn-primary">Lưu</button>
     </form>
 </div>

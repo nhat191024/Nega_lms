@@ -15,7 +15,7 @@
         </div>
     @endif
 
-    <form action="{{ route('category.update', $category->id) }}" method="POST">
+    <form action="{{ route('categories.update', $category->id) }}" method="POST">
         @csrf
         @method('PUT')
         <div class="form-group">
@@ -41,7 +41,7 @@
                 <option value="inactive" {{ $category->status == 'inactive' ? 'selected' : '' }}>Ẩn</option>
             </select>
         </div>
-        <a href="{{ route('category.index') }}" class="btn btn-secondary">Hủy</a>
+        <a href="{{ route('categories.index') }}" class="btn btn-secondary">Hủy</a>
         <button type="submit" class="btn btn-primary">Cập Nhật</button>
     </form>
 </div>
