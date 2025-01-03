@@ -25,6 +25,7 @@ Route::prefix('/users')->name('users.')->group(function () {
 });
 
 Route::prefix('class')->name('classes.')->group(function () {
+    Route::get('/template', [ClassController::class, 'downloadTemplate'])->name('downloadTemplate');
     Route::get('/', [ClassController::class, 'index'])->name('index');
     Route::post('/add-student', [ClassController::class, 'addStudentToClass'])->name('addStudent');
     Route::delete('/remove-student/{class_id}/{student_id}', [ClassController::class, 'removeStudentFromAClass'])->name('removeStudent');

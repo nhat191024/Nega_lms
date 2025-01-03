@@ -182,13 +182,20 @@ class ClassController extends Controller
 
         $questionsHtml = view('partials.assignment_questions', compact('assignment'))->render();
         $scoresHtml = view('partials.assignment_scores', compact('assignment'))->render();
+        $resultsHtml = '';
+
+        if ($assignment->type === 'lab') {
+            $resultsHtml = view('partials.assignment_results', compact('assignment'))->render();
+        }
 
         return response()->json([
             'assignment' => $assignment,
             'questionsHtml' => $questionsHtml,
             'scoresHtml' => $scoresHtml,
+            'resultsHtml' => $resultsHtml,
         ]);
     }
+
 
     public function toggleClassStatus(Request $request, $id)
     {
@@ -262,23 +269,65 @@ class ClassController extends Controller
     {
         $request->validate([
             'file' => 'required|file|mimes:xlsx,xls',
+        ], [
+            'file.required' => 'Vui lòng chọn tệp để tải lên!',
+            'file.mimes' => 'Tệp phải có định dạng xlsx hoặc xls.',
         ]);
 
         $class = Classes::findOrFail($id);
-
         $path = $request->file('file')->getRealPath();
         $data = Excel::toArray([], $path);
 
         if (!empty($data[0])) {
-            foreach ($data[0] as $row) {
-                if (isset($row[1], $row[2])) {
-                    $user = User::where('email', $row[2])->where('role_id', 3)->first();
-                    if ($user) {
-                        $class->users()->syncWithoutDetaching([$user->id]);
-                    }
+            $errors = [];
+            foreach ($data[0] as $index => $row) {
+                if ($index == 0) continue;
+
+                $email = $row[2] ?? null;
+                $password = $row[3] ?? '123456';
+
+                if (!$email) {
+                    $errors[] = "Dòng $index: Email không được để trống.";
+                    continue;
                 }
+
+                $user = User::where('email', $email)->where('role_id', 3)->first();
+                if (!$user) {
+                    $user = User::create([
+                        'name' => $row[1],
+                        'email' => $email,
+                        'password' => bcrypt($password),
+                        'role_id' => 3,
+                    ]);
+                }
+
+                $class->students()->syncWithoutDetaching([$user->id]);
+            }
+
+            if (!empty($errors)) {
+                return redirect()->back()->with('error', 'Một số lỗi xảy ra: ' . implode(', ', $errors));
             }
         }
-        return back()->with('success', 'Danh sách học sinh đã được nhập thành công!');
+        return redirect()->back()->with('success', 'Danh sách học sinh đã được nhập thành công!');
+    }
+
+    public function downloadTemplate()
+    {
+        $headers = ['STT', 'Tên học sinh', 'Email'];
+        $fileName = 'student_import_template.xlsx';
+
+        return Excel::download(new class([$headers]) implements FromArray {
+            protected $data;
+
+            public function __construct($data)
+            {
+                $this->data = $data;
+            }
+
+            public function array(): array
+            {
+                return [$this->data];
+            }
+        }, $fileName);
     }
 }

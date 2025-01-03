@@ -89,18 +89,28 @@
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center">
                             <h3 class="card-title mb-0">Danh sách học sinh</h3>
-                            <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                data-bs-target="#add-student-to-class-{{ Str::slug($class->name) }}">Thêm học sinh</button>
-                            <form action="{{ route('classes.import', $class->id) }}" method="POST"
-                                enctype="multipart/form-data" class="d-inline-block">
-                                @csrf
-                                <label for="file" class="btn btn-primary">
-                                    <i class="fas fa-upload me-2"></i>Nhập danh sách học sinh
-                                </label>
-                                <input type="file" id="file" name="file" class="d-none"
-                                    onchange="this.form.submit()">
-                            </form>
+                            <div class="d-flex align-items-center">
+                                <button type="button" class="btn btn-primary me-2" data-bs-toggle="modal"
+                                    data-bs-target="#add-student-to-class-{{ Str::slug($class->name) }}"
+                                    style="height: 38px;">
+                                    Thêm học sinh
+                                </button>
+                                <a href="{{ route('classes.downloadTemplate') }}" class="btn btn-secondary me-2"
+                                    style="height: 38px;">
+                                    <i class="fas fa-download me-2"></i>Tải mẫu danh sách
+                                </a>
+                                <form action="{{ route('classes.import', $class->id) }}" method="POST"
+                                    enctype="multipart/form-data" class="d-inline-block d-flex align-items-center">
+                                    @csrf
+                                    <label for="file" class="btn btn-primary" style="height: 38px;">
+                                        <i class="fas fa-upload me-2"></i>Nhập danh sách học sinh
+                                    </label>
+                                    <input type="file" id="file" name="file" class="d-none"
+                                        onchange="this.form.submit()">
+                                </form>
+                            </div>
                         </div>
+
                         <div class="table-responsive mt-3">
                             <table class="table table-hover table-bordered table-striped">
                                 <thead class="thead-dark">
@@ -187,21 +197,31 @@
 
             <!-- Chi tiết bài tập -->
             <div class="card mt-3 d-none" id="assignment-details">
-                <div class="card-body"> <button class="btn btn-secondary mb-3" onclick="hideAssignmentDetails()"> <i
-                            class="fas fa-arrow-left me-2"></i> Quay lại danh sách bài tập </button>
+                <div class="card-body">
+                    <button class="btn btn-secondary mb-3" onclick="hideAssignmentDetails()">
+                        <i class="fas fa-arrow-left me-2"></i> Quay lại danh sách bài tập
+                    </button>
                     <ul class="nav nav-tabs" id="assignmentDetailsTab" role="tablist">
-                        <li class="nav-item"> <a class="nav-link active" id="questions-tab" data-toggle="tab"
-                                href="#Questions" role="tab" aria-controls="Questions" aria-selected="true">Câu
-                                hỏi</a> </li>
-                        <li class="nav-item d-none" id="scores-tab-container"> <a class="nav-link" id="scores-tab"
-                                data-toggle="tab" href="#Scores" role="tab" aria-controls="Scores"
-                                aria-selected="false">Điểm</a> </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" id="questions-tab" data-toggle="tab" href="#Questions"
+                                role="tab" aria-controls="Questions" aria-selected="true">Câu hỏi</a>
+                        </li>
+                        <li class="nav-item d-none" id="scores-tab-container">
+                            <a class="nav-link" id="scores-tab" data-toggle="tab" href="#Scores" role="tab"
+                                aria-controls="Scores" aria-selected="false">Điểm</a>
+                        </li>
+                        <li class="nav-item" id="results-tab-container">
+                            <a class="nav-link" id="results-tab" data-toggle="tab" href="#Results" role="tab"
+                                aria-controls="Results" aria-selected="false">Kết quả bài tập</a>
+                        </li>
                     </ul>
                     <div class="tab-content" id="assignmentDetailsTabContent">
                         <div class="tab-pane fade show active" id="Questions" role="tabpanel"
                             aria-labelledby="questions-tab">
                             <div class="mt-3">
-                                <div id="questionsContent"> <!-- Nội dung chi tiết câu hỏi sẽ được tải vào đây --> </div>
+                                <div id="questionsContent">
+                                    <!-- Nội dung chi tiết câu hỏi sẽ được tải vào đây -->
+                                </div>
                             </div>
                         </div>
                         <div class="tab-pane fade" id="Scores" role="tabpanel" aria-labelledby="scores-tab">
@@ -211,9 +231,17 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="tab-pane fade" id="Results" role="tabpanel" aria-labelledby="results-tab">
+                            <div class="mt-3">
+                                <div id="resultsContent">
+                                    <!-- Nội dung chi tiết kết quả bài tập sẽ được tải vào đây -->
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
 
@@ -231,18 +259,23 @@
                 .then(data => {
                     let questionsHtml = '';
                     let scoresHtml = '';
+                    let resultsHtml = '';
 
                     if (data.assignment.type === 'lab') {
                         questionsHtml = `<p>${data.assignment.description}</p>`;
+                        resultsHtml = data.resultsHtml;
                         document.getElementById('scores-tab-container').classList.add('d-none');
+                        document.getElementById('results-tab-container').classList.remove('d-none');
                     } else if (data.assignment.type === 'quiz') {
                         questionsHtml = data.questionsHtml;
                         scoresHtml = data.scoresHtml;
                         document.getElementById('scores-tab-container').classList.remove('d-none');
+                        document.getElementById('results-tab-container').classList.add('d-none');
                     }
 
                     document.getElementById('questionsContent').innerHTML = questionsHtml;
                     document.getElementById('scoresContent').innerHTML = scoresHtml;
+                    document.getElementById('resultsContent').innerHTML = resultsHtml;
                 })
                 .catch(error => console.error('Error fetching assignment details:', error));
         }
@@ -252,8 +285,8 @@
             document.getElementById('assignment-details').classList.add('d-none');
         }
 
-        document.getElementById('class-info-tab').addEventListener('click', function() {
-            hideAssignmentDetails();
+        document.getElementById('info-tab').addEventListener('click', function() {
+            location.reload();
         });
     </script>
 
