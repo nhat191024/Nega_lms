@@ -16,9 +16,9 @@ class QuizBankController extends Controller
     public function index()
     {
         if (Auth::check()) {
-            $quizBank = QuizPackage::with('quizzes', 'creator', 'categories')->get();
-            $categories = Category::with('parent', 'children')->get();
-            $quizzes = Quiz::with('quizPackage', 'choices')->get();
+            $quizBank = QuizPackage::with('quizzes', 'creator', 'categories')->orderBy('created_at', 'DESC')->get();
+            $categories = Category::with('parent', 'children')->orderBy('created_at', 'DESC')->get();
+            $quizzes = Quiz::with('quizPackage', 'choices')->orderBy('created_at', 'DESC')->get();
             return view('QuizBank.index', compact('quizBank', 'categories', 'quizzes'));
         } else {
             return redirect()->route('admin.login');

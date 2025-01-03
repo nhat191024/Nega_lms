@@ -117,7 +117,7 @@
                                     <thead>
                                         <tr>
                                             <th>STT</th>
-                                            <th> Người tạo</th>
+                                            <th>Người tạo</th>
                                             <th>Tên kho</th>
                                             <th>Mô tả</th>
                                             <th>Phạm vi quiz_id</th>
