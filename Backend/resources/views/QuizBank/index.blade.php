@@ -189,53 +189,21 @@
                                                                             
                                                                                             <label class="form-label">Nhập câu trả lời</label>
                                                                             
-                                                                                            <!-- Câu trả lời 1 -->
-                                                                                            <div class="form-check">
-                                                                                                <input type="radio" class="form-check-input @error('anwser') is-invalid @enderror"
-                                                                                                    name="anwser" id="anwser_1" value="1">
-                                                                                                <label class="form-check-label" for="anwser_1">Câu trả lời 1</label>
-                                                                                                <input type="text" class="form-control @error('anwser_name_1') is-invalid @enderror" 
-                                                                                                    id="anwser_name_1" placeholder="Nhập câu trả lời 1" name="anwser_name_1">
-                                                                                                @error('anwser_name_1')
-                                                                                                    <div class="invalid-feedback">{{ $message }}</div>
-                                                                                                @enderror
-                                                                                            </div>
-                                                                            
-                                                                                            <!-- Câu trả lời 2 -->
-                                                                                            <div class="form-check">
-                                                                                                <input type="radio" class="form-check-input @error('anwser') is-invalid @enderror"
-                                                                                                    name="anwser" id="anwser_2" value="2">
-                                                                                                <label class="form-check-label" for="anwser_2">Câu trả lời 2</label>
-                                                                                                <input type="text" class="form-control @error('anwser_name_2') is-invalid @enderror" 
-                                                                                                    id="anwser_name_2" placeholder="Nhập câu trả lời 2" name="anwser_name_2">
-                                                                                                @error('anwser_name_2')
-                                                                                                    <div class="invalid-feedback">{{ $message }}</div>
-                                                                                                @enderror
-                                                                                            </div>
-                                                                            
-                                                                                            <!-- Câu trả lời 3 -->
-                                                                                            <div class="form-check">
-                                                                                                <input type="radio" class="form-check-input @error('anwser') is-invalid @enderror"
-                                                                                                    name="anwser" id="anwser_3" value="3">
-                                                                                                <label class="form-check-label" for="anwser_3">Câu trả lời 3</label>
-                                                                                                <input type="text" class="form-control @error('anwser_name_3') is-invalid @enderror" 
-                                                                                                    id="anwser_name_3" placeholder="Nhập câu trả lời 3" name="anwser_name_3">
-                                                                                                @error('anwser_name_3')
-                                                                                                    <div class="invalid-feedback">{{ $message }}</div>
-                                                                                                @enderror
-                                                                                            </div>
-                                                                            
-                                                                                            <!-- Câu trả lời 4 -->
-                                                                                            <div class="form-check">
-                                                                                                <input type="radio" class="form-check-input @error('anwser') is-invalid @enderror"
-                                                                                                    name="anwser" id="anwser_4" value="4">
-                                                                                                <label class="form-check-label" for="anwser_4">Câu trả lời 4</label>
-                                                                                                <input type="text" class="form-control @error('anwser_name_4') is-invalid @enderror" 
-                                                                                                    id="anwser_name_4" placeholder="Nhập câu trả lời 4" name="anwser_name_4">
-                                                                                                @error('anwser_name_4')
-                                                                                                    <div class="invalid-feedback">{{ $message }}</div>
-                                                                                                @enderror
-                                                                                            </div>
+                                                                                            @for ($i = 1; $i <= 4; $i++)
+                                                                                                <div class="form-check">
+                                                                                                    <input type="radio" class="form-check-input @error('anwser') is-invalid @enderror"
+                                                                                                        name="anwser" id="anwser_{{ $i }}" value="{{ $i }}">
+                                                                                                    <label class="form-check-label" for="anwser_{{ $i }}">Câu trả lời {{ $i }}</label>
+                                                                                                    
+                                                                                                    <input type="text" class="form-control @error('anwser_name_' . $i) is-invalid @enderror" 
+                                                                                                        id="anwser_name_{{ $i }}" placeholder="Nhập câu trả lời {{ $i }}" 
+                                                                                                        name="anwser_name_{{ $i }}">
+                                                                                                    
+                                                                                                    @error('anwser_name_' . $i)
+                                                                                                        <div class="invalid-feedback">{{ $message }}</div>
+                                                                                                    @enderror
+                                                                                                </div>
+                                                                                            @endfor
                                                                                         </div>
                                                                             
                                                                                         <input type="hidden" name="quiz_package_id" value="{{ $quiz->id }}">
