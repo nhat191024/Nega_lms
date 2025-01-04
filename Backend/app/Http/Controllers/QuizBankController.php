@@ -16,11 +16,22 @@ class QuizBankController extends Controller
     public function index()
     {
         if (Auth::check()) {
-            $quizBank = QuizPackage::with('quizzes', 'creator', 'categories')->orderBy('created_at', 'DESC')->get();
-            $categories = Category::with('parent', 'children')->orderBy('created_at', 'DESC')->get();
-            $quizzes = Quiz::with('quizPackage', 'choices')->orderBy('created_at', 'DESC')->get();
+            // Tối ưu tải dữ liệu: sử dụng select() để chỉ lấy các trường cần thiết và paginate() để phân trang
+            $quizBank = QuizPackage::with('quizzes', 'creator', 'categories')
+                ->orderBy('created_at', 'DESC')
+                ->paginate(10); // Phân trang để giảm tải
+
+            $categories = Category::with('parent', 'children')
+                ->orderBy('created_at', 'DESC')
+                ->paginate(10); // Phân trang để giảm tải
+
+            $quizzes = Quiz::with('quizPackage', 'choices')
+                ->orderBy('created_at', 'DESC')
+                ->paginate(10); // Phân trang để giảm tải
+
             return view('QuizBank.index', compact('quizBank', 'categories', 'quizzes'));
         } else {
+            // Nếu chưa đăng nhập, chuyển hướng đến trang đăng nhập
             return redirect()->route('admin.login');
         }
     }
@@ -197,7 +208,7 @@ class QuizBankController extends Controller
                 }
 
                 foreach ($question->choices as $index => $choice) {
-                    $index++; 
+                    $index++;
                     $anwserName = 'anwser_' . $index;
 
                     if ($request->has($anwserName) && $request->$anwserName != $choice->choice) {
@@ -215,9 +226,9 @@ class QuizBankController extends Controller
                 }
 
                 if ($isUpdated) {
-                    $question->save(); 
+                    $question->save();
                     foreach ($question->choices as $choice) {
-                        $choice->save(); 
+                        $choice->save();
                     }
                     return redirect()->route('quiz-bank.index')->with('success', 'Cập nhật câu hỏi thành công');
                 }
@@ -231,8 +242,9 @@ class QuizBankController extends Controller
         return redirect()->route('login')->with('error', 'Bạn cần đăng nhập để thực hiện hành động này');
     }
 
-    public function deleteQuestion(Request $request) {
-        if(Auth::check()) {
+    public function deleteQuestion(Request $request)
+    {
+        if (Auth::check()) {
             $id = $request->question_id;
             $deleteQuestion = Quiz::findOrFail($id);
             if ($deleteQuestion) {
