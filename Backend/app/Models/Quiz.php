@@ -28,6 +28,6 @@ class Quiz extends Model
 
     public function choices()
     {
-        return $this->hasMany(Choice::class);
+        return $this->hasMany(Choice::class, 'quiz_id');
     }
 }
