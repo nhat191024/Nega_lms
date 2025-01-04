@@ -106,6 +106,7 @@
 
         $('#quiz, #quiz-published, #quiz-private, #quiz-close, #question').DataTable({
             "pageLength": 5,
+            "lengthMenu": [[5, 25, 50, -1], [5, 25, 50, "All"]],
             "language": {
                 "lengthMenu": "Hiển thị _MENU_ bản ghi mỗi trang",
                 "zeroRecords": "Không tìm thấy dữ liệu",
