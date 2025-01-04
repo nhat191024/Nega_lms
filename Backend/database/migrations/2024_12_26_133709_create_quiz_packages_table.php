@@ -17,7 +17,8 @@ return new class extends Migration
             $table->string('title');
             $table->string('description');
             $table->string('quiz_id_range');
-            $table->enum('status', ['published', 'private', 'closed']);
+            $table->enum('status', ['published', 'closed'])->default('published');
+            $table->enum('type', ['public', 'private'])->default('public');
             $table->timestamps();
         });
     }
