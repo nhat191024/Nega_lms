@@ -93,12 +93,9 @@
                                                     <button type="submit" class="btn btn-primary">Tạo</button>
                                                 </form>
                                             </div>
-
-                                            <!-- Footer Modal -->
                                             <div class="modal-footer">
 
                                             </div>
-
                                         </div>
                                     </div>
                                 </div>
@@ -115,49 +112,33 @@
                                                 <th>Phạm vi quiz_id</th>
                                                 <th>Thuộc danh mục</th>
                                                 <th>Bộ câu hỏi</th>
-                                                <th class="text-center">Trạng thái</th>
-                                                <th>Tác vụ</th>
+                                                <th class="">Xuất bản</th>
+                                                <th class="text-center">Hiển thị</th>
+                                                <th style="width: 100px;">Tác vụ</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @foreach ($quizBank as $quiz)
-                                                @if ($quiz->status === 'published')
+                                                
+                                                
+                                                @if ($quiz->type === 'public')
                                                     <tr>
+                                                        <td> {{ $loop->iteration }} </td>
                                                         <td>
-                                                            {{ $loop->iteration }}
-                                                        </td>
-                                                        <td>
-                                                            <a>
-                                                                {{ $quiz->creator->name }}
-                                                            </a>
+                                                            <a> {{ $quiz->creator->name }} </a>
                                                             <br />
-                                                            <small>
-                                                                Tạo lúc
-                                                                {{ \Carbon\Carbon::parse($quiz->created_at)->format('d/m/Y') }}
-                                                            </small>
+                                                            <small> Tạo lúc {{ \Carbon\Carbon::parse($quiz->created_at)->format('d/m/Y') }} </small>
                                                         </td>
-                                                        <td>
-                                                            {{ $quiz->title }}
-                                                        </td>
-                                                        <td>
-                                                            {{ $quiz->description }}
-                                                        </td>
-                                                        <td>
-                                                            {{ $quiz->quiz_id_range }}
-                                                        </td>
+                                                        <td> {{ $quiz->title }} </td>
+                                                        <td> {{ $quiz->description }} </td>
+                                                        <td> {{ $quiz->quiz_id_range }} </td>
                                                         <td>
                                                             @foreach ($quiz->categories as $category)
                                                                 <span class="badge badge-primary">{{ $category->name }}</span>
                                                             @endforeach
                                                         </td>
                                                         <td>
-                                                            <button type="button" class="badge badge-success"
-                                                                data-bs-toggle="modal"
-                                                                data-bs-target="#showQuestion_{{ $indexRender }}">
-                                                                Xem bộ câu hỏi
-                                                            </button>
-    
-                                                            <!-- Modal -->
+                                                            <button type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#showQuestion_{{ $indexRender }}"> Xem bộ câu hỏi </button>
                                                             <div class="modal fade" id="showQuestion_{{ $indexRender }}"
                                                                 tabindex="-1" aria-labelledby="showQuestion"
                                                                 aria-hidden="true">
@@ -186,9 +167,7 @@
                                                                                             @error('question_name')
                                                                                                 <div class="invalid-feedback">{{ $message }}</div>
                                                                                             @enderror
-                                                                            
                                                                                             <label class="form-label">Nhập câu trả lời</label>
-                                                                            
                                                                                             @for ($i = 1; $i <= 4; $i++)
                                                                                                 <div class="form-check">
                                                                                                     <input type="radio" class="form-check-input @error('anwser') is-invalid @enderror"
@@ -208,7 +187,7 @@
                                                                             
                                                                                         <input type="hidden" name="quiz_package_id" value="{{ $quiz->id }}">
                                                                             
-                                                                                        <button class="btn btn-danger cancelFormQuestion">Hủy</button>
+                                                                                        <button type="button" onclick="cancelFormQuestion()" class="btn btn-danger">Hủy</button>
                                                                                         <button type="submit" class="btn btn-primary">Tạo</button>
                                                                                     </form>
                                                                                 </div>
@@ -245,17 +224,28 @@
                                                                                             $indexRender++;
                                                                                         @endphp
                                                                                         <div class="main">
-                                                                                            <div class="content">
+                                                                                            <div class="content mb-3">
                                                                                                 <span class="fs-5">{{ $index }}</span>
                                                                                                 <span class="fs-5 text-start">{{ $question->question }}</span>
-                                                                                                <span class="fs-5">
-                                                                                                    <span>Xem</span>
-                                                                                                    <span onclick="formEditQuestion({{ $indexRender }})">Sửa</span>
-                                                                                                    <span>Xóa</span>
+                                                                                                <span class="fs-5 d-flex">
+                                                                                                    <span class="me-2" onclick="cardShowQuestion(this)">
+                                                                                                        <a class="btn btn-info btn-sm" title="Xem câu hỏi" href="javascript:void(0);"><i class="fas fa-eye"></i></a>
+                                                                                                    </span>
+                                                                                                    <span class="mx-1" onclick="formEditQuestion(this)">
+                                                                                                        <a class="btn btn-primary btn-sm" title="Chỉnh sửa câu hỏi" href="javascript:void(0);"><i class="fas fa-pencil-alt"></i></a>
+                                                                                                    </span>
+                                                                                                    <span class="ms-2">
+                                                                                                        <form class="formDeleteQuestion" action="{{ route('quiz-bank.deleteQuestion') }}" method="post">
+                                                                                                            @csrf
+                                                                                                            <input type="hidden" name="question_id" value="{{ $question->id }}">
+                                                                                                            <button type="button" onclick="formDeleteQuestion(this)" class="btn btn-danger btn-sm" title="Xóa câu hỏi"><i class="fas fa-trash"></i></button>
+                                                                                                        </form>
+                                                                                                    </span>
                                                                                                 </span>
                                                                                             </div>
+                                                                                            
                                                                                             <div class="editQuestion">
-                                                                                                <div class="card formEditQuestion formEditQuestion_{{ $indexRender }}" style="width: 100%; display: none;">
+                                                                                                <div class="card formEditQuestion" style="width: 100%; display: none;">
                                                                                                     <div class="card-body">
                                                                                                         <form action="{{ route('quiz-bank.updateQuestion') }}" method="post">
                                                                                                             @csrf
@@ -265,14 +255,14 @@
                                                                                                                 @error('question_name')
                                                                                                                     <div class="invalid-feedback">{{ $message }}</div>
                                                                                                                 @enderror
-                                                                                                
+                                                                            
                                                                                                                 <label class="form-label">Nhập câu trả lời</label>
-                                                                                                
+                                                                            
                                                                                                                 @foreach ($question->choices as $choice)
                                                                                                                     <div class="form-check">
-                                                                                                                        <input type="radio" class="form-check-input @error('anwser') is-invalid @enderror"
+                                                                                                                        <input type="radio" {{ $choice->is_correct === 1 ? 'checked' : '' }} class="form-check-input @error('anwser') is-invalid @enderror"
                                                                                                                             name="anwser" id="anwser_{{ $loop->iteration }}" value="{{ $loop->iteration }}">
-                                                                                                                        <label class="form-check-label" for="anwser_{{ $loop->iteration }}">Câu trả lời {{ $loop->iteration }} <span>{{ $choice->is_correct === 1 ? '✅' : '❌' }}</span></label></label>
+                                                                                                                        <label class="form-check-label" for="anwser_{{ $loop->iteration }}">Câu trả lời {{ $loop->iteration }} <span>{{ $choice->is_correct === 1 ? '✅' : '❌' }}</span></label>
                                                                                                                         <input type="text" class="form-control @error('anwser_name_{{ $loop->iteration }}') is-invalid @enderror"
                                                                                                                             id="anwser_name_{{ $loop->iteration }}" value="{{ $choice->choice }}" 
                                                                                                                             placeholder="Nhập câu trả lời {{ $loop->iteration }}" name="anwser_name_{{ $loop->iteration }}">
@@ -282,41 +272,102 @@
                                                                                                                     </div>
                                                                                                                 @endforeach
                                                                                                             </div>
-                                                                                                
-                                                                                                            <input type="hidden" name="quiz_package_id" value="{{ $quiz->id }}">
-                                                                                                
-                                                                                                            <button class="btn btn-danger" onclick="cancelFormQuestion({{ $indexRender }})">Hủy</button>
-                                                                                                            <button type="submit" class="btn btn-primary">Cập nhật</button>
+                                                                                                            <input type="hidden" name="quiz_package_id" value="{{ $question->id }}">
+                                                                                                            <div class="text-end">
+                                                                                                                <a class="btn btn-danger" href="javascript:void(0);" onclick="cancelFormQuestion()">Hủy</a>
+                                                                                                                <button type="submit" class="btn btn-primary">Cập nhật</button>
+                                                                                                            </div>
                                                                                                         </form>
                                                                                                     </div>
                                                                                                 </div>
-                                                                                                
+                                                                                            </div>
+
+                                                                                            <div class="card cardShowQuestion d-none">
+                                                                                                <div class="card-body">
+                                                                                                    @foreach ($question->choices as $choice)
+                                                                                                        <div class="alert alert-light" role="alert">
+                                                                                                            {{ $choice->is_correct === 1 ? '✅ ' : '❌ ' }} {{ $choice->choice }}
+                                                                                                        </div>
+                                                                                                    @endforeach
+                                                                                                </div>
                                                                                             </div>
                                                                                         </div>
-                                                                                        <hr style="margin: 5px 0">
                                                                                     @endforeach
                                                                                 </div>
                                                                             </div>
+                                                                            
                                                                         </div>
     
                                                                         <!-- Modal Footer -->
-                                                                        <div class="modal-footer">
-                                                                            <button type="button" class="btn btn-secondary"
-                                                                                data-bs-dismiss="modal">Đóng</button>
-                                                                            <button type="button"
-                                                                                class="btn btn-primary addQuestion">Thêm câu
-                                                                                hỏi</button>
+                                                                        <div class="modal-footer d-flex justify-content-between">
+                                                                            <div>
+                                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                                                                                <button onclick="addQuestion()" type="button" class="btn btn-primary">Thêm câu hỏi</button>
+                                                                            </div>
+                                                                            <div class="pagination">
+                                                                                <button class="prev" onclick="changePage('prev')">Trước</button>
+                                                                                <span class="page-numbers"></span>
+                                                                                <button class="next" onclick="changePage('next')">Sau</button>
+                                                                            </div>
+                                                                            <style>
+                                                                                .pagination {
+                                                                                    text-align: center;
+                                                                                    margin-top: 20px;
+                                                                                }
+
+                                                                                .page-num {
+                                                                                    display: inline-block;
+                                                                                    padding: 5px 10px;
+                                                                                    margin: 0 5px;
+                                                                                    cursor: pointer;
+                                                                                    border: 1px solid #ddd;
+                                                                                    border-radius: 5px;
+                                                                                }
+
+                                                                                .page-num.active {
+                                                                                    background-color: #007bff;
+                                                                                    color: white;
+                                                                                }
+
+                                                                                .page-num:hover {
+                                                                                    background-color: #f0f0f0;
+                                                                                }
+
+                                                                                .dots {
+                                                                                    display: inline-block;
+                                                                                    padding: 5px 10px;
+                                                                                    margin: 0 5px;
+                                                                                }
+
+                                                                                button {
+                                                                                    padding: 5px 10px;
+                                                                                    margin: 0 5px;
+                                                                                    cursor: pointer;
+                                                                                }
+
+                                                                                button:disabled {
+                                                                                    opacity: 0.5;
+                                                                                    cursor: not-allowed;
+                                                                                }
+
+
+                                                                            </style>
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                         </td>
                                                         <td class="text-center">
-                                                            <span class="badge badge-success text-center">
-                                                                {{ $quiz->status === 'published' ? 'Công khai' : '' }}
+                                                            <span class="badge badge-{{ $quiz->status === 'published' ? 'info' : 'warning' }} text-center">
+                                                                {{ $quiz->status === 'published' ? 'Đã xuất bản' : 'Đã đóng' }}
                                                             </span>
                                                         </td>
-                                                        <td class="">
+                                                        <td class="text-center">
+                                                            <span class="badge badge-success text-center">
+                                                                {{ $quiz->type === 'public' ? 'Công khai' : 'Riêng tư' }}
+                                                            </span>
+                                                        </td>
+                                                        <td>
                                                             <a class="btn btn-info btn-sm" title="Chỉnh sửa kho"
                                                                 href="#" data-bs-toggle="modal"
                                                                 data-bs-target="#edit_quiz_package_{{ $indexRender }}">
@@ -626,8 +677,7 @@
                                                                                             name="quiz_package_id"
                                                                                             value="{{ $quiz->id }}">
     
-                                                                                        <button
-                                                                                            class="btn btn-danger cancelFormQuestion">Hủy</button>
+                                                                                        <button type="button" onclick="cancelFormQuestion()" class="btn btn-danger cancelFormQuestion">Hủy</button>
                                                                                         <button type="submit"
                                                                                             class="btn btn-primary">Tạo</button>
                                                                                     </form>
@@ -666,8 +716,7 @@
                                                                                                         class="btn btn-primary btn-sm"
                                                                                                         title="Xem chi tiết"
                                                                                                         href="#">
-                                                                                                        <i
-                                                                                                            class="fas fa-eye"></i>
+                                                                                                        <i class="fas fa-eye"></i>
                                                                                                     </a>
     
                                                                                                     <!-- Nút chỉnh sửa -->
@@ -675,8 +724,7 @@
                                                                                                         onclick="editQuestion({{ $indexRender }})"
                                                                                                         title="Chỉnh sửa câu hỏi"
                                                                                                         href="javascript:void(0);">
-                                                                                                        <i
-                                                                                                            class="fas fa-pencil-alt"></i>
+                                                                                                        <i class="fas fa-pencil-alt"></i>
                                                                                                     </a>
     
                                                                                                     <!-- Modal chỉnh sửa câu hỏi -->
@@ -820,8 +868,7 @@
                                                                                                             title="Xóa câu hỏi"
                                                                                                             type="button"
                                                                                                             onclick="confirmDelete({{ $question->id }})">
-                                                                                                            <i
-                                                                                                                class="fas fa-trash"></i>
+                                                                                                            <i class="fas fa-trash"></i>
                                                                                                         </button>
                                                                                                     </form>
     
@@ -850,61 +897,6 @@
                                                                                 class="btn btn-primary addQuestion">Thêm câu
                                                                                 hỏi</button>
                                                                         </div>
-                                                                        <script>
-                                                                            document.addEventListener('DOMContentLoaded', function() {
-                                                                                // Lấy tất cả các nút "Thêm câu hỏi"
-                                                                                const addQuestionButtons = document.querySelectorAll('.addQuestion');
-    
-                                                                                // Lặp qua từng nút "Thêm câu hỏi"
-                                                                                addQuestionButtons.forEach(function(button) {
-                                                                                    button.addEventListener('click', function() {
-                                                                                        // Lấy phần tử .formAddQuestion gần nhất trong modal
-                                                                                        const formAddQuestion = this.closest('.modal-content').querySelector(
-                                                                                            '.formAddQuestion');
-    
-                                                                                        if (formAddQuestion) {
-                                                                                            console.log('Found .formAddQuestion:', formAddQuestion);
-                                                                                            formAddQuestion.style.display = 'block'; // Hiển thị form thêm câu hỏi
-                                                                                        } else {
-                                                                                            console.log('.formAddQuestion not found.');
-                                                                                        }
-                                                                                    });
-                                                                                });
-    
-                                                                                // Lấy tất cả các nút "Hủy"
-                                                                                const cancelButtons = document.querySelectorAll('.cancelFormQuestion');
-    
-                                                                                // Lặp qua từng nút "Hủy"
-                                                                                cancelButtons.forEach(function(button) {
-                                                                                    button.addEventListener('click', function(e) {
-                                                                                        e.preventDefault(); // Ngừng hành động mặc định (nếu có)
-                                                                                        // Ẩn form khi nhấn Hủy
-                                                                                        const formAddQuestion = this.closest('.modal-content').querySelector(
-                                                                                            '.formAddQuestion');
-                                                                                        if (formAddQuestion) {
-                                                                                            formAddQuestion.style.display = 'none'; // Ẩn form
-                                                                                        }
-                                                                                    });
-                                                                                });
-    
-                                                                                // Lắng nghe sự kiện click trên modal để hiển thị form thêm câu hỏi
-                                                                                document.querySelectorAll('#showQuestion').forEach(function(showQuestionButton) {
-                                                                                    showQuestionButton.addEventListener('click', function() {
-                                                                                        // Lấy phần tử .formAddQuestion gần nhất từ phần tử chứa modal
-                                                                                        const formAddQuestion = this.closest('.modal-content').querySelector(
-                                                                                            '.formAddQuestion');
-    
-                                                                                        if (formAddQuestion) {
-                                                                                            console.log('Found .formAddQuestion:', formAddQuestion);
-                                                                                            formAddQuestion.style.display = 'block'; // Hiển thị form thêm câu hỏi
-                                                                                        } else {
-                                                                                            console.log('.formAddQuestion not found.');
-                                                                                        }
-                                                                                    });
-                                                                                });
-                                                                            });
-                                                                        </script>
-    
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -1043,18 +1035,170 @@
         </section>
     </div>
     <script>
-        function formEditQuestion(id) {
-            let formQuestion = document.querySelectorAll('.formEditQuestion');
-            let formQuestion_id = document.querySelector('.formEditQuestion_' + id);
-            formQuestion.forEach(function (question) {
-                question.style.display = 'none';
-            })
-            formQuestion_id.style.display = 'block';
+        function formEditQuestion(button) {
+            cancelFormQuestion();
+            
+            let editQuestion = button.closest('.content').nextElementSibling; 
+            let firstFormQuestion = editQuestion.firstElementChild;
+
+            if (firstFormQuestion) {
+                firstFormQuestion.style.display = 'block';
+            }
         }
 
-        function cancelFormQuestion(id) {
-            let formQuestion_id = document.querySelector('.formEditQuestion_' + id);
-            formQuestion_id.style.display = 'none';
+        function formDeleteQuestion(button) {
+            cancelFormQuestion();
+
+            const formDeleteQuestion = button.closest('.formDeleteQuestion');
+
+            if(confirm('Bạn có chắc chắn muốn xóa không?')) {
+                if (formDeleteQuestion) {
+                    formDeleteQuestion.submit();
+                }
+            }
         }
+
+
+        function cardShowQuestion(button) {
+            cancelFormQuestion();
+
+            let showQuestion = button.closest('.content').nextElementSibling;
+            if (showQuestion && !showQuestion.classList.contains('cardShowQuestion')) {
+                showQuestion = showQuestion.nextElementSibling;
+                showQuestion.classList.remove('d-none');
+                showQuestion.classList.add('d-block');
+            }
+            
+        }
+
+        function cancelFormQuestion() {
+            const formAddQuestion = document.querySelectorAll('.formAddQuestion');
+            const formEditQuestion = document.querySelectorAll('.formEditQuestion');
+            const cardShowQuestion = document.querySelectorAll('.cardShowQuestion')
+            formAddQuestion.forEach(function (formQuestion) {
+                formQuestion.style.display = 'none';
+            })
+            formEditQuestion.forEach(function (formQuestion) {
+                formQuestion.style.display = 'none';
+            })
+            cardShowQuestion.forEach(function (formQuestion) {
+                formQuestion.classList.remove('d-block');
+                formQuestion.classList.add('d-none');
+            })
+        }
+
+        function addQuestion() {
+            cancelFormQuestion();
+            let showFormAddQuestion = document.querySelectorAll('.formAddQuestion');
+            showFormAddQuestion.forEach(function(form) {
+                form.style.display = 'block';
+            })
+        }
+
+        let currentPage = 1;
+        let totalPages = 10; 
+        let maxVisiblePages = 3; 
+
+        function renderPagination() {
+            const pageNumbersContainer = document.querySelector('.page-numbers');
+            let pagesHtml = '';
+
+            let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+            let endPage = Math.min(totalPages, currentPage + Math.floor(maxVisiblePages / 2));
+
+            if (startPage > 1) {
+                pagesHtml += `<span class="page-num" onclick="goToPage(1)">1</span>`;
+                if (startPage > 2) {
+                    pagesHtml += `<span class="dots">...</span>`;
+                }
+            }
+
+            for (let i = startPage; i <= endPage; i++) {
+                if (i === currentPage) {
+                    pagesHtml += `<span class="page-num active">${i}</span>`;
+                } else {
+                    pagesHtml += `<span class="page-num" onclick="goToPage(${i})">${i}</span>`;
+                }
+            }
+
+            if (endPage < totalPages) {
+                if (endPage < totalPages - 1) {
+                    pagesHtml += `<span class="dots">...</span>`;
+                }
+                pagesHtml += `<span class="page-num" onclick="goToPage(${totalPages})">${totalPages}</span>`;
+            }
+
+            pageNumbersContainer.innerHTML = pagesHtml;
+
+            document.querySelector('.prev').disabled = currentPage === 1;
+            document.querySelector('.next').disabled = currentPage === totalPages;
+        }
+
+        // Chuyển đến trang mới
+        function goToPage(page) {
+            if (page < 1 || page > totalPages) return;
+            currentPage = page;
+            renderPagination();
+        }
+
+        // Chuyển đến trang trước hoặc sau
+        function changePage(direction) {
+            if (direction === 'prev' && currentPage > 1) {
+                currentPage--;
+            } else if (direction === 'next' && currentPage < totalPages) {
+                currentPage++;
+            }
+            renderPagination();
+        }
+
+        renderPagination();
+
+
+
+        // let currentPageQuestion = 0;
+
+        // function hideAllContentQuestion() {
+        //     let contentQuestion = document.querySelectorAll('.content-table .main');
+        //     contentQuestion.forEach(function (question) {
+        //         question.style.display = 'none';
+        //     })
+        // }
+
+        // function showContentQuesstion(page) {
+        //     let contentQuestion = document.querySelectorAll('.content-table .main');
+        //     hideAllContentQuestion();
+
+        //     let start = page * 5;
+        //     let end = start + 5;
+
+        //     for (let i = start; i < end && i < contentQuestions.length; i++) {
+        //         contentQuestions[i].style.display = 'block';
+        //     }
+        // }
+
+        // function nextContentQuestion() {
+        //     let contentQuestions = document.querySelectorAll('.content-table .main');
+        //     if ((currentPageQuestion + 1) * 5 < contentQuestions.length) {
+        //         currentPageQuestion++;
+        //         showContentQuesstion(currentPageQuestion);
+        //     }
+        // }
+
+        // function prevContentQuestion() {
+        //     if (currentPageQuestion > 0) {
+        //         currentPageQuestion--;
+        //         showContentQuesstion(currentPageQuestion);
+        //     }
+        // }
+
+        // showContentQuesstion(currentPageQuestion);
+
+        var myModal = document.querySelectorAll('.modal');
+        myModal.forEach(function(modal) {
+            modal.addEventListener('hidden.bs.modal', function () {
+                cancelFormQuestion();
+            });
+        })
+        
     </script>
 @endsection

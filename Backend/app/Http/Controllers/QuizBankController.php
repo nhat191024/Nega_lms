@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\AssignmentQuiz;
 use App\Models\Category;
 use App\Models\Choice;
 use App\Models\Quiz;
@@ -16,22 +17,17 @@ class QuizBankController extends Controller
     public function index()
     {
         if (Auth::check()) {
-            // Tối ưu tải dữ liệu: sử dụng select() để chỉ lấy các trường cần thiết và paginate() để phân trang
             $quizBank = QuizPackage::with('quizzes', 'creator', 'categories')
-                ->orderBy('created_at', 'DESC')
-                ->paginate(10); // Phân trang để giảm tải
+                ->orderBy('created_at', 'DESC')->get();
 
             $categories = Category::with('parent', 'children')
-                ->orderBy('created_at', 'DESC')
-                ->paginate(10); // Phân trang để giảm tải
+                ->orderBy('created_at', 'DESC')->get();
 
             $quizzes = Quiz::with('quizPackage', 'choices')
-                ->orderBy('created_at', 'DESC')
-                ->paginate(10); // Phân trang để giảm tải
+                ->orderBy('created_at', 'DESC')->get();
 
             return view('QuizBank.index', compact('quizBank', 'categories', 'quizzes'));
         } else {
-            // Nếu chưa đăng nhập, chuyển hướng đến trang đăng nhập
             return redirect()->route('admin.login');
         }
     }
@@ -197,25 +193,30 @@ class QuizBankController extends Controller
     public function updateQuestion(Request $request)
     {
         if (Auth::check()) {
+            // dd($request->quiz_package_id);
             try {
-                $question = Quiz::with('quizPackage', 'choices')->findOrFail($request->question_id);
-
+                $id = $request->quiz_package_id;
+                $question = Quiz::with('quizPackage', 'choices')->findOrFail($id);
                 $isUpdated = false;
 
-                if ($request->question != $question->question) {
-                    $question->question = $request->question;
+                // Cập nhật câu hỏi nếu cần thiết
+                if ($request->question_name != $question->question) {
+                    $question->question = $request->question_name;
                     $isUpdated = true;
                 }
 
+                // Cập nhật câu trả lời nếu cần thiết
                 foreach ($question->choices as $index => $choice) {
-                    $index++;
-                    $anwserName = 'anwser_' . $index;
+                    $index++;  // Đảm bảo chỉ số câu trả lời bắt đầu từ 1
+                    $anwserName = 'anwser_name_' . $index;
 
+                    // Cập nhật câu trả lời
                     if ($request->has($anwserName) && $request->$anwserName != $choice->choice) {
                         $choice->choice = $request->$anwserName;
                         $isUpdated = true;
                     }
 
+                    // Cập nhật câu trả lời đúng
                     if (isset($request->anwser)) {
                         $correctAnwser = $index == $request->anwser ? 1 : 0;
                         if ($choice->is_correct !== $correctAnwser) {
@@ -225,15 +226,16 @@ class QuizBankController extends Controller
                     }
                 }
 
+                // Lưu các thay đổi
                 if ($isUpdated) {
                     $question->save();
                     foreach ($question->choices as $choice) {
                         $choice->save();
                     }
-                    return redirect()->route('quiz-bank.index')->with('success', 'Cập nhật câu hỏi thành công');
+                    return redirect()->route('quiz-bank.index')->with('success', 'Cập nhật câu hỏi thành công!');
                 }
 
-                return redirect()->route('quiz-bank.index')->with('error', 'Không có thay đổi nào để cập nhật');
+                return redirect()->route('quiz-bank.index')->with('error', 'Không có thay đổi nào để cập nhật!');
             } catch (\Throwable $th) {
                 return back()->with('error', 'Có lỗi xảy ra trong quá trình cập nhật. Vui lòng thử lại.');
             }
@@ -242,10 +244,16 @@ class QuizBankController extends Controller
         return redirect()->route('login')->with('error', 'Bạn cần đăng nhập để thực hiện hành động này');
     }
 
+
     public function deleteQuestion(Request $request)
     {
         if (Auth::check()) {
             $id = $request->question_id;
+            // dd($id);
+            $asmID = AssignmentQuiz::where('quiz_id', $id)->first();
+            if ($asmID) {
+                return redirect()->route('quiz-bank.index')->with('error', 'Hiện tại không thể xóa câu hỏi này! Vui lòng kiểm tra lại Bài tập.');
+            }
             $deleteQuestion = Quiz::findOrFail($id);
             if ($deleteQuestion) {
                 $deleteQuestion->delete();
