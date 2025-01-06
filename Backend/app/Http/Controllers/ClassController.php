@@ -281,26 +281,23 @@ class ClassController extends Controller
         if (!empty($data[0])) {
             $errors = [];
             foreach ($data[0] as $index => $row) {
-                if ($index == 0) continue;
+                if ($index == 0) continue; // Bỏ qua dòng tiêu đề
 
-                $email = $row[2] ?? null;
-                $password = $row[3] ?? '123456';
+                $name = $row[1] ?? null;
 
-                if (!$email) {
-                    $errors[] = "Dòng $index: Email không được để trống.";
+                if (!$name) {
+                    $errors[] = "Dòng $index: Tên học sinh không được để trống.";
                     continue;
                 }
 
-                $user = User::where('email', $email)->where('role_id', 3)->first();
+                $user = User::where('name', $name)->where('role_id', 3)->first();
+
                 if (!$user) {
-                    $user = User::create([
-                        'name' => $row[1],
-                        'email' => $email,
-                        'password' => bcrypt($password),
-                        'role_id' => 3,
-                    ]);
+                    $errors[] = "Dòng $index: Học sinh '$name' không tồn tại trong hệ thống.";
+                    continue;
                 }
 
+                // Thêm học sinh vào lớp nếu tồn tại
                 $class->students()->syncWithoutDetaching([$user->id]);
             }
 
@@ -308,12 +305,13 @@ class ClassController extends Controller
                 return redirect()->back()->with('error', 'Một số lỗi xảy ra: ' . implode(', ', $errors));
             }
         }
+
         return redirect()->back()->with('success', 'Danh sách học sinh đã được nhập thành công!');
     }
 
     public function downloadTemplate()
     {
-        $headers = ['STT', 'Tên học sinh', 'Email'];
+        $headers = ['STT', 'Tên học sinh'];
         $fileName = 'student_import_template.xlsx';
 
         return Excel::download(new class([$headers]) implements FromArray {
