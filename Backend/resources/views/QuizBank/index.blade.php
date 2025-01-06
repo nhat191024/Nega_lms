@@ -293,21 +293,21 @@
                                                                                             </div>
                                                                                         </div>
                                                                                     @endforeach
+                                                                                    <div class="pagination" style="width: max-content; position: relative; left: 50%; transform: translate(-50%);">
+                                                                                        <button class="prev" onclick="changePage('prev', this)">Trước</button>
+                                                                                        <span class="page-numbers"></span>
+                                                                                        <button class="next" onclick="changePage('next', this)">Sau</button>
+                                                                                    </div>
                                                                                 </div>
                                                                             </div>
                                                                             
                                                                         </div>
     
                                                                         <!-- Modal Footer -->
-                                                                        <div class="modal-footer d-flex justify-content-between">
+                                                                        <div class="modal-footer text-center">
                                                                             <div>
                                                                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
                                                                                 <button onclick="addQuestion()" type="button" class="btn btn-primary">Thêm câu hỏi</button>
-                                                                            </div>
-                                                                            <div class="pagination">
-                                                                                <button class="prev" onclick="changePage('prev')">Trước</button>
-                                                                                <span class="page-numbers"></span>
-                                                                                <button class="next" onclick="changePage('next')">Sau</button>
                                                                             </div>
                                                                             <style>
                                                                                 .pagination {
@@ -1095,104 +1095,100 @@
             })
         }
 
-        let currentPage = 1;
-        let totalPages = 10; 
-        let maxVisiblePages = 3; 
+        // Hàm phân trang cho mỗi bảng
+        function paginateTable(contentTable) {
+            const items = contentTable.querySelectorAll('.main'); // Lấy tất cả các phần tử câu hỏi
+            const itemsPerPage = 3; // Số phần tử mỗi trang
+            const totalPages = Math.ceil(items.length / itemsPerPage); // Tổng số trang
+            let currentPage = 1; // Trang hiện tại
 
-        function renderPagination() {
-            const pageNumbersContainer = document.querySelector('.page-numbers');
-            let pagesHtml = '';
-
-            let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
-            let endPage = Math.min(totalPages, currentPage + Math.floor(maxVisiblePages / 2));
-
-            if (startPage > 1) {
-                pagesHtml += `<span class="page-num" onclick="goToPage(1)">1</span>`;
-                if (startPage > 2) {
-                    pagesHtml += `<span class="dots">...</span>`;
-                }
+            // Hiển thị các phần tử của trang hiện tại
+            function showPage(page) {
+                const startIdx = (page - 1) * itemsPerPage;
+                const endIdx = startIdx + itemsPerPage;
+                items.forEach((item, index) => {
+                    if (index >= startIdx && index < endIdx) {
+                        item.style.display = 'block';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
             }
+            
 
-            for (let i = startPage; i <= endPage; i++) {
-                if (i === currentPage) {
-                    pagesHtml += `<span class="page-num active">${i}</span>`;
-                } else {
-                    pagesHtml += `<span class="page-num" onclick="goToPage(${i})">${i}</span>`;
+            // Render phân trang (số trang và nút điều hướng)
+            function renderPagination() {
+                const pageNumbersContainer = contentTable.querySelector('.page-numbers');
+                let pagesHtml = '';
+                const startPage = Math.max(1, currentPage - Math.floor(3 / 2));
+                const endPage = Math.min(totalPages, currentPage + Math.floor(3 / 2));
+
+                if (startPage > 1) {
+                    pagesHtml += `<span class="page-num" onclick="alert(1)">1</span>`;
+                    // pagesHtml += `<span class="page-num" onclick="goToPage(1)">1</span>`;
+                    if (startPage > 2) {
+                        pagesHtml += `<span class="dots">...</span>`;
+                    }
                 }
-            }
 
-            if (endPage < totalPages) {
-                if (endPage < totalPages - 1) {
-                    pagesHtml += `<span class="dots">...</span>`;
+                for (let i = startPage; i <= endPage; i++) {
+                    if (i === currentPage) {
+                        pagesHtml += `<span class="page-num active">${i}</span>`;
+                    } else {
+                        pagesHtml += `<span class="page-num" onclick="goToPage(${i})">${i}</span>`;
+                    }
                 }
-                pagesHtml += `<span class="page-num" onclick="goToPage(${totalPages})">${totalPages}</span>`;
+
+                if (endPage < totalPages) {
+                    if (endPage < totalPages - 1) {
+                        pagesHtml += `<span class="dots">...</span>`;
+                    }
+                    pagesHtml += `<span class="page-num" onclick="goToPage(${totalPages})">${totalPages}</span>`;
+                }
+
+                pageNumbersContainer.innerHTML = pagesHtml;
             }
-
-            pageNumbersContainer.innerHTML = pagesHtml;
-
-            document.querySelector('.prev').disabled = currentPage === 1;
-            document.querySelector('.next').disabled = currentPage === totalPages;
-        }
-
-        // Chuyển đến trang mới
-        function goToPage(page) {
-            if (page < 1 || page > totalPages) return;
-            currentPage = page;
+            // Initial rendering
             renderPagination();
-        }
+            showPage(currentPage);
 
-        // Chuyển đến trang trước hoặc sau
-        function changePage(direction) {
-            if (direction === 'prev' && currentPage > 1) {
-                currentPage--;
-            } else if (direction === 'next' && currentPage < totalPages) {
-                currentPage++;
+            
+
+            // Chuyển đến trang tiếp theo hoặc trang trước
+            function changePage(direction) {
+                if (direction === 'prev' && currentPage > 1) {
+                    currentPage--;
+                } else if (direction === 'next' && currentPage < totalPages) {
+                    currentPage++;
+                }
+                renderPagination();
+                showPage(currentPage);
             }
-            renderPagination();
+
+            // Attach event listeners to prev/next buttons
+            const prevButton = contentTable.querySelector('.prev');
+            const nextButton = contentTable.querySelector('.next');
+
+            prevButton.addEventListener('click', () => changePage('prev'));
+            nextButton.addEventListener('click', () => changePage('next'));
+
+            // Chuyển đến trang cụ thể
+            function goToPage(page) {
+                console.log("Go to page:", page); 
+                if (page < 1 || page > totalPages) return; // Kiểm tra nếu trang hợp lệ
+                currentPage = page;
+                renderPagination();
+                showPage(currentPage);
+            }
         }
 
-        renderPagination();
-
-
-
-        // let currentPageQuestion = 0;
-
-        // function hideAllContentQuestion() {
-        //     let contentQuestion = document.querySelectorAll('.content-table .main');
-        //     contentQuestion.forEach(function (question) {
-        //         question.style.display = 'none';
-        //     })
-        // }
-
-        // function showContentQuesstion(page) {
-        //     let contentQuestion = document.querySelectorAll('.content-table .main');
-        //     hideAllContentQuestion();
-
-        //     let start = page * 5;
-        //     let end = start + 5;
-
-        //     for (let i = start; i < end && i < contentQuestions.length; i++) {
-        //         contentQuestions[i].style.display = 'block';
-        //     }
-        // }
-
-        // function nextContentQuestion() {
-        //     let contentQuestions = document.querySelectorAll('.content-table .main');
-        //     if ((currentPageQuestion + 1) * 5 < contentQuestions.length) {
-        //         currentPageQuestion++;
-        //         showContentQuesstion(currentPageQuestion);
-        //     }
-        // }
-
-        // function prevContentQuestion() {
-        //     if (currentPageQuestion > 0) {
-        //         currentPageQuestion--;
-        //         showContentQuesstion(currentPageQuestion);
-        //     }
-        // }
-
-        // showContentQuesstion(currentPageQuestion);
-
+        // Chạy khi trang web tải xong, áp dụng phân trang cho mỗi bảng
+        window.onload = () => {
+            const contentTables = document.querySelectorAll('.content-table');
+            contentTables.forEach(table => {
+                paginateTable(table); // Gọi hàm phân trang cho mỗi bảng
+            });
+        };
         var myModal = document.querySelectorAll('.modal');
         myModal.forEach(function(modal) {
             modal.addEventListener('hidden.bs.modal', function () {
