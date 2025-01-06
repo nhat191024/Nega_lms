@@ -87,6 +87,16 @@
             <div class="tab-pane fade" id="Students" role="tabpanel" aria-labelledby="students-tab">
                 <div class="card mt-3">
                     <div class="card-body">
+                        @if (session('messages'))
+                            <div class="alert alert-info">
+                                <strong>Thông báo:</strong>
+                                <ul>
+                                    @foreach (session('messages') as $message)
+                                        <li>{{ $message }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
                         <div class="d-flex justify-content-between align-items-center">
                             <h3 class="card-title mb-0">Danh sách học sinh</h3>
                             <div class="d-flex align-items-center">

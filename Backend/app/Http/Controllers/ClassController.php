@@ -279,31 +279,38 @@ class ClassController extends Controller
         $data = Excel::toArray([], $path);
 
         if (!empty($data[0])) {
-            $errors = [];
+            $missingStudents = [];
+            $addedStudents = [];
             foreach ($data[0] as $index => $row) {
-                if ($index == 0) continue; // Bỏ qua dòng tiêu đề
+                if ($index == 0) continue;
 
                 $name = $row[1] ?? null;
 
-                if (!$name) {
-                    $errors[] = "Dòng $index: Tên học sinh không được để trống.";
-                    continue;
+                if ($name) {
+                    $user = User::where('name', $name)->where('role_id', 3)->first();
+
+                    if (!$user) {
+                        $missingStudents[] = $name;
+                        continue;
+                    }
+
+                    $class->students()->syncWithoutDetaching([$user->id]);
+                    $addedStudents[] = $name;
                 }
-
-                $user = User::where('name', $name)->where('role_id', 3)->first();
-
-                if (!$user) {
-                    $errors[] = "Dòng $index: Học sinh '$name' không tồn tại trong hệ thống.";
-                    continue;
-                }
-
-                // Thêm học sinh vào lớp nếu tồn tại
-                $class->students()->syncWithoutDetaching([$user->id]);
+            }
+            
+            $messages = [];
+            if (!empty($missingStudents)) {
+                $missingList = implode(', ', $missingStudents);
+                $messages[] = "Những học sinh sau đây không tồn tại trong hệ thống: $missingList.";
             }
 
-            if (!empty($errors)) {
-                return redirect()->back()->with('error', 'Một số lỗi xảy ra: ' . implode(', ', $errors));
+            if (!empty($addedStudents)) {
+                $addedList = implode(', ', $addedStudents);
+                $messages[] = "Những học sinh sau đây đã được thêm vào lớp thành công: $addedList.";
             }
+
+            return redirect()->back()->with('messages', $messages);
         }
 
         return redirect()->back()->with('success', 'Danh sách học sinh đã được nhập thành công!');
