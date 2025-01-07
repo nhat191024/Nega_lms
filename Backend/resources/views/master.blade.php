@@ -259,10 +259,11 @@
                             <img class="img-profile rounded-circle" src="{{ !empty($profile->avatar) ? $profile->avatar : 'img/undraw_profile.svg' }}">
                         </a>
                         <div class="dropdown-menu dropdown-menu-end shadow animated--grow-in" aria-labelledby="userDropdown">
-                            <a href="#" class="dropdown-item text-gray-600 hover:bg-gray-100">
+                            <a onclick="if(confirm('Bạn có chắc chắn đăng xuất khỏi tài khoản {{ $profile->email }} không?')) { window.location.href='{{ route('admin.logout') }}'; }" href="#" class="dropdown-item text-gray-600 hover:bg-gray-100">
                                 <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                                 Đăng xuất
                             </a>
+                            
                         </div>
                         
                     </li>

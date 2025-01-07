@@ -11,6 +11,7 @@ use App\Http\Controllers\QuizBankController;
 
 Route::get('/', [AdminAuthController::class, 'showLoginForm'])->name('admin.login');
 Route::post('/login', [AdminAuthController::class, 'login'])->name('admin.login.submit');
+Route::get('/logout', [AdminAuthController::class, 'logout'])->name('admin.logout');
 
 Route::prefix('/dashboard')->name('dashboard.')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('index');
