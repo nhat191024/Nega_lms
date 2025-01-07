@@ -9,6 +9,7 @@ use App\Models\Choice;
 use App\Models\Quiz;
 use App\Models\QuizPackage;
 use App\Models\QuizPackageCategory;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -18,12 +19,10 @@ class QuizBankController extends Controller
     {
         if (Auth::check()) {
             $quizBank = QuizPackage::orderBy('created_at', 'DESC')->get();
-
             $categories = Category::orderBy('created_at', 'DESC')->get();
-
             $quizzes = Quiz::orderBy('created_at', 'DESC')->get();
-
-            return view('QuizBank.index', compact('quizBank', 'categories', 'quizzes'));
+            $profile = User::findOrFail(Auth::id());
+            return view('QuizBank.index', compact('quizBank', 'categories', 'quizzes', 'profile'));
         } else {
             return redirect()->route('admin.login');
         }
