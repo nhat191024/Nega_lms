@@ -235,14 +235,14 @@
                                                                                             <div class="content mb-3">
                                                                                                 <span class="fs-5">{{ $index }}</span>
                                                                                                 <span class="fs-5 text-start">{{ $question->question }}</span>
-                                                                                                <span class="fs-5 d-flex">
-                                                                                                    <span class="me-2" onclick="cardShowQuestion(this)">
+                                                                                                <span class="fs-5 d-flex justify-content-end">
+                                                                                                    <span style="margin-right: 5px;" class="" onclick="cardShowQuestion(this)">
                                                                                                         <a class="btn btn-info btn-sm" title="Xem câu hỏi" href="javascript:void(0);"><i class="fas fa-eye"></i></a>
                                                                                                     </span>
-                                                                                                    <span class="mx-1" onclick="formEditQuestion(this)">
+                                                                                                    <span style="margin: 0 5px;" class="" onclick="formEditQuestion(this)">
                                                                                                         <a class="btn btn-primary btn-sm" title="Chỉnh sửa câu hỏi" href="javascript:void(0);"><i class="fas fa-pencil-alt"></i></a>
                                                                                                     </span>
-                                                                                                    <span class="ms-2">
+                                                                                                    <span>
                                                                                                         <form class="formDeleteQuestion" action="{{ route('quiz-bank.deleteQuestion') }}" method="post">
                                                                                                             @csrf
                                                                                                             <input type="hidden" name="question_id" value="{{ $question->id }}">
