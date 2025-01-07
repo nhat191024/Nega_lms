@@ -80,12 +80,19 @@
                                                         @enderror
                                                     </div>
                                                     <div class="mb-3">
-                                                        <label for="status" class="form-label">Trạng thái</label>
-                                                        <select class="form-select" name="status" id="status">
-                                                            <option value="published">Công khai
-                                                            </option>
-                                                            <option value="private">Ẩn</option>
-                                                            <option value="closed">Hủy</option>
+                                                        <label for="status"
+                                                            class="form-label">Xuất bản</label>
+                                                        <select name="status" class="form-select" id="status">
+                                                            <option selected value="published">Xuất bản</option>
+                                                            <option value="closed">Đóng</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="status"
+                                                            class="form-label">Hiển thị</label>
+                                                        <select name="type" class="form-select">
+                                                            <option selected value="public">Công khai </option>
+                                                            <option value="private">Riêng tư</option>
                                                         </select>
                                                     </div>
                                                     <button type="button" class="btn btn-secondary"
@@ -444,15 +451,17 @@
                                                                                     @enderror
                                                                                 </div>
                                                                                 <div class="mb-3">
-                                                                                    <label for="status"
-                                                                                        class="form-label">Trạng thái</label>
-                                                                                    <select name="status" class="form-select"
-                                                                                        id="status">
-                                                                                        <option selected value="published">Công
-                                                                                            khai
-                                                                                        </option>
-                                                                                        <option value="private">Ẩn</option>
-                                                                                        <option value="closed">Hủy</option>
+                                                                                    <label for="status" class="form-label">Xuất bản</label>
+                                                                                    <select name="status" class="form-select">
+                                                                                        <option {{ $quiz->stutus === 'published' ? 'selected' : '' }} value="published">Xuất bản</option>
+                                                                                        <option {{ $quiz->stutus === 'closed' ? 'selected' : '' }} value="closed">Đóng</option>
+                                                                                    </select>
+                                                                                </div>
+                                                                                <div class="mb-3">
+                                                                                    <label for="type" class="form-label">Hiển thị</label>
+                                                                                    <select name="type" class="form-select">
+                                                                                        <option {{ $quiz->type === 'public' ? 'selected' : '' }} value="public">Công khai </option>
+                                                                                        <option {{ $quiz->type === 'private' ? 'selected' : '' }} value="private">Riêng tư</option>
                                                                                     </select>
                                                                                 </div>
                                                                                 <input type="hidden" name="quiz_id"
@@ -494,11 +503,11 @@
                     @if ($quizBank->count() > 0)
                         <div class="card">
                             <div class="card-header">
-    
+                                
                             </div>
                             <div class="card-body">
                                 <div class="table-responsive">
-                                    <table id="quiz-private" class="table table-striped">
+                                    <table id="quiz-published" class="table table-striped">
                                         <thead>
                                             <tr>
                                                 <th>#</th>
@@ -508,49 +517,33 @@
                                                 <th>Phạm vi quiz_id</th>
                                                 <th>Thuộc danh mục</th>
                                                 <th>Bộ câu hỏi</th>
-                                                <th class="text-center">Trạng thái</th>
-                                                <th>Tác vụ</th>
+                                                <th class="">Xuất bản</th>
+                                                <th class="text-center">Hiển thị</th>
+                                                <th style="width: 100px;">Tác vụ</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @foreach ($quizBank as $quiz)
-                                                @if ($quiz->status === 'private')
+                                                
+                                                
+                                                @if ($quiz->type === 'private')
                                                     <tr>
+                                                        <td> {{ $loop->iteration }} </td>
                                                         <td>
-                                                            {{ $loop->iteration }}
-                                                        </td>
-                                                        <td>
-                                                            <a>
-                                                                {{ $quiz->creator->name }}
-                                                            </a>
+                                                            <a> {{ $quiz->creator->name }} </a>
                                                             <br />
-                                                            <small>
-                                                                Tạo lúc
-                                                                {{ \Carbon\Carbon::parse($quiz->created_at)->format('d/m/Y') }}
-                                                            </small>
+                                                            <small> Tạo lúc {{ \Carbon\Carbon::parse($quiz->created_at)->format('d/m/Y') }} </small>
                                                         </td>
-                                                        <td>
-                                                            {{ $quiz->title }}
-                                                        </td>
-                                                        <td>
-                                                            {{ $quiz->description }}
-                                                        </td>
-                                                        <td>
-                                                            {{ $quiz->quiz_id_range }}
-                                                        </td>
+                                                        <td> {{ $quiz->title }} </td>
+                                                        <td> {{ $quiz->description }} </td>
+                                                        <td> {{ $quiz->quiz_id_range }} </td>
                                                         <td>
                                                             @foreach ($quiz->categories as $category)
                                                                 <span class="badge badge-primary">{{ $category->name }}</span>
                                                             @endforeach
                                                         </td>
                                                         <td>
-                                                            <button type="button" class="badge badge-success"
-                                                                data-bs-toggle="modal"
-                                                                data-bs-target="#showQuestion_{{ $indexRender }}">
-                                                                Xem bộ câu hỏi
-                                                            </button>
-    
-                                                            <!-- Modal -->
+                                                            <button type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#showQuestion_{{ $indexRender }}"> Xem bộ câu hỏi </button>
                                                             <div class="modal fade" id="showQuestion_{{ $indexRender }}"
                                                                 tabindex="-1" aria-labelledby="showQuestion"
                                                                 aria-hidden="true">
@@ -568,345 +561,174 @@
                                                                         <!-- Modal Body -->
                                                                         <div class="modal-body">
                                                                             <!-- Form Thêm Câu Hỏi -->
-                                                                            <div class="card formAddQuestion"
-                                                                                style="width: 100%; display: none;">
+                                                                            <div class="card formAddQuestion" style="width: 100%; display: none;">
                                                                                 <div class="card-body">
-                                                                                    <form
-                                                                                        action="{{ route('quiz-bank.addQuestion') }}"
-                                                                                        method="post" id="quizForm">
+                                                                                    <form action="{{ route('quiz-bank.addQuestion') }}" method="post" id="quizForm">
                                                                                         @csrf
                                                                                         <div class="mb-3">
-                                                                                            <label for="title"
-                                                                                                class="form-label">Nhập câu
-                                                                                                hỏi</label>
-                                                                                            <input type="text"
-                                                                                                class="form-control @error('question_name') is-invalid @enderror"
-                                                                                                id="title"
-                                                                                                placeholder="Nhập câu hỏi"
-                                                                                                name="question_name">
+                                                                                            <label for="title" class="form-label">Nhập câu hỏi</label>
+                                                                                            <input type="text" class="form-control @error('question_name') is-invalid @enderror" 
+                                                                                                id="title" placeholder="Nhập câu hỏi" name="question_name">
                                                                                             @error('question_name')
-                                                                                                <div class="invalid-feedback">
-                                                                                                    {{ $message }}</div>
+                                                                                                <div class="invalid-feedback">{{ $message }}</div>
                                                                                             @enderror
-    
-                                                                                            <label class="form-label">Nhập câu
-                                                                                                trả lời</label>
-    
-                                                                                            <div class="form-check">
-                                                                                                <input type="radio"
-                                                                                                    class="form-check-input @error('anwser') is-invalid @enderror"
-                                                                                                    name="anwser"
-                                                                                                    id="anwser_1"
-                                                                                                    value="1">
-                                                                                                <label class="form-check-label"
-                                                                                                    for="anwser_1">Câu trả lời
-                                                                                                    1</label>
-                                                                                                <input type="text"
-                                                                                                    class="form-control @error('anwser_name_1') is-invalid @enderror"
-                                                                                                    id="anwser_name_1"
-                                                                                                    placeholder="Nhập câu trả lời 1"
-                                                                                                    name="anwser_name_1">
-                                                                                                @error('anwser_name_1')
-                                                                                                    <div class="invalid-feedback">
-                                                                                                        {{ $message }}</div>
-                                                                                                @enderror
-                                                                                            </div>
-    
-                                                                                            <div class="form-check">
-                                                                                                <input type="radio"
-                                                                                                    class="form-check-input @error('anwser') is-invalid @enderror"
-                                                                                                    name="anwser"
-                                                                                                    id="anwser_2"
-                                                                                                    value="2">
-                                                                                                <label class="form-check-label"
-                                                                                                    for="anwser_2">Câu trả lời
-                                                                                                    2</label>
-                                                                                                <input type="text"
-                                                                                                    class="form-control @error('anwser_name_2') is-invalid @enderror"
-                                                                                                    id="anwser_name_2"
-                                                                                                    placeholder="Nhập câu trả lời 2"
-                                                                                                    name="anwser_name_2">
-                                                                                                @error('anwser_name_2')
-                                                                                                    <div class="invalid-feedback">
-                                                                                                        {{ $message }}</div>
-                                                                                                @enderror
-                                                                                            </div>
-    
-                                                                                            <div class="form-check">
-                                                                                                <input type="radio"
-                                                                                                    class="form-check-input @error('anwser') is-invalid @enderror"
-                                                                                                    name="anwser"
-                                                                                                    id="anwser_3"
-                                                                                                    value="3">
-                                                                                                <label class="form-check-label"
-                                                                                                    for="anwser_3">Câu trả lời
-                                                                                                    3</label>
-                                                                                                <input type="text"
-                                                                                                    class="form-control @error('anwser_name_3') is-invalid @enderror"
-                                                                                                    id="anwser_name_3"
-                                                                                                    placeholder="Nhập câu trả lời 3"
-                                                                                                    name="anwser_name_3">
-                                                                                                @error('anwser_name_3')
-                                                                                                    <div class="invalid-feedback">
-                                                                                                        {{ $message }}</div>
-                                                                                                @enderror
-                                                                                            </div>
-    
-                                                                                            <div class="form-check">
-                                                                                                <input type="radio"
-                                                                                                    class="form-check-input @error('anwser') is-invalid @enderror"
-                                                                                                    name="anwser"
-                                                                                                    id="anwser_4"
-                                                                                                    value="4">
-                                                                                                <label class="form-check-label"
-                                                                                                    for="anwser_4">Câu trả lời
-                                                                                                    4</label>
-                                                                                                <input type="text"
-                                                                                                    class="form-control @error('anwser_name_4') is-invalid @enderror"
-                                                                                                    id="anwser_name_4"
-                                                                                                    placeholder="Nhập câu trả lời 4"
-                                                                                                    name="anwser_name_4">
-                                                                                                @error('anwser_name_4')
-                                                                                                    <div class="invalid-feedback">
-                                                                                                        {{ $message }}</div>
-                                                                                                @enderror
-                                                                                            </div>
+                                                                                            <label class="form-label">Nhập câu trả lời</label>
+                                                                                            @for ($i = 1; $i <= 4; $i++)
+                                                                                                <div class="form-check">
+                                                                                                    <input type="radio" class="form-check-input @error('anwser') is-invalid @enderror"
+                                                                                                        name="anwser" id="anwser_{{ $i }}" value="{{ $i }}">
+                                                                                                    <label class="form-check-label" for="anwser_{{ $i }}">Câu trả lời {{ $i }}</label>
+                                                                                                    
+                                                                                                    <input type="text" class="form-control @error('anwser_name_' . $i) is-invalid @enderror" 
+                                                                                                        id="anwser_name_{{ $i }}" placeholder="Nhập câu trả lời {{ $i }}" 
+                                                                                                        name="anwser_name_{{ $i }}">
+                                                                                                    
+                                                                                                    @error('anwser_name_' . $i)
+                                                                                                        <div class="invalid-feedback">{{ $message }}</div>
+                                                                                                    @enderror
+                                                                                                </div>
+                                                                                            @endfor
                                                                                         </div>
-    
-                                                                                        <input type="hidden"
-                                                                                            name="quiz_package_id"
-                                                                                            value="{{ $quiz->id }}">
-    
-                                                                                        <button type="button" onclick="cancelFormQuestion()" class="btn btn-danger cancelFormQuestion">Hủy</button>
-                                                                                        <button type="submit"
-                                                                                            class="btn btn-primary">Tạo</button>
+                                                                            
+                                                                                        <input type="hidden" name="quiz_package_id" value="{{ $quiz->id }}">
+                                                                            
+                                                                                        <button type="button" onclick="cancelFormQuestion()" class="btn btn-danger">Hủy</button>
+                                                                                        <button type="submit" class="btn btn-primary">Tạo</button>
                                                                                     </form>
-    
-    
                                                                                 </div>
                                                                             </div>
-                                                                            <!-- Table Câu Hỏi -->
-                                                                            <div class="table-responsive">
-                                                                                <table id="question"
-                                                                                    class="table table-striped table-hover">
-                                                                                    <thead>
-                                                                                        <tr>
-                                                                                            <th class="text-right"
-                                                                                                style="width: 15px !important;">
-                                                                                                STT</th>
-                                                                                            <th>Câu hỏi</th>
-                                                                                            <th>Tác vụ</th>
-                                                                                        </tr>
-                                                                                    </thead>
-                                                                                    <tbody>
-                                                                                        @foreach ($quiz->quizzes as $index => $question)
-                                                                                            <tr>
-                                                                                                @php
-                                                                                                    $index++;
-                                                                                                    $indexRender++;
-                                                                                                @endphp
-                                                                                                <td class="text-right">
-                                                                                                    {{ $index }}
-                                                                                                </td>
-                                                                                                <td>{{ $question->question }}
-                                                                                                </td>
-                                                                                                <td class="text-right">
-                                                                                                    <!-- Xem chi tiết -->
-                                                                                                    <a onclick="alert('Câu hỏi: {{ addslashes($question->question) }}\n @foreach ($question->choices as $choice) {{ $loop->iteration }}. {{ addslashes($choice->choice) }} {{ $choice->is_correct === 1 ? '✅' : '❌' }}\n @endforeach');"
-                                                                                                        class="btn btn-primary btn-sm"
-                                                                                                        title="Xem chi tiết"
-                                                                                                        href="#">
-                                                                                                        <i class="fas fa-eye"></i>
-                                                                                                    </a>
+                                                                            
+                                                                            <style>
+                                                                                .custom-table .header-table,
+                                                                                .custom-table .content-table .main .content {
+                                                                                    display: grid;
+                                                                                    grid-template-columns: 55px auto 30%;
+                                                                                    column-gap: 20px;
+                                                                                    row-gap: 10px;
+                                                                                    text-align: center
+                                                                                }
     
-                                                                                                    <!-- Nút chỉnh sửa -->
-                                                                                                    <a class="btn btn-info btn-sm editQuestion"
-                                                                                                        onclick="editQuestion({{ $indexRender }})"
-                                                                                                        title="Chỉnh sửa câu hỏi"
-                                                                                                        href="javascript:void(0);">
-                                                                                                        <i class="fas fa-pencil-alt"></i>
-                                                                                                    </a>
-    
-                                                                                                    <!-- Modal chỉnh sửa câu hỏi -->
-                                                                                                    <div hidden
-                                                                                                        class="text-start"
-                                                                                                        style="position: fixed; width: 90%; height: 90%; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 9999;"
-                                                                                                        id="editQuestion_{{ $indexRender }}">
-                                                                                                        <form
-                                                                                                            action="{{ route('quiz-bank.updateQuestion') }}"
-                                                                                                            method="post">
+                                                                                .custom-table .content-table .main {
+                                                                                    background: whitesmoke;
+                                                                                    margin: 5px 0;
+                                                                                    border: 1px solid white;
+                                                                                    border-radius: 10px;
+                                                                                    padding: 10px
+                                                                                }
+                                                                            </style>
+                                                                            <div class="custom-table">
+                                                                                <div class="header-table text-start">
+                                                                                    <span class="fs-4 fw-bold">STT</span>
+                                                                                    <span class="fs-4 fw-bold">Câu hỏi</span>
+                                                                                    <span class="fs-4 fw-bold">Tác vụ</span>
+                                                                                </div>
+                                                                                <div class="content-table">
+                                                                                    @foreach ($quiz->quizzes as $index => $question)
+                                                                                        @php
+                                                                                            $index++;
+                                                                                            $indexRender++;
+                                                                                        @endphp
+                                                                                        <div class="main">
+                                                                                            <div class="content mb-3">
+                                                                                                <span class="fs-5">{{ $index }}</span>
+                                                                                                <span class="fs-5 text-start">{{ $question->question }}</span>
+                                                                                                <span class="fs-5 d-flex">
+                                                                                                    <span class="me-2" onclick="cardShowQuestion(this)">
+                                                                                                        <a class="btn btn-info btn-sm" title="Xem câu hỏi" href="javascript:void(0);"><i class="fas fa-eye"></i></a>
+                                                                                                    </span>
+                                                                                                    <span class="mx-1" onclick="formEditQuestion(this)">
+                                                                                                        <a class="btn btn-primary btn-sm" title="Chỉnh sửa câu hỏi" href="javascript:void(0);"><i class="fas fa-pencil-alt"></i></a>
+                                                                                                    </span>
+                                                                                                    <span class="ms-2">
+                                                                                                        <form class="formDeleteQuestion" action="{{ route('quiz-bank.deleteQuestion') }}" method="post">
                                                                                                             @csrf
-                                                                                                            <div
-                                                                                                                class="card">
-                                                                                                                <div
-                                                                                                                    class="card-header">
-                                                                                                                    <div
-                                                                                                                        class="mb-3">
-                                                                                                                        <h4>Câu
-                                                                                                                            hỏi:
-                                                                                                                        </h4>
-                                                                                                                        <input
-                                                                                                                            class="form-control"
-                                                                                                                            type="text"
-                                                                                                                            name="question"
-                                                                                                                            placeholder="Nhập câu hỏi..."
-                                                                                                                            value="{{ $question->question }}">
+                                                                                                            <input type="hidden" name="question_id" value="{{ $question->id }}">
+                                                                                                            <button type="button" onclick="formDeleteQuestion(this)" class="btn btn-danger btn-sm" title="Xóa câu hỏi"><i class="fas fa-trash"></i></button>
+                                                                                                        </form>
+                                                                                                    </span>
+                                                                                                </span>
+                                                                                            </div>
+                                                                                            
+                                                                                            <div class="editQuestion">
+                                                                                                <div class="card formEditQuestion" style="width: 100%; display: none;">
+                                                                                                    <div class="card-body">
+                                                                                                        <form action="{{ route('quiz-bank.updateQuestion') }}" method="post">
+                                                                                                            @csrf
+                                                                                                            <div class="mb-3">
+                                                                                                                <label for="title" class="form-label">Nhập câu hỏi</label>
+                                                                                                                <input type="text" class="form-control @error('question_name') is-invalid @enderror" value="{{ $question->question }}" id="title" placeholder="Nhập câu hỏi" name="question_name">
+                                                                                                                @error('question_name')
+                                                                                                                    <div class="invalid-feedback">{{ $message }}</div>
+                                                                                                                @enderror
+                                                                            
+                                                                                                                <label class="form-label">Nhập câu trả lời</label>
+                                                                            
+                                                                                                                @foreach ($question->choices as $choice)
+                                                                                                                    <div class="form-check">
+                                                                                                                        <input type="radio" {{ $choice->is_correct === 1 ? 'checked' : '' }} class="form-check-input @error('anwser') is-invalid @enderror"
+                                                                                                                            name="anwser" id="anwser_{{ $loop->iteration }}" value="{{ $loop->iteration }}">
+                                                                                                                        <label class="form-check-label" for="anwser_{{ $loop->iteration }}">Câu trả lời {{ $loop->iteration }} <span>{{ $choice->is_correct === 1 ? '✅' : '❌' }}</span></label>
+                                                                                                                        <input type="text" class="form-control @error('anwser_name_{{ $loop->iteration }}') is-invalid @enderror"
+                                                                                                                            id="anwser_name_{{ $loop->iteration }}" value="{{ $choice->choice }}" 
+                                                                                                                            placeholder="Nhập câu trả lời {{ $loop->iteration }}" name="anwser_name_{{ $loop->iteration }}">
+                                                                                                                        @error('anwser_name_{{ $loop->iteration }}')
+                                                                                                                            <div class="invalid-feedback">{{ $message }}</div>
+                                                                                                                        @enderror
                                                                                                                     </div>
-                                                                                                                </div>
-                                                                                                                <div
-                                                                                                                    class="card-body">
-                                                                                                                    <h4>Câu trả
-                                                                                                                        lời:
-                                                                                                                    </h4>
-                                                                                                                    <div
-                                                                                                                        class="mb-3">
-                                                                                                                        @foreach ($question->choices as $choice)
-                                                                                                                            <div
-                                                                                                                                class="mb-3">
-                                                                                                                                <label
-                                                                                                                                    for="anwser_{{ $loop->iteration }}">Câu
-                                                                                                                                    {{ $loop->iteration }}.
-                                                                                                                                    <span>{{ $choice->is_correct === 1 ? '✅' : '❌' }}</span></label>
-                                                                                                                                <input
-                                                                                                                                    class="form-control"
-                                                                                                                                    type="text"
-                                                                                                                                    name="anwser_{{ $loop->iteration }}"
-                                                                                                                                    value="{{ $choice->choice }}">
-                                                                                                                            </div>
-                                                                                                                        @endforeach
-                                                                                                                    </div>
-                                                                                                                    <div
-                                                                                                                        class="mb-3">
-                                                                                                                        <h5
-                                                                                                                            class="text-danger">
-                                                                                                                            Chọn
-                                                                                                                            lại
-                                                                                                                            câu
-                                                                                                                            đúng
-                                                                                                                            (Nếu
-                                                                                                                            để
-                                                                                                                            trống
-                                                                                                                            sẽ
-                                                                                                                            giữ
-                                                                                                                            nguyên)
-                                                                                                                        </h5>
-                                                                                                                        <div
-                                                                                                                            class="d-flex">
-                                                                                                                            @foreach ($question->choices as $choice)
-                                                                                                                                <div
-                                                                                                                                    class="form-check me-3">
-                                                                                                                                    <label
-                                                                                                                                        class="radio-button">
-                                                                                                                                        <input
-                                                                                                                                            type="radio"
-                                                                                                                                            class="form-check-input @error('anwser') is-invalid @enderror"
-                                                                                                                                            value="{{ $loop->iteration }}"
-                                                                                                                                            name="anwser">
-                                                                                                                                        <span
-                                                                                                                                            class="radio">
-                                                                                                                                            Câu
-                                                                                                                                            {{ $loop->iteration }}
-                                                                                                                                        </span>
-                                                                                                                                    </label>
-                                                                                                                                    @error('anwser_name_{{ $indexRender }}')
-                                                                                                                                        <div
-                                                                                                                                            class="invalid-feedback">
-                                                                                                                                            {{ $message }}
-                                                                                                                                        </div>
-                                                                                                                                    @enderror
-                                                                                                                                </div>
-                                                                                                                            @endforeach
-                                                                                                                        </div>
-                                                                                                                        <input
-                                                                                                                            type="hidden"
-                                                                                                                            name="question_id"
-                                                                                                                            value="{{ $question->id }}"
-                                                                                                                            id="">
-                                                                                                                    </div>
-                                                                                                                </div>
-                                                                                                                <div
-                                                                                                                    class="card-footer text-end">
-                                                                                                                    <button
-                                                                                                                        onclick="closeEditQuestion({{ $indexRender }})"
-                                                                                                                        type="button"
-                                                                                                                        class="btn btn-secondary">Đóng</button>
-                                                                                                                    <button
-                                                                                                                        type="submit"
-                                                                                                                        class="btn btn-primary">Cập
-                                                                                                                        nhật</button>
-                                                                                                                </div>
+                                                                                                                @endforeach
+                                                                                                            </div>
+                                                                                                            <input type="hidden" name="quiz_package_id" value="{{ $question->id }}">
+                                                                                                            <div class="text-end">
+                                                                                                                <a class="btn btn-danger" href="javascript:void(0);" onclick="cancelFormQuestion()">Hủy</a>
+                                                                                                                <button type="submit" class="btn btn-primary">Cập nhật</button>
                                                                                                             </div>
                                                                                                         </form>
                                                                                                     </div>
-    
-                                                                                                    <!-- JavaScript xử lý modal -->
-                                                                                                    <script>
-                                                                                                        // Hiện modal chỉnh sửa cho câu hỏi cụ thể
-                                                                                                        function editQuestion(iteration) {
-                                                                                                            const editQuestionElement = document.querySelector('#editQuestion_' + iteration);
-                                                                                                            editQuestionElement.removeAttribute('hidden');
-                                                                                                        }
-    
-                                                                                                        // Đóng modal chỉnh sửa
-                                                                                                        function closeEditQuestion(iteration) {
-                                                                                                            const editQuestionElement = document.querySelector('#editQuestion_' + iteration);
-                                                                                                            editQuestionElement.setAttribute('hidden', true);
-                                                                                                        }
-                                                                                                    </script>
-    
-                                                                                                    <!-- Nút xóa -->
-                                                                                                    <form
-                                                                                                        action="{{ route('quiz-bank.deleteQuestion') }}"
-                                                                                                        method="post"
-                                                                                                        id="deleteForm_{{ $question->id }}">
-                                                                                                        @csrf
-                                                                                                        <input type="hidden"
-                                                                                                            name="question_id"
-                                                                                                            value="{{ $question->id }}">
-                                                                                                        <button
-                                                                                                            class="btn btn-danger btn-sm"
-                                                                                                            title="Xóa câu hỏi"
-                                                                                                            type="button"
-                                                                                                            onclick="confirmDelete({{ $question->id }})">
-                                                                                                            <i class="fas fa-trash"></i>
-                                                                                                        </button>
-                                                                                                    </form>
-    
-                                                                                                    <script>
-                                                                                                        function confirmDelete(questionId) {
-                                                                                                            // Hiển thị hộp thoại xác nhận
-                                                                                                            if (confirm('Bạn có chắc chắn muốn xóa câu hỏi này không?')) {
-                                                                                                                // Nếu người dùng chọn OK, gửi form
-                                                                                                                document.getElementById('deleteForm_' + questionId).submit();
-                                                                                                            }
-                                                                                                        }
-                                                                                                    </script>
-                                                                                                </td>
-                                                                                            </tr>
-                                                                                        @endforeach
-                                                                                    </tbody>
-                                                                                </table>
+                                                                                                </div>
+                                                                                            </div>
+
+                                                                                            <div class="card cardShowQuestion d-none">
+                                                                                                <div class="card-body">
+                                                                                                    @foreach ($question->choices as $choice)
+                                                                                                        <div class="alert alert-light" role="alert">
+                                                                                                            {{ $choice->is_correct === 1 ? '✅ ' : '❌ ' }} {{ $choice->choice }}
+                                                                                                        </div>
+                                                                                                    @endforeach
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    @endforeach
+                                                                                    <div class="pagination" style="width: max-content; position: relative; left: 50%; transform: translate(-50%);">
+                                                                                        <button class="prev" onclick="changePage('prev', this)">Trước</button>
+                                                                                        <span class="page-numbers"></span>
+                                                                                        <button class="next" onclick="changePage('next', this)">Sau</button>
+                                                                                    </div>
+                                                                                </div>
                                                                             </div>
+                                                                            
                                                                         </div>
     
                                                                         <!-- Modal Footer -->
-                                                                        <div class="modal-footer">
-                                                                            <button type="button" class="btn btn-secondary"
-                                                                                data-bs-dismiss="modal">Đóng</button>
-                                                                            <button type="button"
-                                                                                class="btn btn-primary addQuestion">Thêm câu
-                                                                                hỏi</button>
+                                                                        <div class="modal-footer text-center">
+                                                                            <div>
+                                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                         </td>
                                                         <td class="text-center">
-                                                            <span class="badge badge-success text-center">
-                                                                {{ $quiz->status === 'private' ? 'Đã ẩn' : '' }}
+                                                            <span class="badge badge-{{ $quiz->status === 'published' ? 'info' : 'warning' }} text-center">
+                                                                {{ $quiz->status === 'published' ? 'Đã xuất bản' : 'Đã đóng' }}
                                                             </span>
                                                         </td>
-                                                        <td class="">
+                                                        <td class="text-center">
+                                                            <span class="badge badge-success text-center">
+                                                                {{ $quiz->type === 'public' ? 'Công khai' : 'Riêng tư' }}
+                                                            </span>
+                                                        </td>
+                                                        <td>
                                                             <a class="btn btn-info btn-sm" title="Chỉnh sửa kho"
                                                                 href="#" data-bs-toggle="modal"
                                                                 data-bs-target="#edit_quiz_package_{{ $indexRender }}">
@@ -955,7 +777,7 @@
                                                                                         @foreach ($categories as $category)
                                                                                             <option
                                                                                                 @foreach ($quiz->categories as $category_quiz)
-                                                                                                {{ $category_quiz->id === $category->id ? 'selected' : '' }} @endforeach
+                                                                                                    {{ $category_quiz->id === $category->id ? 'selected' : '' }} @endforeach
                                                                                                 value="{{ $category->id }}">
                                                                                                 {{ $category->name }}
                                                                                             </option>
@@ -983,16 +805,17 @@
                                                                                     @enderror
                                                                                 </div>
                                                                                 <div class="mb-3">
-                                                                                    <label for="status"
-                                                                                        class="form-label">Trạng thái</label>
-                                                                                    <select name="status" class="form-select"
-                                                                                        id="status">
-                                                                                        <option value="published">Công
-                                                                                            khai
-                                                                                        </option>
-                                                                                        <option selected value="private">Ẩn
-                                                                                        </option>
-                                                                                        <option value="closed">Hủy</option>
+                                                                                    <label for="status" class="form-label">Xuất bản</label>
+                                                                                    <select name="status" class="form-select">
+                                                                                        <option {{ $quiz->stutus === 'published' ? 'selected' : '' }} value="published">Xuất bản</option>
+                                                                                        <option {{ $quiz->stutus === 'closed' ? 'selected' : '' }} value="closed">Đóng</option>
+                                                                                    </select>
+                                                                                </div>
+                                                                                <div class="mb-3">
+                                                                                    <label for="type" class="form-label">Hiển thị</label>
+                                                                                    <select name="type" class="form-select">
+                                                                                        <option {{ $quiz->type === 'public' ? 'selected' : '' }} value="public">Công khai </option>
+                                                                                        <option {{ $quiz->type === 'private' ? 'selected' : '' }} value="private">Riêng tư</option>
                                                                                     </select>
                                                                                 </div>
                                                                                 <input type="hidden" name="quiz_id"
@@ -1011,10 +834,10 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            <a onclick="(confirm('Bạn có chắc hiện thị kho {{ $quiz->title }} không?') ? window.location.href='{{ route('quiz-bank.showQuizBank', $quiz->id) }}' : '')"
+                                                            <a onclick="(confirm('Bạn có chắc hiển thị kho {{ $quiz->title }} không?') ? window.location.href='{{ route('quiz-bank.showQuizBank', $quiz->id) }}' : '')"
                                                                 class="btn btn-danger btn-sm" title="Hiển thị kho"
                                                                 href="javascript:void(0)">
-                                                                <i class="fas fa-eye">
+                                                                <i class="fas fa-eye-slash">
                                                                 </i>
                                                             </a>
                                                         </td>
@@ -1025,7 +848,6 @@
                                     </table>
                                 </div>
                             </div>
-                            <!-- /.card-body -->
                         </div>
                     @else
                         <div class="text-center fs-4 text-danger">Không tồn tại kho quiz!</div>

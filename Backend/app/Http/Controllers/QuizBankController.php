@@ -17,14 +17,11 @@ class QuizBankController extends Controller
     public function index()
     {
         if (Auth::check()) {
-            $quizBank = QuizPackage::with('quizzes', 'creator', 'categories')
-                ->orderBy('created_at', 'DESC')->get();
+            $quizBank = QuizPackage::orderBy('created_at', 'DESC')->get();
 
-            $categories = Category::with('parent', 'children')
-                ->orderBy('created_at', 'DESC')->get();
+            $categories = Category::orderBy('created_at', 'DESC')->get();
 
-            $quizzes = Quiz::with('quizPackage', 'choices')
-                ->orderBy('created_at', 'DESC')->get();
+            $quizzes = Quiz::orderBy('created_at', 'DESC')->get();
 
             return view('QuizBank.index', compact('quizBank', 'categories', 'quizzes'));
         } else {
@@ -42,6 +39,7 @@ class QuizBankController extends Controller
                     'description' => $request->quiz_description,
                     'quiz_id_range' => $request->quiz_id_range,
                     'status' => $request->status,
+                    'type' => $request->type,
                 ]);
 
                 foreach ($request->categories as $category) {
@@ -75,6 +73,7 @@ class QuizBankController extends Controller
                 'description' => $request->quiz_description,
                 'quiz_id_range' => $request->quiz_id_range,
                 'status' => $request->status,
+                'type' => $request->type,
             ]);
 
             QuizPackageCategory::where('quiz_package_id', $updateQuizBank->id)->delete();
@@ -100,7 +99,7 @@ class QuizBankController extends Controller
     public function hiddenQuizBank($id)
     {
         if (Auth::check()) {
-            $hiddenQuizBank = QuizPackage::where('id', $id)->update(['status' => 'private']);
+            $hiddenQuizBank = QuizPackage::where('id', $id)->update(['type' => 'private']);
 
             if ($hiddenQuizBank) {
                 return redirect()->route('quiz-bank.index')->with('success', 'Ẩn kho quiz thành công!');
@@ -115,7 +114,7 @@ class QuizBankController extends Controller
     public function showQuizBank($id)
     {
         if (Auth::check()) {
-            $showQuizBank = QuizPackage::where('id', $id)->update(['status' => 'published']);
+            $showQuizBank = QuizPackage::where('id', $id)->update(['type' => 'public']);
 
             if ($showQuizBank) {
                 return redirect()->route('quiz-bank.index')->with('success', 'Hiển thị kho quiz thành công!');
