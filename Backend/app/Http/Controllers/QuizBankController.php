@@ -139,6 +139,22 @@ class QuizBankController extends Controller
                     'anwser' => 'required|in:1,2,3,4',
                 ]);
 
+                $count = 0;
+
+                if ($request->anwser_name_1 != null) $count++;
+                if ($request->anwser_name_2 != null) $count++;
+                if ($request->anwser_name_3 != null) $count++;
+                if ($request->anwser_name_4 != null) $count++;
+
+                if ($count < $request->anwser) {
+                    return redirect()->route('quiz-bank.index')->with('error', 'Vui lòng chọn câu trả lời đúng!');
+                }
+
+                $checkQuestion = Quiz::where('question', $request->question_name);
+                if($checkQuestion) {
+                    return redirect()->route('quiz-bank.index')->with('error', 'Câu hỏi đã tồn tại!');
+                }
+
                 $addQuestion = Quiz::create([
                     'question' => $request->question_name,
                     'quiz_package_id' => $request->quiz_package_id,
