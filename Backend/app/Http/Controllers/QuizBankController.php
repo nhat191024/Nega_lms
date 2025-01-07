@@ -207,30 +207,29 @@ class QuizBankController extends Controller
     public function updateQuestion(Request $request)
     {
         if (Auth::check()) {
-            // dd($request->quiz_package_id);
             try {
+                $checkQuestion = Quiz::where('question', $request->question_name);
+                if($checkQuestion) {
+                    return redirect()->route('quiz-bank.index')->with('error', 'Câu hỏi đã tồn tại!');
+                }
                 $id = $request->quiz_package_id;
                 $question = Quiz::with('quizPackage', 'choices')->findOrFail($id);
                 $isUpdated = false;
 
-                // Cập nhật câu hỏi nếu cần thiết
                 if ($request->question_name != $question->question) {
                     $question->question = $request->question_name;
                     $isUpdated = true;
                 }
 
-                // Cập nhật câu trả lời nếu cần thiết
                 foreach ($question->choices as $index => $choice) {
-                    $index++;  // Đảm bảo chỉ số câu trả lời bắt đầu từ 1
+                    $index++;  
                     $anwserName = 'anwser_name_' . $index;
 
-                    // Cập nhật câu trả lời
                     if ($request->has($anwserName) && $request->$anwserName != $choice->choice) {
                         $choice->choice = $request->$anwserName;
                         $isUpdated = true;
                     }
 
-                    // Cập nhật câu trả lời đúng
                     if (isset($request->anwser)) {
                         $correctAnwser = $index == $request->anwser ? 1 : 0;
                         if ($choice->is_correct !== $correctAnwser) {
@@ -240,7 +239,6 @@ class QuizBankController extends Controller
                     }
                 }
 
-                // Lưu các thay đổi
                 if ($isUpdated) {
                     $question->save();
                     foreach ($question->choices as $choice) {
