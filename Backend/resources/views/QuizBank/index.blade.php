@@ -454,8 +454,8 @@
                                                                                 <div class="mb-3">
                                                                                     <label for="status" class="form-label">Xuất bản</label>
                                                                                     <select name="status" class="form-select">
-                                                                                        <option {{ $quiz->stutus === 'published' ? 'selected' : '' }} value="published">Xuất bản</option>
-                                                                                        <option {{ $quiz->stutus === 'closed' ? 'selected' : '' }} value="closed">Đóng</option>
+                                                                                        <option {{ $quiz->status === 'published' ? 'selected' : '' }} value="published">Xuất </option>
+                                                                                        <option {{ $quiz->status === 'closed' ? 'selected' : '' }} value="closed">Đóng</option>
                                                                                     </select>
                                                                                 </div>
                                                                                 <div class="mb-3">
@@ -808,8 +808,8 @@
                                                                                 <div class="mb-3">
                                                                                     <label for="status" class="form-label">Xuất bản</label>
                                                                                     <select name="status" class="form-select">
-                                                                                        <option {{ $quiz->stutus === 'published' ? 'selected' : '' }} value="published">Xuất bản</option>
-                                                                                        <option {{ $quiz->stutus === 'closed' ? 'selected' : '' }} value="closed">Đóng</option>
+                                                                                        <option {{ $quiz->status === 'published' ? 'selected' : '' }} value="published">Xuất bản</option>
+                                                                                        <option {{ $quiz->status === 'closed' ? 'selected' : '' }} value="closed">Đóng</option>
                                                                                     </select>
                                                                                 </div>
                                                                                 <div class="mb-3">
