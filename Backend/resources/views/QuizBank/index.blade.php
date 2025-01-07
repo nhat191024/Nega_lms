@@ -126,8 +126,9 @@
                                         </thead>
                                         <tbody>
                                             @foreach ($quizBank as $quiz)
-                                                
-                                                
+                                                @php
+                                                    $indexRender++;
+                                                @endphp
                                                 @if ($quiz->type === 'public')
                                                     <tr>
                                                         <td> {{ $loop->iteration }} </td>

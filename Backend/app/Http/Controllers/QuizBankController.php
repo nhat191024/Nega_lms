@@ -129,7 +129,6 @@ class QuizBankController extends Controller
     public function addQuestion(Request $request)
     {
         if (Auth::check()) {
-            // dd($request->all());
             try {
                 $request->validate([
                     'question_name' => 'required|string|max:255',
