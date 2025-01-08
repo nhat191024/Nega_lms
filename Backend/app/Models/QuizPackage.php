@@ -11,7 +11,8 @@ class QuizPackage extends Model
         'title',
         'description',
         'quiz_id_range',
-        'status'
+        'status',
+        'type',
     ];
 
     public function creator()
