@@ -127,7 +127,6 @@ class SideBar extends StatelessWidget {
             child: ListView(
               padding: EdgeInsets.zero,
               children: [
-                _buildListTile(Icons.home, 'Trang chủ', Routes.homePage),
                 _buildListTile(Icons.class_, 'Lớp học', Routes.classListPage),
                 _buildListTile(Icons.person, 'Giảng viên', null),
                 _buildListTile(Icons.login, 'Đăng nhập', Routes.loginPage),
