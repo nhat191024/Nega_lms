@@ -7,7 +7,7 @@ class Images {
   //icons
   static const String searchIcon = 'assets/icons/search.svg';
   static const String penIcon = 'assets/icons/pen.svg';
-  static const String googleIcon = '/icons/google.svg';
+  static const String googleIcon = 'assets/icons/google.svg';
 
   //footer
   static const String appleStore = 'assets/images/app-store.png';
