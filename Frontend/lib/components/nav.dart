@@ -1,12 +1,14 @@
 import 'package:nega_lms/utils/imports.dart';
 
 class NavBar extends StatelessWidget {
-  const NavBar({super.key});
+  final GlobalKey<ScaffoldState> scaffoldKey;
+
+  const NavBar({super.key, required this.scaffoldKey});
 
   @override
   Widget build(BuildContext context) {
     final controllers = Get.put(NavController());
-
+    final isMobile = MediaQuery.of(context).size.width < 768;
     return Container(
       decoration: const BoxDecoration(
         border: Border(
@@ -19,76 +21,51 @@ class NavBar extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 10),
         child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const CircleAvatar(
-              radius: 20,
-              backgroundImage: AssetImage(Images.logoNoBg),
-              backgroundColor: Colors.transparent,
-            ),
-            const SizedBox(width: 10),
-            const Text(
-              'NegaLMS',
-              style: TextStyle(
-                color: CustomColors.primary,
-                fontSize: 18,
-                fontFamily: FontStyleTextStrings.bold,
-              ),
-            ),
-            const Spacer(),
-            TextButton(
+            IconButton(
               onPressed: () {
-                Get.toNamed(Routes.classListPage);
+                scaffoldKey.currentState?.openDrawer();
               },
-              child: const Text(
-                'Lớp học',
-                style: TextStyle(
-                  color: CustomColors.primaryText,
-                  fontSize: 16,
-                  fontFamily: FontStyleTextStrings.regular,
+              icon: const Icon(Icons.menu_rounded),
+              color: CustomColors.primary,
+              iconSize: 30,
+            ),
+            const Row(
+              children: [
+                CircleAvatar(
+                  radius: 20,
+                  backgroundImage: AssetImage(Images.logoNoBg),
+                  backgroundColor: Colors.transparent,
                 ),
+                SizedBox(width: 10),
+                Text(
+                  'NegaLMS',
+                  style: TextStyle(
+                    color: CustomColors.primary,
+                    fontSize: 18,
+                    fontFamily: FontStyleTextStrings.bold,
+                  ),
+                ),
+              ],
+            ),
+            Container(
+              height: 44,
+              width: 44,
+              margin: const EdgeInsets.only(right: 10),
+              decoration: const BoxDecoration(
+                color: Colors.blueAccent,
+                shape: BoxShape.circle,
+              ),
+              clipBehavior: Clip.antiAlias,
+              child: Image.network(
+                // controllers.avatar.value,
+                //for dev only
+                "https://doctor.12bytes.xyz/upload/avatar/hajime.jpg",
+                fit: BoxFit.cover,
               ),
             ),
-            const SizedBox(width: 10),
-            TextButton(
-              onPressed: () {},
-              child: const Text(
-                'Khoá học',
-                style: TextStyle(
-                  color: CustomColors.primaryText,
-                  fontSize: 16,
-                  fontFamily: FontStyleTextStrings.regular,
-                ),
-              ),
-            ),
-            const SizedBox(width: 10),
-            Obx(
-              () => controllers.isLogin.value
-                  ? Container(
-                      height: 44,
-                      width: 44,
-                      decoration: const BoxDecoration(
-                        color: Colors.blueAccent,
-                        shape: BoxShape.circle,
-                      ),
-                      clipBehavior: Clip.antiAlias,
-                      // child: const Icon(Icons.person),
-                      child: Image.network(
-                        "http://127.0.0.1:443/upload/avt/default.png",
-                        fit: BoxFit.cover,
-                      ),
-                    )
-                  : CustomButton(
-                      btnText: "Đăng nhập",
-                      onTap: () {
-                        Get.toNamed(Routes.loginPage);
-                      },
-                      rightPadding: 0,
-                      leftPadding: 0,
-                      borderRadius: 24,
-                      width: Get.width * 0.07,
-                    ),
-            ),
-            const SizedBox(width: 20),
           ],
         ),
       ),
