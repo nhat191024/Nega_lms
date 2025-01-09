@@ -11,7 +11,38 @@ class LoginScreen extends GetView<LoginController> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         toolbarHeight: screenHeight * 0.08,
-        title: NavBar(),
+        title: Container(
+          decoration: const BoxDecoration(
+            border: Border(
+              bottom: BorderSide(
+                color: CustomColors.border,
+                width: 1,
+              ),
+            ),
+          ),
+          child: const Padding(
+            padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
+            child: Row(
+              children: [
+                CircleAvatar(
+                  radius: 20,
+                  backgroundImage: AssetImage(Images.logoNoBg),
+                  backgroundColor: Colors.transparent,
+                ),
+                SizedBox(width: 10),
+                Text(
+                  'NegaLMS',
+                  style: TextStyle(
+                    color: CustomColors.primary,
+                    fontSize: 18,
+                    fontFamily: FontStyleTextStrings.bold,
+                  ),
+                ),
+                Spacer(),
+              ],
+            ),
+          ),
+        ),
       ),
       body: SingleChildScrollView(
         child: Column(
