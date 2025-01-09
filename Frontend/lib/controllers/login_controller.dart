@@ -12,6 +12,14 @@ class LoginController extends GetxController {
 
   final RxBool isButtonLoading = false.obs;
 
+  @override
+  void onInit() {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (!await Token.checkToken()) return;
+    });
+    super.onInit();
+  }
+
   void validate() {
     if (username.text.isEmpty) {
       isUsernameError.value = true;
@@ -47,7 +55,7 @@ class LoginController extends GetxController {
           StorageService.writeStringData(key: "avatar", value: data["avatar"]);
           StorageService.writeStringData(key: "isLogin", value: "true");
           StorageService.writeStringData(key: "role", value: data["role"]);
-          Get.offAllNamed(Routes.classListPage);
+          Get.offAllNamed(Routes.homePage);
         } else if (response.statusCode == 401) {
           Get.dialog(
             const NotificationDialog(
