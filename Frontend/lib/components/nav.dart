@@ -1,14 +1,12 @@
 import 'package:nega_lms/utils/imports.dart';
 
 class NavBar extends StatelessWidget {
-  final VoidCallback? onMenuPressed;
-  final bool showMenuButton;
-
-  NavBar({super.key, this.onMenuPressed, this.showMenuButton = false});
-  final controllers = Get.put(NavController());
+  const NavBar({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final controllers = Get.put(NavController());
+
     return Container(
       decoration: const BoxDecoration(
         border: Border(
@@ -22,29 +20,21 @@ class NavBar extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 10),
         child: Row(
           children: [
-            if (showMenuButton)
-              IconButton(
-                icon: const Icon(Icons.menu, color: CustomColors.primaryText),
-                onPressed: onMenuPressed,
-              ),
             const CircleAvatar(
               radius: 20,
               backgroundImage: AssetImage(Images.logoNoBg),
               backgroundColor: Colors.transparent,
             ),
-            const Spacer(),
-            TextButton(
-              onPressed: () {},
-              child: const Text(
-                'Trang chủ',
-                style: TextStyle(
-                  color: CustomColors.primaryText,
-                  fontSize: 16,
-                  fontFamily: FontStyleTextStrings.regular,
-                ),
+            const SizedBox(width: 10),
+            const Text(
+              'NegaLMS',
+              style: TextStyle(
+                color: CustomColors.primary,
+                fontSize: 18,
+                fontFamily: FontStyleTextStrings.bold,
               ),
             ),
-            const SizedBox(width: 10),
+            const Spacer(),
             TextButton(
               onPressed: () {
                 Get.toNamed(Routes.classListPage);
@@ -62,7 +52,7 @@ class NavBar extends StatelessWidget {
             TextButton(
               onPressed: () {},
               child: const Text(
-                'Giảng viên',
+                'Khoá học',
                 style: TextStyle(
                   color: CustomColors.primaryText,
                   fontSize: 16,
@@ -71,82 +61,37 @@ class NavBar extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 10),
-            if (!controllers.isLogin.value)
-              CustomButton(
-                btnText: "Đăng nhập",
-                onTap: () {
-                  Get.toNamed(Routes.loginPage);
-                },
-                rightPadding: 0,
-                leftPadding: 0,
-                borderRadius: 24,
-                width: Get.width * 0.07,
-              )
-            else
-              Container(
-                height: 64,
-                width: 64,
-                decoration: const BoxDecoration(
-                  color: Colors.white,
-                  shape: BoxShape.circle,
-                ),
-                clipBehavior: Clip.antiAlias,
-                child: const Icon(Icons.person),
-              ),
+            Obx(
+              () => controllers.isLogin.value
+                  ? Container(
+                      height: 44,
+                      width: 44,
+                      decoration: const BoxDecoration(
+                        color: Colors.blueAccent,
+                        shape: BoxShape.circle,
+                      ),
+                      clipBehavior: Clip.antiAlias,
+                      // child: const Icon(Icons.person),
+                      child: Image.network(
+                        "http://127.0.0.1:443/upload/avt/default.png",
+                        fit: BoxFit.cover,
+                      ),
+                    )
+                  : CustomButton(
+                      btnText: "Đăng nhập",
+                      onTap: () {
+                        Get.toNamed(Routes.loginPage);
+                      },
+                      rightPadding: 0,
+                      leftPadding: 0,
+                      borderRadius: 24,
+                      width: Get.width * 0.07,
+                    ),
+            ),
             const SizedBox(width: 20),
           ],
         ),
       ),
-    );
-  }
-}
-
-class SideBar extends StatelessWidget {
-  final bool isCollapsed;
-
-  const SideBar({super.key, required this.isCollapsed});
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 300),
-      width: isCollapsed ? 80 : 250,
-      height: double.infinity,
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        border: Border(
-          right: BorderSide(
-            color: CustomColors.border,
-            width: 1,
-          ),
-        ),
-      ),
-      child: Column(
-        children: [
-          Expanded(
-            child: ListView(
-              padding: EdgeInsets.zero,
-              children: [
-                _buildListTile(Icons.class_, 'Lớp học', Routes.classListPage),
-                _buildListTile(Icons.person, 'Giảng viên', null),
-                _buildListTile(Icons.login, 'Đăng nhập', Routes.loginPage),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildListTile(IconData icon, String title, String? route) {
-    return ListTile(
-      leading: Icon(icon, color: CustomColors.primary),
-      title: isCollapsed ? null : Text(title),
-      onTap: () {
-        if (route != null) {
-          Get.toNamed(route);
-        }
-      },
     );
   }
 }
