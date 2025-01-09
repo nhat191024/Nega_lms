@@ -52,6 +52,7 @@ Route::prefix('/quiz-bank')->name('quiz-bank.')->group(function() {
     Route::get('/', [QuizBankController::class, 'index'])->name('index');
     Route::get('/createQuizBank', [QuizBankController::class, 'createQuizBank'])->name('createQuizBank');
     Route::post('/addQuestion', [QuizBankController::class, 'addQuestion'])->name('addQuestion');
+    Route::post('/addQuestionWithExcel', [QuizBankController::class, 'addQuestionWithExcel'])->name('addQuestionWithExcel');
     Route::post('/updateQuestion', [QuizBankController::class, 'updateQuestion'])->name('updateQuestion');
     Route::post('/deleteQuestion', [QuizBankController::class, 'deleteQuestion'])->name('deleteQuestion');
     Route::post('/updateQuizBank', [QuizBankController::class, 'updateQuizBank'])->name('updateQuizBank');

@@ -79,19 +79,19 @@
                                                             <div class="text-danger">{{ $message }}</div>
                                                         @enderror
                                                     </div>
-                                                    <div class="mb-3">
+                                                    {{-- <div class="mb-3">
                                                         <label for="status"
                                                             class="form-label">Xuất bản</label>
                                                         <select name="status" class="form-select" id="status">
                                                             <option selected value="published">Xuất bản</option>
                                                             <option value="closed">Đóng</option>
                                                         </select>
-                                                    </div>
+                                                    </div> --}}
                                                     <div class="mb-3">
                                                         <label for="status"
-                                                            class="form-label">Hiển thị</label>
+                                                            class="form-label">Trạng thái</label>
                                                         <select name="type" class="form-select">
-                                                            <option selected value="public">Công khai </option>
+                                                            <option selected value="public">Công khai</option>
                                                             <option value="private">Riêng tư</option>
                                                         </select>
                                                     </div>
@@ -120,7 +120,7 @@
                                                 <th>Thuộc danh mục</th>
                                                 <th>Bộ câu hỏi</th>
                                                 <th class="">Xuất bản</th>
-                                                <th class="text-center">Hiển thị</th>
+                                                <th class="text-center">Trạng thái</th>
                                                 <th style="width: 100px;">Tác vụ</th>
                                             </tr>
                                         </thead>
@@ -199,6 +199,36 @@
                                                                                         <button type="submit" class="btn btn-primary">Tạo</button>
                                                                                     </form>
                                                                                 </div>
+                                                                            </div>
+
+                                                                            {{-- Form thêm câu hỏi bằng Exel --}}
+                                                                            <div>
+                                                                                <h1>Thêm bộ câu hỏi bằng Excel</h1>
+                                                                                <form action="{{ route('quiz-bank.addQuestionWithExcel') }}" method="POST" enctype="multipart/form-data">
+                                                                                    @csrf
+                                                                                    <div>
+                                                                                        <label for="file">Chọn file Excel:</label>
+                                                                                        <input type="file" name="file" required>
+                                                                                    </div>
+                                                                                    <button type="submit">Tải lên</button>
+                                                                                </form>
+
+                                                                                <!-- Hiển thị thông báo thành công hoặc lỗi -->
+                                                                                @if(session('success'))
+                                                                                    <p style="color: green;">{{ session('success') }}</p>
+                                                                                @endif
+
+                                                                                @if(session('error'))
+                                                                                    <p style="color: red;">{{ session('error') }}</p>
+                                                                                @endif
+
+                                                                                @if($errors->any())
+                                                                                    <ul style="color: red;">
+                                                                                        @foreach($errors->all() as $error)
+                                                                                            <li>{{ $error }}</li>
+                                                                                        @endforeach
+                                                                                    </ul>
+                                                                                @endif
                                                                             </div>
                                                                             
                                                                             <style>
@@ -451,15 +481,9 @@
                                                                                             {{ $message }}</div>
                                                                                     @enderror
                                                                                 </div>
+                                                                                
                                                                                 <div class="mb-3">
-                                                                                    <label for="status" class="form-label">Xuất bản</label>
-                                                                                    <select name="status" class="form-select">
-                                                                                        <option {{ $quiz->status === 'published' ? 'selected' : '' }} value="published">Xuất </option>
-                                                                                        <option {{ $quiz->status === 'closed' ? 'selected' : '' }} value="closed">Đóng</option>
-                                                                                    </select>
-                                                                                </div>
-                                                                                <div class="mb-3">
-                                                                                    <label for="type" class="form-label">Hiển thị</label>
+                                                                                    <label for="type" class="form-label">Trạng thái</label>
                                                                                     <select name="type" class="form-select">
                                                                                         <option {{ $quiz->type === 'public' ? 'selected' : '' }} value="public">Công khai </option>
                                                                                         <option {{ $quiz->type === 'private' ? 'selected' : '' }} value="private">Riêng tư</option>
@@ -519,7 +543,7 @@
                                                 <th>Thuộc danh mục</th>
                                                 <th>Bộ câu hỏi</th>
                                                 <th class="">Xuất bản</th>
-                                                <th class="text-center">Hiển thị</th>
+                                                <th class="text-center">Trạng thái</th>
                                                 <th style="width: 100px;">Tác vụ</th>
                                             </tr>
                                         </thead>
@@ -805,15 +829,9 @@
                                                                                             {{ $message }}</div>
                                                                                     @enderror
                                                                                 </div>
+                                                                                
                                                                                 <div class="mb-3">
-                                                                                    <label for="status" class="form-label">Xuất bản</label>
-                                                                                    <select name="status" class="form-select">
-                                                                                        <option {{ $quiz->status === 'published' ? 'selected' : '' }} value="published">Xuất bản</option>
-                                                                                        <option {{ $quiz->status === 'closed' ? 'selected' : '' }} value="closed">Đóng</option>
-                                                                                    </select>
-                                                                                </div>
-                                                                                <div class="mb-3">
-                                                                                    <label for="type" class="form-label">Hiển thị</label>
+                                                                                    <label for="type" class="form-label">Trạng thái</label>
                                                                                     <select name="type" class="form-select">
                                                                                         <option {{ $quiz->type === 'public' ? 'selected' : '' }} value="public">Công khai </option>
                                                                                         <option {{ $quiz->type === 'private' ? 'selected' : '' }} value="private">Riêng tư</option>
@@ -835,8 +853,8 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            <a onclick="(confirm('Bạn có chắc hiển thị kho {{ $quiz->title }} không?') ? window.location.href='{{ route('quiz-bank.showQuizBank', $quiz->id) }}' : '')"
-                                                                class="btn btn-danger btn-sm" title="Hiển thị kho"
+                                                            <a onclick="(confirm('Bạn có chắc Trạng thái kho {{ $quiz->title }} không?') ? window.location.href='{{ route('quiz-bank.showQuizBank', $quiz->id) }}' : '')"
+                                                                class="btn btn-danger btn-sm" title="Trạng thái kho"
                                                                 href="javascript:void(0)">
                                                                 <i class="fas fa-eye-slash">
                                                                 </i>
@@ -925,7 +943,7 @@
             const totalPages = Math.ceil(items.length / itemsPerPage); // Tổng số trang
             let currentPage = 1; // Trang hiện tại
 
-            // Hiển thị các phần tử của trang hiện tại
+            // Trạng thái các phần tử của trang hiện tại
             function showPage(page) {
                 const startIdx = (page - 1) * itemsPerPage;
                 const endIdx = startIdx + itemsPerPage;

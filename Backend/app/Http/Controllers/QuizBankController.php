@@ -10,8 +10,10 @@ use App\Models\Quiz;
 use App\Models\QuizPackage;
 use App\Models\QuizPackageCategory;
 use App\Models\User;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
 
 class QuizBankController extends Controller
 {
@@ -37,7 +39,7 @@ class QuizBankController extends Controller
                     'title' => $request->quiz_name,
                     'description' => $request->quiz_description,
                     'quiz_id_range' => $request->quiz_id_range,
-                    'status' => $request->status,
+                    'status' => 'published',
                     'type' => $request->type,
                 ]);
 
@@ -71,7 +73,7 @@ class QuizBankController extends Controller
                 'title' => $request->quiz_name,
                 'description' => $request->quiz_description,
                 'quiz_id_range' => $request->quiz_id_range,
-                'status' => $request->status,
+                'status' => 'published',
                 'type' => $request->type,
             ]);
 
@@ -201,6 +203,56 @@ class QuizBankController extends Controller
         } else {
             return redirect()->route('admin.login');
         }
+    }
+
+    public function addQuestionWithExcel(Request $request) {
+        // $validator = Validator::make($request->all(), [
+        //     'file' => 'required|mimes:xlsx,csv|max:2048',
+        // ]);
+
+        // if ($validator->fails()) {
+        //     return back()->withErrors($validator)->withInput();
+        // }
+
+        // $file = $request->file('file');
+        // $request->validate([
+        //     'file' => 'required|file|mimes:xlsx,xls',
+        // ], [
+        //     'file.required' => 'Vui lòng chọn tệp để tải lên!',
+        //     'file.mimes' => 'Tệp phải có định dạng xlsx hoặc xls.',
+        // ]);
+
+        // $path = $request->file('file')->getRealPath();
+        // // dd($path);
+        // $data = Excel::toArray([], $path);
+        // dd($data);
+        // $students = [];
+
+        // if (!empty($data[0])) {
+        //     foreach ($data[0] as $index => $row) {
+        //         if ($index == 0) continue; // Bỏ qua tiêu đề cột
+
+        //         $name = $row[1] ?? null;
+        //         $email = $row[2] ?? null; // Giả sử email nằm ở cột thứ 2
+
+        //         if ($name && $email) {
+        //             $exists = User::where('name', $name)->where('email', $email)->where('role_id', 3)->exists();
+        //             $students[] = [
+        //                 'name' => $name,
+        //                 'email' => $email,
+        //                 'exists' => $exists,
+        //             ];
+        //         }
+        //     }
+        // }
+
+        // try {
+        //     Excel::import(new QuestionsImport, $file);
+
+        //     return back()->with('success', 'Dữ liệu đã được nhập thành công!');
+        // } catch (\Exception $e) {
+        //     return back()->with('error', 'Có lỗi xảy ra khi nhập dữ liệu. Vui lòng thử lại!');
+        // }
     }
 
     public function updateQuestion(Request $request)
