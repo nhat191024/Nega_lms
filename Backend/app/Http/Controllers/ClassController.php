@@ -196,7 +196,6 @@ class ClassController extends Controller
         ]);
     }
 
-
     public function toggleClassStatus(Request $request, $id)
     {
         $class = Classes::findOrFail($id);
@@ -236,18 +235,6 @@ class ClassController extends Controller
             ];
         }
 
-        $data[] = [];
-        $data[] = ['Bài tập'];
-        $data[] = ['STT', 'Tên bài tập', 'Loại bài tập'];
-
-        foreach ($class->assignments as $key => $assignment) {
-            $data[] = [
-                $key + 1,
-                $assignment->title,
-                $assignment->type,
-            ];
-        }
-
         $fileName = 'class-' . $class->id . '-details.xlsx';
 
         return Excel::download(new class($data) implements FromArray {
@@ -265,55 +252,39 @@ class ClassController extends Controller
         }, $fileName);
     }
 
-    public function import(Request $request, $id)
+    public function importConfirm(Request $request, $class_id)
     {
-        $request->validate([
-            'file' => 'required|file|mimes:xlsx,xls',
-        ], [
-            'file.required' => 'Vui lòng chọn tệp để tải lên!',
-            'file.mimes' => 'Tệp phải có định dạng xlsx hoặc xls.',
-        ]);
+        $students = $request->input('students');
+        $successMessages = [];
+        $errorMessages = [];
 
-        $class = Classes::findOrFail($id);
-        $path = $request->file('file')->getRealPath();
-        $data = Excel::toArray([], $path);
+        foreach ($students as $studentData) {
+            $student = User::where('email', $studentData['email'])->first();
 
-        if (!empty($data[0])) {
-            $missingStudents = [];
-            $addedStudents = [];
-            foreach ($data[0] as $index => $row) {
-                if ($index == 0) continue;
+            if ($student && $student->role_id == 3) {
+                // Kiểm tra nếu học sinh đã tồn tại trong lớp học
+                $enrollmentExists = Enrollment::where('class_id', $class_id)
+                    ->where('student_id', $student->id)
+                    ->exists();
 
-                $name = $row[1] ?? null;
-
-                if ($name) {
-                    $user = User::where('name', $name)->where('role_id', 3)->first();
-
-                    if (!$user) {
-                        $missingStudents[] = $name;
-                        continue;
-                    }
-
-                    $class->students()->syncWithoutDetaching([$user->id]);
-                    $addedStudents[] = $name;
+                if (!$enrollmentExists) {
+                    Enrollment::firstOrCreate(
+                        ['class_id' => $class_id, 'student_id' => $student->id]
+                    );
+                    $successMessages[] = "Học sinh {$student->name} ({$student->email}) đã được thêm thành công.";
+                } else {
+                    $errorMessages[] = "Học sinh {$student->name} ({$student->email}) đã tồn tại trong lớp.";
                 }
+            } else {
+                $errorMessages[] = "Học sinh với email {$studentData['email']} không tồn tại hoặc không phải là học sinh.";
             }
-            
-            $messages = [];
-            if (!empty($missingStudents)) {
-                $missingList = implode(', ', $missingStudents);
-                $messages[] = "Những học sinh sau đây không tồn tại trong hệ thống: $missingList.";
-            }
-
-            if (!empty($addedStudents)) {
-                $addedList = implode(', ', $addedStudents);
-                $messages[] = "Những học sinh sau đây đã được thêm vào lớp thành công: $addedList.";
-            }
-
-            return redirect()->back()->with('messages', $messages);
         }
 
-        return redirect()->back()->with('success', 'Danh sách học sinh đã được nhập thành công!');
+        return response()->json([
+            'success' => true,
+            'successMessages' => $successMessages,
+            'errorMessages' => $errorMessages,
+        ]);
     }
 
     public function downloadTemplate()

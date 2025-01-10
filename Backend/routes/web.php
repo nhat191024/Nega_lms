@@ -38,7 +38,7 @@ Route::prefix('class')->name('classes.')->group(function () {
     Route::get('/assignment/{assignment_id}/details', [ClassController::class, 'assignmentDetailsJson'])->name('assignmentDetailsJson');
     Route::post('/{id}/toggle-status', [ClassController::class, 'toggleClassStatus'])->name('toggleStatus');
     Route::get('/{id}/export', [ClassController::class, 'export'])->name('export');
-    Route::post('/{id}/import', [ClassController::class, 'import'])->name('import');
+    Route::post('/{class}/import-confirm', [ClassController::class, 'importConfirm'])->name('importConfirm');
 });
 
 Route::prefix('/assignment')->name('assignments.')->group(function () {
