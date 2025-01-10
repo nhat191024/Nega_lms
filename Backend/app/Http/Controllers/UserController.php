@@ -16,6 +16,7 @@ class UserController extends Controller
             1 => 'Quản trị',
             2 => 'Giảng viên',
             3 => 'Sinh viên',
+            4 => 'giám sát viên',
         ];
         return view('users.index', compact('users', 'roles'));
     }
@@ -30,21 +31,28 @@ class UserController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
-            'username' => 'required|string|unique:users,username|max:255',
+            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Avatar phải là hình ảnh
             'password' => 'required|string|min:8|confirmed',
-            'role_id' => 'required|in:1,2,3',
-        ],[
+            'gender' => 'required|in:male,female,other',
+            'role_id' => 'required|in:1,2,3,4',
+            'status' => 'required|boolean',
+        ], [
             'name.required' => 'Tên người dùng là bắt buộc.',
             'email.required' => 'Email là bắt buộc.',
             'email.email' => 'Email phải là một địa chỉ email hợp lệ.',
             'email.unique' => 'Email này đã được sử dụng.',
-            'username.required' => 'Tên đăng nhập là bắt buộc.',
-            'username.unique' => 'Tên đăng nhập này đã được sử dụng.',
+            'avatar.image' => 'Avatar phải là tệp hình ảnh.',
+            'avatar.mimes' => 'Avatar phải có định dạng jpeg, png, jpg, hoặc gif.',
+            'avatar.max' => 'Avatar không được vượt quá 2MB.',
             'password.required' => 'Mật khẩu là bắt buộc.',
             'password.min' => 'Mật khẩu phải có ít nhất 8 ký tự.',
             'password.confirmed' => 'Mật khẩu xác nhận không khớp.',
+            'gender.required' => 'Vui lòng chọn giới tính.',
+            'gender.in' => 'Giới tính không hợp lệ.',
             'role_id.required' => 'Vui lòng chọn vai trò người dùng.',
             'role_id.in' => 'Vai trò không hợp lệ.',
+            'status.required' => 'Trạng thái là bắt buộc.',
+            'status.boolean' => 'Trạng thái phải là giá trị đúng hoặc sai.',
         ]);
 
         if ($validator->fails()) {
@@ -52,12 +60,18 @@ class UserController extends Controller
                 ->withErrors($validator)
                 ->withInput();
         }
+        $avatarPath = null;
+        if ($request->hasFile('avatar')) {
+            $avatarPath = $request->file('avatar')->store('avatars', 'public');
+        }
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
+            'avatar' => $avatarPath,
             'username' => $request->username,
             'password' => Hash::make($request->password),
+            'gender' => $request->gender,
             'role_id' => $request->role_id,
         ]);
 
@@ -80,17 +94,21 @@ class UserController extends Controller
         $users = User::findOrFail($id);
 
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $id,
-            'username' => 'required|string|unique:users,username,' . $id . '|max:255',
-            'role_id' => 'required|in:1,2,3',
+            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'name' => 'required|string|max:255',
+            'gender' => 'required|in:male,female,other',
+            'role_id' => 'required|in:1,2,3,4',
         ],[
-            'name.required' => 'Tên người dùng là bắt buộc.',
             'email.required' => 'Email là bắt buộc.',
             'email.email' => 'Email không hợp lệ.',
             'email.unique' => 'Email này đã được sử dụng.',
-            'username.required' => 'Tên đăng nhập là bắt buộc.',
-            'username.unique' => 'Tên đăng nhập này đã được sử dụng.',
+            'avatar.image' => 'Avatar phải là tệp hình ảnh.',
+            'avatar.mimes' => 'Avatar chỉ chấp nhận các định dạng jpeg, png, jpg, gif.',
+            'avatar.max' => 'Avatar không được vượt quá 2MB.',
+            'name.required' => 'Tên người dùng là bắt buộc.',
+            'gender.required' => 'Giới tính là bắt buộc.',
+            'gender.in' => 'Giới tính không hợp lệ.',
             'role_id.required' => 'Vui lòng chọn vai trò.',
             'role_id.in' => 'Vai trò không hợp lệ.',
         ]);
@@ -100,12 +118,16 @@ class UserController extends Controller
                 ->withErrors($validator)
                 ->withInput();
         }
+        if ($request->hasFile('avatar')) {
+            $avatarPath = $request->file('avatar')->store('avatars', 'public');
+            $users->avatar = $avatarPath;
+        }
 
         $users->update([
-            'name' => $request->input('name'),
             'email' => $request->input('email'),
-            'username' => $request->input('username'),
-            'role_id' => $request->input('role_id'),
+        'name' => $request->input('name'),
+        'gender' => $request->input('gender'),
+        'role_id' => $request->input('role_id'),
         ]);
 
         return redirect()->route('users.index')->with('success', 'Thông tin người dùng đã được cập nhật thành công!');

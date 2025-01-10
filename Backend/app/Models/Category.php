@@ -32,4 +32,9 @@ class Category extends Model
     {
         return $this->belongsToMany(Classes::class, 'class_categories');
     }
+    public function isChild()
+    {
+    return $this->parent_id !== null;
+    }
+
 }
