@@ -80,13 +80,14 @@ class ClassDetailTab extends GetView<ClassDetailController> {
                         ],
                       ),
                     ),
-                    IconButton(
-                      onPressed: () {},
-                      icon: const Icon(
-                        Icons.settings,
-                        color: CustomColors.primary,
+                    if (controller.role.value == "teacher")
+                      IconButton(
+                        onPressed: () {},
+                        icon: const Icon(
+                          Icons.settings,
+                          color: CustomColors.primary,
+                        ),
                       ),
-                    ),
                     const SizedBox(width: 40),
                   ],
                 ),
@@ -95,7 +96,7 @@ class ClassDetailTab extends GetView<ClassDetailController> {
                     controller: controller.tabController,
                     children: [
                       ClassOverviewScreen(),
-                      const ClassDetailScreen(),
+                      const ClassAssignmentScreen(),
                       const ClassTeacherScreen(),
                       const ClassPointScreen(),
                     ],
