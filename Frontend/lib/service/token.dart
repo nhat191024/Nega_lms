@@ -18,7 +18,7 @@ class Token {
           "Authorization": "Bearer $token",
         });
         if (response.statusCode == 200) {
-          Get.offAllNamed(Routes.homePage);
+          if (isLogin) Get.offAllNamed(Routes.homePage);
           return true;
         } else {
           if (!isLogin) Get.offAllNamed(Routes.loginPage);
