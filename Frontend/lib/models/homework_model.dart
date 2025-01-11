@@ -1,9 +1,9 @@
 class HomeworkModel {
   int? id;
-  int? type;
+  String? type;
   String? title;
   String? description;
-  int? duration;
+  String? duration;
   String? startDate;
   String? dueDate;
   String? status;
