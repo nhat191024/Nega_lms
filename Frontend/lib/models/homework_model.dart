@@ -1,53 +1,49 @@
 class HomeworkModel {
   int? id;
-  int? homeworkId;
-  String? creatorName;
-  String? name;
+  int? type;
+  String? title;
   String? description;
   int? duration;
   String? startDate;
   String? dueDate;
-  String? type;
+  String? status;
   bool? isSubmitted;
 
   HomeworkModel({
     required this.id,
-    required this.homeworkId,
-    required this.creatorName,
-    required this.name,
+    required this.type,
+    required this.title,
     required this.description,
     required this.duration,
     required this.startDate,
     required this.dueDate,
-    required this.type,
+    required this.status,
     required this.isSubmitted,
   });
 
   Map<String, dynamic> toMap() {
     return {
       'id': id,
-      'homeworkId': homeworkId,
-      'creatorName': creatorName,
-      'name': name,
+      'type': type,
+      'title': title,
       'description': description,
       'duration': duration,
       'startDate': startDate,
       'dueDate': dueDate,
-      'type': type,
+      'status': status,
       'isSubmitted': isSubmitted,
     };
   }
 
   HomeworkModel.fromMap(Map<String, dynamic> map) {
     id = map['id'];
-    homeworkId = map['homeworkId'];
-    creatorName = map['creatorName'];
-    name = map['name'];
+    type = map['type'];
+    title = map['title'];
     description = map['description'];
     duration = map['duration'];
     startDate = map['startDate'];
     dueDate = map['dueDate'];
-    type = map['type'];
+    status = map['status'];
     isSubmitted = map['isSubmitted'];
   }
 }
