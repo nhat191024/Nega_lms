@@ -24,14 +24,15 @@ class NavBar extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            IconButton(
-              onPressed: () {
-                scaffoldKey.currentState?.openDrawer();
-              },
-              icon: const Icon(Icons.menu_rounded),
-              color: CustomColors.primary,
-              iconSize: 30,
-            ),
+            if (isMobile)
+              IconButton(
+                onPressed: () {
+                  scaffoldKey.currentState?.openDrawer();
+                },
+                icon: const Icon(Icons.menu_rounded),
+                color: CustomColors.primary,
+                iconSize: 30,
+              ),
             const Row(
               children: [
                 CircleAvatar(
@@ -62,7 +63,7 @@ class NavBar extends StatelessWidget {
               child: Image.network(
                 // controllers.avatar.value,
                 //for dev only
-                "https://doctor.12bytes.xyz/upload/avatar/hajime.jpg",
+                "https://imgur.com/a/H345YaA",
                 fit: BoxFit.cover,
               ),
             ),
