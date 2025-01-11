@@ -33,23 +33,26 @@ class NavBar extends StatelessWidget {
                 color: CustomColors.primary,
                 iconSize: 30,
               ),
-            const Row(
-              children: [
-                CircleAvatar(
-                  radius: 20,
-                  backgroundImage: AssetImage(Images.logoNoBg),
-                  backgroundColor: Colors.transparent,
-                ),
-                SizedBox(width: 10),
-                Text(
-                  'NegaLMS',
-                  style: TextStyle(
-                    color: CustomColors.primary,
-                    fontSize: 18,
-                    fontFamily: FontStyleTextStrings.bold,
+            const Expanded(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircleAvatar(
+                    radius: 20,
+                    backgroundImage: AssetImage(Images.logoNoBg),
+                    backgroundColor: Colors.transparent,
                   ),
-                ),
-              ],
+                  SizedBox(width: 10),
+                  Text(
+                    'NegaLMS',
+                    style: TextStyle(
+                      color: CustomColors.primary,
+                      fontSize: 18,
+                      fontFamily: FontStyleTextStrings.bold,
+                    ),
+                  ),
+                ],
+              ),
             ),
             Container(
               height: 44,
