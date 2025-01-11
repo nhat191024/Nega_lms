@@ -64,4 +64,4 @@ export 'package:flutter_svg/svg.dart';
 // export 'package:flutter_web_plugins/flutter_web_plugins.dart';
 export 'package:http/http.dart';
 export 'package:get_storage/get_storage.dart' hide Data;
-export 'package:easy_sidemenu/easy_sidemenu.dart';
+export 'package:sidebarx/sidebarx.dart';
