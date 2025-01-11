@@ -2,6 +2,8 @@ import 'package:nega_lms/utils/imports.dart';
 
 class ClassDetailController extends GetxController with GetSingleTickerProviderStateMixin {
   late TabController tabController;
+  late PageController pageController;
+
   RxBool isLoading = true.obs;
   RxBool isSubmitButtonLoading = false.obs;
   RxBool createAssignmentThenPushToClass = false.obs;
@@ -75,21 +77,24 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
   @override
   void onInit() {
     super.onInit();
-    tabController = TabController(length: 3, vsync: this);
+    tabController = TabController(length: 4, vsync: this);
+    pageController = PageController();
+
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (!await Token.checkToken()) return;
       token.value = await Token.getToken();
-      classId.value = Get.arguments ?? 1; // remove this line after finish testing
+      classId.value = Get.find<LayoutController>().selectedClassId.value;
       await fetchClassInfo(classId.value);
       await fetchClassAssignment(classId.value);
-      await fetchAllClassAssignment(classId.value);
-      await fetchAssignmentForTeacher();
-      await fetchClassPoint(classId.value);
+      // await fetchAllClassAssignment(classId.value);
+      // await fetchAssignmentForTeacher();
+      // await fetchClassPoint(classId.value);
     });
-    addNewQuestion();
+    // addNewQuestion();
   }
 
   fetchClassInfo(id) async {
+    isLoading(true);
     try {
       String url = "${Api.server}classes/$id";
       var response = await get(Uri.parse(url), headers: {
@@ -102,6 +107,7 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
         className.value = data['name'];
         classDescription.value = data['description'];
         teacherName.value = data['teacherName'];
+        isLoading(false);
       }
     } catch (e) {
       Get.snackbar("Error", "Failed to fetch class info");
