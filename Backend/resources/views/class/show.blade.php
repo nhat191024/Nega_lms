@@ -96,8 +96,10 @@
                                             @else
                                                 <p>Được giao bởi: Không xác định</p>
                                             @endif
+                                            <p>Phân loại: {{ $assignment->type == 'quiz' ? 'Quiz' : 'Lab' }}</p>
                                             <p>Thời gian làm: {{ $assignment->duration }} phút</p>
-                                            <p>Hạn nộp bài: {{ $assignment->due_date }}</p>
+                                            <p>Hạn nộp bài:
+                                                {{ \Carbon\Carbon::parse($assignment->due_date)->format('d/m/Y') }}</p>
                                         </div>
                                         <button class="btn btn-primary btn-sm"
                                             onclick="showAssignmentDetails({{ $assignment->id }})">Xem chi tiết</button>
