@@ -104,85 +104,85 @@ class LayoutScreen extends GetView<LayoutController> {
       ),
       body: Row(
         children: [
-          SidebarX(
-            showToggleButton: true,
-            controller: controller.sidebarController,
-            animationDuration: const Duration(milliseconds: 150),
-            theme: SidebarXTheme(
-              textStyle: const TextStyle(
-                color: CustomColors.primaryText,
-                fontSize: 16,
-                fontFamily: FontStyleTextStrings.regular,
-              ),
-              selectedTextStyle: const TextStyle(
-                color: CustomColors.white,
-                fontSize: 16,
-                fontFamily: FontStyleTextStrings.medium,
-              ),
-              itemTextPadding: const EdgeInsets.symmetric(horizontal: 20),
-              selectedItemTextPadding: const EdgeInsets.symmetric(horizontal: 20),
-              selectedItemDecoration: BoxDecoration(
-                color: CustomColors.primary,
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(
-                  color: CustomColors.border,
+          if (!isMobile)
+            SidebarX(
+              showToggleButton: true,
+              controller: controller.sidebarController,
+              animationDuration: const Duration(milliseconds: 150),
+              theme: SidebarXTheme(
+                textStyle: const TextStyle(
+                  color: CustomColors.primaryText,
+                  fontSize: 16,
+                  fontFamily: FontStyleTextStrings.regular,
                 ),
-              ),
-              selectedIconTheme: const IconThemeData(
-                color: CustomColors.white,
-              ),
-              decoration: const BoxDecoration(
-                color: CustomColors.background,
-                border: Border(
-                  right: BorderSide(
+                selectedTextStyle: const TextStyle(
+                  color: CustomColors.white,
+                  fontSize: 16,
+                  fontFamily: FontStyleTextStrings.medium,
+                ),
+                itemTextPadding: const EdgeInsets.symmetric(horizontal: 20),
+                selectedItemTextPadding: const EdgeInsets.symmetric(horizontal: 20),
+                selectedItemDecoration: BoxDecoration(
+                  color: CustomColors.primary,
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(
                     color: CustomColors.border,
-                    width: 1,
+                  ),
+                ),
+                selectedIconTheme: const IconThemeData(
+                  color: CustomColors.white,
+                ),
+                decoration: const BoxDecoration(
+                  color: CustomColors.background,
+                  border: Border(
+                    right: BorderSide(
+                      color: CustomColors.border,
+                      width: 1,
+                    ),
                   ),
                 ),
               ),
-            ),
-            extendedTheme: const SidebarXTheme(
-              width: 300,
-
-            ),
-            headerBuilder: (context, extended) {
-              return Container(
-                padding: const EdgeInsets.only(top: 20),
-                height: 100,
-                child: Center(
-                  child: Image.asset(Images.logoNoBg, width: extended ? 150 : 50),
+              extendedTheme: const SidebarXTheme(
+                width: 300,
+              ),
+              headerBuilder: (context, extended) {
+                return Container(
+                  padding: const EdgeInsets.only(top: 20),
+                  height: 100,
+                  child: Center(
+                    child: Image.asset(Images.logoNoBg, width: extended ? 150 : 50),
+                  ),
+                );
+              },
+              footerDivider: const Divider(color: CustomColors.dividers, height: 1),
+              footerItems: [
+                SidebarXItem(
+                  icon: Icons.logout,
+                  label: 'Đăng xuất',
+                  onTap: () {},
                 ),
-              );
-            },
-            footerDivider: const Divider(color: CustomColors.dividers, height: 1),
-            footerItems: [
-              SidebarXItem(
-                icon: Icons.logout,
-                label: 'Đăng xuất',
-                onTap: () {},
-              ),
-            ],
-            items: const [
-              SidebarXItem(
-                icon: Icons.home,
-                label: 'Trang chủ',
-              ),
-              SidebarXItem(
-                icon: Icons.school,
-                label: 'Lớp học',
-              ),
-              SidebarXItem(
-                icon: Icons.person,
-                label: 'Giáo viên',
-              ),
-              // Thêm các mục khác ở đây
-            ],
-          ),
+              ],
+              items: const [
+                SidebarXItem(
+                  icon: Icons.home,
+                  label: 'Trang chủ',
+                ),
+                SidebarXItem(
+                  icon: Icons.school,
+                  label: 'Lớp học',
+                ),
+                SidebarXItem(
+                  icon: Icons.person,
+                  label: 'Giáo viên',
+                ),
+                // Thêm các mục khác ở đây
+              ],
+            ),
           Expanded(
             child: PageView(
               controller: controller.pageController,
               children: [
-                // ClassListScreen(), // Màn hình Lớp học
+                ClassListScreen(),
                 // TeacherPage(),
                 // Thêm các màn hình khác ở đây
               ],
