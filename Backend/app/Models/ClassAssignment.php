@@ -24,7 +24,7 @@ class ClassAssignment extends Model
 
     public function quizzes()
     {
-        return $this->hasOne(AssignmentQuiz::class);
+        return $this->hasMany(AssignmentQuiz::class, 'assignment_id');
     }
 
     public function submits()
