@@ -19,7 +19,6 @@ return Application::configure(basePath: dirname(__DIR__))
             'abilities' => CheckAbilities::class,
             'ability' => CheckForAnyAbility::class,
         ]);
-        $middleware->append(Cors::class);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
