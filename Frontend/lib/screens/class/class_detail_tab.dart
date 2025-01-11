@@ -15,7 +15,7 @@ class ClassDetailTab extends GetView<ClassDetailController> {
                 Row(
                   children: [
                     SizedBox(
-                      width: Get.width * 0.2,
+                      width: Get.width * 0.25,
                       child: TabBar(
                         controller: controller.tabController,
                         labelColor: CustomColors.primary,
