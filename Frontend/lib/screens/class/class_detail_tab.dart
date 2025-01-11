@@ -93,11 +93,11 @@ class ClassDetailTab extends GetView<ClassDetailController> {
                 Expanded(
                   child: TabBarView(
                     controller: controller.tabController,
-                    children: const [
+                    children: [
                       ClassOverviewScreen(),
-                      ClassDetailScreen(),
-                      ClassTeacherScreen(),
-                      ClassPointScreen(),
+                      const ClassDetailScreen(),
+                      const ClassTeacherScreen(),
+                      const ClassPointScreen(),
                     ],
                   ),
                 )
