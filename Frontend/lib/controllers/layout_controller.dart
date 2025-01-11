@@ -2,17 +2,17 @@ import 'package:nega_lms/utils/imports.dart';
 
 class LayoutController extends GetxController {
   late PageController pageController;
-  late SideMenuController sideMenu;
+  late SidebarXController sidebarController;
 
   @override
   void onInit() {
     pageController = PageController();
-    sideMenu = SideMenuController();
+    sidebarController = SidebarXController(selectedIndex: 0, extended: false);
 
-    sideMenu.addListener((index) {
-      pageController.jumpToPage(index);
+    sidebarController.addListener(() {
+      pageController.jumpToPage(sidebarController.selectedIndex);
     });
-    
+
     super.onInit();
   }
 }
