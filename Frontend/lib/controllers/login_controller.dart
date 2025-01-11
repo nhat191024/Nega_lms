@@ -15,7 +15,7 @@ class LoginController extends GetxController {
   @override
   void onInit() {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      if (!await Token.checkToken()) return;
+      if (!await Token.checkToken(isLogin: true)) return;
     });
     super.onInit();
   }
