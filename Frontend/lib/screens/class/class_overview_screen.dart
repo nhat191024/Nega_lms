@@ -27,12 +27,14 @@ class ClassOverviewScreen extends StatelessWidget {
                     _buildEventContainer(),
                   ],
                 ),
-                const Spacer(),
-                Column(
-                  children: [
-                    const SizedBox(height: 20),
-                    _postNewPost(),
-                  ],
+                const SizedBox(width: 20),
+                Expanded(
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 20),
+                      _postNewPost(),
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -173,7 +175,6 @@ class ClassOverviewScreen extends StatelessWidget {
 
   Widget _postNewPost() {
     return Container(
-      width: Get.width * 0.8,
       padding: const EdgeInsets.fromLTRB(25, 20, 25, 20),
       decoration: BoxDecoration(
         color: CustomColors.white,
