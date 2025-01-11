@@ -5,29 +5,10 @@ class ClassDetailTab extends GetView<ClassDetailController> {
 
   @override
   Widget build(BuildContext context) {
-    final ValueNotifier<bool> isCollapsed = ValueNotifier<bool>(true);
-
+    Get.put(ClassDetailController());
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        toolbarHeight: 80,
-        titleSpacing: 0,
-        title: NavBar(
-          onMenuPressed: () {
-            isCollapsed.value = !isCollapsed.value;
-          },
-          showMenuButton: true,
-        ),
-      ),
       body: Row(
         children: [
-          ValueListenableBuilder<bool>(
-            valueListenable: isCollapsed,
-            builder: (context, value, child) {
-              return SideBar(isCollapsed: value);
-            },
-          ),
           Expanded(
             child: Column(
               children: [
@@ -47,6 +28,7 @@ class ClassDetailTab extends GetView<ClassDetailController> {
                         indicatorColor: CustomColors.primary,
                         indicatorSize: TabBarIndicatorSize.label,
                         tabs: const [
+                          Tab(text: 'Tổng quan'),
                           Tab(text: 'Bài tập'),
                           Tab(text: 'Giảng viên'),
                           Tab(text: 'Điểm'),
@@ -112,6 +94,7 @@ class ClassDetailTab extends GetView<ClassDetailController> {
                   child: TabBarView(
                     controller: controller.tabController,
                     children: const [
+                      ClassOverviewScreen(),
                       ClassDetailScreen(),
                       ClassTeacherScreen(),
                       ClassPointScreen(),
