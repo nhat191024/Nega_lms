@@ -9,7 +9,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 //model
-use App\Models\Homework;
+use App\Models\ClassAssignment;
+use App\Models\ClassSubmit;
 use App\Models\Assignment;
 use App\Models\Choice;
 use App\Models\Question;
@@ -23,24 +24,21 @@ class AssignmentController extends Controller
     {
         $homeworks = null;
         if ($role == 1) {
-            $homeworks = Homework::where('class_id', $class_id)->with('assignment')->get();
+            $homeworks = ClassAssignment::where('class_id', $class_id)->get();
         } else {
-            $homeworks = Homework::where('class_id', $class_id)->where('status', 1)->with('assignment')->get();
+            $homeworks = ClassAssignment::where('class_id', $class_id)->where('status', 'published')->get();
         }
         $assignments = $homeworks->map(function ($homework) {
-            $answers = Answer::where('user_id', Auth::user()->id)->where('assignment_id', $homework->assignment ? $homework->assignment->id : $homework->id)->get();
+            $answers = ClassSubmit::where('class_assignment_id', $homework->id)->where('student_id', Auth::user()->id)->get();
             return [
-                'id' => $homework->assignment ? $homework->assignment->id : $homework->id,
-                'homeworkId' => $homework->id,
-                'creatorName' => $homework->assignment ? $homework->assignment->creator->name : null,
-                'name' => $homework->assignment ? $homework->assignment->title : $homework->title,
-                'description' => $homework->assignment ? $homework->assignment->description : $homework->description,
-                'level' => $homework->assignment ? $homework->assignment->level : "Không có",
-                'totalScore' => $homework->assignment ? $homework->assignment->totalScore : $homework->score,
-                'specialized' => $homework->assignment ? $homework->assignment->specialized : "Không có",
-                'subject' => $homework->assignment ?  $homework->assignment->subject : "Không có",
-                'topic' => $homework->assignment ? $homework->assignment->topic : "Không có",
+                'id' => $homework->id,
                 'type' => $homework->type,
+                'title' => $homework->title,
+                'description' => $homework->description,
+                'duration' => $homework->duration ? $homework->duration : "Không có",
+                'startDate' => $homework->start_date,
+                'dueDate' => $homework->due_date,
+                'status' => $homework->status,
                 'isSubmitted' => $answers->count() > 1 ? true : false,
             ];
         });
@@ -299,10 +297,9 @@ class AssignmentController extends Controller
         }
     }
 
-    public function getAssignment($id, $class_id)
+    public function getAssignmentById($id)
     {
-        $class = Classes::find($class_id)::with('homeworks', 'homeworks.assignment', 'homeworks.assignment.questions', 'homeworks.assignment.questions.choices')->first();
-        $assignment = $class->homeworks->where('assignment_id', $id)->first();
+        $assignment = ClassAssignment::find($id);
 
         if (!$assignment) {
             return response()->json(
@@ -315,26 +312,25 @@ class AssignmentController extends Controller
 
         $response = [
             'id' => $assignment->id,
-            'creatorName' => $assignment->assignment->creator ? $assignment->assignment->creator->name : null,
             'name' => $assignment->assignment->title,
             'description' => $assignment->assignment->description,
             'duration' => $assignment->duration,
             'startDate' => $assignment->start_datetime,
             'dueDate' => $assignment->due_datetime,
-            'questions' => $assignment->assignment->questions->map(function ($question) {
-                return [
-                    'id' => $question->id,
-                    'question' => $question->question,
-                    'duration' => $question->duration,
-                    'score' => $question->score,
-                    "choices" => $question->choices->map(function ($choice) {
-                        return [
-                            'id' => $choice->id,
-                            'choice' => $choice->choice,
-                        ];
-                    }),
-                ];
-            }),
+            // 'questions' => $assignment->assignment->questions->map(function ($question) {
+            //     return [
+            //         'id' => $question->id,
+            //         'question' => $question->question,
+            //         'duration' => $question->duration,
+            //         'score' => $question->score,
+            //         "choices" => $question->choices->map(function ($choice) {
+            //             return [
+            //                 'id' => $choice->id,
+            //                 'choice' => $choice->choice,
+            //             ];
+            //         }),
+            //     ];
+            // }),
         ];
 
         return response()->json([
