@@ -8,6 +8,7 @@ use App\Models\Submission;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Fruitcake\Cors\CorsService;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -16,20 +17,23 @@ class ClassController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $enrolledClassIds = $user->enrollments->pluck('class_id')->toArray();
-
-        $classes = Classes::with('teacher')->where('status', 1)->get();
-
-        $classes = $classes->map(function ($class) use ($enrolledClassIds) {
-            return [
-                'id' => $class->id,
-                'name' => $class->class_name,
-                'description' => $class->class_description,
-                'teacherName' => $class->teacher ? $class->teacher->name : 'Chưa có giáo viên',
-                'createdAt' => $class->created_at,
-                'isJoined' => in_array($class->id, $enrolledClassIds),
-            ];
-        });
+        if ($user->role_id == 3) {
+            $enrolledClassIds = $user->enrollments->pluck('class_id')->toArray();
+            $classes = Classes::with('teacher', 'categories')->where('status', 1)->get();
+            $classes = $classes->map(function ($class) use ($enrolledClassIds) {
+                return [
+                    'id' => $class->id,
+                    'name' => $class->name,
+                    'description' => $class->description,
+                    'teacherName' => $class->teacher->name,
+                    'categories' => $class->categories->map(function ($category) {
+                        return $category->name;
+                    }),
+                    'createdAt' => $class->created_at,
+                    'isJoined' => in_array($class->id, $enrolledClassIds),
+                ];
+            });
+        }
 
         return response()->json([
             'classes' => $classes,
@@ -42,9 +46,9 @@ class ClassController extends Controller
 
         return response()->json([
             'id' => $class->id,
-            'code' => $class->class_code,
-            'name' => $class->class_name,
-            'description' => $class->class_description,
+            'code' => $class->code,
+            'name' => $class->name,
+            'description' => $class->description,
             'teacherName' => $class->teacher ? $class->teacher->name : 'Chưa có giáo viên',
             'createdAt' => $class->created_at
         ], Response::HTTP_OK);
