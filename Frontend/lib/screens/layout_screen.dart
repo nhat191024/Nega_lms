@@ -162,19 +162,20 @@ class LayoutScreen extends GetView<LayoutController> {
                   onTap: () {},
                 ),
               ],
-              items: const [
-                SidebarXItem(
-                  icon: Icons.home,
-                  label: 'Trang chủ',
-                ),
-                SidebarXItem(
+              items: [
+                const SidebarXItem(
                   icon: Icons.school,
                   label: 'Lớp học',
                 ),
-                SidebarXItem(
+                const SidebarXItem(
                   icon: Icons.person,
-                  label: 'Giáo viên',
+                  label: 'Lớp học của tôi',
                 ),
+                if (controller.role.value == "teacher")
+                  const SidebarXItem(
+                    icon: Icons.person,
+                    label: 'Giáo viên',
+                  ),
                 // Thêm các mục khác ở đây
               ],
             ),
@@ -183,6 +184,7 @@ class LayoutScreen extends GetView<LayoutController> {
               controller: controller.pageController,
               children: [
                 ClassListScreen(),
+                const ClassDetailTab(),
                 // TeacherPage(),
                 // Thêm các màn hình khác ở đây
               ],
