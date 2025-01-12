@@ -14,6 +14,7 @@ Route::post('/login', [LoginController::class, 'login']);
 //no role required routes
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/token-check', [LoginController::class, 'tokenCheck']);
+    Route::get('/logout', [LoginController::class, 'logout']);
 });
 
 // Teacher routes
