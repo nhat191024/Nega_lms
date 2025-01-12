@@ -85,7 +85,7 @@ class ClassAssignmentScreen extends GetView<ClassDetailController> {
                         fontFamily: FontStyleTextStrings.regular,
                       ),
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 10),
                     Row(
                       children: [
                         Container(
