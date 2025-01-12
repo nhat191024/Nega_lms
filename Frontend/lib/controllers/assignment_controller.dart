@@ -2,6 +2,7 @@ import 'package:nega_lms/utils/imports.dart';
 
 class AssignmentController extends GetxController {
   RxBool isLoading = true.obs;
+  RxString username = ''.obs;
   RxString assignmentId = ''.obs;
   RxString classId = ''.obs;
   RxString token = "".obs;
@@ -10,14 +11,13 @@ class AssignmentController extends GetxController {
   RxInt currentQuestion = 0.obs;
   Rx<HomeworkModel> assignment = HomeworkModel(
     id: 0,
-    homeworkId: 0,
-    creatorName: '',
-    name: '',
+    type: '',
+    title: '',
     description: '',
-    duration: 0,
+    duration: "",
     startDate: '',
     dueDate: '',
-    type: '',
+    status: '',
     isSubmitted: false,
   ).obs;
   RxList<QuestionModel> questionList = <QuestionModel>[].obs;
@@ -33,17 +33,22 @@ class AssignmentController extends GetxController {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (!await Token.checkToken()) return;
       token.value = await Token.getToken();
+
+      if (StorageService.checkData(key: 'username')) {
+        username.value = StorageService.readData(key: 'username');
+      }
+
       final arguments = Get.arguments as Map<String, dynamic>;
       assignmentId.value = arguments['assignment_id'].toString();
       classId.value = arguments['class_id'].toString();
-      await fetchAssignment(assignmentId.value, classId.value);
+      await fetchAssignment(assignmentId.value);
     });
   }
 
-  fetchAssignment(assignmentId, classId) async {
+  fetchAssignment(assignmentId) async {
     try {
       isLoading(true);
-      String url = "${Api.server}assignment/detail/$assignmentId/$classId";
+      String url = "${Api.server}assignment/getById/$assignmentId";
       var response = await get(Uri.parse(url), headers: {
         'Authorization': 'Bearer $token',
       }).timeout(const Duration(seconds: 10));
@@ -52,7 +57,7 @@ class AssignmentController extends GetxController {
         var question = data['questions'];
         assignment.value = HomeworkModel.fromMap(data);
         questionList.value = (question as List).map((e) => QuestionModel.fromMap(e)).toList();
-        assignmentDuration.value = assignment.value.duration!;
+        assignmentDuration.value = int.parse(assignment.value.duration!);
         loadChoiceToAnswerList();
         int duration = (assignmentDuration * 60).toInt();
         startTimer(duration);
@@ -148,18 +153,18 @@ class AssignmentController extends GetxController {
     assignmentTitle.value = 'test';
     assignmentDuration.value = 0;
     currentQuestion.value = 0;
-    assignment.value = HomeworkModel(
-      id: 0,
-      homeworkId: 0,
-      creatorName: '',
-      name: '',
-      description: '',
-      duration: 0,
-      startDate: '',
-      dueDate: '',
-      type: '',
-      isSubmitted: false,
-    );
+    // assignment.value = HomeworkModel(
+    //   id: 0,
+    //   homeworkId: 0,
+    //   creatorName: '',
+    //   name: '',
+    //   description: '',
+    //   duration: 0,
+    //   startDate: '',
+    //   dueDate: '',
+    //   type: '',
+    //   isSubmitted: false,
+    // );
     questionList.clear();
     answerList.clear();
     timeLeft.value = '00:00:00';
