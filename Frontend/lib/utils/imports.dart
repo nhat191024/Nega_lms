@@ -9,7 +9,7 @@ export 'package:nega_lms/screens/responsive_layout.dart';
 export 'package:nega_lms/screens/login_screen.dart';
 export 'package:nega_lms/screens/layout_screen.dart';
 export 'package:nega_lms/screens/class/class_list_screen.dart';
-export 'package:nega_lms/screens/class/class_detail_screen.dart';
+export 'package:nega_lms/screens/class/class_assignment_screen.dart';
 export 'package:nega_lms/screens/class/class_overview_screen.dart';
 export 'package:nega_lms/screens/class/class_detail_tab.dart';
 export 'package:nega_lms/screens/class/class_teacher_screen.dart';
