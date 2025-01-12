@@ -8,6 +8,8 @@ use App\Models\Submission;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\ClassAssignment;
+use App\Models\ClassSubmit;
 use Fruitcake\Cors\CorsService;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
@@ -117,7 +119,7 @@ class ClassController extends Controller
     public function getClassAssignmentPoint($id)
     {
         $user = Auth::user();
-        $submissions = Submission::where('class_id', $id)->with('assignment', 'student')->get();
+        $submissions = ClassSubmit::where('class_assignment_id', $id)->with('assignment', 'student')->get();
 
         $submissions = $submissions->map(function ($submission) {
             return [
@@ -131,5 +133,27 @@ class ClassController extends Controller
         return response()->json([
             'submissions' => $submissions,
         ], Response::HTTP_OK);
+    }
+
+    public function getStudentAssignmentPoint($id)
+    {
+        $user = Auth::user();
+        $assignments = ClassAssignment::where('class_id', $id)->with('submits', 'quizzes')->get();
+
+        $respond = $assignments->map(function ($assignment) {
+            return [
+                'title' => $assignment->title,
+                'type' => $assignment->type,
+                'due_date' => $assignment->due_date,
+                'score' => $assignment->submits->where('student_id', Auth::id())->first()->score ?? 0,
+                'total_score' => $assignment->type == 'quiz' ? $assignment->quizzes->count() : 0,
+                'handed_in' => $assignment->submits->where('student_id', Auth::id())->first() ? true : false,
+            ];
+        });
+
+        return response()->json(
+            $respond,
+            Response::HTTP_OK
+        );
     }
 }
