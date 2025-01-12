@@ -21,8 +21,11 @@ class ClassController extends Controller
         $user = Auth::user();
         if ($user->role_id == 3) {
             $enrolledClassIds = $user->enrollments->pluck('class_id')->toArray();
-            $classes = Classes::with('teacher', 'categories')->where('status', 1)->get();
-            $classes = $classes->map(function ($class) use ($enrolledClassIds) {
+            $classes = Classes::with('teacher', 'categories')
+                ->whereIn('id', $enrolledClassIds)
+                ->where('status', 1)
+                ->get();
+            $classes = $classes->map(function ($class) {
                 return [
                     'id' => $class->id,
                     'name' => $class->name,
@@ -32,7 +35,7 @@ class ClassController extends Controller
                         return $category->name;
                     }),
                     'createdAt' => $class->created_at,
-                    'isJoined' => in_array($class->id, $enrolledClassIds),
+                    'isJoined' => true,
                 ];
             });
         }
