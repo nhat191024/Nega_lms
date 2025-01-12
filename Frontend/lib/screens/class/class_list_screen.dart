@@ -84,17 +84,6 @@ class ClassListScreen extends GetView<ClassController> {
                     ],
                   ),
                 ),
-                const SizedBox(width: 20),
-                CustomButton(
-                  onTap: () {
-                    controller.joinClass(id);
-                  },
-                  isLoading: controller.isJoinBtnLoading.value,
-                  btnText: isJoined ? 'Đã tham gia' : 'Tham gia',
-                  btnColor: CustomColors.primary,
-                  isDisabled: isJoined,
-                  width: 140,
-                ),
               ],
             ),
           ),
