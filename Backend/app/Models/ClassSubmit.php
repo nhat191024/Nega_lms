@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class ClassSubmit extends Model
 {
-    protected $fillable = ['class_assignment_id'];
+    protected $fillable = ['class_assignment_id', 'student_id', 'answer', 'score'];
 
     public function assignment()
     {
