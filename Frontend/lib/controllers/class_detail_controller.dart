@@ -5,6 +5,7 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
   late PageController pageController;
 
   RxBool isLoading = true.obs;
+  RxString role = ''.obs;
   RxBool isSubmitButtonLoading = false.obs;
   RxBool createAssignmentThenPushToClass = false.obs;
   RxInt classId = 0.obs;
@@ -84,6 +85,9 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
       if (!await Token.checkToken()) return;
       token.value = await Token.getToken();
       classId.value = Get.find<LayoutController>().selectedClassId.value;
+      if (StorageService.checkData(key: "role")) {
+        role.value = StorageService.readData(key: "role");
+      }
       await fetchClassInfo(classId.value);
       await fetchClassAssignment(classId.value);
       // await fetchAllClassAssignment(classId.value);
@@ -118,7 +122,7 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
     assignmentList.clear();
     try {
       isLoading(true);
-      String url = "${Api.server}assignment/$id/2";
+      String url = "${Api.server}assignment/getByClass/$id/2";
       var response = await get(Uri.parse(url), headers: {
         'Authorization': 'Bearer $token',
       }).timeout(const Duration(seconds: 10));
