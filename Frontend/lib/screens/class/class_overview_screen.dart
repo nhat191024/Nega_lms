@@ -70,7 +70,6 @@ class ClassOverviewScreen extends StatelessWidget {
   Widget _buildClassCodeContainer() {
     return Container(
       width: Get.width * 0.15,
-      height: Get.height * 0.08,
       padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
       decoration: BoxDecoration(
         color: CustomColors.white,
@@ -122,7 +121,7 @@ class ClassOverviewScreen extends StatelessWidget {
   Widget _buildEventContainer() {
     return Container(
       width: Get.width * 0.15,
-      height: Get.height * 0.1,
+      height: Get.height * 0.2,
       padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
       decoration: BoxDecoration(
         color: CustomColors.white,
@@ -142,7 +141,7 @@ class ClassOverviewScreen extends StatelessWidget {
               fontFamily: FontStyleTextStrings.medium,
             ),
           ),
-          const Spacer(),
+          const SizedBox(height: 10),
           const Text(
             'Không có bài tập nào sắp đến hạn',
             style: TextStyle(
