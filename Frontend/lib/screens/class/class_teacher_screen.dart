@@ -67,35 +67,30 @@ class ClassTeacherScreen extends GetView<ClassDetailController> {
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(60, 20, 60, 0),
-            child: Obx(
-              () => SizedBox(
-                height: Get.height * 0.8,
-                child: controller.isLoading.value
-                    ? const Center(
-                        child: CircularProgressIndicator(),
-                      )
-                    : ListView.builder(
-                        shrinkWrap: true,
-                        physics: const AlwaysScrollableScrollPhysics(),
-                        itemCount: controller.assignmentsList.length,
-                        itemBuilder: (context, index) {
-                          return classCardBuilder(
-                            context,
-                            controller.assignmentsList[index].name ?? '',
-                            controller.assignmentsList[index].description ?? '',
-                            [
-                              "Lập trình",
-                              controller.assignmentsList[index].type ?? '',
-                            ],
-                            10,
-                            index == controller.assignmentsList.length - 1,
-                            controller.assignmentsList[index].id.toString(),
-                            controller.assignmentsList[index].homeworkId.toString(),
-                            controller.assignmentsList[index].type ?? '',
-                          );
-                        },
-                      ),
-              ),
+            child: SizedBox(
+              height: Get.height * 0.8,
+              child: controller.isLoading.value
+                  ? const Center(
+                      child: CircularProgressIndicator(),
+                    )
+                  : ListView.builder(
+                      shrinkWrap: true,
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      itemCount: controller.assignmentList.length,
+                      itemBuilder: (context, index) {
+                        return classCardBuilder(
+                          context,
+                          controller.assignmentList[index].title ?? '',
+                          controller.assignmentList[index].description ?? '',
+                          controller.assignmentList[index].duration ?? '',
+                          10,
+                          index == controller.assignmentList.length - 1,
+                          controller.assignmentList[index].id.toString(),
+                          controller.assignmentList[index].type ?? '',
+                          controller.assignmentList[index].id.toString(),
+                        );
+                      },
+                    ),
             ),
           ),
         ],
@@ -108,12 +103,12 @@ class ClassTeacherScreen extends GetView<ClassDetailController> {
     context,
     String title,
     String description,
-    List<String> tags,
+    String duration,
     double verticalPadding,
     bool isLast,
     String id,
-    String homeworkId,
     String type,
+    String homeworkId,
   ) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: verticalPadding),
@@ -143,28 +138,43 @@ class ClassTeacherScreen extends GetView<ClassDetailController> {
                         fontFamily: FontStyleTextStrings.regular,
                       ),
                     ),
-                    const SizedBox(height: 20),
-                    Wrap(
-                      children: tags
-                          .map(
-                            (tag) => Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                              margin: const EdgeInsets.only(right: 10),
-                              decoration: BoxDecoration(
-                                color: CustomColors.primary,
-                                borderRadius: BorderRadius.circular(50),
-                              ),
-                              child: Text(
-                                tag,
-                                style: const TextStyle(
-                                  fontSize: 12,
-                                  color: CustomColors.background,
-                                  fontFamily: FontStyleTextStrings.medium,
-                                ),
-                              ),
+                    const SizedBox(height: 10),
+                    Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                          margin: const EdgeInsets.only(right: 10),
+                          decoration: BoxDecoration(
+                            color: CustomColors.primary,
+                            borderRadius: BorderRadius.circular(50),
+                          ),
+                          child: Text(
+                            "Loại bài tập: $type",
+                            style: const TextStyle(
+                              fontSize: 12,
+                              color: CustomColors.background,
+                              fontFamily: FontStyleTextStrings.medium,
                             ),
-                          )
-                          .toList(),
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                          margin: const EdgeInsets.only(right: 10),
+                          decoration: BoxDecoration(
+                            color: CustomColors.primary,
+                            borderRadius: BorderRadius.circular(50),
+                          ),
+                          child: Text(
+                            "Thời gian làm: $duration",
+                            style: const TextStyle(
+                              fontSize: 12,
+                              color: CustomColors.background,
+                              fontFamily: FontStyleTextStrings.medium,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -720,52 +730,6 @@ class ClassTeacherScreen extends GetView<ClassDetailController> {
                       ),
                       const SizedBox(height: 20),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          CustomTextField(
-                            labelText: "Thời gian làm bài",
-                            labelColor: CustomColors.primary,
-                            labelSize: 18,
-                            hintText: "nhập",
-                            keyboardType: TextInputType.number,
-                            errorText: controller.assignmentDurationError.value,
-                            isError: controller.isAssignmentDurationError.value.obs,
-                            width: Get.width * 0.3,
-                            obscureText: false.obs,
-                            controller: controller.assignmentDuration,
-                            onChanged: (value) {
-                              if (value.isNotEmpty) {
-                                controller.isAssignmentDurationError.value = false;
-                              } else {
-                                controller.isAssignmentDurationError.value = true;
-                                controller.assignmentDurationError.value = "Thời gian làm bài không được để trống";
-                              }
-                            },
-                          ),
-                          CustomTextField(
-                            labelText: "Điểm số",
-                            labelColor: CustomColors.primary,
-                            labelSize: 18,
-                            hintText: "nhập",
-                            keyboardType: TextInputType.number,
-                            errorText: controller.homeworkScoreError.value,
-                            isError: controller.isHomeworkScoreError.value.obs,
-                            width: Get.width * 0.3,
-                            obscureText: false.obs,
-                            controller: controller.homeworkScore,
-                            onChanged: (value) {
-                              if (value.isNotEmpty) {
-                                controller.isHomeworkScoreError.value = false;
-                              } else {
-                                controller.isHomeworkScoreError.value = true;
-                                controller.homeworkScoreError.value = "Điểm bài tập không được để trống";
-                              }
-                            },
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 20),
-                      Row(
                         children: [
                           DateTimeField(
                             labelText: "Thời gian bắt đầu",
@@ -827,6 +791,32 @@ class ClassTeacherScreen extends GetView<ClassDetailController> {
                             controller.assignmentDescriptionError.value = "Mô tả không được để trống";
                           }
                         },
+                      ),
+                      const SizedBox(height: 20),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SelectBox(
+                            labelText: "Trạng thái",
+                            labelColor: CustomColors.primary,
+                            labelSize: 18,
+                            hintText: "Chọn",
+                            errorText: controller.assignmentStatusError.value,
+                            isError: controller.isAssignmentStatusError.value.obs,
+                            width: Get.width * 0.3,
+                            value: controller.assignmentStatus.value,
+                            items: const [
+                              DropdownMenuItem(value: 'true', child: Text('Hiện')),
+                              DropdownMenuItem(value: 'false', child: Text('Ẩn')),
+                            ],
+                            onChanged: (value) {
+                              if (value != null) {
+                                controller.assignmentStatus.value = value;
+                                controller.isAssignmentStatusError.value = false;
+                              }
+                            },
+                          ),
+                        ],
                       ),
                       const Spacer(),
                       CustomButton(
