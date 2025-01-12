@@ -29,7 +29,7 @@ class ClassDetailTab extends GetView<ClassDetailController> {
                         indicatorSize: TabBarIndicatorSize.label,
                         tabs: [
                           const Tab(text: 'Tổng quan'),
-                          const Tab(text: 'Bài tập'),
+                          if (controller.role.value == "student") const Tab(text: 'Bài tập'),
                           if (controller.role.value == "teacher") const Tab(text: 'Giảng viên'),
                           const Tab(text: 'Điểm'),
                         ],
@@ -96,7 +96,7 @@ class ClassDetailTab extends GetView<ClassDetailController> {
                     controller: controller.tabController,
                     children: [
                       ClassOverviewScreen(),
-                      const ClassAssignmentScreen(),
+                      if (controller.role.value == "student") const ClassAssignmentScreen(),
                       if (controller.role.value == "teacher") const ClassTeacherScreen(),
                       const ClassPointScreen(),
                     ],
