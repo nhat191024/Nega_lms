@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
@@ -27,6 +26,11 @@ class LoginController extends Controller
         }
 
         /** @var \App\Models\User $user **/  $user = Auth::user();
+        if ($user->status == 'locked') {
+            Auth::logout();
+            return response()->json(['message' => 'Tài khoản của bạn đã bị khóa.'], 403);
+        }
+
         if ($user->tokens()->count() > 0) {
             $user->tokens()->delete();
         }
