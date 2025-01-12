@@ -24,7 +24,7 @@ class ClassListScreen extends GetView<ClassController> {
   }
 
   //class card builder
-  Widget classCardBuilder(String title, String description, int id, bool isJoined, List<String> tags, double verticalPadding, bool isLast) {
+  Widget classCardBuilder(String title, String description, int id, List<String> tags, double verticalPadding, bool isLast) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: verticalPadding),
       child: Column(
@@ -194,7 +194,6 @@ class ClassListScreen extends GetView<ClassController> {
                                       controller.filteredList[index].name ?? '',
                                       controller.filteredList[index].description ?? '',
                                       controller.filteredList[index].id ?? 0,
-                                      controller.filteredList[index].isJoined ?? false,
                                       controller.filteredList[index].categories ?? [],
                                       10,
                                       index == controller.filteredList.length - 1,
@@ -234,7 +233,6 @@ class ClassListScreen extends GetView<ClassController> {
                           controller.filteredList[index].name ?? '',
                           controller.filteredList[index].description ?? '',
                           controller.filteredList[index].id ?? 0,
-                          controller.filteredList[index].isJoined ?? false,
                           controller.filteredList[index].categories ?? [],
                           10,
                           index == controller.filteredList.length - 1,
