@@ -24,7 +24,8 @@ class LayoutController extends GetxController {
   logout() async {
     var url = Uri.parse("${Api.server}logout");
     try {
-      var response = await get(url, headers: {"Authorization": "Bearer ${Token.getToken()}"});
+      var token = await Token.getToken();
+      var response = await get(url, headers: {"Authorization": "Bearer $token"});
       if (response.statusCode == 200) {
         Token.removeToken();
         StorageService.removeData(key: "username");
