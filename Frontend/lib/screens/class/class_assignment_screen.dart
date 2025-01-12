@@ -173,7 +173,7 @@ class ClassAssignmentScreen extends GetView<ClassDetailController> {
             child: Material(
               color: Colors.transparent,
               child: Container(
-                width: Get.width * 0.5,
+                width: Get.width * 0.45,
                 height: Get.height * 0.3,
                 padding: const EdgeInsets.fromLTRB(20, 25, 20, 20),
                 decoration: BoxDecoration(
@@ -186,7 +186,7 @@ class ClassAssignmentScreen extends GetView<ClassDetailController> {
                     const Text(
                       'Nộp bài tập',
                       style: TextStyle(
-                        fontSize: 24,
+                        fontSize: 26,
                         color: CustomColors.primary,
                         fontFamily: FontStyleTextStrings.bold,
                       ),
@@ -197,7 +197,7 @@ class ClassAssignmentScreen extends GetView<ClassDetailController> {
                       child: Text(
                         title,
                         style: const TextStyle(
-                          fontSize: 18,
+                          fontSize: 20,
                           color: CustomColors.primaryText,
                           fontFamily: FontStyleTextStrings.medium,
                         ),
@@ -222,7 +222,7 @@ class ClassAssignmentScreen extends GetView<ClassDetailController> {
                     const SizedBox(height: 20),
                     Obx(
                       () => CustomTextField(
-                        labelText: "Link bài tập",
+                        labelText: "Bài tập",
                         labelColor: CustomColors.primary,
                         labelSize: 18,
                         hintText: "nhập",
@@ -231,6 +231,8 @@ class ClassAssignmentScreen extends GetView<ClassDetailController> {
                         width: Get.width * 0.4,
                         obscureText: false.obs,
                         controller: controller.linkSubmit,
+                        minLines: 2,
+                        maxLines: 3,
                         onChanged: (value) {
                           if (value.isNotEmpty) {
                             controller.isLinkSubmitError.value = false;
@@ -254,7 +256,7 @@ class ClassAssignmentScreen extends GetView<ClassDetailController> {
                       },
                       btnText: 'Nộp bài',
                       btnColor: CustomColors.primary,
-                      width: 140,
+                      width: 160,
                     ),
                   ],
                 ),
