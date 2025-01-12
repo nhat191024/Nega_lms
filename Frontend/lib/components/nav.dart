@@ -54,22 +54,34 @@ class NavBar extends StatelessWidget {
                 ],
               ),
             ),
-            Container(
-              height: 44,
-              width: 44,
-              margin: const EdgeInsets.only(right: 10),
-              decoration: const BoxDecoration(
-                color: Colors.blueAccent,
-                shape: BoxShape.circle,
-              ),
-              clipBehavior: Clip.antiAlias,
-              child: Image.network(
-                // controllers.avatar.value,
-                //for dev only
-                "https://imgur.com/a/H345YaA",
-                fit: BoxFit.cover,
-              ),
-            ),
+            Obx(() {
+              return Container(
+                height: 44,
+                width: 44,
+                margin: const EdgeInsets.only(right: 10),
+                decoration: const BoxDecoration(
+                  color: Colors.blueAccent,
+                  shape: BoxShape.circle,
+                ),
+                clipBehavior: Clip.antiAlias,
+                child: controllers.avatar.value.isEmpty
+                    ? const Center(
+                        child: Text(
+                          'A',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontFamily: FontStyleTextStrings.bold,
+                          ),
+                        ),
+                      )
+                    : Image.network(
+                        //for development purpose
+                        "https://van191024.xyz/upload/avt/default.png",
+                        fit: BoxFit.cover,
+                      ),
+              );
+            }),
           ],
         ),
       ),
