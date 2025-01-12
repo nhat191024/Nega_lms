@@ -22,9 +22,9 @@ class AssignmentController extends Controller
     public function GetAssignmentByClassId($class_id, $role)
     {
         $homeworks = null;
-        if ($role == 1) {
+        if ($role == 2) {
             $homeworks = ClassAssignment::where('class_id', $class_id)->get();
-        } else {
+        } elseif ($role == 3) {
             $homeworks = ClassAssignment::where('class_id', $class_id)->where('status', 'published')->get();
         }
         $assignments = $homeworks->map(function ($homework) {
@@ -44,38 +44,6 @@ class AssignmentController extends Controller
 
         return response()->json([
             'assignments' => $assignments,
-        ], Response::HTTP_OK);
-    }
-
-    public function GetAssignmentForTeacher()
-    {
-        $user = Auth::user();
-        $assignments = Assignment::where('status', 'published')
-            ->orWhere(function ($query) use ($user) {
-                $query->where('status', 'private')
-                    ->where('creator_id', $user->id);
-            })
-            ->get();
-
-        $assignmentsFormatted = $assignments->map(function ($assignment) {
-            return [
-                'id' => $assignment->id,
-                'name' => $assignment->title,
-                'description' => $assignment->description,
-                'level' => $assignment->level,
-                'totalScore' => $assignment->totalScore,
-                'specialized' => $assignment->specialized,
-                'subject' => $assignment->subject,
-                'topic' => $assignment->topic,
-                'creator' => $assignment->creator->name,
-                'isCreator' => $assignment->creator_id == Auth::user()->id ? true : false,
-                'createdAt' => $assignment->created_at->format('H:i d:m:Y'),
-                'numberOfQuestions' => $assignment->questions->count(),
-            ];
-        });
-
-        return response()->json([
-            'assignments' => $assignmentsFormatted,
         ], Response::HTTP_OK);
     }
 
@@ -215,7 +183,7 @@ class AssignmentController extends Controller
 
     public function UpdateAssignment(Request $request)
     {
-        $homework = Homework::find($request->id);
+        $homework = ClassAssignment::find($request->id);
         if (!$homework) {
             return response()->json(
                 [
@@ -224,18 +192,12 @@ class AssignmentController extends Controller
                 Response::HTTP_NOT_FOUND
             );
         }
-        $homework->start_datetime = $request->start_datetime;
-        $homework->due_datetime = $request->due_datetime;
-        $homework->duration = $request->duration;
+        $homework->title = $request->title;
+        $homework->description = $request->description;
+        if ($homework->type == "quiz") $homework->duration = $request->duration;
+        $homework->start_date = $request->start_datetime;
+        $homework->due_date = $request->due_datetime;
         $homework->status = $request->status;
-        if ($request->type == "quiz") {
-            $homework->assignment_id = $request->assignment_id;
-            $homework->auto_grade = $request->auto_grade;
-        } else {
-            $homework->title = $request->title;
-            $homework->score = $request->score;
-            $homework->description = $request->description;
-        }
         $homework->save();
 
         return response()->json([
