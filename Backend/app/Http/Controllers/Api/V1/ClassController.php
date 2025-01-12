@@ -23,7 +23,7 @@ class ClassController extends Controller
             $enrolledClassIds = $user->enrollments->pluck('class_id')->toArray();
             $classes = Classes::with('teacher', 'categories')
                 ->whereIn('id', $enrolledClassIds)
-                ->where('status', 1)
+                ->where('status', "published")
                 ->get();
             $classes = $classes->map(function ($class) {
                 return [
@@ -31,6 +31,20 @@ class ClassController extends Controller
                     'name' => $class->name,
                     'description' => $class->description,
                     'teacherName' => $class->teacher->name,
+                    'categories' => $class->categories->map(function ($category) {
+                        return $category->name;
+                    }),
+                    'createdAt' => $class->created_at,
+                ];
+            });
+        } else if ($user->role_id == 2) {
+            $classes = Classes::where('teacher_id', $user->id)->where('status', "published")->with('categories')->get();
+            $classes = $classes->map(function ($class) use ($user) {
+                return [
+                    'id' => $class->id,
+                    'name' => $class->name,
+                    'description' => $class->description,
+                    'teacherName' => $user->name,
                     'categories' => $class->categories->map(function ($category) {
                         return $category->name;
                     }),
