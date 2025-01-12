@@ -13,7 +13,9 @@ use App\Models\ClassAssignment;
 use App\Models\ClassSubmit;
 use App\Models\Assignment;
 use App\Models\Choice;
+use App\Models\ClassAnswer;
 use App\Models\Question;
+use App\Models\Quiz;
 
 class AssignmentController extends Controller
 {
@@ -259,28 +261,27 @@ class AssignmentController extends Controller
             $answers = json_decode($request->answers, true);
             $totalScore = 0;
 
-            // foreach ($answers as $answer) {
-            //     Answer::create([
-            //         'user_id' => $user->id,
-            //         'assignment_id' => $request->assignment_id,
-            //         'question_id' => $answer['question_id'],
-            //         'choice_id' => $answer['choice_id'],
-            //     ]);
+            $submit = ClassSubmit::create([
+                'class_assignment_id' => $request->assignment_id,
+                'student_id' => $user->id,
+            ]);
 
-            //     $question = Question::find($answer['question_id']);
-            //     $choice = Choice::find($answer['choice_id']);
+            foreach ($answers as $answer) {
+                ClassAnswer::create([
+                    'class_submit_id' => $submit->id,
+                    'quiz_id' => $answer['question_id'],
+                    'choice_id' => $answer['choice_id'],
+                ]);
 
-            //     if ($choice && $choice->is_correct == 1) {
-            //         $totalScore += $question->score;
-            //     }
-            // }
+                $choice = Choice::find($answer['choice_id']);
 
-            // Submission::create([
-            //     'assignment_id' => $request->assignment_id,
-            //     'student_id' => $user->id,
-            //     'total_score' => $totalScore,
-            //     'class_id' => $request->class_id,
-            // ]);
+                if ($choice && $choice->is_correct == 1) {
+                    $totalScore += 1;
+                }
+            }
+
+            $submit->score = $totalScore;
+            $submit->save();
 
             return response()->json([
                 'message' => 'Nộp bài thành công',
