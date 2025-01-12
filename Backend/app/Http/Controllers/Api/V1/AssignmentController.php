@@ -244,9 +244,9 @@ class AssignmentController extends Controller
     public function SubmitAssignment(Request $request)
     {
         $user = Auth::user();
-        if ($request->type == 'link') {
+        if ($request->type == 'lab') {
             ClassSubmit::create([
-                'assignment_id' => $request->assignment_id,
+                'class_assignment_id' => $request->assignment_id,
                 'student_id' => $user->id,
                 'answer' => $request->link,
                 'score' => 0,
