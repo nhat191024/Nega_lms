@@ -14,9 +14,6 @@ use App\Models\ClassSubmit;
 use App\Models\Assignment;
 use App\Models\Choice;
 use App\Models\Question;
-use App\Models\Answer;
-use App\Models\Classes;
-use App\Models\Submission;
 
 class AssignmentController extends Controller
 {
@@ -31,17 +28,14 @@ class AssignmentController extends Controller
         $assignments = $homeworks->map(function ($homework) {
             $answers = ClassSubmit::where('class_assignment_id', $homework->id)->where('student_id', Auth::user()->id)->get();
             return [
-                'id' => $homework->assignment ? $homework->assignment->id : $homework->id,
-                'homeworkId' => $homework->id,
-                'creatorName' =>  "Không có",
-                'name' => $homework->title,
+                'id' => $homework->id,
+                'type' => $homework->type,
+                'title' => $homework->title,
                 'description' => $homework->description,
-                'level' => "Không có",
                 'duration' => $homework->duration ? $homework->duration : "Không có",
                 'startDate' => $homework->start_date,
                 'dueDate' => $homework->due_date,
                 'status' => $homework->status,
-                'type' => $homework->type,
                 'isSubmitted' => $answers->count() > 1 ? true : false,
             ];
         });
@@ -295,10 +289,9 @@ class AssignmentController extends Controller
         }
     }
 
-    public function getAssignmentById($id, $class_id)
+    public function getAssignmentById($id)
     {
-        $class = Classes::find($class_id)::with('homeworks', 'homeworks.assignment', 'homeworks.assignment.questions', 'homeworks.assignment.questions.choices')->first();
-        $assignment = $class->homeworks->where('assignment_id', $id)->first();
+        $assignment = ClassAssignment::where('id', $id)->with('quizzes.quiz.choices')->get();
 
         if (!$assignment) {
             return response()->json(
@@ -321,7 +314,6 @@ class AssignmentController extends Controller
                 return [
                     'id' => $question->id,
                     'question' => $question->question,
-                    'duration' => $question->duration,
                     'score' => $question->score,
                     "choices" => $question->choices->map(function ($choice) {
                         return [
