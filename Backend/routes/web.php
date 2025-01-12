@@ -8,7 +8,7 @@ use App\Http\Controllers\AdminAuthController;
 use App\Http\Controllers\AssignmentController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\CategoryController;
-use App\Models\Category;
+use App\Http\Controllers\CourseController;
 
 Route::get('/', [AdminAuthController::class, 'showLoginForm'])->name('admin.login');
 Route::post('/login', [AdminAuthController::class, 'login'])->name('admin.login.submit');
@@ -45,10 +45,20 @@ Route::prefix('/assignment')->name('assignments.')->group(function () {
     Route::put('/{id}', [AssignmentController::class, 'update'])->name('update');
     Route::delete('/delete/{id}', [AssignmentController::class, 'destroy'])->name('destroy');
     Route::get('/assignments/visibility/{id}', [AssignmentController::class, 'toggleVisibility'])
-    ->name('assignments.visibility');
+        ->name('assignments.visibility');
 });
 
-
+Route::prefix('course')->name('courses.')->group(function () {
+    Route::get('/', [CourseController::class, 'index'])->name('index');
+    Route::post('/store', [CourseController::class, 'store'])->name('store');
+    Route::get('/create', [CourseController::class, 'create'])->name('create');
+    Route::get('/{id}', [CourseController::class, 'show'])->name('show');
+    Route::get('/{id}/edit', [CourseController::class, 'edit'])->name('edit');
+    Route::put('/{id}', [CourseController::class, 'update'])->name('update');
+    Route::delete('/{id}', [CourseController::class, 'destroy'])->name('destroy');
+    Route::get('/{id}/assignments/create', [CourseController::class, 'createAssignment'])->name('assignments.create');
+    Route::post('/{id}/assignments', [CourseController::class, 'storeAssignment'])->name('assignments.store');
+});
 
 Route::resource('categories', CategoryController::class)->except(['destroy']);
 Route::get('categories/{id}/toggle-status', [CategoryController::class, 'toggleStatus'])->name('category.toggleStatus');
@@ -58,6 +68,3 @@ Route::get('categories/{id}/edit', [CategoryController::class, 'edit'])->name('c
 Route::put('categories/{id}', [CategoryController::class, 'update'])->name('category.update');
 Route::delete('categories/{id}', [CategoryController::class, 'destroy'])->name('category.destroy');
 Route::get('categories/{id}/status', [CategoryController::class, 'status'])->name('category.status');
-
-
-
