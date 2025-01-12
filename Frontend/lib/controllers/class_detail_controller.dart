@@ -6,6 +6,8 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
 
   RxBool isLoading = true.obs;
   RxString role = ''.obs;
+  RxString avatar = ''.obs;
+  RxString username = ''.obs;
   RxBool isSubmitButtonLoading = false.obs;
   RxBool createAssignmentThenPushToClass = false.obs;
   RxInt classId = 0.obs;
@@ -82,6 +84,14 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
       role.value = StorageService.readData(key: "role");
     }
 
+    if (StorageService.checkData(key: "avatar")) {
+      avatar.value = StorageService.readData(key: "avatar");
+    }
+
+    if (StorageService.checkData(key: "username")) {
+      username.value = StorageService.readData(key: "username");
+    }
+
     var tabLength = role.value == 'teacher' ? 4 : 3;
 
     tabController = TabController(length: tabLength, vsync: this);
@@ -95,6 +105,7 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
       // await fetchAllClassAssignment(classId.value);
       // await fetchAssignmentForTeacher();
       // await fetchClassPoint(classId.value);
+      await fetchStudentAssignment();
     });
     // addNewQuestion();
   }
@@ -102,7 +113,7 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
   fetchClassInfo(id) async {
     isLoading(true);
     try {
-      String url = "${Api.server}classes/$id";
+      String url = "${Api.server}classes/info/$id";
       var response = await get(Uri.parse(url), headers: {
         'Authorization': 'Bearer $token',
       }).timeout(const Duration(seconds: 10));
@@ -183,6 +194,22 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
         classPointList.value = data['submissions'];
+      }
+    } catch (e) {
+      Get.snackbar("Error", "Failed to fetch class info");
+    }
+  }
+
+  fetchStudentAssignment() async {
+    try {
+      String url = "${Api.server}classes/getStudentAssignmentPoint/${classId.value}";
+      var response = await get(Uri.parse(url), headers: {
+        'Authorization': 'Bearer $token',
+      }).timeout(const Duration(seconds: 10));
+
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body);
+        classPointList.value = data;
       }
     } catch (e) {
       Get.snackbar("Error", "Failed to fetch class info");
