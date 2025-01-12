@@ -6,11 +6,6 @@ class DoAssignmentScreen extends GetView<AssignmentController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        title: NavBar(),
-      ),
       backgroundColor: CustomColors.background,
       body: Obx(
         () => controller.isLoading.value
@@ -39,7 +34,7 @@ class DoAssignmentScreen extends GetView<AssignmentController> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    controller.assignment.value.name!,
+                                    controller.assignment.value.title!,
                                     style: const TextStyle(
                                       fontSize: 16,
                                       fontFamily: FontStyleTextStrings.medium,
@@ -48,7 +43,7 @@ class DoAssignmentScreen extends GetView<AssignmentController> {
                                   ),
                                   const SizedBox(height: 10),
                                   Text(
-                                    "Tên thí sinh: ${controller.assignment.value.creatorName}",
+                                    "Tên thí sinh: ${controller.username.value}",
                                     style: const TextStyle(
                                       fontSize: 16,
                                       fontFamily: FontStyleTextStrings.medium,
