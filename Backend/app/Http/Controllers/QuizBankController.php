@@ -205,56 +205,91 @@ class QuizBankController extends Controller
         }
     }
 
-    public function addQuestionWithExcel(Request $request) {
-        // $validator = Validator::make($request->all(), [
-        //     'file' => 'required|mimes:xlsx,csv|max:2048',
-        // ]);
+    public function addQuestionWithExcel(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'file' => 'required|mimes:xlsx,xls|max:2048',
+        ]);
 
-        // if ($validator->fails()) {
-        //     return back()->withErrors($validator)->withInput();
-        // }
+        if ($validator->fails()) {
+            return back()->withErrors($validator)->withInput();
+        }
 
-        // $file = $request->file('file');
-        // $request->validate([
-        //     'file' => 'required|file|mimes:xlsx,xls',
-        // ], [
-        //     'file.required' => 'Vui lòng chọn tệp để tải lên!',
-        //     'file.mimes' => 'Tệp phải có định dạng xlsx hoặc xls.',
-        // ]);
+        $file = $request->file('file');
+        $path = $file->getRealPath();
 
-        // $path = $request->file('file')->getRealPath();
-        // // dd($path);
-        // $data = Excel::toArray([], $path);
-        // dd($data);
-        // $students = [];
+        try {
+            $data = Excel::toArray([], $file);
 
-        // if (!empty($data[0])) {
-        //     foreach ($data[0] as $index => $row) {
-        //         if ($index == 0) continue; // Bỏ qua tiêu đề cột
+            if (!empty($data)) {
+                foreach ($data[0] as $index => $row) {
+                    if ($index === 0) {
+                        continue;
+                    }
+                    $questionText = $row[0] ?? null;
+                    $answer1 = $row[1] ?? null;
+                    $isCorrect1 = strtolower($row[2] ?? '') === 'Đúng' ? 1 : 0;
+                    $answer2 = $row[3] ?? null;
+                    $isCorrect2 = strtolower($row[4] ?? '') === 'Đúng' ? 1 : 0;
+                    $answer3 = $row[5] ?? null;
+                    $isCorrect3 = strtolower($row[6] ?? '') === 'Đúng' ? 1 : 0;
+                    $answer4 = $row[7] ?? null;
+                    $isCorrect4 = strtolower($row[8] ?? '') === 'Đúng' ? 1 : 0;
 
-        //         $name = $row[1] ?? null;
-        //         $email = $row[2] ?? null; // Giả sử email nằm ở cột thứ 2
+                    if (!$questionText) {
+                        continue; 
+                    }
 
-        //         if ($name && $email) {
-        //             $exists = User::where('name', $name)->where('email', $email)->where('role_id', 3)->exists();
-        //             $students[] = [
-        //                 'name' => $name,
-        //                 'email' => $email,
-        //                 'exists' => $exists,
-        //             ];
-        //         }
-        //     }
-        // }
+                    $existingQuestion = Quiz::where('question', $questionText)->exists();
+                    if ($existingQuestion) {
+                        continue;
+                    }
 
-        // try {
-        //     Excel::import(new QuestionsImport, $file);
+                    $newQuestion = Quiz::create([
+                        'question' => $questionText,
+                        'quiz_package_id' => $request->quiz_package_id,
+                    ]);
 
-        //     return back()->with('success', 'Dữ liệu đã được nhập thành công!');
-        // } catch (\Exception $e) {
-        //     return back()->with('error', 'Có lỗi xảy ra khi nhập dữ liệu. Vui lòng thử lại!');
-        // }
+                    $answers = [
+                        [
+                            'choice' => $answer1,
+                            'quiz_id' => $newQuestion->id,
+                            'is_correct' => $isCorrect1,
+                        ],
+                        [
+                            'choice' => $answer2,
+                            'quiz_id' => $newQuestion->id,
+                            'is_correct' => $isCorrect2,
+                        ],
+                        [
+                            'choice' => $answer3,
+                            'quiz_id' => $newQuestion->id,
+                            'is_correct' => $isCorrect3,
+                        ],
+                        [
+                            'choice' => $answer4,
+                            'quiz_id' => $newQuestion->id,
+                            'is_correct' => $isCorrect4,
+                        ],
+                    ];
+
+                    $answers = array_filter($answers, function ($answer) {
+                        return !empty($answer['choice']);
+                    });
+
+                    foreach ($answers as $answer) {
+                        $newQuestion->choices()->create($answer);
+                    }
+                }
+
+                return redirect()->route('quiz-bank.index')->with('success', 'Dữ liệu đã được nhập thành công!');
+            }
+
+            return back()->with('error', 'File không chứa dữ liệu hoặc dữ liệu không hợp lệ!');
+        } catch (\Exception $e) {
+            return back()->with('error', 'Có lỗi xảy ra: ' . $e->getMessage());
+        }
     }
-
     public function updateQuestion(Request $request)
     {
         if (Auth::check()) {

@@ -55,19 +55,23 @@
                                                     <div class="mb-3">
                                                         <label for="category" class="form-label">Danh mục</label>
                                                         <select id="categories" name="categories[]"
-                                                            class="selectpicker form-select" multiple size="3">
+                                                                class="selectpicker form-select" multiple size="3"
+                                                                data-live-search="true" title="Chọn danh mục">
                                                             @foreach ($categories as $category)
                                                                 <option value="{{ $category->id }}">
                                                                     {{ $category->name }}
                                                                 </option>
                                                             @endforeach
                                                         </select>
-                                                        <script>
-                                                            $(document).ready(function() {
-                                                                $('#categories').selectpicker();
-                                                            });
-                                                        </script>
                                                     </div>
+                                                    
+                                                    <script>
+                                                        $(document).ready(function() {
+                                                            // Khởi tạo Bootstrap-Select khi trang tải xong
+                                                            $('#categories').selectpicker();
+                                                        });
+                                                    </script>
+                                                    
                                                     <div class="mb-3">
                                                         <label for="quiz_id_range" class="form-label">Nhập phạm vi
                                                             quiz_id</label>
@@ -153,12 +157,17 @@
                                                                 <div class="modal-dialog modal-lg">
                                                                     <div class="modal-content">
                                                                         <!-- Modal Header -->
-                                                                        <div class="modal-header">
-                                                                            <h5 class="modal-title" id="showQuestion">Bộ câu
-                                                                                hỏi thuộc {{ $quiz->title }}</h5>
-                                                                            <button type="button" class="btn-close"
-                                                                                data-bs-dismiss="modal"
-                                                                                aria-label="Đóng"></button>
+                                                                        <div class="d-flex modal-header justify-content-between">
+                                                                            <div class="">
+                                                                                <h5 class="modal-title" id="showQuestion">Bộ câu
+                                                                                    hỏi thuộc {{ $quiz->title }}</h5>
+                                                                                <button type="button" class="btn-close"
+                                                                                    data-bs-dismiss="modal"
+                                                                                    aria-label="Đóng"></button>
+                                                                            </div>
+                                                                            <div>
+                                                                                <input type="text" name="searchQuestion" placeholder="Tìm kiếm câu hỏi..." id="searchQuestion">
+                                                                            </div>
                                                                         </div>
     
                                                                         <!-- Modal Body -->
@@ -201,34 +210,24 @@
                                                                                 </div>
                                                                             </div>
 
-                                                                            {{-- Form thêm câu hỏi bằng Exel --}}
-                                                                            <div>
-                                                                                <h1>Thêm bộ câu hỏi bằng Excel</h1>
-                                                                                <form action="{{ route('quiz-bank.addQuestionWithExcel') }}" method="POST" enctype="multipart/form-data">
-                                                                                    @csrf
-                                                                                    <div>
-                                                                                        <label for="file">Chọn file Excel:</label>
-                                                                                        <input type="file" name="file" required>
+                                                                            <div class="container mb-2 d-none addQuestionWithExcel">
+                                                                                <div class="card shadow-sm">
+                                                                                    <div class="card-header bg-success text-white text-center">
+                                                                                        <h3>Thêm bộ câu hỏi bằng Excel</h3>
                                                                                     </div>
-                                                                                    <button type="submit">Tải lên</button>
-                                                                                </form>
-
-                                                                                <!-- Hiển thị thông báo thành công hoặc lỗi -->
-                                                                                @if(session('success'))
-                                                                                    <p style="color: green;">{{ session('success') }}</p>
-                                                                                @endif
-
-                                                                                @if(session('error'))
-                                                                                    <p style="color: red;">{{ session('error') }}</p>
-                                                                                @endif
-
-                                                                                @if($errors->any())
-                                                                                    <ul style="color: red;">
-                                                                                        @foreach($errors->all() as $error)
-                                                                                            <li>{{ $error }}</li>
-                                                                                        @endforeach
-                                                                                    </ul>
-                                                                                @endif
+                                                                                    <div class="card-body">
+                                                                                        <form action="{{ route('quiz-bank.addQuestionWithExcel') }}" method="POST" enctype="multipart/form-data">
+                                                                                            @csrf
+                                                                                            <div class="form-group">
+                                                                                                <label for="file" class="font-weight-bold">Chọn file Excel:</label>
+                                                                                                <input type="file" name="file" class="form-control-file" required>
+                                                                                            </div>
+                                                                                            <input type="hidden" name="quiz_package_id" value="{{ $quiz->id }}">
+                                                                                            <button type="button" class="btn btn-danger mt-3" onclick="cancelFormQuestion()">Hủy</button>
+                                                                                            <button type="submit" class="btn btn-success mt-3">Tải lên</button>
+                                                                                        </form>
+                                                                                    </div>
+                                                                                </div>
                                                                             </div>
                                                                             
                                                                             <style>
@@ -331,6 +330,7 @@
                                                                                             </div>
                                                                                         </div>
                                                                                     @endforeach
+                                                                                    <div id="no-results" style="display:none; color: red;">Không tìm thấy kết quả!</div>
                                                                                     <div class="pagination" style="width: max-content; position: relative; left: 50%; transform: translate(-50%);">
                                                                                         <button class="prev" onclick="changePage('prev', this)">Trước</button>
                                                                                         <span class="page-numbers"></span>
@@ -346,6 +346,7 @@
                                                                             <div>
                                                                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
                                                                                 <button onclick="addQuestion()" type="button" class="btn btn-primary">Thêm câu hỏi</button>
+                                                                                <button onclick="addQuestionWithExcel()" type="button" class="btn btn-success">Thêm câu hỏi bằng Excel</button>
                                                                             </div>
                                                                             <style>
                                                                                 .pagination {
@@ -445,27 +446,29 @@
                                                                                     <textarea name="quiz_description" class="form-control" id="description" rows="3" placeholder="Nhập mô tả">{{ $quiz->description }}</textarea>
                                                                                 </div>
                                                                                 <div class="mb-3">
-                                                                                    <label for="category"
-                                                                                        class="form-label">Danh mục</label>
-                                                                                    <select id="categories"
-                                                                                        name="categories[]"
-                                                                                        class="selectpicker form-select"
-                                                                                        multiple size="3">
+                                                                                    <label for="category" class="form-label">Danh mục</label>
+                                                                                    <select id="categories" name="categories[]"
+                                                                                            class="selectpicker form-select" multiple size="5"
+                                                                                            data-live-search="true" title="Chọn danh mục">
                                                                                         @foreach ($categories as $category)
-                                                                                            <option
-                                                                                                @foreach ($quiz->categories as $category_quiz)
-                                                                                                    {{ $category_quiz->id === $category->id ? 'selected' : '' }} @endforeach
-                                                                                                value="{{ $category->id }}">
+                                                                                            <option @foreach ($quiz->categories as $category_quiz)
+                                                                                                        {{ $category_quiz->id === $category->id ? 'selected' : '' }} 
+                                                                                                    @endforeach
+                                                                                                    value="{{ $category->id }}">
                                                                                                 {{ $category->name }}
                                                                                             </option>
                                                                                         @endforeach
                                                                                     </select>
-                                                                                    <script>
-                                                                                        $(document).ready(function() {
-                                                                                            $('#categories').selectpicker();
-                                                                                        });
-                                                                                    </script>
                                                                                 </div>
+                                                                                
+                                                                                <script>
+                                                                                    // Khởi tạo Bootstrap-Select khi trang tải xong
+                                                                                    $(document).ready(function() {
+                                                                                        // Kích hoạt Bootstrap-Select
+                                                                                        $('#categories').selectpicker();
+                                                                                    });
+                                                                                </script>
+                                                                                
                                                                                 <div class="mb-3">
                                                                                     <label for="quiz_id_range"
                                                                                         class="form-label">Phạm vi
@@ -793,27 +796,29 @@
                                                                                     <textarea name="quiz_description" class="form-control" id="description" rows="3" placeholder="Nhập mô tả">{{ $quiz->description }}</textarea>
                                                                                 </div>
                                                                                 <div class="mb-3">
-                                                                                    <label for="category"
-                                                                                        class="form-label">Danh mục</label>
-                                                                                    <select id="categories"
-                                                                                        name="categories[]"
-                                                                                        class="selectpicker form-select"
-                                                                                        multiple size="3">
+                                                                                    <label for="category" class="form-label">Danh mục</label>
+                                                                                    <select id="categories" name="categories[]"
+                                                                                            class="selectpicker form-select" multiple size="5"
+                                                                                            data-live-search="true" title="Chọn danh mục">
                                                                                         @foreach ($categories as $category)
-                                                                                            <option
-                                                                                                @foreach ($quiz->categories as $category_quiz)
-                                                                                                    {{ $category_quiz->id === $category->id ? 'selected' : '' }} @endforeach
-                                                                                                value="{{ $category->id }}">
+                                                                                            <option @foreach ($quiz->categories as $category_quiz)
+                                                                                                        {{ $category_quiz->id === $category->id ? 'selected' : '' }} 
+                                                                                                    @endforeach
+                                                                                                    value="{{ $category->id }}">
                                                                                                 {{ $category->name }}
                                                                                             </option>
                                                                                         @endforeach
                                                                                     </select>
-                                                                                    <script>
-                                                                                        $(document).ready(function() {
-                                                                                            $('#categories').selectpicker();
-                                                                                        });
-                                                                                    </script>
                                                                                 </div>
+                                                                                
+                                                                                <script>
+                                                                                    // Khởi tạo Bootstrap-Select khi trang tải xong
+                                                                                    $(document).ready(function() {
+                                                                                        // Kích hoạt Bootstrap-Select
+                                                                                        $('#categories').selectpicker();
+                                                                                    });
+                                                                                </script>
+                                                                                
                                                                                 <div class="mb-3">
                                                                                     <label for="quiz_id_range"
                                                                                         class="form-label">Phạm vi
@@ -915,7 +920,8 @@
         function cancelFormQuestion() {
             const formAddQuestion = document.querySelectorAll('.formAddQuestion');
             const formEditQuestion = document.querySelectorAll('.formEditQuestion');
-            const cardShowQuestion = document.querySelectorAll('.cardShowQuestion')
+            const cardShowQuestion = document.querySelectorAll('.cardShowQuestion');
+            const addQuestionWithExcel = document.querySelector('.addQuestionWithExcel');
             formAddQuestion.forEach(function (formQuestion) {
                 formQuestion.style.display = 'none';
             })
@@ -926,6 +932,7 @@
                 formQuestion.classList.remove('d-block');
                 formQuestion.classList.add('d-none');
             })
+            addQuestionWithExcel.classList.add('d-none');
         }
 
         function addQuestion() {
@@ -936,18 +943,16 @@
             })
         }
 
-        // Hàm phân trang cho mỗi bảng
         function paginateTable(contentTable) {
-            const items = contentTable.querySelectorAll('.main'); // Lấy tất cả các phần tử câu hỏi
-            const itemsPerPage = 3; // Số phần tử mỗi trang
-            const totalPages = Math.ceil(items.length / itemsPerPage); // Tổng số trang
-            let currentPage = 1; // Trang hiện tại
+            let items = Array.from(contentTable.querySelectorAll('.main'));
+            let itemsPerPage = 3;
+            let currentPage = 1;
+            let filteredItems = items;
 
-            // Trạng thái các phần tử của trang hiện tại
             function showPage(page) {
                 const startIdx = (page - 1) * itemsPerPage;
                 const endIdx = startIdx + itemsPerPage;
-                items.forEach((item, index) => {
+                filteredItems.forEach((item, index) => {
                     if (index >= startIdx && index < endIdx) {
                         item.style.display = 'block';
                     } else {
@@ -955,18 +960,16 @@
                     }
                 });
             }
-            
 
-            // Render phân trang (số trang và nút điều hướng)
             function renderPagination() {
                 const pageNumbersContainer = contentTable.querySelector('.page-numbers');
+                const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
                 let pagesHtml = '';
                 const startPage = Math.max(1, currentPage - Math.floor(3 / 2));
                 const endPage = Math.min(totalPages, currentPage + Math.floor(3 / 2));
 
                 if (startPage > 1) {
-                    pagesHtml += `<span class="page-num" onclick="alert(1)">1</span>`;
-                    // pagesHtml += `<span class="page-num" onclick="goToPage(1)">1</span>`;
+                    pagesHtml += `<span class="page-num" onclick="goToPage(1)">1</span>`;
                     if (startPage > 2) {
                         pagesHtml += `<span class="dots">...</span>`;
                     }
@@ -989,14 +992,9 @@
 
                 pageNumbersContainer.innerHTML = pagesHtml;
             }
-            // Initial rendering
-            renderPagination();
-            showPage(currentPage);
 
-            
-
-            // Chuyển đến trang tiếp theo hoặc trang trước
             function changePage(direction) {
+                const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
                 if (direction === 'prev' && currentPage > 1) {
                     currentPage--;
                 } else if (direction === 'next' && currentPage < totalPages) {
@@ -1006,28 +1004,74 @@
                 showPage(currentPage);
             }
 
-            // Attach event listeners to prev/next buttons
-            const prevButton = contentTable.querySelector('.prev');
-            const nextButton = contentTable.querySelector('.next');
-
-            prevButton.addEventListener('click', () => changePage('prev'));
-            nextButton.addEventListener('click', () => changePage('next'));
-
-            // Chuyển đến trang cụ thể
             function goToPage(page) {
-                console.log("Go to page:", page); 
-                if (page < 1 || page > totalPages) return; // Kiểm tra nếu trang hợp lệ
+                const totalPages = Math.ceil(filteredItems.length / itemsPerPage); 
+                if (page < 1 || page > totalPages) return;
                 currentPage = page;
                 renderPagination();
                 showPage(currentPage);
             }
+
+            const searchInput = document.getElementById('searchQuestion');
+            let typingTimer;  
+            const doneTypingInterval = 1000; 
+
+            searchInput.addEventListener('input', function() {
+                clearTimeout(typingTimer);
+
+                typingTimer = setTimeout(function() {
+                    const searchTerm = searchInput.value.toLowerCase();
+                    filteredItems = items.filter(item => {
+                        const text = item.textContent.toLowerCase();
+                        return text.includes(searchTerm); 
+                    });
+
+                    const noResults = document.getElementById('no-results');
+                    if (filteredItems.length === 0) {
+                        noResults.style.display = 'block';
+                        items.forEach((item) => {
+                            item.style.display = 'none';
+                        });
+                    } else {
+                        noResults.style.display = 'none';
+                        currentPage = 1;
+                        renderPagination();
+                        showPage(currentPage);
+                    }
+                }, doneTypingInterval);
+            });
+
+
+            renderPagination();
+            showPage(currentPage);
+
+
+            const prevButton = contentTable.querySelector('.prev');
+            const nextButton = contentTable.querySelector('.next');
+            prevButton.addEventListener('click', () => changePage('prev'));
+            nextButton.addEventListener('click', () => changePage('next'));
         }
 
-        // Chạy khi trang web tải xong, áp dụng phân trang cho mỗi bảng
+        document.addEventListener('DOMContentLoaded', function() {
+            const contentTable = document.querySelector('.content-table');
+            paginateTable(contentTable);
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const contentTable = document.querySelector('.content-table');
+            paginateTable(contentTable);
+        });
+
+        function addQuestionWithExcel() {
+            cancelFormQuestion();
+            let addQuestionWithExcel = document.querySelector('.addQuestionWithExcel');
+            addQuestionWithExcel.classList.remove('d-none');
+        }
+
         window.onload = () => {
             const contentTables = document.querySelectorAll('.content-table');
             contentTables.forEach(table => {
-                paginateTable(table); // Gọi hàm phân trang cho mỗi bảng
+                paginateTable(table);
             });
         };
         var myModal = document.querySelectorAll('.modal');
