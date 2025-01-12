@@ -36,7 +36,7 @@ class AssignmentController extends Controller
                 'startDate' => $homework->start_date,
                 'dueDate' => $homework->due_date,
                 'status' => $homework->status,
-                'isSubmitted' => $answers->count() > 1 ? true : false,
+                'isSubmitted' => $answers->count() >= 1 ? true : false,
             ];
         });
 
