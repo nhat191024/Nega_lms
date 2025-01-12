@@ -78,16 +78,18 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
   @override
   void onInit() {
     super.onInit();
-    tabController = TabController(length: 4, vsync: this);
-    pageController = PageController();
+    if (StorageService.checkData(key: "role")) {
+      role.value = StorageService.readData(key: "role");
+    }
 
+    var tabLength = role.value == 'teacher' ? 4 : 3;
+
+    tabController = TabController(length: tabLength, vsync: this);
+    pageController = PageController();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (!await Token.checkToken()) return;
       token.value = await Token.getToken();
       classId.value = Get.find<LayoutController>().selectedClassId.value;
-      if (StorageService.checkData(key: "role")) {
-        role.value = StorageService.readData(key: "role");
-      }
       await fetchClassInfo(classId.value);
       await fetchClassAssignment(classId.value);
       // await fetchAllClassAssignment(classId.value);
