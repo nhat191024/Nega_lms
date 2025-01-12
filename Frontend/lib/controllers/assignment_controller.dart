@@ -85,6 +85,7 @@ class AssignmentController extends GetxController {
       if (response.statusCode == 200) {
         classDetailController.fetchClassAssignment(classId.value);
         Get.back();
+        await Future.delayed(const Duration(seconds: 1));
         clear();
         Get.snackbar(
           'Success',
