@@ -27,11 +27,11 @@ class ClassDetailTab extends GetView<ClassDetailController> {
                         indicatorWeight: 4,
                         indicatorColor: CustomColors.primary,
                         indicatorSize: TabBarIndicatorSize.label,
-                        tabs: const [
-                          Tab(text: 'Tổng quan'),
-                          Tab(text: 'Bài tập'),
-                          Tab(text: 'Giảng viên'),
-                          Tab(text: 'Điểm'),
+                        tabs: [
+                          const Tab(text: 'Tổng quan'),
+                          const Tab(text: 'Bài tập'),
+                          if (controller.role.value == "teacher") const Tab(text: 'Giảng viên'),
+                          const Tab(text: 'Điểm'),
                         ],
                       ),
                     ),
@@ -97,7 +97,7 @@ class ClassDetailTab extends GetView<ClassDetailController> {
                     children: [
                       ClassOverviewScreen(),
                       const ClassAssignmentScreen(),
-                      const ClassTeacherScreen(),
+                      if (controller.role.value == "teacher") const ClassTeacherScreen(),
                       const ClassPointScreen(),
                     ],
                   ),
