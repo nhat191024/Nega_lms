@@ -10,12 +10,12 @@ class ClassSubmit extends Model
 
     public function assignment()
     {
-        return $this->belongsTo(ClassAssignment::class);
+        return $this->belongsTo(ClassAssignment::class, 'class_assignment_id');
     }
 
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'student_id');
     }
 
     public function answers()
