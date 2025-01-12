@@ -2,6 +2,7 @@ import 'package:nega_lms/utils/imports.dart';
 
 class ClassListScreen extends GetView<ClassController> {
   final classControllers = Get.put(ClassController());
+  final LayoutController layoutController = Get.find<LayoutController>();
   ClassListScreen({super.key}) {
     controller.searchController.addListener(() {
       if (controller.searchController.text.isNotEmpty) {
@@ -29,7 +30,10 @@ class ClassListScreen extends GetView<ClassController> {
       child: Column(
         children: [
           GestureDetector(
-            onTap: () => Get.find<LayoutController>().goToClassDetail(id),
+            onTap: () {
+              layoutController.sidebarController.selectIndex(99);
+              Get.find<LayoutController>().goToClassDetail(id);
+            },
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -222,11 +226,34 @@ class ClassListScreen extends GetView<ClassController> {
   }
 
   Widget buildMobile() {
-    return const SingleChildScrollView(
+    return SingleChildScrollView(
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Text("Mobile class list screen"),
+          Obx(
+            () => SizedBox(
+              height: Get.height * 0.8,
+              child: controller.isLoading.value
+                  ? const Center(
+                      child: CircularProgressIndicator(),
+                    )
+                  : ListView.builder(
+                      shrinkWrap: true,
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      itemCount: controller.filteredList.length,
+                      itemBuilder: (context, index) {
+                        return classCardBuilder(
+                          controller.filteredList[index].name ?? '',
+                          controller.filteredList[index].description ?? '',
+                          controller.filteredList[index].id ?? 0,
+                          controller.filteredList[index].isJoined ?? false,
+                          controller.filteredList[index].categories ?? [],
+                          10,
+                          index == controller.filteredList.length - 1,
+                        );
+                      },
+                    ),
+            ),
+          ),
         ],
       ),
     );
