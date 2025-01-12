@@ -291,7 +291,7 @@ class AssignmentController extends Controller
 
     public function getAssignmentById($id)
     {
-        $assignment = ClassAssignment::where('id', $id)->with('quizzes.quiz.choices')->get();
+        $assignment = ClassAssignment::where('id', $id)->with('quizzes.quiz.choices')->first();
 
         if (!$assignment) {
             return response()->json(
@@ -302,20 +302,22 @@ class AssignmentController extends Controller
             );
         }
 
+        // dd($assignment);
+
         $response = [
             'id' => $assignment->id,
-            'creatorName' => $assignment->assignment->creator ? $assignment->assignment->creator->name : null,
-            'name' => $assignment->assignment->title,
-            'description' => $assignment->assignment->description,
-            'duration' => $assignment->duration,
-            'startDate' => $assignment->start_datetime,
-            'dueDate' => $assignment->due_datetime,
-            'questions' => $assignment->assignment->questions->map(function ($question) {
+            'type' => $assignment->type,
+            'title' => $assignment->title,
+            'description' => $assignment->description,
+            'duration' => $assignment->duration ? $assignment->duration : "Không có",
+            'startDate' => $assignment->start_date,
+            'dueDate' => $assignment->due_date,
+            'status' => $assignment->status,
+            'questions' => $assignment->quizzes->map(function ($quiz) {
                 return [
-                    'id' => $question->id,
-                    'question' => $question->question,
-                    'score' => $question->score,
-                    "choices" => $question->choices->map(function ($choice) {
+                    'id' => $quiz->quiz->id,
+                    'question' => $quiz->quiz->question,
+                    "choices" => $quiz->quiz->choices->map(function ($choice) {
                         return [
                             'id' => $choice->id,
                             'choice' => $choice->choice,
