@@ -91,10 +91,7 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
     if (StorageService.checkData(key: "username")) {
       username.value = StorageService.readData(key: "username");
     }
-
-    var tabLength = role.value == 'teacher' ? 4 : 3;
-
-    tabController = TabController(length: tabLength, vsync: this);
+    tabController = TabController(length: 3, vsync: this);
     pageController = PageController();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (!await Token.checkToken()) return;
@@ -105,7 +102,7 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
       // await fetchAllClassAssignment(classId.value);
       // await fetchAssignmentForTeacher();
       // await fetchClassPoint(classId.value);
-      await fetchStudentAssignment();
+      if (role.value == "student") await fetchStudentAssignment();
     });
     // addNewQuestion();
   }
@@ -135,7 +132,8 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
     assignmentList.clear();
     try {
       isLoading(true);
-      String url = "${Api.server}assignment/getByClass/$id/2";
+      var roleN = role.value == 'student' ? 3 : 2;
+      String url = "${Api.server}assignment/getByClass/$id/$roleN";
       var response = await get(Uri.parse(url), headers: {
         'Authorization': 'Bearer $token',
       }).timeout(const Duration(seconds: 10));
@@ -146,41 +144,6 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
       }
     } finally {
       isLoading(false);
-    }
-  }
-
-  fetchAllClassAssignment(id) async {
-    assignmentsList.clear();
-    try {
-      isLoading(true);
-      String url = "${Api.server}assignment/$id/1";
-      var response = await get(Uri.parse(url), headers: {
-        'Authorization': 'Bearer $token',
-      }).timeout(const Duration(seconds: 10));
-      if (response.statusCode == 200) {
-        var data = jsonDecode(response.body);
-        var assignmentData = data['assignments'];
-        assignmentsList.value = (assignmentData as List).map((e) => HomeworkModel.fromMap(e)).toList();
-      }
-    } finally {
-      isLoading(false);
-    }
-  }
-
-  fetchAssignmentForTeacher() async {
-    assignmentListForTeacher.clear();
-    try {
-      String url = "${Api.server}assignment/getForTeacher";
-      var response = await get(Uri.parse(url), headers: {
-        'Authorization': 'Bearer $token',
-      }).timeout(const Duration(seconds: 10));
-      if (response.statusCode == 200) {
-        var data = jsonDecode(response.body);
-        var assignmentData = data['assignments'];
-        assignmentListForTeacher.value = (assignmentData as List).map((e) => AssignmentModel.fromMap(e)).toList();
-      }
-    } catch (e) {
-      Get.snackbar("Error", "Failed to fetch assignment for teacher");
     }
   }
 
@@ -580,8 +543,6 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
       clear();
       Get.back();
       fetchClassAssignment(classId.value);
-      fetchAllClassAssignment(classId.value);
-      fetchAssignmentForTeacher();
       Get.snackbar("Thành công", "Tạo bài tập thành công", maxWidth: Get.width * 0.2);
     } else {
       RxString errors = ''.obs;
@@ -598,13 +559,13 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
   Future loadDataToEdit(String id, String type) async {
     clear();
     try {
-      String url = "${Api.server}assignment/get/$id";
+      String url = "${Api.server}assignment/getById/$id";
       var response = await get(Uri.parse(url), headers: {
         'Authorization': 'Bearer $token',
       }).timeout(const Duration(seconds: 10));
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
-        var assignmentData = data['homework'];
+        var assignmentData = data['assignment'];
         if (type == 'quiz') {
           assignmentDuration.text = assignmentData['duration'].toString();
           assignmentAutoGrade.value = assignmentData['autoGrade'] == 1 ? 'true' : 'false';
@@ -614,11 +575,10 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
           selectedAssignment.value = assignmentData['assignmentId'].toString();
         } else {
           assignmentName.text = assignmentData['title'];
-          assignmentDuration.text = assignmentData['duration'].toString();
-          homeworkScore.text = assignmentData['score'].toString();
           assignmentStartDate.text = assignmentData['startDate'];
           assignmentDueDate.text = assignmentData['dueDate'];
           assignmentDescription.text = assignmentData['description'];
+          assignmentStatus.value = assignmentData['status'] == "published" ? 'true' : 'false';
         }
       }
     } catch (e) {
@@ -653,8 +613,7 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
       clear();
       Get.back();
       fetchClassAssignment(classId.value);
-      fetchAllClassAssignment(classId.value);
-      fetchAssignmentForTeacher();
+
       Get.snackbar("Thành công", "Cập nhật bài tập thành công", maxWidth: Get.width * 0.2);
     } else {
       Get.snackbar("Lỗi", "Cập nhật bài tập thất bại", maxWidth: Get.width * 0.2);
