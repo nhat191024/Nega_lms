@@ -20,4 +20,26 @@ class LayoutController extends GetxController {
     selectedClassId.value = classId;
     pageController.jumpToPage(1);
   }
+
+  logout() async {
+    var url = Uri.parse("${Api.server}logout");
+    try {
+      var response = await get(url, headers: {"Authorization": "Bearer ${Token.getToken()}"});
+      if (response.statusCode == 200) {
+        Token.removeToken();
+        StorageService.removeData(key: "username");
+        StorageService.removeData(key: "avatar");
+        StorageService.removeData(key: "isLogin");
+        StorageService.removeData(key: "role");
+        Get.offAllNamed(Routes.loginPage);
+      }
+    } catch (e) {
+      Get.dialog(
+        const NotificationDialog(
+          title: "Đăng xuất thất bại",
+          message: "Đã xảy ra lỗi, vui lòng thử lại sau",
+        ),
+      );
+    }
+  }
 }
