@@ -44,4 +44,8 @@ class Token {
       value: token,
     );
   }
+
+  static removeToken() {
+    StorageService.removeData(key: LocalStorageKeys.token);
+  }
 }
