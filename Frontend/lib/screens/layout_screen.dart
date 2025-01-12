@@ -159,7 +159,7 @@ class LayoutScreen extends GetView<LayoutController> {
                 SidebarXItem(
                   icon: Icons.logout,
                   label: 'Đăng xuất',
-                  onTap: () {},
+                  onTap: () => controller.logout(),
                 ),
               ],
               items: [
