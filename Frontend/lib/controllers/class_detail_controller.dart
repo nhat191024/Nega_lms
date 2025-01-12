@@ -566,20 +566,13 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
         var assignmentData = data['assignment'];
-        if (type == 'quiz') {
-          assignmentDuration.text = assignmentData['duration'].toString();
-          assignmentAutoGrade.value = assignmentData['autoGrade'] == 1 ? 'true' : 'false';
-          assignmentStartDate.text = assignmentData['startDate'];
-          assignmentDueDate.text = assignmentData['dueDate'];
-          assignmentStatus.value = assignmentData['status'] == 1 ? 'true' : 'false';
-          selectedAssignment.value = assignmentData['assignmentId'].toString();
-        } else {
-          assignmentName.text = assignmentData['title'];
-          assignmentStartDate.text = assignmentData['startDate'];
-          assignmentDueDate.text = assignmentData['dueDate'];
-          assignmentDescription.text = assignmentData['description'];
-          assignmentStatus.value = assignmentData['status'] == "published" ? 'true' : 'false';
-        }
+
+        assignmentName.text = assignmentData['title'];
+        assignmentStartDate.text = assignmentData['startDate'];
+        assignmentDueDate.text = assignmentData['dueDate'];
+        if (type == 'quiz') assignmentDuration.text = assignmentData['duration'].toString();
+        assignmentStatus.value = assignmentData['status'] == "published" ? 'true' : 'false';
+        assignmentDescription.text = assignmentData['description'];
       }
     } catch (e) {
       Get.snackbar("Error", "Failed to fetch homework info");
