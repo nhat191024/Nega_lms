@@ -18,18 +18,20 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
 // Teacher routes
 Route::group(['middleware' => ['auth:sanctum', 'ability:teacher']], function () {
-    // Add teacher-specific routes here
+    Route::prefix('classes')->group(function () {
+        Route::get('/point/{classId}', [ClassController::class, 'getClassAssignmentPoint']);
+    });
 });
 
 // Student routes
 Route::group(['middleware' => ['auth:sanctum', 'ability:student']], function () {
     Route::prefix('classes')->group(function () {
         Route::get('/', [ClassController::class, 'index']);
-        Route::get('/{id}', [ClassController::class, 'getClassById']);
+        Route::get('/info/{id}', [ClassController::class, 'getClassById']);
         Route::get('/student-class', [ClassController::class, 'getStudentClasses']);
         Route::get('/join/{classId}', [ClassController::class, 'joinClass']);
         Route::get('/search/{classCode}', [ClassController::class, 'searchClassByCode']);
-        Route::get('/point/{classId}', [ClassController::class, 'getClassAssignmentPoint']);
+        Route::get('/getStudentAssignmentPoint/{class_id}', [ClassController::class, 'getStudentAssignmentPoint']);
     });
 
     Route::get('/user', [ProfileController::class, 'showProfile'])->name('user.profile.show');
