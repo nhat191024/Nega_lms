@@ -302,8 +302,6 @@ class AssignmentController extends Controller
             );
         }
 
-        // dd($assignment);
-
         $response = [
             'id' => $assignment->id,
             'type' => $assignment->type,
