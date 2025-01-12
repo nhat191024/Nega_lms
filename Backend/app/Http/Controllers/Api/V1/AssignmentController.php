@@ -251,16 +251,11 @@ class AssignmentController extends Controller
     {
         $user = Auth::user();
         if ($request->type == 'link') {
-            Answer::create([
-                'user_id' => $user->id,
-                'homework_id' => $request->assignment_id,
-                'link' => $request->link,
-            ]);
-
-            Submission::create([
+            ClassSubmit::create([
+                'assignment_id' => $request->assignment_id,
                 'student_id' => $user->id,
-                'total_score' => 0,
-                'class_id' => $request->class_id,
+                'answer' => $request->link,
+                'score' => 0,
             ]);
 
             return response()->json([
@@ -270,28 +265,28 @@ class AssignmentController extends Controller
             $answers = json_decode($request->answers, true);
             $totalScore = 0;
 
-            foreach ($answers as $answer) {
-                Answer::create([
-                    'user_id' => $user->id,
-                    'assignment_id' => $request->assignment_id,
-                    'question_id' => $answer['question_id'],
-                    'choice_id' => $answer['choice_id'],
-                ]);
+            // foreach ($answers as $answer) {
+            //     Answer::create([
+            //         'user_id' => $user->id,
+            //         'assignment_id' => $request->assignment_id,
+            //         'question_id' => $answer['question_id'],
+            //         'choice_id' => $answer['choice_id'],
+            //     ]);
 
-                $question = Question::find($answer['question_id']);
-                $choice = Choice::find($answer['choice_id']);
+            //     $question = Question::find($answer['question_id']);
+            //     $choice = Choice::find($answer['choice_id']);
 
-                if ($choice && $choice->is_correct == 1) {
-                    $totalScore += $question->score;
-                }
-            }
+            //     if ($choice && $choice->is_correct == 1) {
+            //         $totalScore += $question->score;
+            //     }
+            // }
 
-            Submission::create([
-                'assignment_id' => $request->assignment_id,
-                'student_id' => $user->id,
-                'total_score' => $totalScore,
-                'class_id' => $request->class_id,
-            ]);
+            // Submission::create([
+            //     'assignment_id' => $request->assignment_id,
+            //     'student_id' => $user->id,
+            //     'total_score' => $totalScore,
+            //     'class_id' => $request->class_id,
+            // ]);
 
             return response()->json([
                 'message' => 'Nộp bài thành công',
@@ -300,7 +295,7 @@ class AssignmentController extends Controller
         }
     }
 
-    public function getAssignment($id, $class_id)
+    public function getAssignmentById($id, $class_id)
     {
         $class = Classes::find($class_id)::with('homeworks', 'homeworks.assignment', 'homeworks.assignment.questions', 'homeworks.assignment.questions.choices')->first();
         $assignment = $class->homeworks->where('assignment_id', $id)->first();
