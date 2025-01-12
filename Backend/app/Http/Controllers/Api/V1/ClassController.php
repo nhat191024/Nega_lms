@@ -35,7 +35,6 @@ class ClassController extends Controller
                         return $category->name;
                     }),
                     'createdAt' => $class->created_at,
-                    'isJoined' => true,
                 ];
             });
         }
