@@ -893,49 +893,24 @@ class ClassTeacherScreen extends GetView<ClassDetailController> {
                           ],
                         ),
                         const SizedBox(height: 20),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            CustomTextField(
-                              labelText: "Thời gian làm bài",
-                              labelColor: CustomColors.primary,
-                              labelSize: 18,
-                              hintText: "nhập",
-                              errorText: controller.assignmentDurationError.value,
-                              isError: controller.isAssignmentDurationError.value.obs,
-                              width: Get.width * 0.3,
-                              obscureText: false.obs,
-                              controller: controller.assignmentDuration,
-                              onChanged: (value) {
-                                if (value.isNotEmpty) {
-                                  controller.isAssignmentDurationError.value = false;
-                                } else {
-                                  controller.isAssignmentDurationError.value = true;
-                                  controller.assignmentDurationError.value = "Thời gian làm bài không được để trống";
-                                }
-                              },
-                            ),
-                            SelectBox(
-                              labelText: "Tự động chấm điểm",
-                              labelColor: CustomColors.primary,
-                              labelSize: 18,
-                              hintText: "Chọn",
-                              errorText: controller.assignmentAutoGradeError.value,
-                              isError: controller.isAssignmentAutoGrade.value.obs,
-                              width: Get.width * 0.3,
-                              value: controller.assignmentAutoGrade.value,
-                              items: const [
-                                DropdownMenuItem(value: 'true', child: Text('Bật')),
-                                DropdownMenuItem(value: 'false', child: Text('Tắt')),
-                              ],
-                              onChanged: (value) {
-                                if (value != null) {
-                                  controller.assignmentAutoGrade.value = value;
-                                  controller.isAssignmentAutoGrade.value = false;
-                                }
-                              },
-                            ),
-                          ],
+                        CustomTextField(
+                          labelText: "Tên bài tập",
+                          labelColor: CustomColors.primary,
+                          labelSize: 18,
+                          hintText: "nhập",
+                          errorText: controller.assignmentNameError.value,
+                          isError: controller.isAssignmentNameError.value.obs,
+                          width: Get.width * 0.62,
+                          obscureText: false.obs,
+                          controller: controller.assignmentName,
+                          onChanged: (value) {
+                            if (value.isNotEmpty) {
+                              controller.isAssignmentNameError.value = false;
+                            } else {
+                              controller.isAssignmentNameError.value = true;
+                              controller.assignmentNameError.value = "Câu hỏi không được để trống";
+                            }
+                          },
                         ),
                         const SizedBox(height: 20),
                         Row(
@@ -983,6 +958,25 @@ class ClassTeacherScreen extends GetView<ClassDetailController> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
+                            CustomTextField(
+                              labelText: "Thời gian làm bài",
+                              labelColor: CustomColors.primary,
+                              labelSize: 18,
+                              hintText: "nhập",
+                              errorText: controller.assignmentDurationError.value,
+                              isError: controller.isAssignmentDurationError.value.obs,
+                              width: Get.width * 0.3,
+                              obscureText: false.obs,
+                              controller: controller.assignmentDuration,
+                              onChanged: (value) {
+                                if (value.isNotEmpty) {
+                                  controller.isAssignmentDurationError.value = false;
+                                } else {
+                                  controller.isAssignmentDurationError.value = true;
+                                  controller.assignmentDurationError.value = "Thời gian làm bài không được để trống";
+                                }
+                              },
+                            ),
                             SelectBox(
                               labelText: "Trạng thái",
                               labelColor: CustomColors.primary,
@@ -1006,8 +1000,29 @@ class ClassTeacherScreen extends GetView<ClassDetailController> {
                           ],
                         ),
                         const SizedBox(height: 20),
+                        CustomTextField(
+                          labelText: "Mô tả",
+                          labelColor: CustomColors.primary,
+                          labelSize: 18,
+                          hintText: "nhập",
+                          errorText: controller.assignmentDescriptionError.value,
+                          isError: controller.isAssignmentDescriptionError.value.obs,
+                          width: Get.width * 0.62,
+                          minLines: 4,
+                          maxLines: 4,
+                          obscureText: false.obs,
+                          controller: controller.assignmentDescription,
+                          onChanged: (value) {
+                            if (value.isNotEmpty) {
+                              controller.isAssignmentDescriptionError.value = false;
+                            } else {
+                              controller.isAssignmentDescriptionError.value = true;
+                              controller.assignmentDescriptionError.value = "Mô tả không được để trống";
+                            }
+                          },
+                        ),
                         const Text(
-                          "Kho bài tập",
+                          "Câu hỏi",
                           style: TextStyle(
                             fontSize: 20,
                             color: CustomColors.primary,
