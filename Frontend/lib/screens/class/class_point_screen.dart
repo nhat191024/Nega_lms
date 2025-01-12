@@ -7,36 +7,85 @@ class ClassPointScreen extends GetView<ClassDetailController> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.fromLTRB(60, 20, 60, 0),
+        padding: const EdgeInsets.fromLTRB(200, 40, 200, 40),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Expanded(
-              child: Obx(
-                () => SizedBox(
-                  height: Get.height * 0.8,
-                  child: controller.isLoading.value
-                      ? const Center(
-                          child: CircularProgressIndicator(),
-                        )
-                      : ListView.builder(
-                          shrinkWrap: true,
-                          physics: const AlwaysScrollableScrollPhysics(),
-                          itemCount: controller.classPointList.length,
-                          itemBuilder: (context, index) {
-                            return pointBuilder(
-                              context,
-                              controller.classPointList[index]['assignment_name'] ?? '',
-                              controller.classPointList[index]['student_name'] ?? '',
-                              controller.classPointList[index]['created_at'] ?? '',
-                              controller.classPointList[index]['total_score'] == null
-                                  ? 'Chưa chấm điểm'
-                                  : controller.classPointList[index]['total_score'].toString(),
-                              10,
-                              index == controller.assignmentList.length - 1,
-                            );
-                          },
-                        ),
+            Column(
+              children: [
+                Row(
+                  children: [
+                    Container(
+                      height: 100,
+                      width: 100,
+                      margin: const EdgeInsets.only(right: 10),
+                      decoration: const BoxDecoration(
+                        color: Colors.blueAccent,
+                        shape: BoxShape.circle,
+                      ),
+                      clipBehavior: Clip.antiAlias,
+                      child: controller.avatar.value.isEmpty
+                          ? const Center(
+                              child: Text(
+                                'A',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontFamily: FontStyleTextStrings.bold,
+                                ),
+                              ),
+                            )
+                          : Image.network(
+                              //for development purpose
+                              "https://van191024.xyz/upload/avt/default.png",
+                              fit: BoxFit.cover,
+                            ),
+                    ),
+                    const SizedBox(width: 20),
+                    Text(
+                      controller.username.value,
+                      style: const TextStyle(
+                        fontSize: 26,
+                        color: CustomColors.primary,
+                        fontFamily: FontStyleTextStrings.bold,
+                      ),
+                    ),
+                  ],
                 ),
+                const SizedBox(height: 20),
+                const Divider(thickness: 1, color: CustomColors.primary),
+              ],
+            ),
+            SingleChildScrollView(
+              child: Obx(
+                () => controller.isLoading.value
+                    ? const Center(
+                        child: CircularProgressIndicator(),
+                      )
+                    : Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          ListView.builder(
+                            shrinkWrap: true,
+                            physics: const AlwaysScrollableScrollPhysics(),
+                            itemCount: controller.classPointList.length,
+                            itemBuilder: (context, index) {
+                              return pointBuilder(
+                                context,
+                                controller.classPointList[index]['title'] ?? '',
+                                controller.classPointList[index]['due_date'] ?? '',
+                                controller.classPointList[index]['score'].toString(),
+                                controller.classPointList[index]['total_score'].toString(),
+                                controller.classPointList[index]['type'] ?? '',
+                                10,
+                                controller.classPointList[index]['handed_in'] ?? false,
+                                index == controller.classPointList.length - 1,
+                              );
+                            },
+                          ),
+                        ],
+                      ),
               ),
             ),
           ],
@@ -46,60 +95,94 @@ class ClassPointScreen extends GetView<ClassDetailController> {
   }
 
   //class card builder
-  Widget pointBuilder(context, String title, String studentName, String createAt, String point, double verticalPadding, bool isLast) {
+  Widget pointBuilder(
+    context,
+    String title,
+    String dueDate,
+    String point,
+    String totalPoint,
+    String type,
+    double verticalPadding,
+    bool isHanded,
+    bool isLast,
+  ) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: verticalPadding),
       child: Column(
         children: [
           Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Bài tập: $title",
-                    style: const TextStyle(
-                      fontSize: 18,
-                      color: CustomColors.primary,
-                      fontFamily: FontStyleTextStrings.bold,
+              Padding(
+                padding: const EdgeInsets.only(left: 100),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '$title - $type',
+                      style: const TextStyle(
+                        fontSize: 20,
+                        color: CustomColors.primary,
+                        fontFamily: FontStyleTextStrings.medium,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 5),
-                  Text(
-                    "Người làm: $studentName",
-                    style: const TextStyle(
-                      fontSize: 16,
-                      color: CustomColors.primaryText,
-                      fontFamily: FontStyleTextStrings.medium,
+                    Text(
+                      dueDate,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        color: CustomColors.secondaryText,
+                        fontFamily: FontStyleTextStrings.regular,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 5),
-                  Text(
-                    "Ngày làm: $createAt",
-                    style: const TextStyle(
-                      fontSize: 16,
-                      color: CustomColors.primaryText,
-                      fontFamily: FontStyleTextStrings.medium,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(width: 50),
-              Text(
-                "Điểm: $point",
-                style: const TextStyle(
-                  fontSize: 40,
-                  color: CustomColors.primary,
-                  fontFamily: FontStyleTextStrings.medium,
+                  ],
                 ),
               ),
               const Spacer(),
-              CustomButton(
-                onTap: () {},
-                btnText: 'Xem',
-                btnColor: CustomColors.primary,
-                width: 140,
+              Padding(
+                padding: const EdgeInsets.only(right: 100),
+                child: Column(
+                  children: [
+                    if (type == 'lab') ...[
+                      if (isHanded)
+                        const Text(
+                          'Đã nộp',
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: CustomColors.primary,
+                            fontFamily: FontStyleTextStrings.medium,
+                          ),
+                        )
+                      else
+                        const Text(
+                          'Chưa nộp',
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: CustomColors.primary,
+                            fontFamily: FontStyleTextStrings.medium,
+                          ),
+                        ),
+                    ] else ...[
+                      if (isHanded)
+                        Text(
+                          'Điểm: $point/$totalPoint',
+                          style: const TextStyle(
+                            fontSize: 18,
+                            color: CustomColors.primary,
+                            fontFamily: FontStyleTextStrings.medium,
+                          ),
+                        )
+                      else
+                        const Text(
+                          'Chưa hoàn thành',
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: CustomColors.primary,
+                            fontFamily: FontStyleTextStrings.medium,
+                          ),
+                        ),
+                    ]
+                  ],
+                ),
               ),
             ],
           ),
