@@ -20,6 +20,10 @@
                 <a class="nav-link" id="assignments-tab" data-toggle="tab" href="#Assignments" role="tab"
                     aria-controls="Assignments" aria-selected="false">Bài tập</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" id="certificates-tab" data-toggle="tab" href="#Certificates" role="tab"
+                    aria-controls="Certificates" aria-selected="false">Cấp chứng chỉ</a>
+            </li>
         </ul>
 
         <div class="tab-content" id="myTabContent">
@@ -107,6 +111,56 @@
                                 </li>
                             @endforeach
                         </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="Certificates" role="tabpanel" aria-labelledby="assignments-tab">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Tên sinh viên</th>
+                                        <th>Email</th>
+                                        <th>Tên lớp</th>
+                                        <th>Link chứng chỉ</th>
+                                        <th>Hành động</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($class->students as $student)
+                                        <tr>
+                                            <td>{{ $loop->iteration }}</td>
+                                            <td>{{ $student->name }}</td>
+                                            <td>{{ $student->email }}</td>
+                                            <td>{{ $class->name }}</td>
+
+                                            @php
+                                                // Kiểm tra xem sinh viên có chứng chỉ hay chưa
+                                                $certificate = $certificates->where('student_id', $student->id)->where('class_id', $class->id)->first();
+                                            @endphp
+
+                                            @if ($certificate)
+                                                <td><a class="btn btn-success btn-sm" href="{{ asset($certificate->link_certificate) }}" target="_blank">Xem chứng chỉ</a></td>
+                                                <td><button disabled class="btn btn-info btn-sm">Đã cấp</button></td>
+                                            @else
+                                                <td><button disabled class="btn btn-primary btn-sm">Chưa cấp</button></td>
+                                                <td>
+                                                    <form action="{{ route('generatePDF', ['student' => $student->id, 'class' => $class->id]) }}" method="post">
+                                                        @csrf
+                                                        <button type="submit" class="btn btn-primary btn-sm" onclick="return confirm('Bạn có chắc chắn cấp chứng chỉ cho sinh viên này?')">Cấp chứng chỉ</button>
+                                                    </form>
+                                                </td>
+                                            @endif
+                                        </tr>
+                                    @endforeach
+
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>

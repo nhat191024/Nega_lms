@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Certificate;
 use Maatwebsite\Excel\Facades\Excel;
 use Maatwebsite\Excel\Concerns\FromArray;
 use App\Models\Classes;
 use App\Models\ClassAssignment;
+use App\Models\CourseEnrollment;
 use App\Models\Enrollment;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -164,8 +166,10 @@ class ClassController extends Controller
 
     public function show($id, $assignment_id = null)
     {
+        $class_id = $id;
         $class = Classes::with(['assignments.quizzes.choices'])->findOrFail($id);
-
+        $certificates = Certificate::all();
+        // dd($courseEnrollments);
         $studentsNotInClass = User::where('role_id', 3)
             ->whereDoesntHave('enrollments', function ($query) use ($class) {
                 $query->where('class_id', $class->id);
@@ -173,7 +177,7 @@ class ClassController extends Controller
             ->get();
 
         $assignment = $assignment_id ? ClassAssignment::with('quizzes.choices')->findOrFail($assignment_id) : null;
-        return view('class.show', compact('class', 'studentsNotInClass', 'assignment'));
+        return view('class.show', compact('class', 'class_id', 'studentsNotInClass', 'assignment', 'certificates'));
     }
 
     public function assignmentDetailsJson($assignment_id)

@@ -7,6 +7,7 @@ use App\Http\Controllers\ClassController;
 use App\Http\Controllers\AdminAuthController;
 use App\Http\Controllers\AssignmentController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\PDFController;
 
 Route::get('/', [AdminAuthController::class, 'showLoginForm'])->name('admin.login');
 Route::post('/login', [AdminAuthController::class, 'login'])->name('admin.login.submit');
@@ -52,3 +53,5 @@ Route::prefix('/assignment')->name('assignments.')->group(function () {
     Route::get('/assignments/visibility/{id}', [AssignmentController::class, 'toggleVisibility'])
         ->name('assignments.visibility');
 });
+
+Route::post('/generate-pdf/{student}/{class}', [PDFController::class, 'generatePDF'])->name('generatePDF');
