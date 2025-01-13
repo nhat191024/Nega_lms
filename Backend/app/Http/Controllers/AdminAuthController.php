@@ -16,40 +16,39 @@ class AdminAuthController extends Controller
     {
         $request->validate(
             [
-                'login' => 'required|string',
+                'email' => 'required|string|email',
                 'password' => 'required|string|min:6',
             ],
             [
-                'login.required' => 'Vui lòng nhập tên đăng nhập hoặc email.',
+                'email.required' => 'Vui lòng nhập email.',
+                'email.email' => 'Email không hợp lệ.',
                 'password.required' => 'Vui lòng nhập mật khẩu.',
                 'password.min' => 'Mật khẩu phải có ít nhất 6 ký tự.',
             ],
         );
 
-        $loginType = filter_var($request->login, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
-
-        if (!Auth::attempt([$loginType => $request->login, 'password' => $request->password])) {
+        if (!Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
             return back()
                 ->withErrors([
-                    'login' => 'Tên đăng nhập hoặc mật khẩu không đúng.',
-                    'password' => 'Tên đăng nhập hoặc mật khẩu không đúng.',
+                    'email' => 'Email hoặc mật khẩu không đúng.',
+                    'password' => 'Email hoặc mật khẩu không đúng.',
                 ])
                 ->withInput();
         }
 
         /** @var \App\Models\User $user */
         $user = Auth::user();
-        if ($user->status == 0) { // 0 là tài khoản bị khóa
+        if ($user->status == 0) {
             Auth::logout();
             return back()
-                ->withErrors(['login' => 'Tài khoản của bạn đã bị khóa.'])
+                ->withErrors(['email' => 'Tài khoản của bạn đã bị khóa.'])
                 ->withInput();
         }
 
-        if ($user->role_id != 1) {
+        if (!in_array($user->role_id, [1, 4])) {
             Auth::logout();
             return back()
-                ->withErrors(['login' => 'Bạn không có quyền truy cập quản trị viên.'])
+                ->withErrors(['email' => 'Bạn không có quyền truy cập quản trị viên.'])
                 ->withInput();
         }
 
