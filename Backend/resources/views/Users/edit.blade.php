@@ -18,7 +18,8 @@
 
             <div class="mb-3">
                 <label for="email" class="form-label">Email</label>
-                <input type="email" class="form-control" id="email" name="email" value="{{ old('email', $users->email) }}">
+                <input type="email" class="form-control" id="email" name="email"
+                    value="{{ old('email', $users->email) }}">
                 @error('email')
                     <div class="text-danger">{{ $message }}</div>
                 @enderror
@@ -27,9 +28,10 @@
             <div class="mb-3">
                 <label for="avatar" class="form-label">Avatar</label>
                 <input type="file" class="form-control" id="avatar" name="avatar">
-                @if($users->avatar)
+                @if ($users->avatar)
                     <div class="mt-2">
-                        <img src="{{ asset('storage/' . $users->avatar) }}" alt="Avatar" class="img-thumbnail" width="100">
+                        <img src="{{ asset('storage/' . $users->avatar) }}" alt="Avatar" class="img-thumbnail"
+                            width="100">
                     </div>
                 @endif
                 @error('avatar')
@@ -39,7 +41,8 @@
 
             <div class="mb-3">
                 <label for="name" class="form-label">Tên người dùng</label>
-                <input type="text" class="form-control" id="name" name="name" value="{{ old('name', $users->name) }}">
+                <input type="text" class="form-control" id="name" name="name"
+                    value="{{ old('name', $users->name) }}">
                 @error('name')
                     <div class="text-danger">{{ $message }}</div>
                 @enderror
@@ -63,14 +66,16 @@
                     <option value="1" {{ old('role_id', $users->role_id) == 1 ? 'selected' : '' }}>Quản trị</option>
                     <option value="2" {{ old('role_id', $users->role_id) == 2 ? 'selected' : '' }}>Giảng viên</option>
                     <option value="3" {{ old('role_id', $users->role_id) == 3 ? 'selected' : '' }}>Sinh viên</option>
-                    <option value="4" {{ old('role_id', $users->role_id) == 4 ? 'selected' : '' }}>Giám sát viên</option>
+                    <option value="4" {{ old('role_id', $users->role_id) == 4 ? 'selected' : '' }}>Giám sát viên
+                    </option>
                 </select>
                 @error('role_id')
                     <div class="text-danger">{{ $message }}</div>
                 @enderror
             </div>
 
-            <button type="submit" class="btn btn-primary" onclick="return confirm('Bạn có muốn cập nhật thông tin người dùng này không?')">
+            <button type="submit" class="btn btn-primary"
+                onclick="return confirm('Bạn có muốn cập nhật thông tin người dùng này không?')">
                 Cập Nhật
             </button>
         </form>

@@ -89,7 +89,8 @@
                 @enderror
             </div>
 
-            <button type="submit" class="btn btn-primary" onclick="return confirm('Bạn có muốn tạo người dùng mới không?')">
+            <button type="submit" class="btn btn-primary"
+                onclick="return confirm('Bạn có muốn tạo người dùng mới không?')">
                 Tạo
             </button>
         </form>
