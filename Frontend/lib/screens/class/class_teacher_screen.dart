@@ -876,27 +876,57 @@ class ClassTeacherScreen extends GetView<ClassDetailController> {
                           },
                         ),
                         const SizedBox(height: 40),
-                        const Text(
-                          "Câu hỏi",
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: CustomColors.primary,
-                            fontFamily: FontStyleTextStrings.medium,
-                          ),
+                        Stack(
+                          children: [
+                            const Align(
+                              alignment: Alignment.center,
+                              child: Padding(
+                                padding: EdgeInsets.only(top: 15),
+                                child: Text(
+                                  "Câu hỏi",
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    color: CustomColors.primary,
+                                    fontFamily: FontStyleTextStrings.medium,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Align(
+                              alignment: Alignment.centerRight,
+                              child: CustomButton(
+                                onTap: () => {},
+                                btnText: isEdit ? 'Thay đổi câu hỏi' : 'Thêm câu hỏi',
+                                btnColor: CustomColors.primary,
+                                width: 200,
+                              ),
+                            ),
+                          ],
                         ),
                         const SizedBox(height: 10),
                         Padding(
                           padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
-                          child: MasonryGridView.count(
-                            shrinkWrap: true,
-                            crossAxisCount: 2,
-                            crossAxisSpacing: 30,
-                            mainAxisSpacing: 30,
-                            itemCount: controller.quizzes.length,
-                            itemBuilder: (context, index) {
-                              return _buildQuizContainer(index, controller.quizzes[index]);
-                            },
-                          ),
+                          child: controller.quizzes.isEmpty
+                              ? const Center(
+                                  child: Text(
+                                    "Chưa có câu hỏi nào",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: CustomColors.primary,
+                                      fontFamily: FontStyleTextStrings.medium,
+                                    ),
+                                  ),
+                                )
+                              : MasonryGridView.count(
+                                  shrinkWrap: true,
+                                  crossAxisCount: 2,
+                                  crossAxisSpacing: 30,
+                                  mainAxisSpacing: 30,
+                                  itemCount: controller.quizzes.length,
+                                  itemBuilder: (context, index) {
+                                    return _buildQuizContainer(index, controller.quizzes[index]);
+                                  },
+                                ),
                         ),
                       ],
                     ),
