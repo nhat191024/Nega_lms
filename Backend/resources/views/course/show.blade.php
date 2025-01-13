@@ -190,7 +190,7 @@
                                                             <div class="mb-4">
                                                                 <label for="number_of_questions" class="form-label">Số lượng câu hỏi</label>
                                                                 <div class="input-group">
-                                                                    <input class="form-control" type="number" value="{{ $assignment->courseQuizzes->count() }}" min="10" max="100" name="number_of_questions" id="number_of_questions" aria-label="Số lượng câu hỏi">
+                                                                    <input class="form-control" type="number" value="{{ $assignment->courseQuizzes->count() }}" min="5" max="100" name="number_of_questions" id="number_of_questions" aria-label="Số lượng câu hỏi">
                                                                 </div>
                                                             </div>
                                                             
@@ -320,7 +320,7 @@
                         <div class="mb-4">
                             <label for="number_of_questions" class="form-label">Số lượng câu hỏi</label>
                             <div class="input-group">
-                                <input class="form-control" type="number" value="10" min="10" max="100" name="number_of_questions" id="number_of_questions" aria-label="Số lượng câu hỏi">
+                                <input class="form-control" type="number" value="10" min="5" max="100" name="number_of_questions" id="number_of_questions" aria-label="Số lượng câu hỏi">
                             </div>
                         </div>
                         

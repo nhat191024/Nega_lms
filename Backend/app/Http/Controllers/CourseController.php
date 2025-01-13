@@ -49,10 +49,6 @@ class CourseController extends Controller
         ->findOrFail($id);
         $quizPackages = QuizPackage::all();
         $courseAssignment = QuizPackage::all();
-        // foreach ($course->assignments as $index => $assignment) {
-        //     dd($assignment);
-        //     dd($assignment->courseQuizzes);
-        // }
         
         return view('course.show', compact('course', 'quizPackages'));
     }
@@ -86,7 +82,7 @@ class CourseController extends Controller
                 'video_url' => 'required|url',
                 'description' => 'required',
                 'duration' => 'nullable|integer',
-                'number_of_questions' => 'required|integer|min:10|max:100',
+                'number_of_questions' => 'required|integer|min:5|max:100',
                 'quiz_select' => 'required'
             ]);
     
@@ -107,7 +103,7 @@ class CourseController extends Controller
             foreach ($quizPackage->quizzes as $quiz) {
                 $quizIdArray[] = $quiz->id;
             }
-            $randomQuizIds = array_rand(array_flip($quizIdArray), min(10, count($quizIdArray)));
+            $randomQuizIds = array_rand(array_flip($quizIdArray), min($request->number_of_questions, count($quizIdArray)));
             $randomQuizIds = (array) $randomQuizIds;
 
             foreach ($randomQuizIds as $quizID) {
@@ -132,7 +128,7 @@ class CourseController extends Controller
                 'video_url' => 'required|url',
                 'description' => 'required',
                 'duration' => 'nullable|integer',
-                'number_of_questions' => 'required|integer|min:10|max:100',
+                'number_of_questions' => 'required|integer|min:5|max:100',
                 'quiz_select' => 'required'
             ]);
             
@@ -151,7 +147,7 @@ class CourseController extends Controller
                 $quizIdArray[] = $quiz->id;
             }
 
-            $randomQuizIds = array_rand(array_flip($quizIdArray), min(10, count($quizIdArray)));
+            $randomQuizIds = array_rand(array_flip($quizIdArray), min($request->number_of_questions, count($quizIdArray)));
             $randomQuizIds = (array) $randomQuizIds;
 
             foreach ($assignment->courseQuizzes as $courseQuiz) {
