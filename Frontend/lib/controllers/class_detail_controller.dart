@@ -307,6 +307,7 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
     } else if (!vietnameseRegex.hasMatch(assignmentName.text.trim())) {
       setError(isAssignmentNameError, assignmentNameError, "Tên bài tập chỉ chứa ký tự chữ và số");
     }
+    
     //start date validation
     if (assignmentStartDate.text.trim().isEmpty) {
       setError(isAssignmentStartDateError, assignmentStartDateError, "Ngày bắt đầu không được để trống");
@@ -318,6 +319,7 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
         "Ngày bắt đầu không được lớn hơn ngày hiện tại",
       );
     }
+
     //due date validation
     if (assignmentDueDate.text.trim().isEmpty) {
       setError(isAssignmentDueDateError, assignmentDueDateError, "Ngày kết thúc không được để trống");
@@ -329,35 +331,39 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
         "Ngày kết thúc không được lớn hơn ngày hiện tại",
       );
     }
-    //duration validation
-    if (assignmentDuration.text.trim().isEmpty) {
-      setError(isAssignmentDurationError, assignmentDurationError, "Thời lượng không được để trống");
-    } else if (!RegExp(r'^\d+$').hasMatch(assignmentDuration.text.trim())) {
-      setError(isAssignmentDurationError, assignmentDurationError, "Thời lượng phải là số dương");
-    } else if (assignmentStartDate.text.isNotEmpty && assignmentDueDate.text.isNotEmpty) {
-      DateTime startDate = DateTime.parse(assignmentStartDate.text.trim());
-      DateTime dueDate = DateTime.parse(assignmentDueDate.text.trim());
-      int durationMinutes = int.parse(assignmentDuration.text.trim());
-      int diffMinutes = dueDate.difference(startDate).inMinutes;
 
-      if (diffMinutes < durationMinutes) {
-        setError(
-          isAssignmentDurationError,
-          assignmentDurationError,
-          "Thời lượng không được lớn hơn khoảng thời gian giữa ngày bắt đầu và kết thúc",
-        );
-        setError(
-          isAssignmentStartDateError,
-          assignmentStartDateError,
-          "Thời lượng không được lớn hơn khoảng thời gian giữa ngày bắt đầu và kết thúc",
-        );
-        setError(
-          isAssignmentDueDateError,
-          assignmentDueDateError,
-          "Thời lượng không được lớn hơn khoảng thời gian giữa ngày bắt đầu và kết thúc",
-        );
+    //duration validation
+    if (assignmentType.value == "quiz") {
+      if (assignmentDuration.text.trim().isEmpty) {
+        setError(isAssignmentDurationError, assignmentDurationError, "Thời lượng không được để trống");
+      } else if (!RegExp(r'^\d+$').hasMatch(assignmentDuration.text.trim())) {
+        setError(isAssignmentDurationError, assignmentDurationError, "Thời lượng phải là số dương");
+      } else if (assignmentStartDate.text.isNotEmpty && assignmentDueDate.text.isNotEmpty) {
+        DateTime startDate = DateTime.parse(assignmentStartDate.text.trim());
+        DateTime dueDate = DateTime.parse(assignmentDueDate.text.trim());
+        int durationMinutes = int.parse(assignmentDuration.text.trim());
+        int diffMinutes = dueDate.difference(startDate).inMinutes;
+
+        if (diffMinutes < durationMinutes) {
+          setError(
+            isAssignmentDurationError,
+            assignmentDurationError,
+            "Thời lượng không được lớn hơn khoảng thời gian giữa ngày bắt đầu và kết thúc",
+          );
+          setError(
+            isAssignmentStartDateError,
+            assignmentStartDateError,
+            "Thời lượng không được lớn hơn khoảng thời gian giữa ngày bắt đầu và kết thúc",
+          );
+          setError(
+            isAssignmentDueDateError,
+            assignmentDueDateError,
+            "Thời lượng không được lớn hơn khoảng thời gian giữa ngày bắt đầu và kết thúc",
+          );
+        }
       }
     }
+
     //description validation
     if (assignmentDescription.text.trim().isEmpty) {
       setError(isAssignmentDescriptionError, assignmentDescriptionError, "Mô tả không được để trống");
