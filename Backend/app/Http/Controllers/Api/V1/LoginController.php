@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
@@ -10,37 +11,31 @@ class LoginController extends Controller
     public function login(Request $request)
     {
         $request->validate([
-            'email' => 'required|string|email',
+            'login' => 'required|string',
             'password' => 'required|string',
         ], [
-            'email.required' => 'Vui lòng nhập email.',
-            'email.email' => 'Email không hợp lệ.',
+            'login.required' => 'Vui lòng nhập tên đăng nhập hoặc email.',
             'password.required' => 'Vui lòng nhập mật khẩu.',
         ]);
 
-        if (!Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+        $loginType = filter_var($request->login, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
+
+        if (!Auth::attempt([$loginType => $request->login, 'password' => $request->password])) {
             return response()->json([
-                'message' => 'Email hoặc mật khẩu không đúng.'
+                'message' => 'Tên đăng nhập hoặc mật khẩu không đúng.'
             ], 401);
         }
 
-        /** @var \App\Models\User $user */
-        $user = Auth::user();
-        if ($user->status == 0) { // 0 là tài khoản bị khóa
-            Auth::logout();
-            return response()->json(['message' => 'Tài khoản của bạn đã bị khóa.'], 403);
-        }
-
-        if (!in_array($user->role_id, [1, 4])) {
-            Auth::logout();
-            return response()->json(['message' => 'Bạn không có quyền truy cập quản trị viên.'], 403);
-        }
-
+        /** @var \App\Models\User $user **/  $user = Auth::user();
         if ($user->tokens()->count() > 0) {
             $user->tokens()->delete();
         }
 
-        $token = $user->createToken('authToken', ["*"])->plainTextToken;
+        if ($user->role_id == 1) {
+            $token = $user->createToken('authToken', ["*"])->plainTextToken;
+        } else {
+            $token = $user->createToken('authToken', [$user->role->name])->plainTextToken;
+        }
 
         return response()->json([
             'message' => 'Đăng nhập thành công.',
@@ -53,8 +48,7 @@ class LoginController extends Controller
 
     public function logout()
     {
-        /** @var \App\Models\User $user */
-        $user = Auth::user();
+        /** @var \App\Models\User $user **/  $user = Auth::user();
         $user->tokens()->delete();
 
         return response()->json([
