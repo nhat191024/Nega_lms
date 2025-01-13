@@ -48,7 +48,7 @@ class AssignmentController extends GetxController {
   fetchAssignment(assignmentId) async {
     try {
       isLoading(true);
-      String url = "${Api.server}assignment/getById/$assignmentId";
+      String url = "${Api.server}assignment/getById/$assignmentId/3";
       var response = await get(Uri.parse(url), headers: {
         'Authorization': 'Bearer $token',
       }).timeout(const Duration(seconds: 10));
