@@ -32,51 +32,35 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
   RxString selectedAssignment = ''.obs;
 
   TextEditingController assignmentName = TextEditingController();
-  TextEditingController assignmentSubject = TextEditingController();
-  RxString assignmentStatus = ''.obs;
-  RxString assignmentLevel = ''.obs;
-  TextEditingController assignmentDuration = TextEditingController();
-  RxString assignmentAutoGrade = ''.obs;
   TextEditingController assignmentStartDate = TextEditingController();
   TextEditingController assignmentDueDate = TextEditingController();
-  RxString assignmentSpecialized = ''.obs;
-  RxString assignmentTopic = ''.obs;
+  TextEditingController assignmentDuration = TextEditingController();
+  RxString assignmentStatus = ''.obs;
   TextEditingController assignmentDescription = TextEditingController();
+  
   RxList<Map<String, dynamic>> questions = <Map<String, dynamic>>[].obs;
 
-  TextEditingController homeworkScore = TextEditingController();
   TextEditingController linkSubmit = TextEditingController();
 
   List quizzes = [];
 
   RxBool isAssignmentNameError = false.obs;
-  RxBool isAssignmentSubjectError = false.obs;
-  RxBool isAssignmentStatusError = false.obs;
-  RxBool isAssignmentLevelError = false.obs;
-  RxBool isAssignmentDurationError = false.obs;
-  RxBool isAssignmentAutoGrade = false.obs;
   RxBool isAssignmentStartDateError = false.obs;
   RxBool isAssignmentDueDateError = false.obs;
-  RxBool isAssignmentSpecializedError = false.obs;
-  RxBool isAssignmentTopicError = false.obs;
+  RxBool isAssignmentDurationError = false.obs;
+  RxBool isAssignmentStatusError = false.obs;
   RxBool isAssignmentDescriptionError = false.obs;
 
   RxBool isHomeworkScoreError = false.obs;
   RxBool isLinkSubmitError = false.obs;
 
   RxString assignmentNameError = ''.obs;
-  RxString assignmentSubjectError = ''.obs;
-  RxString assignmentStatusError = ''.obs;
-  RxString assignmentLevelError = ''.obs;
-  RxString assignmentDurationError = ''.obs;
-  RxString assignmentAutoGradeError = ''.obs;
   RxString assignmentStartDateError = ''.obs;
   RxString assignmentDueDateError = ''.obs;
-  RxString assignmentSpecializedError = ''.obs;
-  RxString assignmentTopicError = ''.obs;
+  RxString assignmentDurationError = ''.obs;
+  RxString assignmentStatusError = ''.obs;
   RxString assignmentDescriptionError = ''.obs;
 
-  RxString homeworkScoreError = ''.obs;
   RxString linkSubmitError = ''.obs;
 
   @override
@@ -338,36 +322,8 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
           );
         }
       }
-
-      if (assignmentType.value == 'quiz' || assignmentType.value == 'quiz_bank') {
-        if (assignmentAutoGrade.value.isEmpty) {
-          setError(isAssignmentAutoGrade, assignmentAutoGradeError, "Tự động chấm điểm không được để trống");
-        }
-      }
     }
 
-    // Validate quiz specific fields
-    if (assignmentType.value == 'quiz') {
-      if (assignmentSubject.text.trim().isEmpty) {
-        setError(isAssignmentSubjectError, assignmentSubjectError, "Chủ đề không được để trống");
-      } else if (assignmentSubject.text.trim().length > 255) {
-        setError(isAssignmentSubjectError, assignmentSubjectError, "Chủ đề không được quá 255 ký tự");
-      } else if (!vietnameseRegex.hasMatch(assignmentSubject.text.trim())) {
-        setError(isAssignmentSubjectError, assignmentSubjectError, "Chủ đề chỉ chứa ký tự chữ và số");
-      }
-
-      if (assignmentLevel.value.isEmpty) {
-        setError(isAssignmentLevelError, assignmentLevelError, "Cấp độ không được để trống");
-      }
-
-      if (assignmentSpecialized.value.isEmpty) {
-        setError(isAssignmentSpecializedError, assignmentSpecializedError, "Chuyên ngành không được để trống");
-      }
-
-      if (assignmentTopic.value.isEmpty) {
-        setError(isAssignmentTopicError, assignmentTopicError, "Chủ đề không được để trống");
-      }
-    }
 
     // Validate common fields for quiz and quiz_bank
     if (assignmentType.value == 'quiz' || assignmentType.value == 'quiz_bank') {
@@ -395,14 +351,6 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
       }
     }
 
-    // Validate link specific fields
-    if (assignmentType.value == 'link') {
-      if (homeworkScore.text.trim().isEmpty) {
-        setError(isHomeworkScoreError, homeworkScoreError, "Điểm số không được để trống");
-      } else if (!RegExp(r'^\d*\.?\d+$').hasMatch(homeworkScore.text.trim())) {
-        setError(isHomeworkScoreError, homeworkScoreError, "Điểm số phải là số dương");
-      }
-    }
 
     if (error.value) return false;
 
@@ -516,11 +464,7 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
       response.fields['title'] = assignmentName.text.trim();
       response.fields['description'] = assignmentDescription.text.trim();
       response.fields['status'] = assignmentStatus.value.toString();
-      response.fields['level'] = assignmentLevel.value;
       response.fields['totalScore'] = totalScore.toString();
-      response.fields['specialized'] = assignmentSpecialized.value;
-      response.fields['subject'] = assignmentSubject.text.trim();
-      response.fields['topic'] = assignmentTopic.value;
       String questionsJson = jsonEncode(formattedQuestions);
       response.fields['questions'] = questionsJson;
     }
@@ -531,12 +475,10 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
       if (selectedAssignment.value.isNotEmpty) response.fields['assignment_id'] = selectedAssignment.value;
       response.fields['class_id'] = classId.value.toString();
       if (assignmentType.value == 'link') response.fields['title'] = assignmentName.text.trim();
-      if (assignmentType.value == 'link') response.fields['score'] = homeworkScore.text.trim();
       if (assignmentType.value == 'link') response.fields['description'] = assignmentDescription.text.trim();
       response.fields['start_datetime'] = assignmentStartDate.text.trim();
       response.fields['due_datetime'] = assignmentDueDate.text.trim();
       response.fields['duration'] = assignmentDuration.text.trim();
-      if (assignmentType.value == 'quiz' || assignmentType.value == 'quiz_bank') response.fields['auto_grade'] = assignmentAutoGrade.value;
       response.fields['homework_status'] = 1.toString();
     }
 
@@ -600,10 +542,8 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
     response.fields['status'] = assignmentStatus.value == 'true' ? 1.toString() : 0.toString();
     if (type == 'quiz') {
       response.fields['assignment_id'] = selectedAssignment.value;
-      response.fields['auto_grade'] = assignmentAutoGrade.value == 'true' ? 1.toString() : 0.toString();
     } else {
       response.fields['title'] = assignmentName.text.trim();
-      response.fields['score'] = homeworkScore.text.trim();
       response.fields['description'] = assignmentDescription.text.trim();
     }
 
@@ -622,32 +562,16 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
   void clear() {
     assignmentName.clear();
     isAssignmentNameError.value = false;
-    assignmentSubject.clear();
-    isAssignmentSubjectError.value = false;
     assignmentStatus.value = 'true';
     isAssignmentStatusError.value = false;
-    assignmentLevel.value = '';
-    isAssignmentLevelError.value = false;
     assignmentStartDate.clear();
     isAssignmentStartDateError.value = false;
     assignmentDueDate.clear();
     isAssignmentDueDateError.value = false;
-    assignmentSpecialized.value = '';
-    isAssignmentSpecializedError.value = false;
-    assignmentTopic.value = '';
-    isAssignmentTopicError.value = false;
     assignmentDescription.clear();
     isAssignmentDescriptionError.value = false;
     assignmentDuration.clear();
     isAssignmentDurationError.value = false;
-    assignmentAutoGrade.value = 'true';
-    isAssignmentAutoGrade.value = false;
-    homeworkScore.clear();
-    isHomeworkScoreError.value = false;
-    linkSubmit.clear();
-    isLinkSubmitError.value = false;
-    assignmentType.value = '';
-    createAssignmentThenPushToClass.value = false;
     selectedAssignment.value = '';
     questions.clear();
     addNewQuestion();
