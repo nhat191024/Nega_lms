@@ -129,18 +129,15 @@
                         </a>
 
                         <div class="dropdown-menu dropdown-menu-end shadow animated--grow-in" aria-labelledby="userDropdown">
-                            <a onclick="if(confirm('Bạn có chắc chắn đăng xuất khỏi tài khoản không?')) { window.location.href='{{ route('admin.logout') }}'; }" href="#" class="dropdown-item text-gray-600 hover:bg-gray-100">
-
-                        <div class="dropdown-menu dropdown-menu-end shadow animated--grow-in"
-                            aria-labelledby="userDropdown">
                             <a onclick="if(confirm('Bạn có chắc chắn đăng xuất khỏi tài khoản không?')) { window.location.href='{{ route('admin.logout') }}'; }"
-                                href="#" class="dropdown-item text-gray-600 hover:bg-gray-100">
-
+                               href="#"
+                               class="dropdown-item text-gray-600 hover:bg-gray-100">
                                 <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                                 Đăng xuất
                             </a>
                         </div>
                     </li>
+
                 </ul>
 
             </nav>
