@@ -9,8 +9,8 @@ use App\Models\Choice;
 use App\Models\ClassAssignment;
 use App\Models\Classes;
 use App\Models\ClassSubmit;
+use App\Models\Quiz;
 use App\Models\Enrollment;
-use App\Models\ClassSubmit;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -191,7 +191,7 @@ class DashboardController extends Controller
                 ->get();
 
             $averageScore = $submissions->avg('score');
-            
+
             if ($averageScore !== null) {
                 $totalScores += $averageScore;
                 $totalStudents++;
@@ -210,7 +210,7 @@ class DashboardController extends Controller
             $studentName = isset($studentDetails[$studentId]) ? $studentDetails[$studentId]->name : 'Chưa có tên';
 
             $results[] = [
-                'student_name' => $studentName, 
+                'student_name' => $studentName,
                 'average_score' => round($averageScore, 2),
                 'passed_assignments' => $passedAssignments,
                 'total_assignments' => $totalAssignments,
