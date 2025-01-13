@@ -526,6 +526,7 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
   }
 
   void updateQuiz(String id, String type) async {
+    assignmentType.value = type;
     if (!validateQuiz()) return;
     var uri = Uri.parse("${Api.server}assignment/update");
     var response = MultipartRequest('POST', uri);
