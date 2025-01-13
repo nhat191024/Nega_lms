@@ -293,7 +293,7 @@ class ClassController extends Controller
 
     public function downloadTemplate()
     {
-        $headers = ['STT', 'Tên học sinh'];
+        $headers = ['STT', 'Tên học sinh','Email'];
         $fileName = 'student_import_template.xlsx';
 
         return Excel::download(new class([$headers]) implements FromArray {
