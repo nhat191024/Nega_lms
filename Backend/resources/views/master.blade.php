@@ -63,6 +63,12 @@
                     <span>Người dùng</span></a>
             </li>
 
+            <li class="nav-item">
+                <a class="nav-link" href="{{ route('category.index') }}">
+                    <i class="fas fa-fw fa-chart-area"></i>
+                    <span>Danh mục</span></a>
+            </li>
+
             <!-- Nav Item - Tables -->
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('classes.index') }}">
