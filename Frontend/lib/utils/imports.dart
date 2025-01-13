@@ -65,3 +65,4 @@ export 'package:flutter_svg/svg.dart';
 export 'package:http/http.dart';
 export 'package:get_storage/get_storage.dart' hide Data;
 export 'package:sidebarx/sidebarx.dart';
+export 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
