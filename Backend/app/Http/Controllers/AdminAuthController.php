@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Models\User;
@@ -27,7 +26,7 @@ class AdminAuthController extends Controller
             ],
         );
 
-        $loginType = filter_var($request->login, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
+        $loginType =  'email';
 
         if (!Auth::attempt([$loginType => $request->login, 'password' => $request->password])) {
             return back()
@@ -38,7 +37,16 @@ class AdminAuthController extends Controller
                 ->withInput();
         }
 
-        if (Auth::user()->role_id != 1) {
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        if ($user->status == 0) {
+            Auth::logout();
+            return back()
+                ->withErrors(['login' => 'Tài khoản của bạn đã bị khóa.'])
+                ->withInput();
+        }
+
+        if (!in_array($user->role_id, [1, 4])) {
             Auth::logout();
             return back()
                 ->withErrors(['login' => 'Bạn không có quyền truy cập quản trị viên.'])
@@ -46,5 +54,14 @@ class AdminAuthController extends Controller
         }
 
         return redirect()->route('dashboard.index');
+    }
+
+    public function logout(Request $request)
+    {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('login');
     }
 }
