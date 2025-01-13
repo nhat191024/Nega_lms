@@ -9,6 +9,9 @@ use App\Models\QuizPackage;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Concerns\FromArray;
+use App\Models\Enrollment;
+use Maatwebsite\Excel\Facades\Excel;
 
 class CourseController extends Controller
 {
@@ -175,47 +178,100 @@ class CourseController extends Controller
         $course = Course::with(['enrollments.user'])
             ->orderBy('created_at', 'DESC')
             ->findOrFail($id);
-    
+
         // Lấy danh sách học sinh chưa ghi danh vào khóa học
         $enrolledStudentIds = DB::table('course_enrollments')
             ->where('course_id', $id)
             ->pluck('student_id');
-    
+
         $students = User::where('role_id', 3)
             ->whereNotIn('id', $enrolledStudentIds)
             ->get();
-    
+
         $quizPackages = QuizPackage::all();
-    
+
         return view('course.show', compact('course', 'quizPackages', 'students'));
     }
-    
+
 
     public function addStudent(Request $request, $courseId)
-{
-    $course = Course::findOrFail($courseId);
-    $studentIds = $request->input('student_ids');
+    {
+        $course = Course::findOrFail($courseId);
+        $studentIds = $request->input('student_ids');
 
-    foreach ($studentIds as $studentId) {
-        // Kiểm tra nếu học sinh đã được ghi danh vào khóa học
-        $exists = DB::table('course_enrollments')
-            ->where('course_id', $courseId)
-            ->where('student_id', $studentId)
-            ->exists();
+        foreach ($studentIds as $studentId) {
+            // Kiểm tra nếu học sinh đã được ghi danh vào khóa học
+            $exists = DB::table('course_enrollments')
+                ->where('course_id', $courseId)
+                ->where('student_id', $studentId)
+                ->exists();
 
-        if (!$exists) {
-            // Thêm học sinh vào bảng course_enrollments
-            DB::table('course_enrollments')->insert([
-                'course_id' => $courseId,
-                'student_id' => $studentId,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
+            if (!$exists) {
+                // Thêm học sinh vào bảng course_enrollments
+                DB::table('course_enrollments')->insert([
+                    'course_id' => $courseId,
+                    'student_id' => $studentId,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
         }
+
+        return redirect()->route('courses.show', $courseId)
+            ->with('success', 'Học sinh đã được thêm vào khóa học.');
+    }
+    public function importConfirm(Request $request, $course_id)
+    {
+        $students = $request->input('students');
+        $successMessages = [];
+        $errorMessages = [];
+
+        foreach ($students as $studentData) {
+            $student = User::where('email', $studentData['email'])->first();
+
+            if ($student && $student->role_id == 3) {
+                // Kiểm tra nếu học sinh đã tồn tại trong khóa học
+                $enrollmentExists = Enrollment::where('course_id', $course_id)
+                    ->where('student_id', $student->id)
+                    ->exists();
+
+                if (!$enrollmentExists) {
+                    Enrollment::firstOrCreate(
+                        ['course_id' => $course_id, 'student_id' => $student->id]
+                    );
+                    $successMessages[] = "Học sinh {$student->name} ({$student->email}) đã được thêm thành công.";
+                } else {
+                    $errorMessages[] = "Học sinh {$student->name} ({$student->email}) đã tồn tại trong khóa học.";
+                }
+            } else {
+                $errorMessages[] = "Học sinh với email {$studentData['email']} không tồn tại hoặc không phải là học sinh.";
+            }
+        }
+
+        return response()->json([
+            'success' => true,
+            'successMessages' => $successMessages,
+            'errorMessages' => $errorMessages,
+        ]);
     }
 
-    return redirect()->route('courses.show', $courseId)
-        ->with('success', 'Học sinh đã được thêm vào khóa học.');
-}
+    public function downloadTemplate()
+    {
+        $headers = ['STT', 'Tên học sinh', 'Email'];
+        $fileName = 'student_import_template.xlsx';
 
+        return Excel::download(new class([$headers]) implements FromArray {
+            protected $data;
+
+            public function __construct($data)
+            {
+                $this->data = $data;
+            }
+
+            public function array(): array
+            {
+                return [$this->data];
+            }
+        }, $fileName);
+    }
 }

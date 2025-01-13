@@ -55,6 +55,21 @@
                 <div class="card mt-3">
                     <div class="card-body">
                         <h3 class="card-title">Danh sách học sinh</h3>
+                        <div class="d-flex align-items-center gap-2">
+                            <a href="{{ route('courses.downloadTemplate') }}" class="btn btn-secondary">
+                                <i class="fas fa-download me-2"></i>Tải mẫu danh sách
+                            </a>
+                            <form id="import-students-form" method="POST" enctype="multipart/form-data" action="{{ route('courses.importConfirm', $course->id) }}" class="d-inline-block d-flex align-items-center">
+                                @csrf
+                                <div class="d-flex align-items-center">
+                                    <label for="file" class="btn btn-primary mb-0">
+                                        <i class="fas fa-upload me-2"></i>Nhập danh sách học sinh
+                                    </label>
+                                    <input type="file" id="file" name="file" class="d-none" onchange="previewStudents(this)">
+                                </div>
+                            </form>
+                        </div>
+                        
                         <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal"
                             data-bs-target="#addStudentModal"> <i class="fas fa-plus-circle me-2"></i> Thêm Học Sinh
                         </button>
@@ -115,6 +130,39 @@
                     </form>
                 </div>
             </div>
+
+            <!-- Modal Xác Nhận Danh Sách Học Sinh -->
+<div class="modal fade" id="studentsPreviewModal" tabindex="-1" aria-labelledby="studentsPreviewModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="studentsPreviewModalLabel">Xác nhận danh sách học sinh</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <table class="table table-hover table-bordered table-striped">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th class="text-center">STT</th>
+                                <th class="text-center">Tên học sinh</th>
+                                <th class="text-center">Email</th>
+                                <th class="text-center">Tác vụ</th>
+                            </tr>
+                        </thead>
+                        <tbody id="students-preview-table">
+                            <!-- Dữ liệu danh sách học sinh sẽ được chèn ở đây -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <button type="button" id="confirm-add-students" class="btn btn-primary">Xác nhận và thêm</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 
             <!-- Tab Bài tập -->
@@ -454,6 +502,48 @@
     document.addEventListener("DOMContentLoaded", function() {
         $('.selectpicker').selectpicker();
     });
+
+    function previewStudents(input) {
+    const file = input.files[0];
+    const formData = new FormData();
+    formData.append('file', file);
+
+    fetch('{{ route('courses.importPreview') }}', {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+        },
+    })
+    .then(response => response.json())
+    .then(data => {
+        const tableBody = document.getElementById('students-preview-table');
+        tableBody.innerHTML = '';
+
+        data.students.forEach((student, index) => {
+            tableBody.innerHTML += `
+                <tr>
+                    <td class="text-center">${index + 1}</td>
+                    <td>${student.name}</td>
+                    <td>${student.email}</td>
+                    <td class="text-center">
+                        <button class="btn btn-danger btn-sm" onclick="removeStudent(${index})">Xóa</button>
+                    </td>
+                </tr>
+            `;
+        });
+
+        const modal = new bootstrap.Modal(document.getElementById('studentsPreviewModal'));
+        modal.show();
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+document.getElementById('confirm-add-students').addEventListener('click', function () {
+    const form = document.getElementById('import-students-form');
+    form.submit();
+});
+
 </script>
 
 @endsection

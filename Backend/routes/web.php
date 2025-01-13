@@ -62,6 +62,9 @@ Route::prefix('course')->name('courses.')->group(function () {
     Route::delete('/{course}/assignments/delete/{assignment}', [CourseController::class, 'deleteAssignment'])->name('assignments.delete');
     Route::get('/{id}/add-student', [CourseController::class, 'showAddStudentForm'])->name('add-student.form');
     Route::post('/{id}/add-student', [CourseController::class, 'addStudent'])->name('add-student');
+    Route::get('/download-template', [CourseController::class, 'downloadTemplate'])->name('downloadTemplate');
+    Route::post('/{id}/import-confirm', [CourseController::class, 'importConfirm'])->name('importConfirm');
+
 });
 
 Route::resource('categories', CategoryController::class)->except(['destroy']);
