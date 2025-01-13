@@ -115,12 +115,18 @@ class AssignmentController extends Controller
         $quizPackageId = $request->quiz_package_id;
         $numberOfQuestions = $request->number_of_questions;
 
-        $package = QuizPackage::find($quizPackageId);
-
         ClassAssignment::find($classAssignmentId)->quizzes()->delete();
 
+        $package = QuizPackage::find($quizPackageId);
+        $selectedQuizIds = [];
+
         for ($i = 0; $i < $numberOfQuestions; $i++) {
-            $quiz = $package->quizzes->random();
+            do {
+                $quiz = $package->quizzes->random();
+            } while (in_array($quiz->id, $selectedQuizIds));
+
+            $selectedQuizIds[] = $quiz->id;
+
             AssignmentQuiz::create([
                 'assignment_id' => $classAssignmentId,
                 'quiz_id' => $quiz->id,
