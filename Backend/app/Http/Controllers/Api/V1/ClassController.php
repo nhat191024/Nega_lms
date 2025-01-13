@@ -134,20 +134,40 @@ class ClassController extends Controller
 
     public function getClassAssignmentPoint($id)
     {
-        $user = Auth::user();
-        $submissions = ClassSubmit::where('class_assignment_id', $id)->with('assignment', 'student')->get();
+        $assignments = ClassAssignment::where('class_id', $id)->with('submits.user')->get();
+        $enrollment = Enrollment::where('class_id', $id)->with('student')->get();
 
-        $submissions = $submissions->map(function ($submission) {
-            return [
-                'assignment_name' => $submission->assignment->title,
-                'student_name' => $submission->student->name,
-                'total_score' => $submission->total_score,
-                'created_at' => $submission->created_at->format('H:i d:m:Y'),
-            ];
+        $assignmentName = $assignments->map(function ($assignment) {
+            return $assignment->title;
+        })->values();
+
+        $students = $enrollment->map(function ($student) {
+            return $student->student->name;
         });
 
+        $assignmentPoint = $students->map(function ($studentName) use ($assignments) {
+            $points = $assignments->map(function ($assignment) use ($studentName) {
+                $submit = $assignment->submits->firstWhere('user.name', $studentName);
+                if ($assignment->type == 'quiz') {
+                    return [
+                        'score' => $submit ? $submit->score : 0,
+                    ];
+                } else {
+                    return [
+                        'score' => $submit ? "Đã nộp bài" : "Chưa nộp bài",
+                    ];
+                }
+            })->values();
+
+            return [
+                'name' => $studentName,
+                'points' => $points
+            ];
+        })->values();
+
         return response()->json([
-            'submissions' => $submissions,
+            'assignmentName' => $assignmentName,
+            'assignmentPoint' => $assignmentPoint,
         ], Response::HTTP_OK);
     }
 
