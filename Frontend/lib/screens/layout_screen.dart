@@ -86,20 +86,24 @@ class LayoutScreen extends GetView<LayoutController> {
             onTap: () {},
           ),
         ],
-        items: const [
-          SidebarXItem(
-            icon: Icons.home,
-            label: 'Trang chủ',
-          ),
+        items: [
           SidebarXItem(
             icon: Icons.school,
-            label: 'Lớp học',
+            label: 'Lớp học của tôi',
+            onTap: () {
+              controller.pageController.jumpToPage(0);
+              controller.sidebarController.selectIndex(0);
+            },
           ),
-          SidebarXItem(
-            icon: Icons.person,
-            label: 'Giáo viên',
-          ),
-          // Thêm các mục khác ở đây
+          if (controller.role.value == 'student')
+            SidebarXItem(
+              icon: Icons.person,
+              label: 'Khoá học',
+              onTap: () {
+                controller.pageController.jumpToPage(2);
+                controller.sidebarController.selectIndex(2);
+              },
+            ),
         ],
       ),
       body: Row(
@@ -171,10 +175,15 @@ class LayoutScreen extends GetView<LayoutController> {
                     controller.sidebarController.selectIndex(0);
                   },
                 ),
-                const SidebarXItem(
-                  icon: Icons.person,
-                  label: 'Khoá học',
-                ),
+                if (controller.role.value == 'student')
+                  SidebarXItem(
+                    icon: Icons.person,
+                    label: 'Khoá học',
+                    onTap: () {
+                      controller.pageController.jumpToPage(2);
+                      controller.sidebarController.selectIndex(1);
+                    },
+                  ),
               ],
             ),
           Expanded(
@@ -183,6 +192,7 @@ class LayoutScreen extends GetView<LayoutController> {
               children: [
                 ClassListScreen(),
                 const ClassDetailTab(),
+                if (controller.role.value == 'student') CourseListScreen(),
               ],
             ),
           ),
