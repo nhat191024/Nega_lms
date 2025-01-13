@@ -40,7 +40,7 @@ class CourseController extends Controller
 
         Course::create($request->all());
 
-        return redirect()->route('course.index')->with('success', 'Khóa học đã được tạo thành công.');
+        return redirect()->route('courses.index')->with('success', 'Khóa học đã được tạo thành công.');
     }
 
     public function edit($id)
