@@ -307,7 +307,7 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
     } else if (!vietnameseRegex.hasMatch(assignmentName.text.trim())) {
       setError(isAssignmentNameError, assignmentNameError, "Tên bài tập chỉ chứa ký tự chữ và số");
     }
-    
+
     //start date validation
     if (assignmentStartDate.text.trim().isEmpty) {
       setError(isAssignmentStartDateError, assignmentStartDateError, "Ngày bắt đầu không được để trống");
@@ -467,7 +467,7 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
 
   createQuiz() async {
     if (!validateQuiz()) return;
-    if (!validateQuizNumber(numberOfQuiz.text.trim())) return;
+    if (assignmentType.value == "quiz" && !validateQuizNumber(numberOfQuiz.text.trim())) return;
     var uri = Uri.parse("${Api.server}assignment/create");
     var request = MultipartRequest('POST', uri);
     request.headers['Authorization'] = 'Bearer $token';
@@ -481,9 +481,9 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
     request.fields['duration'] = assignmentDuration.text.trim();
     request.fields['status'] = assignmentStatus.value == 'true' ? "published" : "closed";
     request.fields['description'] = assignmentDescription.text.trim();
-    request.fields['type'] = 'quiz';
-    request.fields['quiz_package_id'] = quizPackage[int.tryParse(selectedPackage.value) ?? 0]["id"].toString();
-    request.fields['number_of_questions'] = numberOfQuiz.text.trim();
+    request.fields['type'] = assignmentType.value;
+    if (assignmentType.value == "quiz") request.fields['quiz_package_id'] = quizPackage[int.tryParse(selectedPackage.value) ?? 0]["id"].toString();
+    if (assignmentType.value == "quiz") request.fields['number_of_questions'] = numberOfQuiz.text.trim();
 
     var streamedResponse = await request.send();
     if (streamedResponse.statusCode == 201) {
