@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('name');
             $table->text('description');
             $table->unsignedInteger('teacher_id');
-            $table->enum('status', ['published', 'locked'])->default('published');
+            $table->enum('status', ['published', 'closed'])->default('published');
             $table->timestamps();
         });
     }
