@@ -887,31 +887,14 @@ class ClassTeacherScreen extends GetView<ClassDetailController> {
                         const SizedBox(height: 10),
                         Padding(
                           padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
-                          child: GridView.builder(
+                          child: MasonryGridView.count(
                             shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              crossAxisSpacing: 30,
-                              mainAxisSpacing: 30,
-                              childAspectRatio: 7 / 2,
-                            ),
-                            itemCount: controller.assignmentListForTeacher.length,
+                            crossAxisCount: 2,
+                            crossAxisSpacing: 30,
+                            mainAxisSpacing: 30,
+                            itemCount: controller.quizzes.length,
                             itemBuilder: (context, index) {
-                              return assignmentCardBuilder(
-                                controller.assignmentListForTeacher[index].name ?? '',
-                                controller.assignmentListForTeacher[index].description ?? '',
-                                controller.assignmentListForTeacher[index].creator ?? '',
-                                controller.assignmentListForTeacher[index].isCreator ?? false,
-                                controller.assignmentListForTeacher[index].createAt ?? '',
-                                controller.assignmentListForTeacher[index].totalQuestion ?? 0,
-                                [
-                                  controller.assignmentListForTeacher[index].level ?? '',
-                                  controller.assignmentListForTeacher[index].specialized ?? '',
-                                  controller.assignmentListForTeacher[index].topic ?? '',
-                                ],
-                                controller.assignmentListForTeacher[index].id.toString(),
-                              );
+                              return _buildQuizContainer(index, controller.quizzes[index]);
                             },
                           ),
                         ),
@@ -927,124 +910,61 @@ class ClassTeacherScreen extends GetView<ClassDetailController> {
     );
   }
 
-  Widget assignmentCardBuilder(
-    String title,
-    String description,
-    String creator,
-    bool isCreator,
-    String createAt,
-    int totalQuestion,
-    List<String> tags,
-    String id,
-  ) {
+  Widget _buildQuizContainer(index, quiz) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
       decoration: BoxDecoration(
-        color: CustomColors.white,
-        borderRadius: BorderRadius.circular(10),
-        boxShadow: [
-          BoxShadow(
-            color: CustomColors.primaryText.withOpacity(0.5),
-            offset: const Offset(0, 2),
-            blurRadius: 5,
-          ),
-        ],
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: CustomColors.primary, width: 1),
       ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      padding: const EdgeInsets.all(20),
+      child: Column(
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          Row(
             children: [
-              Text(
-                title,
-                style: const TextStyle(
-                  fontSize: 16,
-                  color: CustomColors.primaryText,
-                  fontFamily: FontStyleTextStrings.medium,
-                ),
-              ),
-              const SizedBox(height: 5),
-              SizedBox(
-                width: Get.width * 0.2,
+              Expanded(
                 child: Text(
-                  description,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
+                  "${index + 1}. ${quiz['question']}",
+                  softWrap: true,
                   style: const TextStyle(
                     fontSize: 14,
-                    color: CustomColors.secondaryText,
-                    fontFamily: FontStyleTextStrings.regular,
+                    color: CustomColors.primary,
+                    fontFamily: FontStyleTextStrings.medium,
                   ),
                 ),
               ),
-              const SizedBox(height: 5),
-              Text(
-                "Số câu: ${totalQuestion.toString()}",
-                style: const TextStyle(
-                  fontSize: 14,
-                  color: CustomColors.secondaryText,
-                  fontFamily: FontStyleTextStrings.regular,
-                ),
-              ),
-              const SizedBox(height: 5),
-              Text(
-                "Người tạo: ${isCreator ? "Bạn" : creator}",
-                style: const TextStyle(
-                  fontSize: 14,
-                  color: CustomColors.secondaryText,
-                  fontFamily: FontStyleTextStrings.regular,
-                ),
-              ),
-              const SizedBox(height: 5),
-              Text(
-                "Ngày tạo: $createAt",
-                style: const TextStyle(
-                  fontSize: 14,
-                  color: CustomColors.secondaryText,
-                  fontFamily: FontStyleTextStrings.regular,
-                ),
-              ),
-              const Spacer(),
-              Wrap(
-                children: tags
-                    .map(
-                      (tag) => Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                        margin: const EdgeInsets.only(right: 10),
-                        decoration: BoxDecoration(
-                          color: CustomColors.primary,
-                          borderRadius: BorderRadius.circular(50),
-                        ),
+            ],
+          ),
+          const SizedBox(height: 5),
+          Column(
+            children: [
+              ...List.generate(
+                quiz['choices'].length,
+                (aIndex) => Padding(
+                  padding: const EdgeInsets.only(right: 10),
+                  child: Row(
+                    children: [
+                      Checkbox(
+                        value: quiz['choices'][aIndex]['isCorrect'] == 1 ? true : false,
+                        onChanged: (bool? value) {},
+                        activeColor: CustomColors.primary,
+                      ),
+                      Expanded(
                         child: Text(
-                          tag,
+                          quiz['choices'][aIndex]['choice'],
+                          softWrap: true,
                           style: const TextStyle(
-                            fontSize: 12,
-                            color: CustomColors.background,
-                            fontFamily: FontStyleTextStrings.medium,
+                            fontSize: 14,
+                            color: CustomColors.primary,
+                            fontFamily: FontStyleTextStrings.regular,
                           ),
                         ),
                       ),
-                    )
-                    .toList(),
+                    ],
+                  ),
+                ),
               ),
             ],
-          ),
-          const SizedBox(width: 20),
-          Obx(
-            () => CustomButton(
-              onTap: () {
-                if (controller.selectedAssignment.value == id) {
-                  controller.selectedAssignment.value = '';
-                } else {
-                  controller.selectedAssignment.value = id;
-                }
-              },
-              btnText: controller.selectedAssignment.value == id ? 'Bỏ Chọn' : 'Chọn',
-              btnColor: CustomColors.primary,
-              width: 140,
-            ),
           ),
         ],
       ),
