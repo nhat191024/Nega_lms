@@ -47,6 +47,8 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
   TextEditingController homeworkScore = TextEditingController();
   TextEditingController linkSubmit = TextEditingController();
 
+  List quizzes = [];
+
   RxBool isAssignmentNameError = false.obs;
   RxBool isAssignmentSubjectError = false.obs;
   RxBool isAssignmentStatusError = false.obs;
@@ -559,7 +561,7 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
   Future loadDataToEdit(String id, String type) async {
     clear();
     try {
-      String url = "${Api.server}assignment/getById/$id";
+      String url = "${Api.server}assignment/getById/$id/1";
       var response = await get(Uri.parse(url), headers: {
         'Authorization': 'Bearer $token',
       }).timeout(const Duration(seconds: 10));
@@ -573,6 +575,10 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
         if (type == 'quiz') assignmentDuration.text = assignmentData['duration'].toString();
         assignmentStatus.value = assignmentData['status'] == "published" ? 'true' : 'false';
         assignmentDescription.text = assignmentData['description'];
+
+        for (var question in assignmentData['questions']) {
+          quizzes.add(question);
+        }
       }
     } catch (e) {
       Get.snackbar("Error", "Failed to fetch homework info");
