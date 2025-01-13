@@ -266,12 +266,12 @@ class CourseController extends Controller
 
     public function downloadTemplate()
     {
-        $headers = ['STT', 'Tên học sinh', 'Email'];
+        $headers = [ 'Tên học sinh', 'Email'];
 
         $data = [
-            [1, 'Tên học sinh 1', 'email1@example.com'],
-            [2, 'Tên học sinh 2', 'email2@example.com'],
-            [3, 'Tên học sinh 3', 'email3@example.com'],
+            [ 'Tên học sinh 1', 'email1@example.com'],
+            [ 'Tên học sinh 2', 'email2@example.com'],
+            [ 'Tên học sinh 3', 'email3@example.com'],
         ];
 
         $dataWithHeaders = array_merge([$headers], $data);

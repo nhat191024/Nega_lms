@@ -18,7 +18,7 @@ class LoginController extends Controller
             'password.required' => 'Vui lòng nhập mật khẩu.',
         ]);
 
-        $loginType = filter_var($request->login, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
+        $loginType = 'email';
 
         if (!Auth::attempt([$loginType => $request->login, 'password' => $request->password])) {
             return response()->json([
