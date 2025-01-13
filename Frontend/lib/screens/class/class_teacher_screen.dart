@@ -892,42 +892,75 @@ class ClassTeacherScreen extends GetView<ClassDetailController> {
                                 ),
                               ),
                             ),
-                            Align(
-                              alignment: Alignment.centerRight,
-                              child: CustomButton(
-                                onTap: () => {},
-                                btnText: isEdit ? 'Thay đổi câu hỏi' : 'Thêm câu hỏi',
-                                btnColor: CustomColors.primary,
-                                width: 200,
-                              ),
+                            Obx(
+                              () => controller.step.value == '1'
+                                  ? Align(
+                                      alignment: Alignment.centerRight,
+                                      child: CustomButton(
+                                        onTap: () {
+                                          controller.step2();
+                                        },
+                                        btnText: isEdit ? 'Thay đổi câu hỏi' : 'Thêm câu hỏi',
+                                        btnColor: CustomColors.primary,
+                                        width: 200,
+                                      ),
+                                    )
+                                  : const SizedBox.shrink(),
                             ),
                           ],
                         ),
                         const SizedBox(height: 10),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
-                          child: controller.quizzes.isEmpty
-                              ? const Center(
-                                  child: Text(
-                                    "Chưa có câu hỏi nào",
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      color: CustomColors.primary,
-                                      fontFamily: FontStyleTextStrings.medium,
+                        switch (controller.step.value) {
+                          '1' => Padding(
+                              padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+                              child: controller.quizzes.isEmpty
+                                  ? const Center(
+                                      child: Text(
+                                        "Chưa có câu hỏi nào",
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          color: CustomColors.primary,
+                                          fontFamily: FontStyleTextStrings.medium,
+                                        ),
+                                      ),
+                                    )
+                                  : MasonryGridView.count(
+                                      shrinkWrap: true,
+                                      crossAxisCount: 2,
+                                      crossAxisSpacing: 30,
+                                      mainAxisSpacing: 30,
+                                      itemCount: controller.quizzes.length,
+                                      itemBuilder: (context, index) {
+                                        return _buildQuizContainer(index, controller.quizzes[index]);
+                                      },
                                     ),
-                                  ),
-                                )
-                              : MasonryGridView.count(
-                                  shrinkWrap: true,
-                                  crossAxisCount: 2,
-                                  crossAxisSpacing: 30,
-                                  mainAxisSpacing: 30,
-                                  itemCount: controller.quizzes.length,
-                                  itemBuilder: (context, index) {
-                                    return _buildQuizContainer(index, controller.quizzes[index]);
-                                  },
-                                ),
-                        ),
+                            ),
+                          '2' => Padding(
+                              padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+                              child: controller.quizPackage.isEmpty
+                                  ? const Center(
+                                      child: Text(
+                                        "Hiện không có bộ câu hỏi nào",
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          color: CustomColors.primary,
+                                          fontFamily: FontStyleTextStrings.medium,
+                                        ),
+                                      ),
+                                    )
+                                  : MasonryGridView.count(
+                                      shrinkWrap: true,
+                                      crossAxisCount: 2,
+                                      crossAxisSpacing: 30,
+                                      mainAxisSpacing: 30,
+                                      itemCount: controller.quizPackage.length,
+                                      itemBuilder: (context, index) {
+                                        return _buildQuizPackageContainer(controller.quizPackage[index]);
+                                      },
+                                    ),
+                            ),
+                          _ => const SizedBox.shrink(),
+                        }
                       ],
                     ),
                   ),
@@ -995,6 +1028,86 @@ class ClassTeacherScreen extends GetView<ClassDetailController> {
                 ),
               ),
             ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildQuizPackageContainer(package) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: CustomColors.primary, width: 1),
+      ),
+      padding: const EdgeInsets.all(20),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                package['title'],
+                style: const TextStyle(
+                  fontSize: 16,
+                  color: CustomColors.primaryText,
+                  fontFamily: FontStyleTextStrings.medium,
+                ),
+              ),
+              const SizedBox(height: 5),
+              SizedBox(
+                width: Get.width * 0.2,
+                child: Text(
+                  package['description'],
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    color: CustomColors.secondaryText,
+                    fontFamily: FontStyleTextStrings.regular,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 5),
+              Text(
+                "Số câu: ${package['totalQuizzes'].toString()}",
+                style: const TextStyle(
+                  fontSize: 14,
+                  color: CustomColors.secondaryText,
+                  fontFamily: FontStyleTextStrings.regular,
+                ),
+              ),
+              const SizedBox(height: 5),
+              Text(
+                "Người tạo: ${package['creator']}",
+                style: const TextStyle(
+                  fontSize: 14,
+                  color: CustomColors.secondaryText,
+                  fontFamily: FontStyleTextStrings.regular,
+                ),
+              ),
+              const SizedBox(height: 5),
+              Text(
+                "Ngày tạo: ${package['createdAt']}",
+                style: const TextStyle(
+                  fontSize: 14,
+                  color: CustomColors.secondaryText,
+                  fontFamily: FontStyleTextStrings.regular,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(width: 20),
+          CustomButton(
+            onTap: () {
+              controller.selectedAssignment.value == package["id"];
+            },
+            btnText: 'Chọn',
+            btnColor: CustomColors.primary,
+            width: 140,
           ),
         ],
       ),
