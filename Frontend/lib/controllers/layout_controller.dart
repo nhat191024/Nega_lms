@@ -5,6 +5,7 @@ class LayoutController extends GetxController {
   late SidebarXController sidebarController;
   final RxString role = "".obs;
   final RxInt selectedClassId = 0.obs;
+  final RxInt selectedCourseId = 0.obs;
 
   @override
   void onInit() {
@@ -18,6 +19,11 @@ class LayoutController extends GetxController {
 
   void goToClassDetail(int classId) {
     selectedClassId.value = classId;
+    pageController.jumpToPage(1);
+  }
+
+  void goToCourseDetail(int courseId) {
+    selectedCourseId.value = courseId;
     pageController.jumpToPage(1);
   }
 
