@@ -5,7 +5,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ClassController;
 use App\Http\Controllers\AdminAuthController;
-use App\Http\Controllers\AssignmentController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\QuizBankController;
 use App\Http\Controllers\CategoryController;
@@ -38,18 +37,6 @@ Route::prefix('class')->name('classes.')->group(function () {
     Route::put('/update-class/{class_id}', [ClassController::class, 'updateClass'])->name('updateClass');
 });
 
-Route::prefix('/assignment')->name('assignments.')->group(function () {
-    Route::get('/', [AssignmentController::class, 'index'])->name('index');
-    Route::get('/get/{id}', [AssignmentController::class, 'getAssignments'])->name('get');
-    Route::get('/create', [AssignmentController::class, 'create'])->name('create');
-    Route::post('/store', [AssignmentController::class, 'store'])->name('store');
-    Route::get('/edit/{id}', [AssignmentController::class, 'edit'])->name('edit');
-    Route::put('/{id}', [AssignmentController::class, 'update'])->name('update');
-    Route::delete('/delete/{id}', [AssignmentController::class, 'destroy'])->name('destroy');
-    Route::get('/assignments/visibility/{id}', [AssignmentController::class, 'toggleVisibility'])
-        ->name('assignments.visibility');
-});
-
 Route::prefix('course')->name('courses.')->group(function () {
     Route::get('/download-template', [CourseController::class, 'downloadTemplate'])->name('downloadTemplate');
     Route::get('/', [CourseController::class, 'index'])->name('index');
@@ -67,8 +54,9 @@ Route::prefix('course')->name('courses.')->group(function () {
     Route::post('/{id}/add-student', [CourseController::class, 'addStudent'])->name('add-student');
     Route::post('/{id}/import-confirm', [CourseController::class, 'importConfirm'])->name('importConfirm');
     Route::post('/{courseId}/remove-student', [CourseController::class, 'removeStudent'])->name('removeStudent');
+});
 
-Route::prefix('/quiz-bank')->name('quiz-bank.')->group(function() {
+Route::prefix('/quiz-bank')->name('quiz-bank.')->group(function () {
     Route::get('/', [QuizBankController::class, 'index'])->name('index');
     Route::get('/createQuizBank', [QuizBankController::class, 'createQuizBank'])->name('createQuizBank');
     Route::post('/addQuestion', [QuizBankController::class, 'addQuestion'])->name('addQuestion');
