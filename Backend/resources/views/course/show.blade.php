@@ -266,24 +266,28 @@
                     <h3 class="card-title">Danh sách học sinh</h3>
                     <div id="messages-container"></div>
                     <div class="d-flex align-items-center gap-2">
-                        <button type="button" class="btn btn-primary mb-3 me-2" data-bs-toggle="modal" data-bs-target="#addStudentModal">
+                        <button type="button" class="btn btn-primary mb-3 me-2" data-bs-toggle="modal"
+                            data-bs-target="#addStudentModal">
                             <i class="fas fa-plus-circle me-2"></i> Thêm Học Sinh
                         </button>
-                        
+
                         <a href="{{ route('courses.downloadTemplate') }}" class="btn btn-secondary mb-3 me-2">
                             <i class="fas fa-download me-2"></i>Tải mẫu danh sách
                         </a>
-                    
-                        <form id="import-students-form" method="POST" enctype="multipart/form-data" action="{{ route('courses.importConfirm', $course->id) }}" class="d-inline-block d-flex align-items-center mb-3">
+
+                        <form id="import-students-form" method="POST" enctype="multipart/form-data"
+                            action="{{ route('courses.importConfirm', $course->id) }}"
+                            class="d-inline-block d-flex align-items-center mb-3">
                             @csrf
                             <div class="d-flex align-items-center">
                                 <label for="file" class="btn btn-primary mb-0">
                                     <i class="fas fa-upload me-2"></i>Nhập danh sách học sinh
                                 </label>
-                                <input type="file" id="file" name="file" class="d-none" onchange="previewStudents(this)">
+                                <input type="file" id="file" name="file" class="d-none"
+                                    onchange="previewStudents(this)">
                             </div>
                         </form>
-                    </div>                    
+                    </div>
 
                     <div class="table-responsive">
                         <table class="table table-bordered table-striped table-hover">
@@ -336,18 +340,30 @@
                                 aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
+                            @if (session('success'))
+                                <div class="alert alert-success">
+                                    {{ session('success') }}
+                                </div>
+                            @endif
+
+                            @if (session('error'))
+                                <div class="alert alert-danger">
+                                    {{ session('error') }}
+                                </div>
+                            @endif
+
                             <div class="form-group">
                                 <label for="student_ids">Chọn học sinh</label>
-                                <!-- Sử dụng Bootstrap Select -->
-                                <select class="form-select selectpicker" id="student_ids" name="student_ids[]"
-                                    multiple data-live-search="true" data-size="5">
-                                    @foreach ($studentsNotInCourse as $student)
-                                        <option value="{{ $student->id }}">{{ $student->name }}</option>
-                                    @endforeach
+                                <select class="form-select" id="student_ids" name="student_ids[]" multiple>
+                                    @forelse ($studentsNotInCourse as $student)
+                                        <option value="{{ $student->id }}">{{ $student->name }}
+                                            ({{ $student->email }})</option>
+                                    @empty
+                                        <option disabled>Không có học sinh nào chưa tham gia khóa học</option>
+                                    @endforelse
                                 </select>
                             </div>
                         </div>
-
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
                             <button type="submit" class="btn btn-primary">Thêm Học Sinh</button>
@@ -356,6 +372,7 @@
                 </form>
             </div>
         </div>
+
 
         <!-- Modal hiển thị danh sách học sinh đã được tải lên -->
         <div class="modal" tabindex="-1" id="studentsPreviewModal">
@@ -495,6 +512,27 @@
 </div>
 
 <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Lấy trạng thái tab đã chọn từ sessionStorage
+        var activeTab = sessionStorage.getItem('activeTab');
+
+        if (activeTab) {
+            // Nếu có tab đã lưu, mở tab đó
+            var tab = new bootstrap.Tab(document.getElementById(activeTab));
+            tab.show();
+        }
+
+        // Lắng nghe sự kiện khi người dùng chọn tab
+        var tabs = document.querySelectorAll('#myTab a');
+        tabs.forEach(function(tab) {
+            tab.addEventListener('shown.bs.tab', function() {
+                // Lưu tab đã chọn vào sessionStorage
+                sessionStorage.setItem('activeTab', this.id);
+            });
+        });
+    });
+
+
     document.addEventListener('DOMContentLoaded', function() {
         // Khởi tạo tab Bootstrap
         var triggerTabList = [].slice.call(document.querySelectorAll('#myTab a'));

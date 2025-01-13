@@ -176,12 +176,11 @@ class CourseController extends Controller
     public function show($id)
     {
         $course = Course::with(['enrollments.user'])
-            ->orderBy('created_at', 'DESC')
             ->findOrFail($id);
 
         $studentsNotInCourse = User::where('role_id', 3)
-            ->whereDoesntHave('courseEnrollments', function ($query) use ($course) {
-                $query->where('course_id', $course->id);
+            ->whereDoesntHave('courseEnrollments', function ($query) use ($id) {
+                $query->where('course_id', $id);
             })
             ->get();
 
@@ -195,6 +194,10 @@ class CourseController extends Controller
         $course = Course::findOrFail($courseId);
         $studentIds = $request->input('student_ids');
 
+        if (empty($studentIds)) {
+            return redirect()->back()->with('error', 'Vui lòng chọn ít nhất một học sinh.');
+        }
+
         foreach ($studentIds as $studentId) {
             $exists = DB::table('course_enrollments')
                 ->where('course_id', $courseId)
@@ -203,8 +206,8 @@ class CourseController extends Controller
 
             if (!$exists) {
                 DB::table('course_enrollments')->insert([
-                    'course_id' => $courseId,
                     'student_id' => $studentId,
+                    'course_id' => $courseId,
                     'created_at' => now(),
                     'updated_at' => now(),
                 ]);
@@ -214,6 +217,7 @@ class CourseController extends Controller
         return redirect()->route('courses.show', $courseId)
             ->with('success', 'Học sinh đã được thêm vào khóa học.');
     }
+
 
     public function importConfirm(Request $request, $course_id)
     {
@@ -261,35 +265,33 @@ class CourseController extends Controller
     }
 
     public function downloadTemplate()
-{
-    $headers = ['STT', 'Tên học sinh', 'Email'];
+    {
+        $headers = ['STT', 'Tên học sinh', 'Email'];
 
-    // Cấu trúc dữ liệu cho file Excel (mỗi dòng là một mảng con)
-    $data = [
-        [1, 'Tên học sinh 1', 'email1@example.com'],
-        [2, 'Tên học sinh 2', 'email2@example.com'],
-        [3, 'Tên học sinh 3', 'email3@example.com'],
-    ];
+        $data = [
+            [1, 'Tên học sinh 1', 'email1@example.com'],
+            [2, 'Tên học sinh 2', 'email2@example.com'],
+            [3, 'Tên học sinh 3', 'email3@example.com'],
+        ];
 
-    // Kết hợp tiêu đề và dữ liệu
-    $dataWithHeaders = array_merge([$headers], $data);
+        $dataWithHeaders = array_merge([$headers], $data);
 
-    $fileName = 'student_import_template.xlsx';
+        $fileName = 'student_import_template.xlsx';
 
-    return Excel::download(new class($dataWithHeaders) implements FromArray {
-        protected $data;
+        return Excel::download(new class($dataWithHeaders) implements FromArray {
+            protected $data;
 
-        public function __construct($data)
-        {
-            $this->data = $data;
-        }
+            public function __construct($data)
+            {
+                $this->data = $data;
+            }
 
-        public function array(): array
-        {
-            return $this->data;
-        }
-    }, $fileName);
-}
+            public function array(): array
+            {
+                return $this->data;
+            }
+        }, $fileName);
+    }
 
     public function removeStudent(Request $request, $courseId)
     {
