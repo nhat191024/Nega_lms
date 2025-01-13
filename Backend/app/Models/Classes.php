@@ -7,12 +7,18 @@ use Illuminate\Database\Eloquent\Model;
 class Classes extends Model
 {
     protected $fillable = [
+        'code',  
         'name',
         'teacher_id',
         'description',
         'start_date',
         'end_date',
         'status',
+    ];
+
+    protected $casts = [
+        'start_date' => 'datetime',
+        'end_date' => 'datetime',
     ];
 
     public function teacher()
@@ -38,5 +44,20 @@ class Classes extends Model
     public function notifications()
     {
         return $this->hasMany(ClassNotification::class);
+    }
+
+    public function students()
+    {
+        return $this->belongsToMany(User::class, 'enrollments', 'class_id', 'student_id');
+    }
+
+    public function scopePublished($query)
+    {
+        return $query->where('status', 'published');
+    }
+
+    public function scopeUpcoming($query)
+    {
+        return $query->where('start_date', '>', now());
     }
 }

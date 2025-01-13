@@ -6,6 +6,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ClassController;
 use App\Http\Controllers\AdminAuthController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\PDFController;
 use App\Http\Controllers\QuizBankController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CourseController;
@@ -28,6 +29,7 @@ Route::prefix('/users')->name('users.')->group(function () {
 });
 
 Route::prefix('class')->name('classes.')->group(function () {
+    Route::get('/template', [ClassController::class, 'downloadTemplate'])->name('downloadTemplate');
     Route::get('/', [ClassController::class, 'index'])->name('index');
     Route::post('/add-student', [ClassController::class, 'addStudentToClass'])->name('addStudent');
     Route::delete('/remove-student/{class_id}/{student_id}', [ClassController::class, 'removeStudentFromAClass'])->name('removeStudent');
@@ -35,7 +37,27 @@ Route::prefix('class')->name('classes.')->group(function () {
     Route::get('/hide-class/{class_id}', [ClassController::class, 'hideClass'])->name('hideClass');
     Route::get('/edit-class/{class_id}', [ClassController::class, 'editClass'])->name('editClass');
     Route::put('/update-class/{class_id}', [ClassController::class, 'updateClass'])->name('updateClass');
+    Route::get('/{id}', [ClassController::class, 'show'])->name('show');
+    Route::get('/{id}/assignment/{assignment_id}', [ClassController::class, 'show'])->name('assignmentDetails');
+    Route::get('/assignment/{assignment_id}/details', [ClassController::class, 'assignmentDetailsJson'])->name('assignmentDetailsJson');
+    Route::post('/{id}/toggle-status', [ClassController::class, 'toggleClassStatus'])->name('toggleStatus');
+    Route::get('/{id}/export', [ClassController::class, 'export'])->name('export');
+    Route::post('/{class}/import-confirm', [ClassController::class, 'importConfirm'])->name('importConfirm');
 });
+
+Route::prefix('/assignment')->name('assignments.')->group(function () {
+    Route::get('/', [AssignmentController::class, 'index'])->name('index');
+    Route::get('/get/{id}', [AssignmentController::class, 'getAssignments'])->name('get');
+    Route::get('/create', [AssignmentController::class, 'create'])->name('create');
+    Route::post('/store', [AssignmentController::class, 'store'])->name('store');
+    Route::get('/edit/{id}', [AssignmentController::class, 'edit'])->name('edit');
+    Route::put('/{id}', [AssignmentController::class, 'update'])->name('update');
+    Route::delete('/delete/{id}', [AssignmentController::class, 'destroy'])->name('destroy');
+    Route::get('/assignments/visibility/{id}', [AssignmentController::class, 'toggleVisibility'])
+        ->name('assignments.visibility');
+});
+
+Route::post('/generate-pdf/{student}/{class}', [PDFController::class, 'generatePDF'])->name('generatePDF');
 
 Route::prefix('course')->name('courses.')->group(function () {
     Route::get('/download-template', [CourseController::class, 'downloadTemplate'])->name('downloadTemplate');

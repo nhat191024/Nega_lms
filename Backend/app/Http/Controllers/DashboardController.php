@@ -10,8 +10,7 @@ use App\Models\ClassAssignment;
 use App\Models\Classes;
 use App\Models\ClassSubmit;
 use App\Models\Enrollment;
-use App\Models\Quiz;
-use App\Models\Submission;
+use App\Models\ClassSubmit;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -99,7 +98,6 @@ class DashboardController extends Controller
             'courses' => $courses,
         ]);
     }
-
 
     public function getUserProgress($userID)
     {

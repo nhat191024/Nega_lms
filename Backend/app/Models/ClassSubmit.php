@@ -22,4 +22,9 @@ class ClassSubmit extends Model
     {
         return $this->hasMany(ClassAnswer::class);
     }
+
+    public function student()
+    {
+        return $this->belongsTo(User::class, 'student_id');
+    }
 }
