@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\CourseAssignment;
-use App\Models\User;
 use App\Models\Course;
 use App\Models\CourseQuiz;
 use App\Models\QuizPackage;
 use Illuminate\Http\Request;
+use App\Models\User;
 
 class CourseController extends Controller
 {
@@ -40,23 +40,23 @@ class CourseController extends Controller
     }
 
     public function show($id)
-    {
-        $course = Course::with(['enrollments' => function ($query) {
-            $query->whereHas('user', function ($q) {
-                $q->where('role_id', 3);
-            });
-        }, 'enrollments.user'])
-            ->orderBy('created_at', 'DESC')
-            ->findOrFail($id);
+{
+    $course = Course::with(['enrollments' => function ($query) {
+        $query->whereHas('user', function ($q) {
+            $q->where('role_id', 3);
+        });
+    }, 'enrollments.user'])
+        ->orderBy('created_at', 'DESC')
+        ->findOrFail($id);
 
-        $studentsNotEnrolled = User::where('role_id', 3)
-            ->whereNotIn('id', $course->enrollments->pluck('user_id'))
-            ->get();
+    $quizPackages = QuizPackage::all();
+    $courseAssignment = QuizPackage::all();
 
-        $quizPackages = QuizPackage::all();
+    $students = User::where('role_id', 3)->whereNull('course_id')->get(); // Lấy danh sách học sinh chưa được gán khóa học
 
-        return view('course.show', compact('course', 'quizPackages', 'studentsNotEnrolled'));
-    }
+    return view('course.show', compact('course', 'quizPackages', 'students'));
+}
+
 
     public function edit($id)
     {
@@ -188,19 +188,15 @@ class CourseController extends Controller
         }
     }
 
-    public function addStudent(Request $request)
+    public function addStudent(Request $request, $courseId)
     {
-        $course = Course::findOrFail($request->course_id);
-        $course->enrollments()->create(['user_id' => $request->student_id]);
-
-        return redirect()->back()->with('success', 'Đã thêm học sinh vào khóa học!');
-    }
-
-    public function removeStudent(Request $request)
-    {
-        $course = Course::findOrFail($request->course_id);
-        $course->enrollments()->where('user_id', $request->student_id)->delete();
-
-        return redirect()->back()->with('success', 'Đã xóa học sinh khỏi khóa học!');
+        $course = Course::findOrFail($courseId);
+        $studentIds = $request->input('student_ids');
+        foreach ($studentIds as $studentId) {
+            $student = User::findOrFail($studentId);
+            $student->course_id = $course->id;
+            $student->save();
+        }
+        return redirect()->route('courses.show', $courseId)->with('success', 'Học sinh đã được thêm vào khóa học.');
     }
 }
