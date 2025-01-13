@@ -19,12 +19,12 @@ class ClassTeacherScreen extends GetView<ClassDetailController> {
                   _showAddQuizModal(context);
                 } else if (value == 'Bài tập 1 câu trả lời') {
                   controller.clear();
-                  controller.assignmentType.value = 'link';
+                  controller.assignmentType.value = 'lab';
                   _showAddLinkHomeworkModal(context);
                   controller.createAssignmentThenPushToClass.value = true;
                 } else {
                   controller.clear();
-                  controller.assignmentType.value = 'quiz_bank';
+                  controller.assignmentType.value = 'quiz';
                   _showAddQuizFromBankModal(context);
                   controller.createAssignmentThenPushToClass.value = true;
                 }
