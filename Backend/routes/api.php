@@ -52,6 +52,10 @@ Route::group(['middleware' => ['auth:sanctum', 'ability:student']], function () 
         Route::get('/getStudentAssignmentPoint/{class_id}', [ClassController::class, 'getStudentAssignmentPoint']);
     });
 
+    Route::prefix('courses')->group(function () {
+        Route::get('/get', [CourseController::class, 'index']);
+    });
+
     Route::prefix('assignment')->group(function () {
         Route::post('submit', [AssignmentController::class, 'submitAssignment']);
     });
