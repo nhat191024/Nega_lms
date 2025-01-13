@@ -94,8 +94,7 @@
                     </div>
                 </form>
                 <ul class="navbar-nav ml-auto">
-<<<<<<< HEAD
-=======
+
                     <!-- Nav Item - Search Dropdown (Visible Only XS) -->
                     <li class="nav-item dropdown no-arrow d-sm-none">
                         <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"
@@ -119,7 +118,7 @@
                             </form>
                         </div>
                     </li>
->>>>>>> 02b9d9c867ba38dc0fc8668f0bb202b7e0c5f8fb
+
                     <div class="topbar-divider d-none d-sm-block"></div>
                     <li class="nav-item dropdown no-arrow">
                         <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -128,15 +127,15 @@
                             </span>
                             <img class="img-profile rounded-circle" src="{{ !empty(Auth::user()->avatar) ? Auth::user()->avatar : 'img/undraw_profile.svg' }}">
                         </a>
-<<<<<<< HEAD
+
                         <div class="dropdown-menu dropdown-menu-end shadow animated--grow-in" aria-labelledby="userDropdown">
                             <a onclick="if(confirm('Bạn có chắc chắn đăng xuất khỏi tài khoản không?')) { window.location.href='{{ route('admin.logout') }}'; }" href="#" class="dropdown-item text-gray-600 hover:bg-gray-100">
-=======
+
                         <div class="dropdown-menu dropdown-menu-end shadow animated--grow-in"
                             aria-labelledby="userDropdown">
                             <a onclick="if(confirm('Bạn có chắc chắn đăng xuất khỏi tài khoản không?')) { window.location.href='{{ route('admin.logout') }}'; }"
                                 href="#" class="dropdown-item text-gray-600 hover:bg-gray-100">
->>>>>>> 02b9d9c867ba38dc0fc8668f0bb202b7e0c5f8fb
+
                                 <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                                 Đăng xuất
                             </a>
@@ -169,13 +168,12 @@
 
 </body>
 
-<<<<<<< HEAD
-=======
+
 <!-- Core plugin JavaScript-->
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
->>>>>>> 02b9d9c867ba38dc0fc8668f0bb202b7e0c5f8fb
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/js/bootstrap-select.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
