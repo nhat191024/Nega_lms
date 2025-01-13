@@ -1155,7 +1155,7 @@ class ClassTeacherScreen extends GetView<ClassDetailController> {
           controller: controller.numberOfQuiz,
           keyboardType: TextInputType.number,
           onChanged: (value) {
-            controller.validateQuizNumber(value);
+            if (isEdit) controller.validateQuizNumber(value);
           },
         ),
         if (isEdit) ...[
