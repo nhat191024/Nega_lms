@@ -24,10 +24,10 @@ class AdminAuthController extends Controller
                 'login.required' => 'Vui lòng nhập tên đăng nhập hoặc email.',
                 'password.required' => 'Vui lòng nhập mật khẩu.',
                 'password.min' => 'Mật khẩu phải có ít nhất 6 ký tự.',
-            ],
+            ]
         );
 
-        $loginType = filter_var($request->login, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
+        $loginType = 'email';
 
         if (!Auth::attempt([$loginType => $request->login, 'password' => $request->password])) {
             return back()
@@ -38,7 +38,16 @@ class AdminAuthController extends Controller
                 ->withInput();
         }
 
-        if (Auth::user()->role_id != 1) {
+        $user = Auth::user();
+
+        if ($user->status == 'closed') {
+            Auth::logout();
+            return back()
+                ->withErrors(['login' => 'Tài khoản của bạn đã bị khóa.'])
+                ->withInput();
+        }
+
+        if ($user->role_id != 1 && $user->role_id != 4) {
             Auth::logout();
             return back()
                 ->withErrors(['login' => 'Bạn không có quyền truy cập quản trị viên.'])
@@ -48,9 +57,10 @@ class AdminAuthController extends Controller
         return redirect()->route('dashboard.index')->with('success', 'Đăng nhập thành công!');
     }
 
-    public function logout() {
+    public function logout()
+    {
         Auth::logout();
-            return redirect()->route('admin.login')->with('success', 'Đăng xuất thành công!');
-    }
 
+        return redirect()->route('admin.login')->with('success', 'Đăng xuất thành công!');
+    }
 }
