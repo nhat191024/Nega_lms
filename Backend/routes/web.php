@@ -58,6 +58,8 @@ Route::prefix('course')->name('courses.')->group(function () {
     Route::delete('/{id}', [CourseController::class, 'destroy'])->name('destroy');
     Route::get('/{id}/assignments/create', [CourseController::class, 'createAssignment'])->name('assignments.create');
     Route::post('/{id}/assignments', [CourseController::class, 'storeAssignment'])->name('assignments.store');
+    Route::post('/{course}/assignments/update/{assignment}', [CourseController::class, 'updateAssignment'])->name('assignments.update');
+    Route::delete('/{course}/assignments/delete/{assignment}', [CourseController::class, 'deleteAssignment'])->name('assignments.delete');
 });
 
 Route::resource('categories', CategoryController::class)->except(['destroy']);

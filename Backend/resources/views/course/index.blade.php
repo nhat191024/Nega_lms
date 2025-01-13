@@ -94,6 +94,7 @@
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
+                            
                             <div class="col-12">
                                 <button class="btn btn-primary" type="submit">Tạo</button>
                             </div>
