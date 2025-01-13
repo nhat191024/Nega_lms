@@ -69,7 +69,7 @@ class ClassPointScreen extends GetView<ClassDetailController> {
                           ListView.builder(
                             shrinkWrap: true,
                             physics: const AlwaysScrollableScrollPhysics(),
-                            itemCount: controller.classPointList.length,
+                            itemCount: controller.studentPointList.length,
                             itemBuilder: (context, index) {
                               return pointBuilder(
                                 context,
