@@ -439,7 +439,7 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
 
     if (!value.isNumericOnly) {
       isNumberOfQuizError.value = true;
-      numberOfQuizError.value = "Số lượng câu hỏi phải là số";
+      numberOfQuizError.value = "Số lượng câu hỏi phải là số"; 
       return false;
     }
 
@@ -454,7 +454,7 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
       isNumberOfQuizError.value = true;
       numberOfQuizError.value = "Số lượng câu hỏi phải lớn hơn 5";
       return false;
-    } else if (parsedValue >= quizPackage[int.tryParse(selectedPackage.value) ?? 0]["totalQuizzes"]) {
+    } else if (parsedValue > quizPackage[int.tryParse(selectedPackage.value) ?? 0]["totalQuizzes"]) {
       isNumberOfQuizError.value = true;
       numberOfQuizError.value =
           "Số lượng câu hỏi phải nhỏ hơn tổng số câu hỏi trong bộ (${quizPackage[int.tryParse(selectedPackage.value) ?? 0]["totalQuizzes"].toString()})";
