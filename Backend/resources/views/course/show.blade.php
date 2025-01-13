@@ -50,121 +50,6 @@
                 </div>
             </div>
 
-            <!-- Tab Danh sách học sinh -->
-            <div class="tab-pane fade" id="Students" role="tabpanel" aria-labelledby="students-tab">
-                <div class="card mt-3">
-                    <div class="card-body">
-                        <h3 class="card-title">Danh sách học sinh</h3>
-                        <div class="d-flex align-items-center gap-2">
-                            <a href="{{ route('courses.downloadTemplate') }}" class="btn btn-secondary">
-                                <i class="fas fa-download me-2"></i>Tải mẫu danh sách
-                            </a>
-                            <form id="import-students-form" method="POST" enctype="multipart/form-data" action="{{ route('courses.importConfirm', $course->id) }}" class="d-inline-block d-flex align-items-center">
-                                @csrf
-                                <div class="d-flex align-items-center">
-                                    <label for="file" class="btn btn-primary mb-0">
-                                        <i class="fas fa-upload me-2"></i>Nhập danh sách học sinh
-                                    </label>
-                                    <input type="file" id="file" name="file" class="d-none" onchange="previewStudents(this)">
-                                </div>
-                            </form>
-                        </div>
-                        
-                        <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal"
-                            data-bs-target="#addStudentModal"> <i class="fas fa-plus-circle me-2"></i> Thêm Học Sinh
-                        </button>
-                        <div class="table-responsive">
-                            <table class="table table-bordered table-striped table-hover">
-                                <thead class="thead-dark">
-                                    <tr>
-                                        <th>STT</th>
-                                        <th>Tên</th>
-                                        <th>Email</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($course->enrollments as $index => $enrollment)
-                                        <tr>
-                                            <td>{{ $index + 1 }}</td>
-                                            <td>{{ $enrollment->user->name }}</td>
-                                            <td>{{ $enrollment->user->email }}</td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Modal Thêm Học Sinh -->
-            <div class="modal fade" id="addStudentModal" tabindex="-1" aria-labelledby="addStudentModalLabel"
-                aria-hidden="true">
-                <div class="modal-dialog">
-                    <form action="{{ route('courses.add-student', $course->id) }}" method="POST">
-                        @csrf
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="addStudentModalLabel">Thêm Học Sinh Mới</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                    aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <div class="form-group">
-                                    <label for="student_ids">Chọn học sinh</label>
-                                    <!-- Sử dụng Bootstrap Select -->
-                                    <select class="form-select selectpicker" id="student_ids" name="student_ids[]" multiple
-                                        data-live-search="true" data-size="5">
-                                        @foreach ($students as $student)
-                                            <option value="{{ $student->id }}">{{ $student->name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                                <button type="submit" class="btn btn-primary">Thêm Học Sinh</button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-
-            <!-- Modal Xác Nhận Danh Sách Học Sinh -->
-<div class="modal fade" id="studentsPreviewModal" tabindex="-1" aria-labelledby="studentsPreviewModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="studentsPreviewModalLabel">Xác nhận danh sách học sinh</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="table-responsive">
-                    <table class="table table-hover table-bordered table-striped">
-                        <thead class="thead-dark">
-                            <tr>
-                                <th class="text-center">STT</th>
-                                <th class="text-center">Tên học sinh</th>
-                                <th class="text-center">Email</th>
-                                <th class="text-center">Tác vụ</th>
-                            </tr>
-                        </thead>
-                        <tbody id="students-preview-table">
-                            <!-- Dữ liệu danh sách học sinh sẽ được chèn ở đây -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                <button type="button" id="confirm-add-students" class="btn btn-primary">Xác nhận và thêm</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-
             <!-- Tab Bài tập -->
             <div class="tab-pane fade" id="Assignments" role="tabpanel" aria-labelledby="assignments-tab">
                 <div class="card mt-3" id="assignment-list">
@@ -191,8 +76,7 @@
                                                 data-bs-target="#assignmentDetailsModal_{{ $assignment->id }}">
                                                 Xem chi tiết
                                             </button>
-                                            <button type="button" class="btn btn-info btn-sm mx-2"
-                                                data-bs-toggle="modal"
+                                            <button type="button" class="btn btn-info btn-sm mx-2" data-bs-toggle="modal"
                                                 data-bs-target="#edit-assignment-modal_{{ $assignment->id }}">
                                                 Sửa bài tập
                                             </button>
@@ -367,9 +251,138 @@
                                             </form>
                                         </div>
                                     </div>
+                                </div>
                             </li>
                         @endforeach
                     </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab Danh sách học sinh -->
+        <div class="tab-pane fade" id="Students" role="tabpanel" aria-labelledby="students-tab">
+            <div class="card mt-3">
+                <div class="card-body">
+                    <h3 class="card-title">Danh sách học sinh</h3>
+                    <div id="messages-container"></div>
+                    <div class="d-flex align-items-center gap-2">
+                        <button type="button" class="btn btn-primary mb-3 me-2" data-bs-toggle="modal" data-bs-target="#addStudentModal">
+                            <i class="fas fa-plus-circle me-2"></i> Thêm Học Sinh
+                        </button>
+                        
+                        <a href="{{ route('courses.downloadTemplate') }}" class="btn btn-secondary mb-3 me-2">
+                            <i class="fas fa-download me-2"></i>Tải mẫu danh sách
+                        </a>
+                    
+                        <form id="import-students-form" method="POST" enctype="multipart/form-data" action="{{ route('courses.importConfirm', $course->id) }}" class="d-inline-block d-flex align-items-center mb-3">
+                            @csrf
+                            <div class="d-flex align-items-center">
+                                <label for="file" class="btn btn-primary mb-0">
+                                    <i class="fas fa-upload me-2"></i>Nhập danh sách học sinh
+                                </label>
+                                <input type="file" id="file" name="file" class="d-none" onchange="previewStudents(this)">
+                            </div>
+                        </form>
+                    </div>                    
+
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped table-hover">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Tên</th>
+                                    <th>Email</th>
+                                    <th>Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($course->enrollments as $index => $enrollment)
+                                    <tr>
+                                        <td>{{ $index + 1 }}</td>
+                                        <td>{{ $enrollment->user->name }}</td>
+                                        <td>{{ $enrollment->user->email }}</td>
+                                        <td>
+                                            <form
+                                                action="{{ route('courses.removeStudent', ['courseId' => $course->id]) }}"
+                                                method="POST" class="d-inline-block">
+                                                @csrf
+                                                @method('POST')
+                                                <input type="hidden" name="student_ids[]"
+                                                    value="{{ $enrollment->user->id }}">
+                                                <button type="submit" class="btn btn-danger btn-sm">
+                                                    <i class="fas fa-trash-alt"></i> Xóa
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Thêm Học Sinh -->
+        <div class="modal fade" id="addStudentModal" tabindex="-1" aria-labelledby="addStudentModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <form action="{{ route('courses.add-student', $course->id) }}" method="POST">
+                    @csrf
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="addStudentModalLabel">Thêm Học Sinh Mới</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="student_ids">Chọn học sinh</label>
+                                <!-- Sử dụng Bootstrap Select -->
+                                <select class="form-select selectpicker" id="student_ids" name="student_ids[]"
+                                    multiple data-live-search="true" data-size="5">
+                                    @foreach ($studentsNotInCourse as $student)
+                                        <option value="{{ $student->id }}">{{ $student->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                            <button type="submit" class="btn btn-primary">Thêm Học Sinh</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Modal hiển thị danh sách học sinh đã được tải lên -->
+        <div class="modal" tabindex="-1" id="studentsPreviewModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Danh sách học sinh</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <table class="table table-bordered" id="students-preview-table">
+                            <thead>
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Tên học sinh</th>
+                                    <th>Email</th>
+                                    <th>Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                        <button type="button" class="btn btn-primary" id="confirm-add-students">Xác nhận</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -483,67 +496,136 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        // Khởi tạo tab Bootstrap
         var triggerTabList = [].slice.call(document.querySelectorAll('#myTab a'));
         triggerTabList.forEach(function(triggerEl) {
             var tabTrigger = new bootstrap.Tab(triggerEl);
-
             triggerEl.addEventListener('click', function(event) {
                 event.preventDefault();
                 tabTrigger.show();
             });
         });
 
+        // Khởi tạo Selectpicker (nếu có)
         var quizSelect = document.getElementById('quizSelect');
         if (quizSelect) {
             new bootstrap.Select(quizSelect);
         }
-    });
-
-    document.addEventListener("DOMContentLoaded", function() {
         $('.selectpicker').selectpicker();
     });
 
-    function previewStudents(input) {
-    const file = input.files[0];
-    const formData = new FormData();
-    formData.append('file', file);
+    // Xử lý file Excel khi chọn
+    document.getElementById('file').addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        if (!file) return;
 
-    fetch('{{ route('courses.importPreview') }}', {
-        method: 'POST',
-        body: formData,
-        headers: {
-            'X-CSRF-TOKEN': '{{ csrf_token() }}',
-        },
-    })
-    .then(response => response.json())
-    .then(data => {
-        const tableBody = document.getElementById('students-preview-table');
-        tableBody.innerHTML = '';
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const data = new Uint8Array(e.target.result);
+            const workbook = XLSX.read(data, {
+                type: 'array'
+            });
+            const sheetName = workbook.SheetNames[0];
+            const sheet = workbook.Sheets[sheetName];
+            const rows = XLSX.utils.sheet_to_json(sheet, {
+                header: 1
+            });
 
-        data.students.forEach((student, index) => {
-            tableBody.innerHTML += `
-                <tr>
-                    <td class="text-center">${index + 1}</td>
-                    <td>${student.name}</td>
-                    <td>${student.email}</td>
-                    <td class="text-center">
-                        <button class="btn btn-danger btn-sm" onclick="removeStudent(${index})">Xóa</button>
-                    </td>
-                </tr>
-            `;
+            rows.splice(0, 1); // Xóa dòng đầu tiên nếu là tiêu đề
+
+            const previewTable = document.querySelector('#students-preview-table tbody');
+            previewTable.innerHTML = '';
+
+            rows.forEach((row, index) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${row[0] || ''}</td>
+                    <td>${row[1] || ''}</td>
+                    <td><button type="button" class="btn btn-danger" onclick="removeStudent(this)">Xóa</button></td>
+                `;
+                previewTable.appendChild(tr);
+            });
+
+            new bootstrap.Modal(document.getElementById('studentsPreviewModal')).show();
+        };
+        reader.readAsArrayBuffer(file);
+    });
+
+    // Xóa học sinh khỏi bảng trước khi xác nhận
+    function removeStudent(button) {
+        const row = button.closest('tr');
+        if (row) row.remove();
+    }
+
+    // Xử lý khi nhấn nút "Xác nhận thêm học sinh"
+    document.getElementById('confirm-add-students').addEventListener('click', function() {
+        const formData = new FormData();
+        const rows = document.querySelectorAll('#students-preview-table tbody tr');
+
+        // Lấy tên và email học sinh từ bảng preview
+        rows.forEach((row, index) => {
+            const cells = row.querySelectorAll('td');
+            formData.append(`students[${index}][name]`, cells[1].innerText.trim());
+            formData.append(`students[${index}][email]`, cells[2].innerText.trim());
         });
 
-        const modal = new bootstrap.Modal(document.getElementById('studentsPreviewModal'));
-        modal.show();
-    })
-    .catch(error => console.error('Error:', error));
-}
+        // Gửi dữ liệu tới server
+        fetch('{{ route('courses.importConfirm', $course->id) }}', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                const modal = bootstrap.Modal.getInstance(document.getElementById('studentsPreviewModal'));
+                modal.hide(); // Đóng modal sau khi thêm học sinh
 
-document.getElementById('confirm-add-students').addEventListener('click', function () {
-    const form = document.getElementById('import-students-form');
-    form.submit();
-});
+                let messages = '';
+                if (data.successMessages && data.successMessages.length > 0) {
+                    messages += `
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <strong>Thành công!</strong>
+                        ${data.successMessages.map(msg => `<div>${msg}</div>`).join('')}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>`;
+                }
+                if (data.errorMessages && data.errorMessages.length > 0) {
+                    messages += `
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <strong>Lỗi!</strong>
+                        ${data.errorMessages.map(msg => `<div>${msg}</div>`).join('')}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>`;
+                }
+                document.getElementById('messages-container').innerHTML = messages;
 
+                // Cập nhật bảng danh sách học sinh với những học sinh mới
+                const studentTable = document.querySelector('#Students table tbody');
+                data.students.forEach((student, index) => {
+                    const newRow = studentTable.insertRow();
+                    newRow.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${student.name}</td>
+                    <td>${student.email}</td>
+                    <td>
+                        <form action="{{ route('courses.removeStudent', ['courseId' => $course->id]) }}" method="POST" class="d-inline-block">
+                            @csrf
+                            @method('POST')
+                            <input type="hidden" name="student_ids[]" value="${student.id}">
+                            <button type="submit" class="btn btn-danger btn-sm">
+                                <i class="fas fa-trash-alt"></i> Xóa
+                            </button>
+                        </form>
+                    </td>
+                `;
+                });
+            });
+    });
 </script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script>
 
 @endsection

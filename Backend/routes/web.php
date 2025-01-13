@@ -49,6 +49,7 @@ Route::prefix('/assignment')->name('assignments.')->group(function () {
 });
 
 Route::prefix('course')->name('courses.')->group(function () {
+    Route::get('/download-template', [CourseController::class, 'downloadTemplate'])->name('downloadTemplate');
     Route::get('/', [CourseController::class, 'index'])->name('index');
     Route::post('/store', [CourseController::class, 'store'])->name('store');
     Route::get('/create', [CourseController::class, 'create'])->name('create');
@@ -62,8 +63,8 @@ Route::prefix('course')->name('courses.')->group(function () {
     Route::delete('/{course}/assignments/delete/{assignment}', [CourseController::class, 'deleteAssignment'])->name('assignments.delete');
     Route::get('/{id}/add-student', [CourseController::class, 'showAddStudentForm'])->name('add-student.form');
     Route::post('/{id}/add-student', [CourseController::class, 'addStudent'])->name('add-student');
-    Route::get('/download-template', [CourseController::class, 'downloadTemplate'])->name('downloadTemplate');
     Route::post('/{id}/import-confirm', [CourseController::class, 'importConfirm'])->name('importConfirm');
+    Route::post('/{courseId}/remove-student', [CourseController::class, 'removeStudent'])->name('removeStudent');
 });
 
 Route::resource('categories', CategoryController::class)->except(['destroy']);
