@@ -29,15 +29,11 @@ class Choice {
 class QuestionModel {
   int? id;
   String? question;
-  String? duration;
-  int? score;
   List<Choice>? choices;
 
   QuestionModel({
     required this.id,
     required this.question,
-    required this.duration,
-    required this.score,
     this.choices,
   });
 
@@ -45,8 +41,6 @@ class QuestionModel {
     return {
       'id': id,
       'question': question,
-      'duration': duration,
-      'score': score,
       'choices': choices?.map((x) => x.toMap()).toList(),
     };
   }
@@ -54,8 +48,6 @@ class QuestionModel {
   QuestionModel.fromMap(Map<String, dynamic> map) {
     id = map['id'];
     question = map['question'];
-    duration = map['duration'];
-    score = map['score'];
     choices = List<Choice>.from(map['choices']?.map((x) => Choice.fromMap(x)) ?? []);
   }
 }

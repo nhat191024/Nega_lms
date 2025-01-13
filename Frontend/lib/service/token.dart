@@ -9,7 +9,7 @@ class Token {
     }
   }
 
-  static Future<bool> checkToken() async {
+  static Future<bool> checkToken({bool isLogin = false}) async {
     if (StorageService.checkData(key: LocalStorageKeys.token)) {
       var url = Uri.parse("${Api.server}token-check");
       var token = StorageService.readData(key: LocalStorageKeys.token);
@@ -18,17 +18,18 @@ class Token {
           "Authorization": "Bearer $token",
         });
         if (response.statusCode == 200) {
+          if (isLogin) Get.offAllNamed(Routes.homePage);
           return true;
         } else {
-          Get.offAllNamed(Routes.loginPage);
+          if (!isLogin) Get.offAllNamed(Routes.loginPage);
           return false;
         }
       } catch (e) {
-        Get.offAllNamed(Routes.loginPage);
+        if (!isLogin) Get.offAllNamed(Routes.loginPage);
         return false;
       }
     } else {
-      Get.offAllNamed(Routes.loginPage);
+      if (!isLogin) Get.offAllNamed(Routes.loginPage);
       return false;
     }
   }
@@ -42,5 +43,9 @@ class Token {
       key: LocalStorageKeys.token,
       value: token,
     );
+  }
+
+  static removeToken() {
+    StorageService.removeData(key: LocalStorageKeys.token);
   }
 }

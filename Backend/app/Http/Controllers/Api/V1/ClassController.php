@@ -8,6 +8,9 @@ use App\Models\Submission;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\ClassAssignment;
+use App\Models\ClassSubmit;
+use Fruitcake\Cors\CorsService;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -16,20 +19,39 @@ class ClassController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $enrolledClassIds = $user->enrollments->pluck('class_id')->toArray();
-
-        $classes = Classes::with('teacher')->where('status', 1)->get();
-
-        $classes = $classes->map(function ($class) use ($enrolledClassIds) {
-            return [
-                'id' => $class->id,
-                'name' => $class->class_name,
-                'description' => $class->class_description,
-                'teacherName' => $class->teacher ? $class->teacher->name : 'Chưa có giáo viên',
-                'createdAt' => $class->created_at,
-                'isJoined' => in_array($class->id, $enrolledClassIds),
-            ];
-        });
+        if ($user->role_id == 3) {
+            $enrolledClassIds = $user->enrollments->pluck('class_id')->toArray();
+            $classes = Classes::with('teacher', 'categories')
+                ->whereIn('id', $enrolledClassIds)
+                ->where('status', "published")
+                ->get();
+            $classes = $classes->map(function ($class) {
+                return [
+                    'id' => $class->id,
+                    'name' => $class->name,
+                    'description' => $class->description,
+                    'teacherName' => $class->teacher->name,
+                    'categories' => $class->categories->map(function ($category) {
+                        return $category->name;
+                    }),
+                    'createdAt' => $class->created_at,
+                ];
+            });
+        } else if ($user->role_id == 2) {
+            $classes = Classes::where('teacher_id', $user->id)->where('status', "published")->with('categories')->get();
+            $classes = $classes->map(function ($class) use ($user) {
+                return [
+                    'id' => $class->id,
+                    'name' => $class->name,
+                    'description' => $class->description,
+                    'teacherName' => $user->name,
+                    'categories' => $class->categories->map(function ($category) {
+                        return $category->name;
+                    }),
+                    'createdAt' => $class->created_at,
+                ];
+            });
+        }
 
         return response()->json([
             'classes' => $classes,
@@ -42,9 +64,9 @@ class ClassController extends Controller
 
         return response()->json([
             'id' => $class->id,
-            'code' => $class->class_code,
-            'name' => $class->class_name,
-            'description' => $class->class_description,
+            'code' => $class->code,
+            'name' => $class->name,
+            'description' => $class->description,
             'teacherName' => $class->teacher ? $class->teacher->name : 'Chưa có giáo viên',
             'createdAt' => $class->created_at
         ], Response::HTTP_OK);
@@ -112,20 +134,62 @@ class ClassController extends Controller
 
     public function getClassAssignmentPoint($id)
     {
-        $user = Auth::user();
-        $submissions = Submission::where('class_id', $id)->with('assignment', 'student')->get();
+        $assignments = ClassAssignment::where('class_id', $id)->with('submits.user')->get();
+        $enrollment = Enrollment::where('class_id', $id)->with('student')->get();
 
-        $submissions = $submissions->map(function ($submission) {
+        $assignmentName = $assignments->map(function ($assignment) {
+            return $assignment->title;
+        })->values();
+
+        $students = $enrollment->map(function ($student) {
+            return $student->student->name;
+        });
+
+        $assignmentPoint = $students->map(function ($studentName) use ($assignments) {
+            $points = $assignments->map(function ($assignment) use ($studentName) {
+                $submit = $assignment->submits->firstWhere('user.name', $studentName);
+                if ($assignment->type == 'quiz') {
+                    return [
+                        'score' => $submit ? $submit->score : 0,
+                    ];
+                } else {
+                    return [
+                        'score' => $submit ? "Đã nộp bài" : "Chưa nộp bài",
+                    ];
+                }
+            })->values();
+
             return [
-                'assignment_name' => $submission->assignment->title,
-                'student_name' => $submission->student->name,
-                'total_score' => $submission->total_score,
-                'created_at' => $submission->created_at->format('H:i d:m:Y'),
+                'name' => $studentName,
+                'points' => $points
+            ];
+        })->values();
+
+        return response()->json([
+            'assignmentName' => $assignmentName,
+            'assignmentPoint' => $assignmentPoint,
+        ], Response::HTTP_OK);
+    }
+
+    public function getStudentAssignmentPoint($id)
+    {
+        $user = Auth::user();
+        $assignments = ClassAssignment::where('class_id', $id)->with('submits', 'quizzes')->get();
+
+        $respond = $assignments->map(function ($assignment) {
+            return [
+                'title' => $assignment->title,
+                'type' => $assignment->type,
+                'due_date' => $assignment->due_date,
+                'score' => $assignment->submits->where('student_id', Auth::id())->first()->score ?? 0,
+                'total_score' => $assignment->type == 'quiz' ? $assignment->quizzes->count() : 0,
+                'handed_in' => $assignment->submits->where('student_id', Auth::id())->first() ? true : false,
             ];
         });
 
-        return response()->json([
-            'submissions' => $submissions,
-        ], Response::HTTP_OK);
+        return response()->json(
+            $respond,
+            Response::HTTP_OK
+        );
     }
 }

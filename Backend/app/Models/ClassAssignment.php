@@ -24,11 +24,11 @@ class ClassAssignment extends Model
 
     public function quizzes()
     {
-        return $this->hasOne(AssignmentQuiz::class);
+        return $this->hasMany(AssignmentQuiz::class, 'assignment_id');
     }
 
     public function submits()
     {
-        return $this->hasMany(ClassSubmit::class);
+        return $this->hasMany(ClassSubmit::class, 'class_assignment_id');
     }
 }
