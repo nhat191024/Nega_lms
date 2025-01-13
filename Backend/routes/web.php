@@ -45,18 +45,6 @@ Route::prefix('class')->name('classes.')->group(function () {
     Route::post('/{class}/import-confirm', [ClassController::class, 'importConfirm'])->name('importConfirm');
 });
 
-Route::prefix('/assignment')->name('assignments.')->group(function () {
-    Route::get('/', [AssignmentController::class, 'index'])->name('index');
-    Route::get('/get/{id}', [AssignmentController::class, 'getAssignments'])->name('get');
-    Route::get('/create', [AssignmentController::class, 'create'])->name('create');
-    Route::post('/store', [AssignmentController::class, 'store'])->name('store');
-    Route::get('/edit/{id}', [AssignmentController::class, 'edit'])->name('edit');
-    Route::put('/{id}', [AssignmentController::class, 'update'])->name('update');
-    Route::delete('/delete/{id}', [AssignmentController::class, 'destroy'])->name('destroy');
-    Route::get('/assignments/visibility/{id}', [AssignmentController::class, 'toggleVisibility'])
-        ->name('assignments.visibility');
-});
-
 Route::post('/generate-pdf/{student}/{class}', [PDFController::class, 'generatePDF'])->name('generatePDF');
 
 Route::prefix('course')->name('courses.')->group(function () {
