@@ -12,10 +12,11 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\ClassAssignment;
 use App\Models\ClassSubmit;
 use App\Models\Assignment;
+use App\Models\AssignmentQuiz;
 use App\Models\Choice;
 use App\Models\ClassAnswer;
 use App\Models\Question;
-use App\Models\Quiz;
+use App\Models\QuizPackage;
 
 class AssignmentController extends Controller
 {
@@ -199,6 +200,33 @@ class AssignmentController extends Controller
         $homework->due_date = $request->due_datetime;
         $homework->status = $request->status;
         $homework->save();
+
+        return response()->json([
+            'message' => 'Cập nhật đề thi thành công',
+        ], Response::HTTP_OK);
+    }
+
+    public function UpdateAssignmentQuizzes(Request $request)
+    {
+        $classAssignmentId = $request->class_assignment_id;
+        $quizPackageId = $request->quiz_package_id;
+        $numberOfQuestions = $request->number_of_questions;
+
+        return response()->json([
+            'message' => 'done',
+        ], Response::HTTP_OK);
+
+        $package = QuizPackage::find($quizPackageId);
+
+        ClassAssignment::where('assignment_id', $classAssignmentId)->quizzes()->delete();
+
+        for ($i = 0; $i < $numberOfQuestions; $i++) {
+            $quiz = $package->quizzes->random();
+            AssignmentQuiz::create([
+                'assignment_id' => $classAssignmentId,
+                'quiz_id' => $quiz->id,
+            ]);
+        }
 
         return response()->json([
             'message' => 'Cập nhật đề thi thành công',
