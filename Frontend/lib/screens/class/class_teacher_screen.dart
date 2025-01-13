@@ -701,6 +701,7 @@ class ClassTeacherScreen extends GetView<ClassDetailController> {
           canPop: true,
           onPopInvokedWithResult: (didPop, result) {
             if (didPop) {
+              controller.clear();
               Get.back();
             }
           },
@@ -878,6 +879,25 @@ class ClassTeacherScreen extends GetView<ClassDetailController> {
                         const SizedBox(height: 40),
                         Stack(
                           children: [
+                            Obx(
+                              () => controller.step.value == '1'
+                                  ? const SizedBox.shrink()
+                                  : Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: CustomButton(
+                                        onTap: () {
+                                          if (controller.step.value == '2') {
+                                            controller.step.value = '1';
+                                          } else {
+                                            controller.step.value = '2';
+                                          }
+                                        },
+                                        btnText: "Quay lại",
+                                        btnColor: CustomColors.primary,
+                                        width: 200,
+                                      ),
+                                    ),
+                            ),
                             const Align(
                               alignment: Alignment.center,
                               child: Padding(
@@ -955,10 +975,11 @@ class ClassTeacherScreen extends GetView<ClassDetailController> {
                                       mainAxisSpacing: 30,
                                       itemCount: controller.quizPackage.length,
                                       itemBuilder: (context, index) {
-                                        return _buildQuizPackageContainer(controller.quizPackage[index]);
+                                        return _buildQuizPackageContainer(index, controller.quizPackage[index]);
                                       },
                                     ),
                             ),
+                          '3' => _buildStepThree(),
                           _ => const SizedBox.shrink(),
                         }
                       ],
@@ -1034,7 +1055,7 @@ class ClassTeacherScreen extends GetView<ClassDetailController> {
     );
   }
 
-  Widget _buildQuizPackageContainer(package) {
+  Widget _buildQuizPackageContainer(index, package) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.transparent,
@@ -1103,7 +1124,8 @@ class ClassTeacherScreen extends GetView<ClassDetailController> {
           const SizedBox(width: 20),
           CustomButton(
             onTap: () {
-              controller.selectedAssignment.value == package["id"];
+              controller.selectedPackage.value = index.toString();
+              controller.step.value = '3';
             },
             btnText: 'Chọn',
             btnColor: CustomColors.primary,
@@ -1111,6 +1133,43 @@ class ClassTeacherScreen extends GetView<ClassDetailController> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildStepThree() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        const SizedBox(height: 20),
+        CustomTextField(
+          labelText: "Số lượng câu hỏi",
+          labelColor: CustomColors.primary,
+          labelSize: 18,
+          hintText: "nhập",
+          errorText: controller.numberOfQuizError.value,
+          isError: controller.isNumberOfQuizError,
+          width: Get.width * 0.62,
+          obscureText: false.obs,
+          controller: controller.numberOfQuiz,
+          keyboardType: TextInputType.number,
+          onChanged: (value) {
+            controller.validateQuizNumber(value);
+          },
+        ),
+        const SizedBox(height: 10),
+        Obx(
+          () => CustomButton(
+            onTap: () {
+              controller.updateQuizzes();
+            },
+            btnText: 'Thay đổi số lượng câu hỏi',
+            btnColor: CustomColors.primary,
+            width: Get.width * 0.15,
+            isLoading: controller.isUpdateQuizLoading.value,
+          ),
+        ),
+        const SizedBox(height: 10),
+      ],
     );
   }
 }
