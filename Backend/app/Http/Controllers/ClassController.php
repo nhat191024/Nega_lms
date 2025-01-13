@@ -205,13 +205,13 @@ class ClassController extends Controller
         $class = Classes::findOrFail($id);
 
         $newStatus = $request->input('status');
-        if (!in_array($newStatus, ['locked', 'published'])) {
+        if (!in_array($newStatus, ['closed', 'published'])) {
             return redirect()->back()->with('error', 'Trạng thái không hợp lệ!');
         }
 
         $class->update(['status' => $newStatus]);
 
-        $message = $newStatus === 'locked' ? 'Lớp đã được khóa.' : 'Lớp đã được mở khóa.';
+        $message = $newStatus === 'closed' ? 'Lớp đã được khóa.' : 'Lớp đã được mở khóa.';
         return redirect()->back()->with('success', $message);
     }
 
@@ -293,7 +293,7 @@ class ClassController extends Controller
 
     public function downloadTemplate()
     {
-        $headers = ['STT', 'Tên học sinh','Email'];
+        $headers = [ 'Tên học sinh','Email'];
         $fileName = 'student_import_template.xlsx';
 
         return Excel::download(new class([$headers]) implements FromArray {
