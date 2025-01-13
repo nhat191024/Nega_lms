@@ -23,8 +23,8 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
   RxString step = '1'.obs;
 
   RxList<HomeworkModel> assignmentList = <HomeworkModel>[].obs;
-  RxList<HomeworkModel> assignmentsList = <HomeworkModel>[].obs;
-  RxList<AssignmentModel> assignmentListForTeacher = <AssignmentModel>[].obs;
+  RxList assignmentNameList = [].obs;
+  RxList studentPointList = [].obs;
   RxList classPointList = [].obs;
 
   RxList<QuestionModel> questionList = <QuestionModel>[].obs;
@@ -97,8 +97,8 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
       await fetchClassInfo(classId.value);
       await fetchClassAssignment(classId.value);
       if (role.value == "student") await fetchStudentAssignment();
+      if (role.value == "teacher") await fetchClassPoint();
     });
-    // addNewQuestion();
   }
 
   fetchClassInfo(id) async {
@@ -141,16 +141,25 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
     }
   }
 
-  fetchClassPoint(id) async {
+  fetchClassPoint() async {
     try {
-      String url = "${Api.server}classes/point/$id";
+      String url = "${Api.server}classes/point/${classId.value}";
       var response = await get(Uri.parse(url), headers: {
         'Authorization': 'Bearer $token',
       }).timeout(const Duration(seconds: 10));
 
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
-        classPointList.value = data['submissions'];
+        var assignmentName = data['assignmentName'];
+        var points = data['assignmentPoint'];
+
+        for (var item in assignmentName) {
+          assignmentNameList.add(item);
+        }
+
+        for (var item in points) {
+          classPointList.add(item);
+        }
       }
     } catch (e) {
       Get.snackbar("Error", "Failed to fetch class info");
@@ -166,7 +175,7 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
 
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
-        classPointList.value = data;
+        studentPointList.value = data;
       }
     } catch (e) {
       Get.snackbar("Error", "Failed to fetch class info");
@@ -439,7 +448,7 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
 
     if (!value.isNumericOnly) {
       isNumberOfQuizError.value = true;
-      numberOfQuizError.value = "Số lượng câu hỏi phải là số"; 
+      numberOfQuizError.value = "Số lượng câu hỏi phải là số";
       return false;
     }
 
