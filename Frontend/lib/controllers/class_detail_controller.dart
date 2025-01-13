@@ -9,6 +9,7 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
   RxString avatar = ''.obs;
   RxString username = ''.obs;
   RxBool isSubmitButtonLoading = false.obs;
+  RxBool isUpdateQuizLoading = false.obs;
   RxBool createAssignmentThenPushToClass = false.obs;
   RxInt classId = 0.obs;
   RxString token = "".obs;
@@ -31,7 +32,7 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
   RxString timeLeft = '00:00:00'.obs;
 
   RxString assignmentType = ''.obs;
-  RxString selectedAssignment = ''.obs;
+  RxString selectedPackage = ''.obs;
 
   TextEditingController assignmentName = TextEditingController();
   TextEditingController assignmentStartDate = TextEditingController();
@@ -39,6 +40,8 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
   TextEditingController assignmentDuration = TextEditingController();
   RxString assignmentStatus = ''.obs;
   TextEditingController assignmentDescription = TextEditingController();
+
+  TextEditingController numberOfQuiz = TextEditingController();
 
   RxList<Map<String, dynamic>> questions = <Map<String, dynamic>>[].obs;
 
@@ -54,6 +57,8 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
   RxBool isAssignmentStatusError = false.obs;
   RxBool isAssignmentDescriptionError = false.obs;
 
+  RxBool isNumberOfQuizError = false.obs;
+
   RxBool isHomeworkScoreError = false.obs;
   RxBool isLinkSubmitError = false.obs;
 
@@ -63,6 +68,8 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
   RxString assignmentDurationError = ''.obs;
   RxString assignmentStatusError = ''.obs;
   RxString assignmentDescriptionError = ''.obs;
+
+  RxString numberOfQuizError = ''.obs;
 
   RxString linkSubmitError = ''.obs;
 
@@ -170,6 +177,7 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
 
   step2() async {
     try {
+      quizPackage.clear();
       String url = "${Api.server}quizPackage/teacher-quiz-package";
       var response = await get(Uri.parse(url), headers: {
         'Authorization': 'Bearer $token',
@@ -180,11 +188,39 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
         for (var item in data) {
           quizPackage.add(item);
         }
-        
+
         step.value = '2';
       }
     } catch (e) {
       Get.snackbar("Error", "Failed to fetch class info");
+    }
+  }
+
+  updateQuizzes() async {
+    isUpdateQuizLoading.value = true;
+    try {
+      var uri = Uri.parse("${Api.server}assignment/update-assignment-quiz");
+      var request = MultipartRequest('POST', uri);
+      request.headers['Authorization'] = 'Bearer $token';
+      request.headers['Content-Type'] = 'application/json';
+      request.headers['Accept'] = 'application/json';
+
+      request.fields['class_assignment_id'] = classId.value.toString();
+      request.fields['quiz_package_id'] = quizPackage[int.tryParse(selectedPackage.value) ?? 0]["id"].toString();
+      request.fields['number_of_questions'] = numberOfQuiz.text.trim();
+
+      var streamedResponse = await request.send();
+
+      if (streamedResponse.statusCode == 200) {
+        isSubmitButtonLoading.value = false;
+        Get.back();
+        fetchClassAssignment(classId.value);
+        Get.snackbar("Thành công", "Cập nhật bài tập thành công", maxWidth: Get.width * 0.2);
+      } else {
+        Get.snackbar("Lỗi", "Đã có lỗi xảy ra", maxWidth: Get.width * 0.2);
+      }
+    } finally {
+      isUpdateQuizLoading.value = false;
     }
   }
 
@@ -376,17 +412,17 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
     if (error.value) return false;
 
     // Validate quiz_bank specific fields
-    if (assignmentType.value == 'quiz_bank') {
-      if (selectedAssignment.value.isEmpty) {
-        Get.dialog(
-          const NotificationDialogWithoutButton(
-            title: "Lỗi",
-            message: "Bạn phải chọn 1 bài tập từ ngân hàng câu hỏi",
-          ),
-        );
-        return false;
-      }
-    }
+    // if (assignmentType.value == 'quiz_bank') {
+    //   if (selectedAssignment.value.isEmpty) {
+    //     Get.dialog(
+    //       const NotificationDialogWithoutButton(
+    //         title: "Lỗi",
+    //         message: "Bạn phải chọn 1 bài tập từ ngân hàng câu hỏi",
+    //       ),
+    //     );
+    //     return false;
+    //   }
+    // }
 
     // Validate quiz questions and answers
     if (assignmentType.value == 'quiz') {
@@ -455,6 +491,38 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
     return true;
   }
 
+  validateQuizNumber(String value) {
+    if (value.isEmpty) {
+      isNumberOfQuizError.value = true;
+      numberOfQuizError.value = "Số lượng câu hỏi không được để trống";
+      return;
+    }
+
+    if (!value.isNumericOnly) {
+      isNumberOfQuizError.value = true;
+      numberOfQuizError.value = "Số lượng câu hỏi phải là số";
+      return;
+    }
+
+    int? parsedValue = int.tryParse(value);
+    if (parsedValue == null) {
+      isNumberOfQuizError.value = true;
+      numberOfQuizError.value = "Số lượng câu hỏi phải là số";
+      return;
+    }
+
+    if (parsedValue < 5) {
+      isNumberOfQuizError.value = true;
+      numberOfQuizError.value = "Số lượng câu hỏi phải lớn hơn 5";
+    } else if (parsedValue >= quizPackage[int.tryParse(selectedPackage.value) ?? 0]["totalQuizzes"]) {
+      isNumberOfQuizError.value = true;
+      numberOfQuizError.value =
+          "Số lượng câu hỏi phải nhỏ hơn tổng số câu hỏi trong bộ (${quizPackage[int.tryParse(selectedPackage.value) ?? 0]["totalQuizzes"].toString()})";
+    } else {
+      isNumberOfQuizError.value = false;
+    }
+  }
+
   void createQuiz() async {
     if (!validateQuiz()) return;
     var uri = Uri.parse("${Api.server}assignment/create");
@@ -493,7 +561,6 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
     //homework data
     response.fields['type'] = assignmentType.value == 'link' ? 'link' : 'quiz';
     if (createAssignmentThenPushToClass.value || assignmentType.value == 'link') {
-      if (selectedAssignment.value.isNotEmpty) response.fields['assignment_id'] = selectedAssignment.value;
       response.fields['class_id'] = classId.value.toString();
       if (assignmentType.value == 'link') response.fields['title'] = assignmentName.text.trim();
       if (assignmentType.value == 'link') response.fields['description'] = assignmentDescription.text.trim();
@@ -561,12 +628,12 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
     response.fields['due_datetime'] = assignmentDueDate.text.trim();
     response.fields['duration'] = assignmentDuration.text.trim();
     response.fields['status'] = assignmentStatus.value == 'true' ? 1.toString() : 0.toString();
-    if (type == 'quiz') {
-      response.fields['assignment_id'] = selectedAssignment.value;
-    } else {
-      response.fields['title'] = assignmentName.text.trim();
-      response.fields['description'] = assignmentDescription.text.trim();
-    }
+    // if (type == 'quiz') {
+    //   response.fields['assignment_id'] = selectedAssignment.value;
+    // } else {
+    //   response.fields['title'] = assignmentName.text.trim();
+    //   response.fields['description'] = assignmentDescription.text.trim();
+    // }
 
     var streamedResponse = await response.send();
     if (streamedResponse.statusCode == 200) {
@@ -593,7 +660,12 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
     isAssignmentDescriptionError.value = false;
     assignmentDuration.clear();
     isAssignmentDurationError.value = false;
-    selectedAssignment.value = '';
+
+    numberOfQuiz.clear();
+    isNumberOfQuizError.value = false;
+
+    step.value = '1';
+    selectedPackage.value = '';
     questions.clear();
     addNewQuestion();
   }
