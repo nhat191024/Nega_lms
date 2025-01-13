@@ -35,6 +35,7 @@ Route::group(['middleware' => ['auth:sanctum', 'ability:teacher']], function () 
     Route::prefix('assignment')->group(function () {
         Route::post('/create', [AssignmentController::class, 'CreateAssignment']);
         Route::post('/update', [AssignmentController::class, 'UpdateAssignment']);
+        Route::post('/update-assignment-quiz', [AssignmentController::class, 'UpdateAssignmentQuizzes']);
     });
 
     Route::prefix('quizPackage')->group(function () {
