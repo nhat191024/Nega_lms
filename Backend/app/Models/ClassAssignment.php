@@ -29,6 +29,6 @@ class ClassAssignment extends Model
 
     public function submits()
     {
-        return $this->hasMany(ClassSubmit::class);
+        return $this->hasMany(ClassSubmit::class, 'class_assignment_id');
     }
 }
