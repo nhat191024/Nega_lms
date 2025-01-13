@@ -69,28 +69,30 @@ class ClassTeacherScreen extends GetView<ClassDetailController> {
             padding: const EdgeInsets.fromLTRB(60, 20, 60, 0),
             child: SizedBox(
               height: Get.height * 0.8,
-              child: controller.isLoading.value
-                  ? const Center(
-                      child: CircularProgressIndicator(),
-                    )
-                  : ListView.builder(
-                      shrinkWrap: true,
-                      physics: const AlwaysScrollableScrollPhysics(),
-                      itemCount: controller.assignmentList.length,
-                      itemBuilder: (context, index) {
-                        return classCardBuilder(
-                          context,
-                          controller.assignmentList[index].title ?? '',
-                          controller.assignmentList[index].description ?? '',
-                          controller.assignmentList[index].duration ?? '',
-                          10,
-                          index == controller.assignmentList.length - 1,
-                          controller.assignmentList[index].id.toString(),
-                          controller.assignmentList[index].type ?? '',
-                          controller.assignmentList[index].id.toString(),
-                        );
-                      },
-                    ),
+              child: Obx(
+                () => controller.isLoading.value
+                    ? const Center(
+                        child: CircularProgressIndicator(),
+                      )
+                    : ListView.builder(
+                        shrinkWrap: true,
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        itemCount: controller.assignmentList.length,
+                        itemBuilder: (context, index) {
+                          return classCardBuilder(
+                            context,
+                            controller.assignmentList[index].title ?? '',
+                            controller.assignmentList[index].description ?? '',
+                            controller.assignmentList[index].duration ?? '',
+                            10,
+                            index == controller.assignmentList.length - 1,
+                            controller.assignmentList[index].id.toString(),
+                            controller.assignmentList[index].type ?? '',
+                            controller.assignmentList[index].id.toString(),
+                          );
+                        },
+                      ),
+              ),
             ),
           ),
         ],
