@@ -981,7 +981,7 @@ class ClassTeacherScreen extends GetView<ClassDetailController> {
                                       },
                                     ),
                             ),
-                          '3' => _buildStepThree(),
+                          '3' => _buildStepThree(isEdit),
                           _ => const SizedBox.shrink(),
                         }
                       ],
@@ -1138,7 +1138,7 @@ class ClassTeacherScreen extends GetView<ClassDetailController> {
     );
   }
 
-  Widget _buildStepThree() {
+  Widget _buildStepThree(isEdit) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
@@ -1158,18 +1158,20 @@ class ClassTeacherScreen extends GetView<ClassDetailController> {
             controller.validateQuizNumber(value);
           },
         ),
-        const SizedBox(height: 10),
-        Obx(
-          () => CustomButton(
-            onTap: () {
-              controller.updateQuizzes();
-            },
-            btnText: 'Thay đổi số lượng câu hỏi',
-            btnColor: CustomColors.primary,
-            width: Get.width * 0.15,
-            isLoading: controller.isUpdateQuizLoading.value,
+        if (isEdit) ...[
+          const SizedBox(height: 10),
+          Obx(
+            () => CustomButton(
+              onTap: () {
+                controller.updateQuizzes();
+              },
+              btnText: 'Thay đổi số lượng câu hỏi',
+              btnColor: CustomColors.primary,
+              width: Get.width * 0.15,
+              isLoading: controller.isUpdateQuizLoading.value,
+            ),
           ),
-        ),
+        ],
         const SizedBox(height: 10),
       ],
     );
