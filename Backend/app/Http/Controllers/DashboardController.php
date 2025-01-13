@@ -9,8 +9,9 @@ use App\Models\Choice;
 use App\Models\ClassAssignment;
 use App\Models\Classes;
 use App\Models\ClassSubmit;
-use App\Models\Quiz;
 use App\Models\Enrollment;
+use App\Models\Quiz;
+use App\Models\Submission;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -30,7 +31,11 @@ class DashboardController extends Controller
             // $choices = Choice::all();
             $profile = User::findOrFail(Auth::id());
             return view('dashboard.index', compact(
-                'assignments', 'students', 'questions', 'profile', 'classes'
+                'assignments',
+                'students',
+                'questions',
+                'profile',
+                'classes'
             ));
         }
 
@@ -98,6 +103,7 @@ class DashboardController extends Controller
             'courses' => $courses,
         ]);
     }
+
 
     public function getUserProgress($userID)
     {
@@ -172,8 +178,8 @@ class DashboardController extends Controller
     public function getScoresAndAchievements($classId)
     {
         $students = Enrollment::where('class_id', $classId)
-                    ->pluck('student_id')
-                    ->toArray();
+            ->pluck('student_id')
+            ->toArray();
 
         $studentDetails = DB::table('users')->whereIn('id', $students)->get()->keyBy('id');
 
@@ -224,7 +230,4 @@ class DashboardController extends Controller
 
         return response()->json($results);
     }
-
-
-
 }
