@@ -124,6 +124,9 @@ class ClassController extends Controller
             'name' => $class->class_name,
             'description' => $class->class_description,
             'teacherName' => $class->teacher ? $class->teacher->name : 'Chưa có giáo viên',
+            'categories' => $class->categories->map(function ($category) {
+                return $category->name;
+            }),
             'createdAt' => $class->created_at,
         ];
 
