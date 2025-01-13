@@ -26,7 +26,7 @@ class AdminAuthController extends Controller
             ],
         );
 
-        $loginType = filter_var($request->login, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
+        $loginType =  'email';
 
         if (!Auth::attempt([$loginType => $request->login, 'password' => $request->password])) {
             return back()
@@ -46,7 +46,7 @@ class AdminAuthController extends Controller
                 ->withInput();
         }
 
-        if ($user->role_id != 1) {
+        if (!in_array($user->role_id, [1, 4])) {
             Auth::logout();
             return back()
                 ->withErrors(['login' => 'Bạn không có quyền truy cập quản trị viên.'])

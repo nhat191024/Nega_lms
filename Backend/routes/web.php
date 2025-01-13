@@ -1,4 +1,5 @@
 <?php
+
 use App\Http\Middleware\CheckUserStatus;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
@@ -8,10 +9,9 @@ use App\Http\Controllers\AssignmentController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\CategoryController;
 
-Route::get('/login', [AdminAuthController::class, 'showLoginForm'])->name('login');
+Route::get('/', [AdminAuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AdminAuthController::class, 'login'])->name('admin.login.submit');
 Route::post('/logout', [AdminAuthController::class, 'logout'])->name('logout');
-
 
 Route::middleware(['auth', CheckUserStatus::class])->group(function () {
     Route::prefix('/dashboard')->name('dashboard.')->group(function () {
@@ -27,7 +27,7 @@ Route::middleware(['auth', CheckUserStatus::class])->group(function () {
         Route::get('/status/{id}', [UserController::class, 'status'])->name('status');
     });
 
-    Route::prefix('class')->name('classes.')->group(function () {
+    Route::prefix('/class')->name('classes.')->group(function () {
         Route::get('/', [ClassController::class, 'index'])->name('index');
         Route::post('/add-student', [ClassController::class, 'addStudentToClass'])->name('addStudent');
         Route::delete('/remove-student/{class_id}/{student_id}', [ClassController::class, 'removeStudentFromAClass'])->name('removeStudent');
