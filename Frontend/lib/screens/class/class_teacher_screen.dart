@@ -187,7 +187,7 @@ class ClassTeacherScreen extends GetView<ClassDetailController> {
                   await controller.loadDataToEdit(homeworkId, type);
                   type == "quiz"
                       ? _showAddQuizFromBankModal(context, isEdit: true, homeworkId: homeworkId, type: type)
-                      : _showAddLinkHomeworkModal(context, isEdit: true);
+                      : _showAddLinkHomeworkModal(context, isEdit: true, type: type, homeworkId: homeworkId);
                 },
                 btnText: 'Chỉnh sửa',
                 btnColor: CustomColors.primary,
