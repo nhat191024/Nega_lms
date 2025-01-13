@@ -252,7 +252,7 @@ class AssignmentController extends Controller
         }
     }
 
-    public function getAssignmentById($id)
+    public function getAssignmentById($id, $isTeacher)
     {
         $assignment = ClassAssignment::where('id', $id)->with('quizzes.quiz.choices')->first();
 
@@ -274,14 +274,15 @@ class AssignmentController extends Controller
             'startDate' => $assignment->start_date,
             'dueDate' => $assignment->due_date,
             'status' => $assignment->status,
-            'questions' => $assignment->quizzes->map(function ($quiz) {
+            'questions' => $assignment->quizzes->map(function ($quiz) use ($isTeacher) {
                 return [
                     'id' => $quiz->quiz->id,
                     'question' => $quiz->quiz->question,
-                    "choices" => $quiz->quiz->choices->map(function ($choice) {
+                    "choices" => $quiz->quiz->choices->map(function ($choice) use ($isTeacher) {
                         return [
                             'id' => $choice->id,
                             'choice' => $choice->choice,
+                            'isCorrect' => $isTeacher == 1 ? $choice->is_correct : null,
                         ];
                     }),
                 ];
