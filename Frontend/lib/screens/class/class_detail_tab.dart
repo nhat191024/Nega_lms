@@ -98,7 +98,8 @@ class ClassDetailTab extends GetView<ClassDetailController> {
                       ClassOverviewScreen(),
                       if (controller.role.value == "student") const ClassAssignmentScreen(),
                       if (controller.role.value == "teacher") const ClassTeacherScreen(),
-                      const ClassPointScreen(),
+                      if (controller.role.value == "student") const ClassPointScreen(),
+                      if (controller.role.value == "teacher") const ClassPointOverviewScreen(),
                     ],
                   ),
                 )
