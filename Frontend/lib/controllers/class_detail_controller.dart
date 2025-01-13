@@ -34,6 +34,7 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
   RxString assignmentType = ''.obs;
   RxString selectedPackage = ''.obs;
 
+  RxString selectedAssignment = ''.obs;
   TextEditingController assignmentName = TextEditingController();
   TextEditingController assignmentStartDate = TextEditingController();
   TextEditingController assignmentDueDate = TextEditingController();
@@ -95,9 +96,6 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
       classId.value = Get.find<LayoutController>().selectedClassId.value;
       await fetchClassInfo(classId.value);
       await fetchClassAssignment(classId.value);
-      // await fetchAllClassAssignment(classId.value);
-      // await fetchAssignmentForTeacher();
-      // await fetchClassPoint(classId.value);
       if (role.value == "student") await fetchStudentAssignment();
     });
     // addNewQuestion();
@@ -193,34 +191,6 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
       }
     } catch (e) {
       Get.snackbar("Error", "Failed to fetch class info");
-    }
-  }
-
-  updateQuizzes() async {
-    isUpdateQuizLoading.value = true;
-    try {
-      var uri = Uri.parse("${Api.server}assignment/update-assignment-quiz");
-      var request = MultipartRequest('POST', uri);
-      request.headers['Authorization'] = 'Bearer $token';
-      request.headers['Content-Type'] = 'application/json';
-      request.headers['Accept'] = 'application/json';
-
-      request.fields['class_assignment_id'] = classId.value.toString();
-      request.fields['quiz_package_id'] = quizPackage[int.tryParse(selectedPackage.value) ?? 0]["id"].toString();
-      request.fields['number_of_questions'] = numberOfQuiz.text.trim();
-
-      var streamedResponse = await request.send();
-
-      if (streamedResponse.statusCode == 200) {
-        isSubmitButtonLoading.value = false;
-        Get.back();
-        fetchClassAssignment(classId.value);
-        Get.snackbar("Thành công", "Cập nhật bài tập thành công", maxWidth: Get.width * 0.2);
-      } else {
-        Get.snackbar("Lỗi", "Đã có lỗi xảy ra", maxWidth: Get.width * 0.2);
-      }
-    } finally {
-      isUpdateQuizLoading.value = false;
     }
   }
 
@@ -599,6 +569,7 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
         var data = jsonDecode(response.body);
         var assignmentData = data['assignment'];
 
+        selectedAssignment = id.obs;
         assignmentName.text = assignmentData['title'];
         assignmentStartDate.text = assignmentData['startDate'];
         assignmentDueDate.text = assignmentData['dueDate'];
@@ -647,6 +618,33 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
     }
   }
 
+  updateQuizzes() async {
+    isUpdateQuizLoading.value = true;
+    try {
+      var uri = Uri.parse("${Api.server}assignment/update-assignment-quiz");
+      var request = MultipartRequest('POST', uri);
+      request.headers['Authorization'] = 'Bearer $token';
+      request.headers['Content-Type'] = 'application/json';
+      request.headers['Accept'] = 'application/json';
+
+      request.fields['class_assignment_id'] = selectedAssignment.value;
+      request.fields['quiz_package_id'] = quizPackage[int.tryParse(selectedPackage.value) ?? 0]["id"].toString();
+      request.fields['number_of_questions'] = numberOfQuiz.text.trim();
+
+      var streamedResponse = await request.send();
+
+      if (streamedResponse.statusCode == 200) {
+        isSubmitButtonLoading.value = false;
+        Get.back();
+        Get.snackbar("Thành công", "Cập nhật bài tập thành công", maxWidth: Get.width * 0.2);
+      } else {
+        Get.snackbar("Lỗi", "Đã có lỗi xảy ra", maxWidth: Get.width * 0.2);
+      }
+    } finally {
+      isUpdateQuizLoading.value = false;
+    }
+  }
+
   void clear() {
     assignmentName.clear();
     isAssignmentNameError.value = false;
@@ -663,6 +661,10 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
 
     numberOfQuiz.clear();
     isNumberOfQuizError.value = false;
+
+    quizzes.clear();
+    quizPackage.clear();
+    assignmentList.clear();
 
     step.value = '1';
     selectedPackage.value = '';
