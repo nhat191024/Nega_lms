@@ -299,164 +299,127 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
       }
     }
 
-    // Validate common fields
-    if (createAssignmentThenPushToClass.value == true) {
-      if (assignmentStartDate.text.trim().isEmpty) {
-        setError(isAssignmentStartDateError, assignmentStartDateError, "Ngày bắt đầu không được để trống");
-      } else {
-        isOverTimeToday(
-          assignmentStartDate.text.trim(),
+    //title validation
+    if (assignmentName.text.trim().isEmpty) {
+      setError(isAssignmentNameError, assignmentNameError, "Tên bài tập không được để trống");
+    } else if (assignmentName.text.trim().length > 255) {
+      setError(isAssignmentNameError, assignmentNameError, "Tên bài tập không được quá 255 ký tự");
+    } else if (!vietnameseRegex.hasMatch(assignmentName.text.trim())) {
+      setError(isAssignmentNameError, assignmentNameError, "Tên bài tập chỉ chứa ký tự chữ và số");
+    }
+    //start date validation
+    if (assignmentStartDate.text.trim().isEmpty) {
+      setError(isAssignmentStartDateError, assignmentStartDateError, "Ngày bắt đầu không được để trống");
+    } else {
+      isOverTimeToday(
+        assignmentStartDate.text.trim(),
+        isAssignmentStartDateError,
+        assignmentStartDateError,
+        "Ngày bắt đầu không được lớn hơn ngày hiện tại",
+      );
+    }
+    //due date validation
+    if (assignmentDueDate.text.trim().isEmpty) {
+      setError(isAssignmentDueDateError, assignmentDueDateError, "Ngày kết thúc không được để trống");
+    } else {
+      isOverTimeToday(
+        assignmentDueDate.text.trim(),
+        isAssignmentDueDateError,
+        assignmentDueDateError,
+        "Ngày kết thúc không được lớn hơn ngày hiện tại",
+      );
+    }
+    //duration validation
+    if (assignmentDuration.text.trim().isEmpty) {
+      setError(isAssignmentDurationError, assignmentDurationError, "Thời lượng không được để trống");
+    } else if (!RegExp(r'^\d+$').hasMatch(assignmentDuration.text.trim())) {
+      setError(isAssignmentDurationError, assignmentDurationError, "Thời lượng phải là số dương");
+    } else if (assignmentStartDate.text.isNotEmpty && assignmentDueDate.text.isNotEmpty) {
+      DateTime startDate = DateTime.parse(assignmentStartDate.text.trim());
+      DateTime dueDate = DateTime.parse(assignmentDueDate.text.trim());
+      int durationMinutes = int.parse(assignmentDuration.text.trim());
+      int diffMinutes = dueDate.difference(startDate).inMinutes;
+
+      if (diffMinutes < durationMinutes) {
+        setError(
+          isAssignmentDurationError,
+          assignmentDurationError,
+          "Thời lượng không được lớn hơn khoảng thời gian giữa ngày bắt đầu và kết thúc",
+        );
+        setError(
           isAssignmentStartDateError,
           assignmentStartDateError,
-          "Ngày bắt đầu không được lớn hơn ngày hiện tại",
+          "Thời lượng không được lớn hơn khoảng thời gian giữa ngày bắt đầu và kết thúc",
         );
-      }
-
-      if (assignmentDueDate.text.trim().isEmpty) {
-        setError(isAssignmentDueDateError, assignmentDueDateError, "Ngày kết thúc không được để trống");
-      } else {
-        isOverTimeToday(
-          assignmentDueDate.text.trim(),
+        setError(
           isAssignmentDueDateError,
           assignmentDueDateError,
-          "Ngày kết thúc không được lớn hơn ngày hiện tại",
+          "Thời lượng không được lớn hơn khoảng thời gian giữa ngày bắt đầu và kết thúc",
         );
       }
-
-      if (assignmentDuration.text.trim().isEmpty) {
-        setError(isAssignmentDurationError, assignmentDurationError, "Thời lượng không được để trống");
-      } else if (!RegExp(r'^\d+$').hasMatch(assignmentDuration.text.trim())) {
-        setError(isAssignmentDurationError, assignmentDurationError, "Thời lượng phải là số dương");
-      } else if (assignmentStartDate.text.isNotEmpty && assignmentDueDate.text.isNotEmpty) {
-        DateTime startDate = DateTime.parse(assignmentStartDate.text.trim());
-        DateTime dueDate = DateTime.parse(assignmentDueDate.text.trim());
-        int durationMinutes = int.parse(assignmentDuration.text.trim());
-        int diffMinutes = dueDate.difference(startDate).inMinutes;
-
-        if (diffMinutes < durationMinutes) {
-          setError(
-            isAssignmentDurationError,
-            assignmentDurationError,
-            "Thời lượng không được lớn hơn khoảng thời gian giữa ngày bắt đầu và kết thúc",
-          );
-          setError(
-            isAssignmentStartDateError,
-            assignmentStartDateError,
-            "Thời lượng không được lớn hơn khoảng thời gian giữa ngày bắt đầu và kết thúc",
-          );
-          setError(
-            isAssignmentDueDateError,
-            assignmentDueDateError,
-            "Thời lượng không được lớn hơn khoảng thời gian giữa ngày bắt đầu và kết thúc",
-          );
-        }
-      }
     }
-
-    // Validate common fields for quiz and quiz_bank
-    if (assignmentType.value == 'quiz' || assignmentType.value == 'quiz_bank') {
-      if (assignmentStatus.value.isEmpty) {
-        setError(isAssignmentStatusError, assignmentStatusError, "Trạng thái không được để trống");
-      }
-    }
-
-    // Validate common fields for quiz and link
-    if (assignmentType.value == 'quiz' || assignmentType.value == 'link') {
-      if (assignmentName.text.trim().isEmpty) {
-        setError(isAssignmentNameError, assignmentNameError, "Tên bài tập không được để trống");
-      } else if (assignmentName.text.trim().length > 255) {
-        setError(isAssignmentNameError, assignmentNameError, "Tên bài tập không được quá 255 ký tự");
-      } else if (!vietnameseRegex.hasMatch(assignmentName.text.trim())) {
-        setError(isAssignmentNameError, assignmentNameError, "Tên bài tập chỉ chứa ký tự chữ và số");
-      }
-
-      if (assignmentDescription.text.trim().isEmpty) {
-        setError(isAssignmentDescriptionError, assignmentDescriptionError, "Mô tả không được để trống");
-      } else if (assignmentDescription.text.trim().length > 255) {
-        setError(isAssignmentDescriptionError, assignmentDescriptionError, "Mô tả không được quá 255 ký tự");
-      } else if (!vietnameseRegex.hasMatch(assignmentDescription.text.trim())) {
-        setError(isAssignmentDescriptionError, assignmentDescriptionError, "Mô tả chỉ chứa ký tự chữ và số");
-      }
+    //description validation
+    if (assignmentDescription.text.trim().isEmpty) {
+      setError(isAssignmentDescriptionError, assignmentDescriptionError, "Mô tả không được để trống");
+    } else if (assignmentDescription.text.trim().length > 255) {
+      setError(isAssignmentDescriptionError, assignmentDescriptionError, "Mô tả không được quá 255 ký tự");
+    } else if (!vietnameseRegex.hasMatch(assignmentDescription.text.trim())) {
+      setError(isAssignmentDescriptionError, assignmentDescriptionError, "Mô tả chỉ chứa ký tự chữ và số");
     }
 
     if (error.value) return false;
 
-    // Validate quiz_bank specific fields
-    // if (assignmentType.value == 'quiz_bank') {
-    //   if (selectedAssignment.value.isEmpty) {
-    //     Get.dialog(
-    //       const NotificationDialogWithoutButton(
-    //         title: "Lỗi",
-    //         message: "Bạn phải chọn 1 bài tập từ ngân hàng câu hỏi",
-    //       ),
-    //     );
-    //     return false;
+    //   for (int i = 0; i < questions.length; i++) {
+    //     if (questions[i]['question'].text.trim().isEmpty) {
+    //       Get.dialog(
+    //         NotificationDialogWithoutButton(
+    //           title: "Lỗi",
+    //           message: "Câu hỏi ${i + 1} không được để trống",
+    //         ),
+    //       );
+    //       return false;
+    //     }
+
+    //     var answers = questions[i]['answers'] as RxList<Map<String, dynamic>>;
+
+    //     if (answers.length < 2) {
+    //       Get.dialog(
+    //         NotificationDialogWithoutButton(
+    //           title: "Lỗi",
+    //           message: "Câu hỏi ${i + 1} phải có ít nhất 2 câu trả lời",
+    //         ),
+    //       );
+    //       return false;
+    //     }
+
+    //     bool hasCorrectAnswer = false;
+    //     for (int j = 0; j < answers.length; j++) {
+    //       if (answers[j]['controller'].text.trim().isEmpty) {
+    //         Get.dialog(
+    //           NotificationDialogWithoutButton(
+    //             title: "Lỗi",
+    //             message: "Câu trả lời ${j + 1} của câu hỏi ${i + 1} không được để trống",
+    //           ),
+    //         );
+    //         return false;
+    //       }
+
+    //       if ((answers[j]['isCorrect'] as RxBool).value) {
+    //         hasCorrectAnswer = true;
+    //       }
+    //     }
+
+    //     if (!hasCorrectAnswer) {
+    //       Get.dialog(
+    //         NotificationDialogWithoutButton(
+    //           title: "Lỗi",
+    //           message: "Câu hỏi ${i + 1} phải có ít nhất 1 câu trả lời đúng",
+    //         ),
+    //       );
+    //       return false;
+    //     }
     //   }
     // }
-
-    // Validate quiz questions and answers
-    if (assignmentType.value == 'quiz') {
-      if (questions.isEmpty) {
-        Get.dialog(
-          const NotificationDialogWithoutButton(
-            title: "Lỗi",
-            message: "Bài tập phải có ít nhất 1 câu hỏi",
-          ),
-        );
-        return false;
-      }
-
-      for (int i = 0; i < questions.length; i++) {
-        if (questions[i]['question'].text.trim().isEmpty) {
-          Get.dialog(
-            NotificationDialogWithoutButton(
-              title: "Lỗi",
-              message: "Câu hỏi ${i + 1} không được để trống",
-            ),
-          );
-          return false;
-        }
-
-        var answers = questions[i]['answers'] as RxList<Map<String, dynamic>>;
-
-        if (answers.length < 2) {
-          Get.dialog(
-            NotificationDialogWithoutButton(
-              title: "Lỗi",
-              message: "Câu hỏi ${i + 1} phải có ít nhất 2 câu trả lời",
-            ),
-          );
-          return false;
-        }
-
-        bool hasCorrectAnswer = false;
-        for (int j = 0; j < answers.length; j++) {
-          if (answers[j]['controller'].text.trim().isEmpty) {
-            Get.dialog(
-              NotificationDialogWithoutButton(
-                title: "Lỗi",
-                message: "Câu trả lời ${j + 1} của câu hỏi ${i + 1} không được để trống",
-              ),
-            );
-            return false;
-          }
-
-          if ((answers[j]['isCorrect'] as RxBool).value) {
-            hasCorrectAnswer = true;
-          }
-        }
-
-        if (!hasCorrectAnswer) {
-          Get.dialog(
-            NotificationDialogWithoutButton(
-              title: "Lỗi",
-              message: "Câu hỏi ${i + 1} phải có ít nhất 1 câu trả lời đúng",
-            ),
-          );
-          return false;
-        }
-      }
-    }
 
     return true;
   }
@@ -595,23 +558,19 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
     response.headers['Accept'] = 'application/json';
 
     response.fields['id'] = id;
+    response.fields['title'] = assignmentName.text.trim();
     response.fields['start_datetime'] = assignmentStartDate.text.trim();
     response.fields['due_datetime'] = assignmentDueDate.text.trim();
-    response.fields['duration'] = assignmentDuration.text.trim();
-    response.fields['status'] = assignmentStatus.value == 'true' ? 1.toString() : 0.toString();
-    // if (type == 'quiz') {
-    //   response.fields['assignment_id'] = selectedAssignment.value;
-    // } else {
-    //   response.fields['title'] = assignmentName.text.trim();
-    //   response.fields['description'] = assignmentDescription.text.trim();
-    // }
+    if (type == 'quiz') response.fields['duration'] = assignmentDuration.text.trim();
+    response.fields['status'] = assignmentStatus.value == 'true' ? "published" : "closed";
+    response.fields['description'] = assignmentDescription.text.trim();
 
     var streamedResponse = await response.send();
+
     if (streamedResponse.statusCode == 200) {
       clear();
       Get.back();
       fetchClassAssignment(classId.value);
-
       Get.snackbar("Thành công", "Cập nhật bài tập thành công", maxWidth: Get.width * 0.2);
     } else {
       Get.snackbar("Lỗi", "Cập nhật bài tập thất bại", maxWidth: Get.width * 0.2);
