@@ -73,13 +73,13 @@ class ClassPointScreen extends GetView<ClassDetailController> {
                             itemBuilder: (context, index) {
                               return pointBuilder(
                                 context,
-                                controller.classPointList[index]['title'] ?? '',
-                                controller.classPointList[index]['due_date'] ?? '',
-                                controller.classPointList[index]['score'].toString(),
-                                controller.classPointList[index]['total_score'].toString(),
-                                controller.classPointList[index]['type'] ?? '',
+                                controller.studentPointList[index]['title'] ?? '',
+                                controller.studentPointList[index]['due_date'] ?? '',
+                                controller.studentPointList[index]['score'].toString(),
+                                controller.studentPointList[index]['total_score'].toString(),
+                                controller.studentPointList[index]['type'] ?? '',
                                 10,
-                                controller.classPointList[index]['handed_in'] ?? false,
+                                controller.studentPointList[index]['handed_in'] ?? false,
                                 index == controller.classPointList.length - 1,
                               );
                             },
