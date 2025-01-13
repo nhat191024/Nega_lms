@@ -424,86 +424,62 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
     return true;
   }
 
-  validateQuizNumber(String value) {
+  bool validateQuizNumber(String value) {
     if (value.isEmpty) {
       isNumberOfQuizError.value = true;
       numberOfQuizError.value = "Số lượng câu hỏi không được để trống";
-      return;
+      return false;
     }
 
     if (!value.isNumericOnly) {
       isNumberOfQuizError.value = true;
       numberOfQuizError.value = "Số lượng câu hỏi phải là số";
-      return;
+      return false;
     }
 
     int? parsedValue = int.tryParse(value);
     if (parsedValue == null) {
       isNumberOfQuizError.value = true;
       numberOfQuizError.value = "Số lượng câu hỏi phải là số";
-      return;
+      return false;
     }
 
     if (parsedValue < 5) {
       isNumberOfQuizError.value = true;
       numberOfQuizError.value = "Số lượng câu hỏi phải lớn hơn 5";
+      return false;
     } else if (parsedValue >= quizPackage[int.tryParse(selectedPackage.value) ?? 0]["totalQuizzes"]) {
       isNumberOfQuizError.value = true;
       numberOfQuizError.value =
           "Số lượng câu hỏi phải nhỏ hơn tổng số câu hỏi trong bộ (${quizPackage[int.tryParse(selectedPackage.value) ?? 0]["totalQuizzes"].toString()})";
+      return false;
     } else {
       isNumberOfQuizError.value = false;
+      return true;
     }
   }
 
-  void createQuiz() async {
+  createQuiz() async {
     if (!validateQuiz()) return;
+    if (!validateQuizNumber(numberOfQuiz.text.trim())) return;
     var uri = Uri.parse("${Api.server}assignment/create");
-    var response = MultipartRequest('POST', uri);
-    response.headers['Authorization'] = 'Bearer $token';
-    response.headers['Content-Type'] = 'application/json';
-    response.headers['Accept'] = 'application/json';
-    response.fields['create_homework'] = createAssignmentThenPushToClass.value.toString();
+    var request = MultipartRequest('POST', uri);
+    request.headers['Authorization'] = 'Bearer $token';
+    request.headers['Content-Type'] = 'application/json';
+    request.headers['Accept'] = 'application/json';
 
-    if (assignmentType.value == 'quiz') {
-      double totalScore = 0.0;
-      List<Map<String, dynamic>> formattedQuestions = questions.map((question) {
-        var answers = question['answers'] as RxList<Map<String, dynamic>>;
-        totalScore += double.parse(question['score'].text.trim());
-        return {
-          'question': question['question'].text.trim(),
-          'score': double.parse(question['score'].text.trim()),
-          'choices': answers.map((answer) {
-            return {
-              'choice': answer['controller'].text.trim(),
-              'is_correct': (answer['isCorrect'] as RxBool).value,
-            };
-          }).toList(),
-        };
-      }).toList();
+    request.fields['class_id'] = classId.value.toString();
+    request.fields['title'] = assignmentName.text.trim();
+    request.fields['start_datetime'] = assignmentStartDate.text.trim();
+    request.fields['due_datetime'] = assignmentDueDate.text.trim();
+    request.fields['duration'] = assignmentDuration.text.trim();
+    request.fields['status'] = assignmentStatus.value == 'true' ? "published" : "closed";
+    request.fields['description'] = assignmentDescription.text.trim();
+    request.fields['type'] = 'quiz';
+    request.fields['quiz_package_id'] = quizPackage[int.tryParse(selectedPackage.value) ?? 0]["id"].toString();
+    request.fields['number_of_questions'] = numberOfQuiz.text.trim();
 
-      //assignment data
-      response.fields['title'] = assignmentName.text.trim();
-      response.fields['description'] = assignmentDescription.text.trim();
-      response.fields['status'] = assignmentStatus.value.toString();
-      response.fields['totalScore'] = totalScore.toString();
-      String questionsJson = jsonEncode(formattedQuestions);
-      response.fields['questions'] = questionsJson;
-    }
-
-    //homework data
-    response.fields['type'] = assignmentType.value == 'link' ? 'link' : 'quiz';
-    if (createAssignmentThenPushToClass.value || assignmentType.value == 'link') {
-      response.fields['class_id'] = classId.value.toString();
-      if (assignmentType.value == 'link') response.fields['title'] = assignmentName.text.trim();
-      if (assignmentType.value == 'link') response.fields['description'] = assignmentDescription.text.trim();
-      response.fields['start_datetime'] = assignmentStartDate.text.trim();
-      response.fields['due_datetime'] = assignmentDueDate.text.trim();
-      response.fields['duration'] = assignmentDuration.text.trim();
-      response.fields['homework_status'] = 1.toString();
-    }
-
-    var streamedResponse = await response.send();
+    var streamedResponse = await request.send();
     if (streamedResponse.statusCode == 201) {
       clear();
       Get.back();
@@ -511,12 +487,6 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
       Get.snackbar("Thành công", "Tạo bài tập thành công", maxWidth: Get.width * 0.2);
     } else {
       RxString errors = ''.obs;
-      var responseString = await streamedResponse.stream.bytesToString();
-      var data = jsonDecode(responseString);
-      for (var error in data['error']) {
-        errors.value += '${error.value}\n';
-      }
-
       Get.snackbar("Lỗi", errors.value, maxWidth: Get.width * 0.2);
     }
   }
@@ -623,7 +593,6 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
 
     quizzes.clear();
     quizPackage.clear();
-    assignmentList.clear();
 
     step.value = '1';
     selectedPackage.value = '';
