@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\V1\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\V1\LoginController;
 use App\Http\Controllers\Api\v1\ClassController;
+use App\Http\Controllers\DashboardController;
 
 // Public routes
 Route::post('/login', [LoginController::class, 'login']);
@@ -50,3 +51,10 @@ Route::prefix('assignment')->group(function () {
         Route::post('submit', [AssignmentController::class, 'submitAssignment'])->name('submit');
     });
 });
+
+Route::get('/completion-rate/{classId}', [DashboardController::class, 'getCompletionRate']);
+Route::get('/classes', [DashboardController::class, 'getClasses']);
+Route::get('/scores-achievements/{classId}', [DashboardController::class, 'getScoresAndAchievements']);
+Route::get('/user-analytics/classes/{userID}', [DashboardController::class, 'getUserClasses']);
+Route::get('/user-analytics/progress/{userID}', [DashboardController::class, 'getUserProgress']);
+Route::get('/user-analytics/interactions/{userID}', [DashboardController::class, 'getUserInteractions']);

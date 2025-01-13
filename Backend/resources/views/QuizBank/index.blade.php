@@ -166,7 +166,7 @@
                                                                                     aria-label="Đóng"></button>
                                                                             </div>
                                                                             <div>
-                                                                                <input type="text" name="searchQuestion" placeholder="Tìm kiếm câu hỏi..." id="searchQuestion">
+                                                                                <input class="form-control" type="text" name="searchQuestion" placeholder="Tìm kiếm câu hỏi..." id="searchQuestion">
                                                                             </div>
                                                                         </div>
     
@@ -462,9 +462,7 @@
                                                                                 </div>
                                                                                 
                                                                                 <script>
-                                                                                    // Khởi tạo Bootstrap-Select khi trang tải xong
                                                                                     $(document).ready(function() {
-                                                                                        // Kích hoạt Bootstrap-Select
                                                                                         $('#categories').selectpicker();
                                                                                     });
                                                                                 </script>
