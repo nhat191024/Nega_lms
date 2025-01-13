@@ -5,36 +5,17 @@ class ClassDetailTab extends GetView<ClassDetailController> {
 
   @override
   Widget build(BuildContext context) {
-    final ValueNotifier<bool> isCollapsed = ValueNotifier<bool>(true);
-
+    Get.put(ClassDetailController());
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        toolbarHeight: 80,
-        titleSpacing: 0,
-        title: NavBar(
-          onMenuPressed: () {
-            isCollapsed.value = !isCollapsed.value;
-          },
-          showMenuButton: true,
-        ),
-      ),
       body: Row(
         children: [
-          ValueListenableBuilder<bool>(
-            valueListenable: isCollapsed,
-            builder: (context, value, child) {
-              return SideBar(isCollapsed: value);
-            },
-          ),
           Expanded(
             child: Column(
               children: [
                 Row(
                   children: [
                     SizedBox(
-                      width: Get.width * 0.2,
+                      width: Get.width * 0.25,
                       child: TabBar(
                         controller: controller.tabController,
                         labelColor: CustomColors.primary,
@@ -46,10 +27,11 @@ class ClassDetailTab extends GetView<ClassDetailController> {
                         indicatorWeight: 4,
                         indicatorColor: CustomColors.primary,
                         indicatorSize: TabBarIndicatorSize.label,
-                        tabs: const [
-                          Tab(text: 'Bài tập'),
-                          Tab(text: 'Giảng viên'),
-                          Tab(text: 'Điểm'),
+                        tabs: [
+                          const Tab(text: 'Tổng quan'),
+                          if (controller.role.value == "student") const Tab(text: 'Bài tập'),
+                          if (controller.role.value == "teacher") const Tab(text: 'Giảng viên'),
+                          const Tab(text: 'Điểm'),
                         ],
                       ),
                     ),
@@ -98,23 +80,26 @@ class ClassDetailTab extends GetView<ClassDetailController> {
                         ],
                       ),
                     ),
-                    IconButton(
-                      onPressed: () {},
-                      icon: const Icon(
-                        Icons.settings,
-                        color: CustomColors.primary,
+                    if (controller.role.value == "teacher")
+                      IconButton(
+                        onPressed: () {},
+                        icon: const Icon(
+                          Icons.settings,
+                          color: CustomColors.primary,
+                        ),
                       ),
-                    ),
                     const SizedBox(width: 40),
                   ],
                 ),
                 Expanded(
                   child: TabBarView(
                     controller: controller.tabController,
-                    children: const [
-                      ClassDetailScreen(),
-                      ClassTeacherScreen(),
-                      ClassPointScreen(),
+                    children: [
+                      ClassOverviewScreen(),
+                      if (controller.role.value == "student") const ClassAssignmentScreen(),
+                      if (controller.role.value == "teacher") const ClassTeacherScreen(),
+                      if (controller.role.value == "student") const ClassPointScreen(),
+                      if (controller.role.value == "teacher") const ClassPointOverviewScreen(),
                     ],
                   ),
                 )

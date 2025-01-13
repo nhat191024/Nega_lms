@@ -9,39 +9,37 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 //model
-use App\Models\Homework;
+use App\Models\ClassAssignment;
+use App\Models\ClassSubmit;
 use App\Models\Assignment;
+use App\Models\AssignmentQuiz;
 use App\Models\Choice;
+use App\Models\ClassAnswer;
 use App\Models\Question;
-use App\Models\Answer;
-use App\Models\Classes;
-use App\Models\Submission;
+use App\Models\QuizPackage;
 
 class AssignmentController extends Controller
 {
     public function GetAssignmentByClassId($class_id, $role)
     {
         $homeworks = null;
-        if ($role == 1) {
-            $homeworks = Homework::where('class_id', $class_id)->with('assignment')->get();
-        } else {
-            $homeworks = Homework::where('class_id', $class_id)->where('status', 1)->with('assignment')->get();
+        if ($role == 2) {
+            $homeworks = ClassAssignment::where('class_id', $class_id)->get();
+        } elseif ($role == 3) {
+            $homeworks = ClassAssignment::where('class_id', $class_id)->where('status', 'published')->get();
         }
         $assignments = $homeworks->map(function ($homework) {
-            $answers = Answer::where('user_id', Auth::user()->id)->where('assignment_id', $homework->assignment ? $homework->assignment->id : $homework->id)->get();
+            $answers = ClassSubmit::where('class_assignment_id', $homework->id)->where('student_id', Auth::user()->id)->get();
             return [
-                'id' => $homework->assignment ? $homework->assignment->id : $homework->id,
-                'homeworkId' => $homework->id,
-                'creatorName' => $homework->assignment ? $homework->assignment->creator->name : null,
-                'name' => $homework->assignment ? $homework->assignment->title : $homework->title,
-                'description' => $homework->assignment ? $homework->assignment->description : $homework->description,
-                'level' => $homework->assignment ? $homework->assignment->level : "Không có",
-                'totalScore' => $homework->assignment ? $homework->assignment->totalScore : $homework->score,
-                'specialized' => $homework->assignment ? $homework->assignment->specialized : "Không có",
-                'subject' => $homework->assignment ?  $homework->assignment->subject : "Không có",
-                'topic' => $homework->assignment ? $homework->assignment->topic : "Không có",
+                'id' => $homework->id,
                 'type' => $homework->type,
-                'isSubmitted' => $answers->count() > 1 ? true : false,
+                'title' => $homework->title,
+                'description' => $homework->description,
+                'duration' => $homework->duration ? $homework->duration : "Không có",
+                'startDate' => $homework->start_date,
+                'dueDate' => $homework->due_date,
+                'status' => $homework->status,
+                'isSubmitted' => $answers->count() >= 1 ? true : false,
             ];
         });
 
@@ -50,175 +48,46 @@ class AssignmentController extends Controller
         ], Response::HTTP_OK);
     }
 
-    public function GetAssignmentForTeacher()
-    {
-        $user = Auth::user();
-        $assignments = Assignment::where('status', 'published')
-            ->orWhere(function ($query) use ($user) {
-                $query->where('status', 'private')
-                    ->where('creator_id', $user->id);
-            })
-            ->get();
-
-        $assignmentsFormatted = $assignments->map(function ($assignment) {
-            return [
-                'id' => $assignment->id,
-                'name' => $assignment->title,
-                'description' => $assignment->description,
-                'level' => $assignment->level,
-                'totalScore' => $assignment->totalScore,
-                'specialized' => $assignment->specialized,
-                'subject' => $assignment->subject,
-                'topic' => $assignment->topic,
-                'creator' => $assignment->creator->name,
-                'isCreator' => $assignment->creator_id == Auth::user()->id ? true : false,
-                'createdAt' => $assignment->created_at->format('H:i d:m:Y'),
-                'numberOfQuestions' => $assignment->questions->count(),
-            ];
-        });
-
-        return response()->json([
-            'assignments' => $assignmentsFormatted,
-        ], Response::HTTP_OK);
-    }
-
     public function CreateAssignment(Request $request)
     {
-        $rules = [
-            'create_homework' => 'required|String',
-            //assignment
-            'assignment_id' => 'String',
-            'title' => 'string',
-            'description' => 'string',
-            'status' => 'in:closed,published,private,draft',
-            'level' => 'string',
-            'totalScore' => 'integer',
-            'specialized' => 'string',
-            'subject' => 'string',
-            'topic' => 'string',
-            //question
-            // 'questions' => 'json',
-        ];
+        $classAssignment = ClassAssignment::create([
+            'class_id' => $request->class_id,
+            'type' => $request->type,
+            'title' => $request->title,
+            'description' => $request->description,
+            'duration' => $request->duration,
+            'start_date' => $request->start_datetime,
+            'due_date' => $request->due_datetime,
+            'status' => $request->status,
+        ]);
 
-        if ($request->create_homework == 'true') {
-            $rules['class_id'] = 'required|integer';
-            $rules['type'] = 'required|in:link,quiz';
-            $rules['title'] = 'required|string';
-            $request->type != "link" ?? $rules['score'] = 'required|integer';
-            $rules['start_datetime'] = 'required|string';
-            $rules['due_datetime'] = 'required|string';
-            $rules['duration'] = 'required|integer';
-            $request->type != "link" ?? $rules['auto_grade'] = 'required|string';
-            $rules['homework_status'] = 'required|integer';
-        }
-
-        $messages = [
-            'create_homework.required' => 'only_assignment không được để trống',
-            'create_homework.string' => 'only_assignment phải là chuỗi',
-            'assignment_id.string' => 'assignment_id phải là chuỗi',
-            'title.string' => 'title phải là chuỗi',
-            'description.string' => 'description phải là chuỗi',
-            'status.in' => 'status phải là closed, published, private hoặc draft',
-            'level.string' => 'level phải là chuỗi',
-            'totalScore.integer' => 'totalScore phải là số nguyên',
-            'specialized.string' => 'specialized phải là chuỗi',
-            'subject.string' => 'subject phải là chuỗi',
-            'topic.string' => 'topic phải là chuỗi',
-            'questions.json' => 'questions phải là json',
-            'class_id.required' => 'class_id không được để trống',
-            'class_id.integer' => 'class_id phải là số nguyên',
-            'type.required' => 'type không được để trống',
-            'type.in' => 'type phải là link hoặc quiz',
-            'title.string' => 'title phải là chuỗi',
-            'score.integer' => 'score phải là số nguyên',
-            'start_datetime.required' => 'start_datetime không được để trống',
-            'start_datetime.string' => 'start_datetime phải là chuỗi',
-            'due_datetime.required' => 'due_datetime không được để trống',
-            'due_datetime.string' => 'due_datetime phải là chuỗi',
-            'duration.required' => 'duration không được để trống',
-            'duration.integer' => 'duration phải là số nguyên',
-            'auto_grade.string' => 'auto_grade phải là boolean',
-            'homework_status.required' => 'status không được để trống',
-            'homework_status.integer' => 'status phải là số nguyên',
-        ];
-
-        $validated = Validator::make($request->all(), $rules, $messages);
-        if ($validated->fails()) {
+        if ($request->type == 'lab') {
             return response()->json([
-                'error' => $validated->errors(),
-            ], Response::HTTP_BAD_REQUEST);
-        }
-        $user = Auth::user();
-        $assignment = $request->type == 'quiz' ? new Assignment() : null;
-        if ($request->type == 'quiz' && $request->assignment_id == null) {
-            $assignment->creator_id = $user->id;
-            $assignment->title = $request->title;
-            $assignment->description = $request->description;
-            $assignment->status = $request->status;
-            $assignment->level = $request->level;
-            $assignment->totalScore = $request->totalScore;
-            $assignment->specialized = $request->specialized;
-            $assignment->subject = $request->subject;
-            $assignment->topic = $request->topic;
-            $assignment->save();
-
-            //convert question to array
-            $questions = json_decode($request->questions, true);
-
-            foreach ($questions as $questionData) {
-                $question = Question::create([
-                    'assignment_id' => $assignment->id,
-                    'question' => $questionData['question'],
-                    'duration' => "00:00:00",
-                    'score' => $questionData['score'],
-                ]);
-
-                foreach ($questionData['choices'] as $choiceData) {
-                    Choice::create([
-                        'question_id' => $question->id,
-                        'choice' => $choiceData['choice'],
-                        'is_correct' => $choiceData['is_correct'],
-                    ]);
-                }
-            }
+                'message' => 'Tạo bài tập thành công',
+                'data' => $request->all(),
+            ], Response::HTTP_CREATED);
         }
 
-        if ($request->create_homework == 'true') {
-            $assignmentId = null;
-            if ($request->type == 'quiz' && $request->assignment_id == null) {
-                $assignmentId = $assignment->id;
-            } else if ($request->type == 'link') {
-                $assignmentId = null;
-            } else {
-                $assignmentId = $request->assignment_id;
-            }
-            $homework = new Homework();
-            $homework->class_id = $request->class_id;
-            $homework->assignment_id = $assignmentId;
-            $homework->type = $request->type;
-            $homework->title = $request->type == 'link' ? $request->title : null;
-            $homework->score = $request->type == 'link' ? $request->score : null;
-            $homework->description = $request->type == 'link' ? $request->description : null;
-            $homework->start_datetime = $request->start_datetime;
-            $homework->due_datetime = $request->due_datetime;
-            $homework->duration = $request->duration;
-            if ($request->type != 'link') {
-                $homework->auto_grade = $request->auto_grade == 'true' ? true : false;
-            } else {
-                $homework->auto_grade = false;
-            }
-            $homework->status = $request->homework_status;
-            $homework->save();
+        $package = QuizPackage::find($request->quiz_package_id);
+        $numberOfQuestions = $request->number_of_questions;
+
+        for ($i = 0; $i < $numberOfQuestions; $i++) {
+            $quiz = $package->quizzes->random();
+            AssignmentQuiz::create([
+                'assignment_id' => $classAssignment->id,
+                'quiz_id' => $quiz->id,
+            ]);
         }
 
         return response()->json([
             'message' => 'Tạo đề thi thành công',
+            'data' => $request->all(),
         ], Response::HTTP_CREATED);
     }
 
     public function UpdateAssignment(Request $request)
     {
-        $homework = Homework::find($request->id);
+        $homework = ClassAssignment::find($request->id);
         if (!$homework) {
             return response()->json(
                 [
@@ -227,19 +96,42 @@ class AssignmentController extends Controller
                 Response::HTTP_NOT_FOUND
             );
         }
-        $homework->start_datetime = $request->start_datetime;
-        $homework->due_datetime = $request->due_datetime;
-        $homework->duration = $request->duration;
+        $homework->title = $request->title;
+        $homework->description = $request->description;
+        if ($homework->type == "quiz") $homework->duration = $request->duration;
+        $homework->start_date = $request->start_datetime;
+        $homework->due_date = $request->due_datetime;
         $homework->status = $request->status;
-        if ($request->type == "quiz") {
-            $homework->assignment_id = $request->assignment_id;
-            $homework->auto_grade = $request->auto_grade;
-        } else {
-            $homework->title = $request->title;
-            $homework->score = $request->score;
-            $homework->description = $request->description;
-        }
         $homework->save();
+
+        return response()->json([
+            'message' => 'Cập nhật đề thi thành công',
+        ], Response::HTTP_OK);
+    }
+
+    public function UpdateAssignmentQuizzes(Request $request)
+    {
+        $classAssignmentId = $request->class_assignment_id;
+        $quizPackageId = $request->quiz_package_id;
+        $numberOfQuestions = $request->number_of_questions;
+
+        ClassAssignment::find($classAssignmentId)->quizzes()->delete();
+
+        $package = QuizPackage::find($quizPackageId);
+        $selectedQuizIds = [];
+
+        for ($i = 0; $i < $numberOfQuestions; $i++) {
+            do {
+                $quiz = $package->quizzes->random();
+            } while (in_array($quiz->id, $selectedQuizIds));
+
+            $selectedQuizIds[] = $quiz->id;
+
+            AssignmentQuiz::create([
+                'assignment_id' => $classAssignmentId,
+                'quiz_id' => $quiz->id,
+            ]);
+        }
 
         return response()->json([
             'message' => 'Cập nhật đề thi thành công',
@@ -249,17 +141,12 @@ class AssignmentController extends Controller
     public function SubmitAssignment(Request $request)
     {
         $user = Auth::user();
-        if ($request->type == 'link') {
-            Answer::create([
-                'user_id' => $user->id,
-                'homework_id' => $request->assignment_id,
-                'link' => $request->link,
-            ]);
-
-            Submission::create([
+        if ($request->type == 'lab') {
+            ClassSubmit::create([
+                'class_assignment_id' => $request->assignment_id,
                 'student_id' => $user->id,
-                'total_score' => 0,
-                'class_id' => $request->class_id,
+                'answer' => $request->link,
+                'score' => 0,
             ]);
 
             return response()->json([
@@ -269,28 +156,27 @@ class AssignmentController extends Controller
             $answers = json_decode($request->answers, true);
             $totalScore = 0;
 
+            $submit = ClassSubmit::create([
+                'class_assignment_id' => $request->assignment_id,
+                'student_id' => $user->id,
+            ]);
+
             foreach ($answers as $answer) {
-                Answer::create([
-                    'user_id' => $user->id,
-                    'assignment_id' => $request->assignment_id,
-                    'question_id' => $answer['question_id'],
+                ClassAnswer::create([
+                    'class_submit_id' => $submit->id,
+                    'quiz_id' => $answer['question_id'],
                     'choice_id' => $answer['choice_id'],
                 ]);
 
-                $question = Question::find($answer['question_id']);
                 $choice = Choice::find($answer['choice_id']);
 
                 if ($choice && $choice->is_correct == 1) {
-                    $totalScore += $question->score;
+                    $totalScore += 1;
                 }
             }
 
-            Submission::create([
-                'assignment_id' => $request->assignment_id,
-                'student_id' => $user->id,
-                'total_score' => $totalScore,
-                'class_id' => $request->class_id,
-            ]);
+            $submit->score = $totalScore;
+            $submit->save();
 
             return response()->json([
                 'message' => 'Nộp bài thành công',
@@ -299,10 +185,9 @@ class AssignmentController extends Controller
         }
     }
 
-    public function getAssignment($id, $class_id)
+    public function getAssignmentById($id, $isTeacher)
     {
-        $class = Classes::find($class_id)::with('homeworks', 'homeworks.assignment', 'homeworks.assignment.questions', 'homeworks.assignment.questions.choices')->first();
-        $assignment = $class->homeworks->where('assignment_id', $id)->first();
+        $assignment = ClassAssignment::where('id', $id)->with('quizzes.quiz.choices')->first();
 
         if (!$assignment) {
             return response()->json(
@@ -315,22 +200,22 @@ class AssignmentController extends Controller
 
         $response = [
             'id' => $assignment->id,
-            'creatorName' => $assignment->assignment->creator ? $assignment->assignment->creator->name : null,
-            'name' => $assignment->assignment->title,
-            'description' => $assignment->assignment->description,
-            'duration' => $assignment->duration,
-            'startDate' => $assignment->start_datetime,
-            'dueDate' => $assignment->due_datetime,
-            'questions' => $assignment->assignment->questions->map(function ($question) {
+            'type' => $assignment->type,
+            'title' => $assignment->title,
+            'description' => $assignment->description,
+            'duration' => $assignment->duration ? $assignment->duration : "Không có",
+            'startDate' => $assignment->start_date,
+            'dueDate' => $assignment->due_date,
+            'status' => $assignment->status,
+            'questions' => $assignment->quizzes->map(function ($quiz) use ($isTeacher) {
                 return [
-                    'id' => $question->id,
-                    'question' => $question->question,
-                    'duration' => $question->duration,
-                    'score' => $question->score,
-                    "choices" => $question->choices->map(function ($choice) {
+                    'id' => $quiz->quiz->id,
+                    'question' => $quiz->quiz->question,
+                    "choices" => $quiz->quiz->choices->map(function ($choice) use ($isTeacher) {
                         return [
                             'id' => $choice->id,
                             'choice' => $choice->choice,
+                            'isCorrect' => $isTeacher == 1 ? $choice->is_correct : null,
                         ];
                     }),
                 ];
@@ -339,35 +224,6 @@ class AssignmentController extends Controller
 
         return response()->json([
             'assignment' => $response,
-        ], Response::HTTP_OK);
-    }
-
-    public function getHomeworkByIdToEdit($id)
-    {
-        $homework = Homework::find($id);
-        if (!$homework) {
-            return response()->json(
-                [
-                    'message' => 'Không tìm thấy đề thi.',
-                ],
-                Response::HTTP_NOT_FOUND
-            );
-        }
-
-        $homeworkFormatted = [
-            'title' => $homework->type == 'link' ? $homework->title : null,
-            'score' => $homework->type == 'link' ? $homework->score : null,
-            'description' => $homework->type == 'link' ? $homework->description : null,
-            'duration' => $homework->duration,
-            'autoGrade' => $homework->auto_grade,
-            'startDate' => $homework->start_datetime,
-            'dueDate' => $homework->due_datetime,
-            'status' => $homework->status,
-            'assignmentId' => $homework->assignment_id,
-        ];
-
-        return response()->json([
-            'homework' => $homeworkFormatted,
         ], Response::HTTP_OK);
     }
 }

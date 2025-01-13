@@ -7,11 +7,13 @@ use App\Http\Controllers\ClassController;
 use App\Http\Controllers\AdminAuthController;
 use App\Http\Controllers\AssignmentController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\QuizBankController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CourseController;
 
 Route::get('/', [AdminAuthController::class, 'showLoginForm'])->name('admin.login');
 Route::post('/login', [AdminAuthController::class, 'login'])->name('admin.login.submit');
+Route::get('/logout', [AdminAuthController::class, 'logout'])->name('admin.logout');
 
 Route::prefix('/dashboard')->name('dashboard.')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('index');
@@ -65,6 +67,17 @@ Route::prefix('course')->name('courses.')->group(function () {
     Route::post('/{id}/add-student', [CourseController::class, 'addStudent'])->name('add-student');
     Route::post('/{id}/import-confirm', [CourseController::class, 'importConfirm'])->name('importConfirm');
     Route::post('/{courseId}/remove-student', [CourseController::class, 'removeStudent'])->name('removeStudent');
+
+Route::prefix('/quiz-bank')->name('quiz-bank.')->group(function() {
+    Route::get('/', [QuizBankController::class, 'index'])->name('index');
+    Route::get('/createQuizBank', [QuizBankController::class, 'createQuizBank'])->name('createQuizBank');
+    Route::post('/addQuestion', [QuizBankController::class, 'addQuestion'])->name('addQuestion');
+    Route::post('/addQuestionWithExcel', [QuizBankController::class, 'addQuestionWithExcel'])->name('addQuestionWithExcel');
+    Route::post('/updateQuestion', [QuizBankController::class, 'updateQuestion'])->name('updateQuestion');
+    Route::post('/deleteQuestion', [QuizBankController::class, 'deleteQuestion'])->name('deleteQuestion');
+    Route::post('/updateQuizBank', [QuizBankController::class, 'updateQuizBank'])->name('updateQuizBank');
+    Route::get('/hiddenQuizBank/{id}', [QuizBankController::class, 'hiddenQuizBank'])->name('hiddenQuizBank');
+    Route::get('/showQuizBank/{id}', [QuizBankController::class, 'showQuizBank'])->name('showQuizBank');
 });
 
 Route::resource('categories', CategoryController::class)->except(['destroy']);

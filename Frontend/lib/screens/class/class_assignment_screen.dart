@@ -1,7 +1,7 @@
 import 'package:nega_lms/utils/imports.dart';
 
-class ClassDetailScreen extends GetView<ClassDetailController> {
-  const ClassDetailScreen({super.key});
+class ClassAssignmentScreen extends GetView<ClassDetailController> {
+  const ClassAssignmentScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -25,12 +25,9 @@ class ClassDetailScreen extends GetView<ClassDetailController> {
                           itemBuilder: (context, index) {
                             return classCardBuilder(
                               context,
-                              controller.assignmentList[index].name ?? '',
+                              controller.assignmentList[index].title ?? '',
                               controller.assignmentList[index].description ?? '',
-                              [
-                                "Lập trình",
-                                controller.assignmentList[index].type ?? '',
-                              ],
+                              controller.assignmentList[index].duration ?? '',
                               10,
                               index == controller.assignmentList.length - 1,
                               controller.assignmentList[index].id.toString(),
@@ -50,7 +47,16 @@ class ClassDetailScreen extends GetView<ClassDetailController> {
 
   //class card builder
   Widget classCardBuilder(
-      context, String title, String description, List<String> tags, double verticalPadding, bool isLast, String id, String type, bool isSubmitted) {
+    context,
+    String title,
+    String description,
+    String duration,
+    double verticalPadding,
+    bool isLast,
+    String id,
+    String type,
+    bool isSubmitted,
+  ) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: verticalPadding),
       child: Column(
@@ -79,28 +85,43 @@ class ClassDetailScreen extends GetView<ClassDetailController> {
                         fontFamily: FontStyleTextStrings.regular,
                       ),
                     ),
-                    const SizedBox(height: 20),
-                    Wrap(
-                      children: tags
-                          .map(
-                            (tag) => Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                              margin: const EdgeInsets.only(right: 10),
-                              decoration: BoxDecoration(
-                                color: CustomColors.primary,
-                                borderRadius: BorderRadius.circular(50),
-                              ),
-                              child: Text(
-                                tag,
-                                style: const TextStyle(
-                                  fontSize: 12,
-                                  color: CustomColors.background,
-                                  fontFamily: FontStyleTextStrings.medium,
-                                ),
-                              ),
+                    const SizedBox(height: 10),
+                    Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                          margin: const EdgeInsets.only(right: 10),
+                          decoration: BoxDecoration(
+                            color: CustomColors.primary,
+                            borderRadius: BorderRadius.circular(50),
+                          ),
+                          child: Text(
+                            "Loại bài tập: $type",
+                            style: const TextStyle(
+                              fontSize: 12,
+                              color: CustomColors.background,
+                              fontFamily: FontStyleTextStrings.medium,
                             ),
-                          )
-                          .toList(),
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                          margin: const EdgeInsets.only(right: 10),
+                          decoration: BoxDecoration(
+                            color: CustomColors.primary,
+                            borderRadius: BorderRadius.circular(50),
+                          ),
+                          child: Text(
+                            "Thời gian làm: $duration",
+                            style: const TextStyle(
+                              fontSize: 12,
+                              color: CustomColors.background,
+                              fontFamily: FontStyleTextStrings.medium,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -152,7 +173,7 @@ class ClassDetailScreen extends GetView<ClassDetailController> {
             child: Material(
               color: Colors.transparent,
               child: Container(
-                width: Get.width * 0.5,
+                width: Get.width * 0.45,
                 height: Get.height * 0.3,
                 padding: const EdgeInsets.fromLTRB(20, 25, 20, 20),
                 decoration: BoxDecoration(
@@ -165,7 +186,7 @@ class ClassDetailScreen extends GetView<ClassDetailController> {
                     const Text(
                       'Nộp bài tập',
                       style: TextStyle(
-                        fontSize: 24,
+                        fontSize: 26,
                         color: CustomColors.primary,
                         fontFamily: FontStyleTextStrings.bold,
                       ),
@@ -176,7 +197,7 @@ class ClassDetailScreen extends GetView<ClassDetailController> {
                       child: Text(
                         title,
                         style: const TextStyle(
-                          fontSize: 18,
+                          fontSize: 20,
                           color: CustomColors.primaryText,
                           fontFamily: FontStyleTextStrings.medium,
                         ),
@@ -201,7 +222,7 @@ class ClassDetailScreen extends GetView<ClassDetailController> {
                     const SizedBox(height: 20),
                     Obx(
                       () => CustomTextField(
-                        labelText: "Link bài tập",
+                        labelText: "Bài tập",
                         labelColor: CustomColors.primary,
                         labelSize: 18,
                         hintText: "nhập",
@@ -210,6 +231,8 @@ class ClassDetailScreen extends GetView<ClassDetailController> {
                         width: Get.width * 0.4,
                         obscureText: false.obs,
                         controller: controller.linkSubmit,
+                        minLines: 2,
+                        maxLines: 3,
                         onChanged: (value) {
                           if (value.isNotEmpty) {
                             controller.isLinkSubmitError.value = false;
@@ -233,7 +256,7 @@ class ClassDetailScreen extends GetView<ClassDetailController> {
                       },
                       btnText: 'Nộp bài',
                       btnColor: CustomColors.primary,
-                      width: 140,
+                      width: 160,
                     ),
                   ],
                 ),
