@@ -60,6 +60,8 @@ Route::prefix('course')->name('courses.')->group(function () {
     Route::post('/{id}/assignments', [CourseController::class, 'storeAssignment'])->name('assignments.store');
     Route::post('/{course}/assignments/update/{assignment}', [CourseController::class, 'updateAssignment'])->name('assignments.update');
     Route::delete('/{course}/assignments/delete/{assignment}', [CourseController::class, 'deleteAssignment'])->name('assignments.delete');
+    Route::post('/add-student', [CourseController::class, 'addStudent'])->name('addStudent');
+    Route::delete('/remove-student', [CourseController::class, 'removeStudent'])->name('removeStudent');
 });
 
 Route::resource('categories', CategoryController::class)->except(['destroy']);

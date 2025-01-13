@@ -54,7 +54,13 @@
             <div class="tab-pane fade" id="Students" role="tabpanel" aria-labelledby="students-tab">
                 <div class="card mt-3">
                     <div class="card-body">
-                        <h3 class="card-title">Danh sách học sinh</h3>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h3 class="card-title mb-0">Danh sách học sinh</h3>
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                data-bs-target="#add-student-to-course">
+                                Thêm học sinh
+                            </button>
+                        </div>
                         <div class="table-responsive">
                             <table class="table table-bordered table-striped table-hover">
                                 <thead class="thead-dark">
@@ -62,6 +68,7 @@
                                         <th>STT</th>
                                         <th>Tên</th>
                                         <th>Email</th>
+                                        <th class="text-center">Tác vụ</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -70,6 +77,16 @@
                                             <td>{{ $index + 1 }}</td>
                                             <td>{{ $enrollment->user->name }}</td>
                                             <td>{{ $enrollment->user->email }}</td>
+                                            <td class="text-center">
+                                                <form
+                                                    action="{{ route('courses.removeStudent', ['course_id' => $course->id, 'student_id' => $enrollment->user->id]) }}"
+                                                    method="POST"
+                                                    onsubmit="return confirm('Bạn có chắc chắn muốn xóa học sinh này khỏi khóa học?')">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-danger">Xóa</button>
+                                                </form>
+                                            </td>
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -78,6 +95,38 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Modal thêm học sinh vào khóa học -->
+            <div class="modal fade" id="add-student-to-course" tabindex="-1" aria-labelledby="addStudentToCourseLabel"
+                aria-hidden="true">
+                <div class="modal-dialog">
+                    <form action="{{ route('courses.addStudent') }}" method="POST">
+                        @csrf
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="addStudentToCourseLabel">Thêm học sinh vào khóa học</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <input type="hidden" name="course_id" value="{{ $course->id }}">
+                            <div class="modal-body">
+                                <select name="student_id" class="form-select" data-live-search="true" data-width="100%"
+                                    title="Chọn học sinh...">
+                                    @foreach ($studentsNotEnrolled as $student)
+                                        <option value="{{ $student->id }}">{{ $student->name }} - {{ $student->email }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                                <button type="submit" class="btn btn-primary">Lưu</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
 
             <!-- Tab Bài tập -->
             <div class="tab-pane fade" id="Assignments" role="tabpanel" aria-labelledby="assignments-tab">
@@ -105,7 +154,8 @@
                                                 data-bs-target="#assignmentDetailsModal_{{ $assignment->id }}">
                                                 Xem chi tiết
                                             </button>
-                                            <button type="button" class="btn btn-info btn-sm mx-2" data-bs-toggle="modal"
+                                            <button type="button" class="btn btn-info btn-sm mx-2"
+                                                data-bs-toggle="modal"
                                                 data-bs-target="#edit-assignment-modal_{{ $assignment->id }}">
                                                 Sửa bài tập
                                             </button>

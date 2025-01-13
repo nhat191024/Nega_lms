@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\CourseAssignment;
+use App\Models\User;
 use App\Models\Course;
 use App\Models\CourseQuiz;
 use App\Models\QuizPackage;
@@ -45,12 +46,16 @@ class CourseController extends Controller
                 $q->where('role_id', 3);
             });
         }, 'enrollments.user'])
-        ->orderBy('created_at', 'DESC')
-        ->findOrFail($id);
+            ->orderBy('created_at', 'DESC')
+            ->findOrFail($id);
+
+        $studentsNotEnrolled = User::where('role_id', 3)
+            ->whereNotIn('id', $course->enrollments->pluck('user_id'))
+            ->get();
+
         $quizPackages = QuizPackage::all();
-        $courseAssignment = QuizPackage::all();
-        
-        return view('course.show', compact('course', 'quizPackages'));
+
+        return view('course.show', compact('course', 'quizPackages', 'studentsNotEnrolled'));
     }
 
     public function edit($id)
@@ -85,9 +90,9 @@ class CourseController extends Controller
                 'number_of_questions' => 'required|integer|min:5|max:100',
                 'quiz_select' => 'required'
             ]);
-    
+
             $course = Course::findOrFail($courseId);
-    
+
             $assignment = new CourseAssignment([
                 'course_id' => $course->id,
                 'title' => $request->title,
@@ -95,7 +100,7 @@ class CourseController extends Controller
                 'description' => $request->description,
                 'duration' => $request->duration,
             ]);
-    
+
             $course->assignments()->save($assignment);
 
             $quizPackage = QuizPackage::findOrFail($request->quiz_select);
@@ -112,7 +117,7 @@ class CourseController extends Controller
                     'quiz_id' => $quizID,
                 ]);
             }
-    
+
             return redirect()->route('courses.show', $courseId)->with('success', 'Bài học đã được thêm thành công.');
         } catch (\Throwable $th) {
             return redirect()->route('courses.show', $courseId)->with('error', 'Bài học thêm thất bại.');
@@ -121,7 +126,7 @@ class CourseController extends Controller
 
     public function updateAssignment(Request $request, $courseId, $assignmentId)
     {
-        
+
         try {
             $request->validate([
                 'title' => 'required',
@@ -131,7 +136,7 @@ class CourseController extends Controller
                 'number_of_questions' => 'required|integer|min:5|max:100',
                 'quiz_select' => 'required'
             ]);
-            
+
             $course = Course::findOrFail($courseId);
             $assignment = CourseAssignment::findOrFail($assignmentId);
 
@@ -173,7 +178,7 @@ class CourseController extends Controller
             $course = Course::findOrFail($courseId);
             $assignment = CourseAssignment::findOrFail($assignmentId);
 
-            $assignment->courseQuizzes()->delete(); 
+            $assignment->courseQuizzes()->delete();
 
             $assignment->delete();
 
@@ -183,4 +188,19 @@ class CourseController extends Controller
         }
     }
 
+    public function addStudent(Request $request)
+    {
+        $course = Course::findOrFail($request->course_id);
+        $course->enrollments()->create(['user_id' => $request->student_id]);
+
+        return redirect()->back()->with('success', 'Đã thêm học sinh vào khóa học!');
+    }
+
+    public function removeStudent(Request $request)
+    {
+        $course = Course::findOrFail($request->course_id);
+        $course->enrollments()->where('user_id', $request->student_id)->delete();
+
+        return redirect()->back()->with('success', 'Đã xóa học sinh khỏi khóa học!');
+    }
 }
