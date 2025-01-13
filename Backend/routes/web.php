@@ -64,7 +64,6 @@ Route::prefix('course')->name('courses.')->group(function () {
     Route::post('/{id}/add-student', [CourseController::class, 'addStudent'])->name('add-student');
     Route::get('/download-template', [CourseController::class, 'downloadTemplate'])->name('downloadTemplate');
     Route::post('/{id}/import-confirm', [CourseController::class, 'importConfirm'])->name('importConfirm');
-
 });
 
 Route::resource('categories', CategoryController::class)->except(['destroy']);
