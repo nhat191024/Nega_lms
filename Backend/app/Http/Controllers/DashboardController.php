@@ -37,7 +37,7 @@ class DashboardController extends Controller
                 'classes' => Classes::all(),
                 'submissions' => $submissions,
                 'enrollments' => Enrollment::all(),
-                // 'assignments' => Assignment::all(),
+                'assignments' => Assignment::all(),
                 'averageScoreForAssignments' => $averageScoreForAssignments,
                 'dates' => $participationData['dates'],
                 'participantsCount' => $participationData['participantsCount'],
