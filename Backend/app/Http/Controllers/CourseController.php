@@ -8,6 +8,7 @@ use App\Models\CourseQuiz;
 use App\Models\QuizPackage;
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 
 class CourseController extends Controller
 {
@@ -38,25 +39,6 @@ class CourseController extends Controller
 
         return redirect()->route('course.index')->with('success', 'Khóa học đã được tạo thành công.');
     }
-
-    public function show($id)
-{
-    $course = Course::with(['enrollments' => function ($query) {
-        $query->whereHas('user', function ($q) {
-            $q->where('role_id', 3);
-        });
-    }, 'enrollments.user'])
-        ->orderBy('created_at', 'DESC')
-        ->findOrFail($id);
-
-    $quizPackages = QuizPackage::all();
-    $courseAssignment = QuizPackage::all();
-
-    $students = User::where('role_id', 3)->whereNull('course_id')->get(); // Lấy danh sách học sinh chưa được gán khóa học
-
-    return view('course.show', compact('course', 'quizPackages', 'students'));
-}
-
 
     public function edit($id)
     {
@@ -188,15 +170,52 @@ class CourseController extends Controller
         }
     }
 
-    public function addStudent(Request $request, $courseId)
+    public function show($id)
     {
-        $course = Course::findOrFail($courseId);
-        $studentIds = $request->input('student_ids');
-        foreach ($studentIds as $studentId) {
-            $student = User::findOrFail($studentId);
-            $student->course_id = $course->id;
-            $student->save();
-        }
-        return redirect()->route('courses.show', $courseId)->with('success', 'Học sinh đã được thêm vào khóa học.');
+        $course = Course::with(['enrollments.user'])
+            ->orderBy('created_at', 'DESC')
+            ->findOrFail($id);
+    
+        // Lấy danh sách học sinh chưa ghi danh vào khóa học
+        $enrolledStudentIds = DB::table('course_enrollments')
+            ->where('course_id', $id)
+            ->pluck('student_id');
+    
+        $students = User::where('role_id', 3)
+            ->whereNotIn('id', $enrolledStudentIds)
+            ->get();
+    
+        $quizPackages = QuizPackage::all();
+    
+        return view('course.show', compact('course', 'quizPackages', 'students'));
     }
+    
+
+    public function addStudent(Request $request, $courseId)
+{
+    $course = Course::findOrFail($courseId);
+    $studentIds = $request->input('student_ids');
+
+    foreach ($studentIds as $studentId) {
+        // Kiểm tra nếu học sinh đã được ghi danh vào khóa học
+        $exists = DB::table('course_enrollments')
+            ->where('course_id', $courseId)
+            ->where('student_id', $studentId)
+            ->exists();
+
+        if (!$exists) {
+            // Thêm học sinh vào bảng course_enrollments
+            DB::table('course_enrollments')->insert([
+                'course_id' => $courseId,
+                'student_id' => $studentId,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
+    }
+
+    return redirect()->route('courses.show', $courseId)
+        ->with('success', 'Học sinh đã được thêm vào khóa học.');
+}
+
 }
