@@ -12,7 +12,8 @@
     <title>@yield('title')</title>
 
     <!-- Custom fonts for this template-->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/css/bootstrap-select.min.css">
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/css/bootstrap-select.min.css">
     <link href="{{ asset('vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -128,7 +129,8 @@
                             <form class="form-inline mr-auto w-100 navbar-search">
                                 <div class="input-group">
                                     <input type="text" class="form-control bg-light border-0 small"
-                                        placeholder="Tìm kiếm..." aria-label="Search" aria-describedby="basic-addon2">
+                                        placeholder="Tìm kiếm..." aria-label="Search"
+                                        aria-describedby="basic-addon2">
                                     <div class="input-group-append">
                                         <button class="btn btn-primary" type="button">
                                             <i class="fas fa-search fa-sm"></i>
@@ -256,20 +258,23 @@
                     <!-- Nav Item - User Information -->
                     <li class="nav-item dropdown no-arrow">
                         <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
-                           data-bs-toggle="dropdown" aria-expanded="false">
-                            <span class="mr-2 d-none d-lg-inline text-gray-600 small">{{ $profile->name }}</span>
-                            <img class="img-profile rounded-circle" src="{{ !empty($profile->avatar) ? $profile->avatar : 'img/undraw_profile.svg' }}">
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            <span class="mr-2 d-none d-lg-inline text-gray-600 small">Admin</span>
+                            <img class="img-profile rounded-circle"
+                                src="{{ !empty($profile->avatar) ? $profile->avatar : 'img/undraw_profile.svg' }}">
                         </a>
-                        <div class="dropdown-menu dropdown-menu-end shadow animated--grow-in" aria-labelledby="userDropdown">
-                            <a onclick="if(confirm('Bạn có chắc chắn đăng xuất khỏi tài khoản {{ $profile->email }} không?')) { window.location.href='{{ route('admin.logout') }}'; }" href="#" class="dropdown-item text-gray-600 hover:bg-gray-100">
+                        <div class="dropdown-menu dropdown-menu-end shadow animated--grow-in"
+                            aria-labelledby="userDropdown">
+                            <a onclick="if(confirm('Bạn có chắc chắn đăng xuất khỏi tài khoản {{ $profile->email }} không?')) { window.location.href='{{ route('admin.logout') }}'; }"
+                                href="#" class="dropdown-item text-gray-600 hover:bg-gray-100">
                                 <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                                 Đăng xuất
                             </a>
-                            
+
                         </div>
-                        
+
                     </li>
-                    
+
                 </ul>
             </nav>
             <!-- End of Topbar -->
@@ -351,7 +356,7 @@
         }
         document.getElementById(tabName).style.display = "block";
         evt.currentTarget.className += " active";
-    } // Mở tab đầu tiên mặc định document.getElementById('Info').style.display = 'block'; 
+    } // Mở tab đầu tiên mặc định document.getElementById('Info').style.display = 'block';
 </script>
 
 </html>
