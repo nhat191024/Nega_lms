@@ -60,7 +60,7 @@
                                 class="d-inline me-2">
                                 @csrf
                                 <input type="hidden" name="status"
-                                    value="{{ $class->status === 'published' ? 'locked' : 'published' }}">
+                                    value="{{ $class->status === 'published' ? 'closed' : 'published' }}">
                                 @if ($class->status === 'published')
                                     <button type="submit" class="btn btn-danger">
                                         <i class="fas fa-lock"></i> Khóa lớp
