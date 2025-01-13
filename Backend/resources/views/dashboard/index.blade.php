@@ -63,7 +63,7 @@
                             document.addEventListener('DOMContentLoaded', function() {
                                 var classSelect = document.getElementById('classSelect');
                                 if (classSelect) {
-                                    new bootstrap.Select(classSelect); 
+                                    new bootstrap.Select(classSelect);
                                 }
                             });
                         </script>
@@ -75,7 +75,7 @@
                 </form>
             </div>
         </div>
-    
+
         <!-- Biểu đồ điểm số -->
         <div class="card mb-4">
             <div class="card-body">
@@ -84,10 +84,10 @@
             </div>
         </div>
     </div>
-    
+
     <div class="container-fluid mb-4">
         <h1 class="h4 mb-4 text-dark">Phân Tích Hành Vi Học Sinh</h1>
-    
+
         <div class="card mb-4">
             <div class="card-body">
                 <h5 class="card-title">Lọc Hành Vi Học Sinh</h5>
@@ -116,11 +116,11 @@
                             document.addEventListener('DOMContentLoaded', function() {
                                 var userSelect = document.getElementById('userSelect');
                                 if (userSelect) {
-                                    new bootstrap.Select(userSelect); 
+                                    new bootstrap.Select(userSelect);
                                 }
                             });
                         </script>
-                        
+
                         <div class="col-md-4 mb-3">
                             <label for="timeRange" class="form-label">Khoảng Thời Gian:</label>
                             <select id="timeRange" class="form-select">
@@ -136,7 +136,7 @@
                 </form>
             </div>
         </div>
-    
+
         <div id="analyticsResult">
             <div class="row text-center mb-4">
                 <div class="col-md-4">
@@ -158,7 +158,7 @@
                     </div>
                 </div>
             </div>
-    
+
             <!-- Biểu đồ hoàn thành -->
             {{-- <div class="card mb-4">
                 <div class="card-body">
@@ -166,7 +166,7 @@
                     <canvas id="completionChart" height="100"></canvas>
                 </div>
             </div> --}}
-    
+
             <!-- Chi Tiết Hành Vi -->
             <div class="card">
                 <div class="card-body">
@@ -190,7 +190,7 @@
             </div>
         </div>
     </div>
-    
+
     <!-- CSS cho các biểu đồ -->
     <style>
         #scoreChart {
@@ -198,7 +198,7 @@
             height: 400px !important; /* Kích thước chiều cao phù hợp */
         }
     </style>
-    
+
 </div>
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
@@ -256,7 +256,7 @@
                 .then(data => {
                     document.getElementById('totalInteractions').textContent = data.notifications;
                     const activityTable = document.getElementById('userActivityTable');
-                    activityTable.innerHTML = ''; 
+                    activityTable.innerHTML = '';
 
                     if (data.recent_comments.length > 0) {
                         data.recent_comments.forEach(function(comment, index) {
@@ -331,10 +331,10 @@
 
     let scoreChart;
     const ctx = document.getElementById('scoreChart').getContext('2d');
-    
+
     function createChart(labels, data) {
         if (scoreChart) {
-            scoreChart.destroy(); 
+            scoreChart.destroy();
         }
         scoreChart = new Chart(ctx, {
             type: 'bar',
@@ -351,10 +351,10 @@
             options: {
                 responsive: true,
                 scales: {
-                    y: { 
-                        beginAtZero: true, 
-                        max: 10, 
-                        ticks: { stepSize: 1 }, 
+                    y: {
+                        beginAtZero: true,
+                        max: 10,
+                        ticks: { stepSize: 1 },
                         title: { display: true, text: 'Điểm trung bình' }
                     },
                     x: { title: { display: true, text: 'Học sinh' }}
@@ -403,5 +403,5 @@
     });
 </script>
 
-    
+
 @endsection
