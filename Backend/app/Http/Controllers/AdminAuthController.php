@@ -45,6 +45,12 @@ class AdminAuthController extends Controller
                 ->withInput();
         }
 
-        return redirect()->route('dashboard.index');
+        return redirect()->route('dashboard.index')->with('success', 'Đăng nhập thành công!');
     }
+
+    public function logout() {
+        Auth::logout();
+            return redirect()->route('admin.login')->with('success', 'Đăng xuất thành công!');
+    }
+
 }

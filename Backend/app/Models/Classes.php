@@ -29,11 +29,11 @@ class Classes extends Model
     public function categories()
     {
         return $this->belongsToMany(Category::class, 'class_categories', 'class_id', 'category_id');
-    }    
+    }
 
     public function assignments()
     {
-        return $this->hasMany(ClassAssignment::class, 'class_id'); // Sử dụng đúng cột 'class_id'
+        return $this->hasMany(ClassAssignment::class, 'class_id');
     }
 
     public function enrollments()

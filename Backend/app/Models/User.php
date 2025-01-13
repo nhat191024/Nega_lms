@@ -80,4 +80,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(ClassSubmit::class, 'student_id');
     }
+  
+    public function courseEnrollments()
+    {
+        return $this->hasMany(CourseEnrollment::class, 'student_id');
+    }
 }

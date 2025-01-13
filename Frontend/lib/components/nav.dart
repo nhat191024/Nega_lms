@@ -1,14 +1,14 @@
 import 'package:nega_lms/utils/imports.dart';
 
 class NavBar extends StatelessWidget {
-  final VoidCallback? onMenuPressed;
-  final bool showMenuButton;
+  final GlobalKey<ScaffoldState> scaffoldKey;
 
-  NavBar({super.key, this.onMenuPressed, this.showMenuButton = false});
-  final controllers = Get.put(NavController());
+  const NavBar({super.key, required this.scaffoldKey});
 
   @override
   Widget build(BuildContext context) {
+    final controllers = Get.put(NavController());
+    final isMobile = MediaQuery.of(context).size.width < 768;
     return Container(
       decoration: const BoxDecoration(
         border: Border(
@@ -21,133 +21,70 @@ class NavBar extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 10),
         child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            if (showMenuButton)
+            if (isMobile)
               IconButton(
-                icon: const Icon(Icons.menu, color: CustomColors.primaryText),
-                onPressed: onMenuPressed,
-              ),
-            const CircleAvatar(
-              radius: 20,
-              backgroundImage: AssetImage(Images.logoNoBg),
-              backgroundColor: Colors.transparent,
-            ),
-            const Spacer(),
-            TextButton(
-              onPressed: () {},
-              child: const Text(
-                'Trang chủ',
-                style: TextStyle(
-                  color: CustomColors.primaryText,
-                  fontSize: 16,
-                  fontFamily: FontStyleTextStrings.regular,
-                ),
-              ),
-            ),
-            const SizedBox(width: 10),
-            TextButton(
-              onPressed: () {
-                Get.toNamed(Routes.classListPage);
-              },
-              child: const Text(
-                'Lớp học',
-                style: TextStyle(
-                  color: CustomColors.primaryText,
-                  fontSize: 16,
-                  fontFamily: FontStyleTextStrings.regular,
-                ),
-              ),
-            ),
-            const SizedBox(width: 10),
-            TextButton(
-              onPressed: () {},
-              child: const Text(
-                'Giảng viên',
-                style: TextStyle(
-                  color: CustomColors.primaryText,
-                  fontSize: 16,
-                  fontFamily: FontStyleTextStrings.regular,
-                ),
-              ),
-            ),
-            const SizedBox(width: 10),
-            if (!controllers.isLogin.value)
-              CustomButton(
-                btnText: "Đăng nhập",
-                onTap: () {
-                  Get.toNamed(Routes.loginPage);
+                onPressed: () {
+                  scaffoldKey.currentState?.openDrawer();
                 },
-                rightPadding: 0,
-                leftPadding: 0,
-                borderRadius: 24,
-                width: Get.width * 0.07,
-              )
-            else
-              Container(
-                height: 64,
-                width: 64,
+                icon: const Icon(Icons.menu_rounded),
+                color: CustomColors.primary,
+                iconSize: 30,
+              ),
+            const Expanded(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircleAvatar(
+                    radius: 20,
+                    backgroundImage: AssetImage(Images.logoNoBg),
+                    backgroundColor: Colors.transparent,
+                  ),
+                  SizedBox(width: 10),
+                  Text(
+                    'NegaLMS',
+                    style: TextStyle(
+                      color: CustomColors.primary,
+                      fontSize: 18,
+                      fontFamily: FontStyleTextStrings.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Obx(() {
+              return Container(
+                height: 44,
+                width: 44,
+                margin: const EdgeInsets.only(right: 10),
                 decoration: const BoxDecoration(
-                  color: Colors.white,
+                  color: Colors.blueAccent,
                   shape: BoxShape.circle,
                 ),
                 clipBehavior: Clip.antiAlias,
-                child: const Icon(Icons.person),
-              ),
-            const SizedBox(width: 20),
+                child: controllers.avatar.value.isEmpty
+                    ? const Center(
+                        child: Text(
+                          'A',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontFamily: FontStyleTextStrings.bold,
+                          ),
+                        ),
+                      )
+                    : Image.network(
+                        //for development purpose
+                        "https://van191024.xyz/upload/avt/default.png",
+                        fit: BoxFit.cover,
+                      ),
+              );
+            }),
           ],
         ),
       ),
-    );
-  }
-}
-
-class SideBar extends StatelessWidget {
-  final bool isCollapsed;
-
-  const SideBar({super.key, required this.isCollapsed});
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 300),
-      width: isCollapsed ? 80 : 250,
-      height: double.infinity,
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        border: Border(
-          right: BorderSide(
-            color: CustomColors.border,
-            width: 1,
-          ),
-        ),
-      ),
-      child: Column(
-        children: [
-          Expanded(
-            child: ListView(
-              padding: EdgeInsets.zero,
-              children: [
-                _buildListTile(Icons.home, 'Trang chủ', Routes.homePage),
-                _buildListTile(Icons.class_, 'Lớp học', Routes.classListPage),
-                _buildListTile(Icons.person, 'Giảng viên', null),
-                _buildListTile(Icons.login, 'Đăng nhập', Routes.loginPage),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildListTile(IconData icon, String title, String? route) {
-    return ListTile(
-      leading: Icon(icon, color: CustomColors.primary),
-      title: isCollapsed ? null : Text(title),
-      onTap: () {
-        if (route != null) {
-          Get.toNamed(route);
-        }
-      },
     );
   }
 }

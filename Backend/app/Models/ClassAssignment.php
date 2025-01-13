@@ -20,7 +20,7 @@ class ClassAssignment extends Model
 
     public function class()
     {
-        return $this->belongsTo(Classes::class, 'class_id'); 
+        return $this->hasMany(AssignmentQuiz::class, 'assignment_id');
     }
 
     public function submits()

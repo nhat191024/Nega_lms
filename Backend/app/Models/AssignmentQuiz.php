@@ -10,7 +10,7 @@ class AssignmentQuiz extends Model
 
     public function assignment()
     {
-        return $this->belongsTo(ClassAssignment::class);
+        return $this->belongsTo(ClassAssignment::class, 'assignment_id');
     }
 
     public function quiz()
