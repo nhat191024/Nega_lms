@@ -16,22 +16,23 @@ class AdminAuthController extends Controller
     {
         $request->validate(
             [
-                'email' => 'required|string|email',
+                'login' => 'required|string',
                 'password' => 'required|string|min:6',
             ],
             [
-                'email.required' => 'Vui lòng nhập email.',
-                'email.email' => 'Email không hợp lệ.',
+                'login.required' => 'Vui lòng nhập tên đăng nhập hoặc email.',
                 'password.required' => 'Vui lòng nhập mật khẩu.',
                 'password.min' => 'Mật khẩu phải có ít nhất 6 ký tự.',
             ],
         );
 
-        if (!Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+        $loginType = filter_var($request->login, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
+
+        if (!Auth::attempt([$loginType => $request->login, 'password' => $request->password])) {
             return back()
                 ->withErrors([
-                    'email' => 'Email hoặc mật khẩu không đúng.',
-                    'password' => 'Email hoặc mật khẩu không đúng.',
+                    'login' => 'Tên đăng nhập hoặc mật khẩu không đúng.',
+                    'password' => 'Tên đăng nhập hoặc mật khẩu không đúng.',
                 ])
                 ->withInput();
         }
@@ -41,14 +42,14 @@ class AdminAuthController extends Controller
         if ($user->status == 0) {
             Auth::logout();
             return back()
-                ->withErrors(['email' => 'Tài khoản của bạn đã bị khóa.'])
+                ->withErrors(['login' => 'Tài khoản của bạn đã bị khóa.'])
                 ->withInput();
         }
 
-        if (!in_array($user->role_id, [1, 4])) {
+        if ($user->role_id != 1) {
             Auth::logout();
             return back()
-                ->withErrors(['email' => 'Bạn không có quyền truy cập quản trị viên.'])
+                ->withErrors(['login' => 'Bạn không có quyền truy cập quản trị viên.'])
                 ->withInput();
         }
 
