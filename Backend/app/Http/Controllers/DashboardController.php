@@ -104,7 +104,6 @@ class DashboardController extends Controller
         ]);
     }
 
-
     public function getUserProgress($userID)
     {
         $userId = $userID;
