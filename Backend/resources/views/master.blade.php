@@ -71,16 +71,16 @@
             </li>
 
             <li class="nav-item">
-                <a class="nav-link" href="{{ route('assignments.index') }}">
+                <a class="nav-link" href="{{ route('quiz-bank.index') }}">
                     <i class="fas fa-fw fa-chart-area"></i>
-                    <span>Bài tập</span></a>
+                    <span>Kho Quiz</span></a>
                 </a>
             </li>
 
             <li class="nav-item">
-                <a class="nav-link" href="{{ route('quiz-bank.index') }}">
+                <a class="nav-link" href="{{ route('courses.index') }}">
                     <i class="fas fa-fw fa-chart-area"></i>
-                    <span>Kho Quiz</span></a>
+                    <span>Khoá học</span></a>
                 </a>
             </li>
 
