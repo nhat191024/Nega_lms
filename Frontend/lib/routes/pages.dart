@@ -5,28 +5,18 @@ part 'routes.dart';
 class Pages {
   Pages._();
 
-  static const initialRoute = Routes.homePage;
+  static const initialRoute = Routes.loginPage;
 
   static final routes = [
     GetPage(
       name: _Paths.homePage,
-      page: () => const HomeScreen(),
-      binding: HomeBinding(),
+      page: () => const LayoutScreen(),
+      binding: LayoutBinding(),
     ),
     GetPage(
       name: _Paths.loginPage,
       page: () => const LoginScreen(),
       binding: LoginBinding(),
-    ),
-    GetPage(
-      name: _Paths.classListPage,
-      page: () => ClassListScreen(),
-      binding: ClassBinding(),
-    ),
-    GetPage(
-      name: _Paths.classDetailScreen,
-      page: () => const ClassDetailTab(),
-      binding: ClassDetailBinding(),
     ),
     GetPage(
       name: _Paths.doAssignmentScreen,

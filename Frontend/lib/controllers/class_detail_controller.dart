@@ -2,8 +2,14 @@ import 'package:nega_lms/utils/imports.dart';
 
 class ClassDetailController extends GetxController with GetSingleTickerProviderStateMixin {
   late TabController tabController;
+  late PageController pageController;
+
   RxBool isLoading = true.obs;
+  RxString role = ''.obs;
+  RxString avatar = ''.obs;
+  RxString username = ''.obs;
   RxBool isSubmitButtonLoading = false.obs;
+  RxBool isUpdateQuizLoading = false.obs;
   RxBool createAssignmentThenPushToClass = false.obs;
   RxInt classId = 0.obs;
   RxString token = "".obs;
@@ -14,9 +20,11 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
   RxString assignmentTitle = 'test'.obs;
   RxInt currentQuestion = 0.obs;
 
+  RxString step = '1'.obs;
+
   RxList<HomeworkModel> assignmentList = <HomeworkModel>[].obs;
-  RxList<HomeworkModel> assignmentsList = <HomeworkModel>[].obs;
-  RxList<AssignmentModel> assignmentListForTeacher = <AssignmentModel>[].obs;
+  RxList assignmentNameList = [].obs;
+  RxList studentPointList = [].obs;
   RxList classPointList = [].obs;
 
   RxList<QuestionModel> questionList = <QuestionModel>[].obs;
@@ -24,74 +32,79 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
   RxString timeLeft = '00:00:00'.obs;
 
   RxString assignmentType = ''.obs;
-  RxString selectedAssignment = ''.obs;
+  RxString selectedPackage = ''.obs;
 
+  RxString selectedAssignment = ''.obs;
   TextEditingController assignmentName = TextEditingController();
-  TextEditingController assignmentSubject = TextEditingController();
-  RxString assignmentStatus = ''.obs;
-  RxString assignmentLevel = ''.obs;
-  TextEditingController assignmentDuration = TextEditingController();
-  RxString assignmentAutoGrade = ''.obs;
   TextEditingController assignmentStartDate = TextEditingController();
   TextEditingController assignmentDueDate = TextEditingController();
-  RxString assignmentSpecialized = ''.obs;
-  RxString assignmentTopic = ''.obs;
+  TextEditingController assignmentDuration = TextEditingController();
+  RxString assignmentStatus = ''.obs;
   TextEditingController assignmentDescription = TextEditingController();
+
+  TextEditingController numberOfQuiz = TextEditingController();
+
   RxList<Map<String, dynamic>> questions = <Map<String, dynamic>>[].obs;
 
-  TextEditingController homeworkScore = TextEditingController();
   TextEditingController linkSubmit = TextEditingController();
 
+  List quizzes = [];
+  List quizPackage = [];
+
   RxBool isAssignmentNameError = false.obs;
-  RxBool isAssignmentSubjectError = false.obs;
-  RxBool isAssignmentStatusError = false.obs;
-  RxBool isAssignmentLevelError = false.obs;
-  RxBool isAssignmentDurationError = false.obs;
-  RxBool isAssignmentAutoGrade = false.obs;
   RxBool isAssignmentStartDateError = false.obs;
   RxBool isAssignmentDueDateError = false.obs;
-  RxBool isAssignmentSpecializedError = false.obs;
-  RxBool isAssignmentTopicError = false.obs;
+  RxBool isAssignmentDurationError = false.obs;
+  RxBool isAssignmentStatusError = false.obs;
   RxBool isAssignmentDescriptionError = false.obs;
+
+  RxBool isNumberOfQuizError = false.obs;
 
   RxBool isHomeworkScoreError = false.obs;
   RxBool isLinkSubmitError = false.obs;
 
   RxString assignmentNameError = ''.obs;
-  RxString assignmentSubjectError = ''.obs;
-  RxString assignmentStatusError = ''.obs;
-  RxString assignmentLevelError = ''.obs;
-  RxString assignmentDurationError = ''.obs;
-  RxString assignmentAutoGradeError = ''.obs;
   RxString assignmentStartDateError = ''.obs;
   RxString assignmentDueDateError = ''.obs;
-  RxString assignmentSpecializedError = ''.obs;
-  RxString assignmentTopicError = ''.obs;
+  RxString assignmentDurationError = ''.obs;
+  RxString assignmentStatusError = ''.obs;
   RxString assignmentDescriptionError = ''.obs;
 
-  RxString homeworkScoreError = ''.obs;
+  RxString numberOfQuizError = ''.obs;
+
   RxString linkSubmitError = ''.obs;
 
   @override
   void onInit() {
     super.onInit();
+    if (StorageService.checkData(key: "role")) {
+      role.value = StorageService.readData(key: "role");
+    }
+
+    if (StorageService.checkData(key: "avatar")) {
+      avatar.value = StorageService.readData(key: "avatar");
+    }
+
+    if (StorageService.checkData(key: "username")) {
+      username.value = StorageService.readData(key: "username");
+    }
     tabController = TabController(length: 3, vsync: this);
+    pageController = PageController();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (!await Token.checkToken()) return;
       token.value = await Token.getToken();
-      classId.value = Get.arguments ?? 1; // remove this line after finish testing
+      classId.value = Get.find<LayoutController>().selectedClassId.value;
       await fetchClassInfo(classId.value);
       await fetchClassAssignment(classId.value);
-      await fetchAllClassAssignment(classId.value);
-      await fetchAssignmentForTeacher();
-      await fetchClassPoint(classId.value);
+      if (role.value == "student") await fetchStudentAssignment();
+      if (role.value == "teacher") await fetchClassPoint();
     });
-    addNewQuestion();
   }
 
   fetchClassInfo(id) async {
+    isLoading(true);
     try {
-      String url = "${Api.server}classes/$id";
+      String url = "${Api.server}classes/info/$id";
       var response = await get(Uri.parse(url), headers: {
         'Authorization': 'Bearer $token',
       }).timeout(const Duration(seconds: 10));
@@ -102,6 +115,7 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
         className.value = data['name'];
         classDescription.value = data['description'];
         teacherName.value = data['teacherName'];
+        isLoading(false);
       }
     } catch (e) {
       Get.snackbar("Error", "Failed to fetch class info");
@@ -112,7 +126,8 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
     assignmentList.clear();
     try {
       isLoading(true);
-      String url = "${Api.server}assignment/$id/2";
+      var roleN = role.value == 'student' ? 3 : 2;
+      String url = "${Api.server}assignment/getByClass/$id/$roleN";
       var response = await get(Uri.parse(url), headers: {
         'Authorization': 'Bearer $token',
       }).timeout(const Duration(seconds: 10));
@@ -126,51 +141,62 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
     }
   }
 
-  fetchAllClassAssignment(id) async {
-    assignmentsList.clear();
+  fetchClassPoint() async {
     try {
-      isLoading(true);
-      String url = "${Api.server}assignment/$id/1";
+      String url = "${Api.server}classes/point/${classId.value}";
       var response = await get(Uri.parse(url), headers: {
         'Authorization': 'Bearer $token',
       }).timeout(const Duration(seconds: 10));
-      if (response.statusCode == 200) {
-        var data = jsonDecode(response.body);
-        var assignmentData = data['assignments'];
-        assignmentsList.value = (assignmentData as List).map((e) => HomeworkModel.fromMap(e)).toList();
-      }
-    } finally {
-      isLoading(false);
-    }
-  }
 
-  fetchAssignmentForTeacher() async {
-    assignmentListForTeacher.clear();
-    try {
-      String url = "${Api.server}assignment/getForTeacher";
-      var response = await get(Uri.parse(url), headers: {
-        'Authorization': 'Bearer $token',
-      }).timeout(const Duration(seconds: 10));
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
-        var assignmentData = data['assignments'];
-        assignmentListForTeacher.value = (assignmentData as List).map((e) => AssignmentModel.fromMap(e)).toList();
+        var assignmentName = data['assignmentName'];
+        var points = data['assignmentPoint'];
+
+        for (var item in assignmentName) {
+          assignmentNameList.add(item);
+        }
+
+        for (var item in points) {
+          classPointList.add(item);
+        }
       }
     } catch (e) {
-      Get.snackbar("Error", "Failed to fetch assignment for teacher");
+      Get.snackbar("Error", "Failed to fetch class info");
     }
   }
 
-  fetchClassPoint(id) async {
+  fetchStudentAssignment() async {
     try {
-      String url = "${Api.server}classes/point/$id";
+      String url = "${Api.server}classes/getStudentAssignmentPoint/${classId.value}";
       var response = await get(Uri.parse(url), headers: {
         'Authorization': 'Bearer $token',
       }).timeout(const Duration(seconds: 10));
 
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
-        classPointList.value = data['submissions'];
+        studentPointList.value = data;
+      }
+    } catch (e) {
+      Get.snackbar("Error", "Failed to fetch class info");
+    }
+  }
+
+  step2() async {
+    try {
+      quizPackage.clear();
+      String url = "${Api.server}quizPackage/teacher-quiz-package";
+      var response = await get(Uri.parse(url), headers: {
+        'Authorization': 'Bearer $token',
+      }).timeout(const Duration(seconds: 10));
+
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body);
+        for (var item in data) {
+          quizPackage.add(item);
+        }
+
+        step.value = '2';
       }
     } catch (e) {
       Get.snackbar("Error", "Failed to fetch class info");
@@ -282,30 +308,41 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
       }
     }
 
-    // Validate common fields
-    if (createAssignmentThenPushToClass.value == true) {
-      if (assignmentStartDate.text.trim().isEmpty) {
-        setError(isAssignmentStartDateError, assignmentStartDateError, "Ngày bắt đầu không được để trống");
-      } else {
-        isOverTimeToday(
-          assignmentStartDate.text.trim(),
-          isAssignmentStartDateError,
-          assignmentStartDateError,
-          "Ngày bắt đầu không được lớn hơn ngày hiện tại",
-        );
-      }
+    //title validation
+    if (assignmentName.text.trim().isEmpty) {
+      setError(isAssignmentNameError, assignmentNameError, "Tên bài tập không được để trống");
+    } else if (assignmentName.text.trim().length > 255) {
+      setError(isAssignmentNameError, assignmentNameError, "Tên bài tập không được quá 255 ký tự");
+    } else if (!vietnameseRegex.hasMatch(assignmentName.text.trim())) {
+      setError(isAssignmentNameError, assignmentNameError, "Tên bài tập chỉ chứa ký tự chữ và số");
+    }
 
-      if (assignmentDueDate.text.trim().isEmpty) {
-        setError(isAssignmentDueDateError, assignmentDueDateError, "Ngày kết thúc không được để trống");
-      } else {
-        isOverTimeToday(
-          assignmentDueDate.text.trim(),
-          isAssignmentDueDateError,
-          assignmentDueDateError,
-          "Ngày kết thúc không được lớn hơn ngày hiện tại",
-        );
-      }
+    //start date validation
+    if (assignmentStartDate.text.trim().isEmpty) {
+      setError(isAssignmentStartDateError, assignmentStartDateError, "Ngày bắt đầu không được để trống");
+    } else {
+      isOverTimeToday(
+        assignmentStartDate.text.trim(),
+        isAssignmentStartDateError,
+        assignmentStartDateError,
+        "Ngày bắt đầu không được lớn hơn ngày hiện tại",
+      );
+    }
 
+    //due date validation
+    if (assignmentDueDate.text.trim().isEmpty) {
+      setError(isAssignmentDueDateError, assignmentDueDateError, "Ngày kết thúc không được để trống");
+    } else {
+      isOverTimeToday(
+        assignmentDueDate.text.trim(),
+        isAssignmentDueDateError,
+        assignmentDueDateError,
+        "Ngày kết thúc không được lớn hơn ngày hiện tại",
+      );
+    }
+
+    //duration validation
+    if (assignmentType.value == "quiz") {
       if (assignmentDuration.text.trim().isEmpty) {
         setError(isAssignmentDurationError, assignmentDurationError, "Thời lượng không được để trống");
       } else if (!RegExp(r'^\d+$').hasMatch(assignmentDuration.text.trim())) {
@@ -334,224 +371,137 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
           );
         }
       }
-
-      if (assignmentType.value == 'quiz' || assignmentType.value == 'quiz_bank') {
-        if (assignmentAutoGrade.value.isEmpty) {
-          setError(isAssignmentAutoGrade, assignmentAutoGradeError, "Tự động chấm điểm không được để trống");
-        }
-      }
     }
 
-    // Validate quiz specific fields
-    if (assignmentType.value == 'quiz') {
-      if (assignmentSubject.text.trim().isEmpty) {
-        setError(isAssignmentSubjectError, assignmentSubjectError, "Chủ đề không được để trống");
-      } else if (assignmentSubject.text.trim().length > 255) {
-        setError(isAssignmentSubjectError, assignmentSubjectError, "Chủ đề không được quá 255 ký tự");
-      } else if (!vietnameseRegex.hasMatch(assignmentSubject.text.trim())) {
-        setError(isAssignmentSubjectError, assignmentSubjectError, "Chủ đề chỉ chứa ký tự chữ và số");
-      }
-
-      if (assignmentLevel.value.isEmpty) {
-        setError(isAssignmentLevelError, assignmentLevelError, "Cấp độ không được để trống");
-      }
-
-      if (assignmentSpecialized.value.isEmpty) {
-        setError(isAssignmentSpecializedError, assignmentSpecializedError, "Chuyên ngành không được để trống");
-      }
-
-      if (assignmentTopic.value.isEmpty) {
-        setError(isAssignmentTopicError, assignmentTopicError, "Chủ đề không được để trống");
-      }
-    }
-
-    // Validate common fields for quiz and quiz_bank
-    if (assignmentType.value == 'quiz' || assignmentType.value == 'quiz_bank') {
-      if (assignmentStatus.value.isEmpty) {
-        setError(isAssignmentStatusError, assignmentStatusError, "Trạng thái không được để trống");
-      }
-    }
-
-    // Validate common fields for quiz and link
-    if (assignmentType.value == 'quiz' || assignmentType.value == 'link') {
-      if (assignmentName.text.trim().isEmpty) {
-        setError(isAssignmentNameError, assignmentNameError, "Tên bài tập không được để trống");
-      } else if (assignmentName.text.trim().length > 255) {
-        setError(isAssignmentNameError, assignmentNameError, "Tên bài tập không được quá 255 ký tự");
-      } else if (!vietnameseRegex.hasMatch(assignmentName.text.trim())) {
-        setError(isAssignmentNameError, assignmentNameError, "Tên bài tập chỉ chứa ký tự chữ và số");
-      }
-
-      if (assignmentDescription.text.trim().isEmpty) {
-        setError(isAssignmentDescriptionError, assignmentDescriptionError, "Mô tả không được để trống");
-      } else if (assignmentDescription.text.trim().length > 255) {
-        setError(isAssignmentDescriptionError, assignmentDescriptionError, "Mô tả không được quá 255 ký tự");
-      } else if (!vietnameseRegex.hasMatch(assignmentDescription.text.trim())) {
-        setError(isAssignmentDescriptionError, assignmentDescriptionError, "Mô tả chỉ chứa ký tự chữ và số");
-      }
-    }
-
-    // Validate link specific fields
-    if (assignmentType.value == 'link') {
-      if (homeworkScore.text.trim().isEmpty) {
-        setError(isHomeworkScoreError, homeworkScoreError, "Điểm số không được để trống");
-      } else if (!RegExp(r'^\d*\.?\d+$').hasMatch(homeworkScore.text.trim())) {
-        setError(isHomeworkScoreError, homeworkScoreError, "Điểm số phải là số dương");
-      }
+    //description validation
+    if (assignmentDescription.text.trim().isEmpty) {
+      setError(isAssignmentDescriptionError, assignmentDescriptionError, "Mô tả không được để trống");
+    } else if (assignmentDescription.text.trim().length > 255) {
+      setError(isAssignmentDescriptionError, assignmentDescriptionError, "Mô tả không được quá 255 ký tự");
+    } else if (!vietnameseRegex.hasMatch(assignmentDescription.text.trim())) {
+      setError(isAssignmentDescriptionError, assignmentDescriptionError, "Mô tả chỉ chứa ký tự chữ và số");
     }
 
     if (error.value) return false;
 
-    // Validate quiz_bank specific fields
-    if (assignmentType.value == 'quiz_bank') {
-      if (selectedAssignment.value.isEmpty) {
-        Get.dialog(
-          const NotificationDialogWithoutButton(
-            title: "Lỗi",
-            message: "Bạn phải chọn 1 bài tập từ ngân hàng câu hỏi",
-          ),
-        );
-        return false;
-      }
-    }
+    //   for (int i = 0; i < questions.length; i++) {
+    //     if (questions[i]['question'].text.trim().isEmpty) {
+    //       Get.dialog(
+    //         NotificationDialogWithoutButton(
+    //           title: "Lỗi",
+    //           message: "Câu hỏi ${i + 1} không được để trống",
+    //         ),
+    //       );
+    //       return false;
+    //     }
 
-    // Validate quiz questions and answers
-    if (assignmentType.value == 'quiz') {
-      if (questions.isEmpty) {
-        Get.dialog(
-          const NotificationDialogWithoutButton(
-            title: "Lỗi",
-            message: "Bài tập phải có ít nhất 1 câu hỏi",
-          ),
-        );
-        return false;
-      }
+    //     var answers = questions[i]['answers'] as RxList<Map<String, dynamic>>;
 
-      for (int i = 0; i < questions.length; i++) {
-        if (questions[i]['question'].text.trim().isEmpty) {
-          Get.dialog(
-            NotificationDialogWithoutButton(
-              title: "Lỗi",
-              message: "Câu hỏi ${i + 1} không được để trống",
-            ),
-          );
-          return false;
-        }
+    //     if (answers.length < 2) {
+    //       Get.dialog(
+    //         NotificationDialogWithoutButton(
+    //           title: "Lỗi",
+    //           message: "Câu hỏi ${i + 1} phải có ít nhất 2 câu trả lời",
+    //         ),
+    //       );
+    //       return false;
+    //     }
 
-        var answers = questions[i]['answers'] as RxList<Map<String, dynamic>>;
+    //     bool hasCorrectAnswer = false;
+    //     for (int j = 0; j < answers.length; j++) {
+    //       if (answers[j]['controller'].text.trim().isEmpty) {
+    //         Get.dialog(
+    //           NotificationDialogWithoutButton(
+    //             title: "Lỗi",
+    //             message: "Câu trả lời ${j + 1} của câu hỏi ${i + 1} không được để trống",
+    //           ),
+    //         );
+    //         return false;
+    //       }
 
-        if (answers.length < 2) {
-          Get.dialog(
-            NotificationDialogWithoutButton(
-              title: "Lỗi",
-              message: "Câu hỏi ${i + 1} phải có ít nhất 2 câu trả lời",
-            ),
-          );
-          return false;
-        }
+    //       if ((answers[j]['isCorrect'] as RxBool).value) {
+    //         hasCorrectAnswer = true;
+    //       }
+    //     }
 
-        bool hasCorrectAnswer = false;
-        for (int j = 0; j < answers.length; j++) {
-          if (answers[j]['controller'].text.trim().isEmpty) {
-            Get.dialog(
-              NotificationDialogWithoutButton(
-                title: "Lỗi",
-                message: "Câu trả lời ${j + 1} của câu hỏi ${i + 1} không được để trống",
-              ),
-            );
-            return false;
-          }
-
-          if ((answers[j]['isCorrect'] as RxBool).value) {
-            hasCorrectAnswer = true;
-          }
-        }
-
-        if (!hasCorrectAnswer) {
-          Get.dialog(
-            NotificationDialogWithoutButton(
-              title: "Lỗi",
-              message: "Câu hỏi ${i + 1} phải có ít nhất 1 câu trả lời đúng",
-            ),
-          );
-          return false;
-        }
-      }
-    }
+    //     if (!hasCorrectAnswer) {
+    //       Get.dialog(
+    //         NotificationDialogWithoutButton(
+    //           title: "Lỗi",
+    //           message: "Câu hỏi ${i + 1} phải có ít nhất 1 câu trả lời đúng",
+    //         ),
+    //       );
+    //       return false;
+    //     }
+    //   }
+    // }
 
     return true;
   }
 
-  void createQuiz() async {
+  bool validateQuizNumber(String value) {
+    if (value.isEmpty) {
+      isNumberOfQuizError.value = true;
+      numberOfQuizError.value = "Số lượng câu hỏi không được để trống";
+      return false;
+    }
+
+    if (!value.isNumericOnly) {
+      isNumberOfQuizError.value = true;
+      numberOfQuizError.value = "Số lượng câu hỏi phải là số";
+      return false;
+    }
+
+    int? parsedValue = int.tryParse(value);
+    if (parsedValue == null) {
+      isNumberOfQuizError.value = true;
+      numberOfQuizError.value = "Số lượng câu hỏi phải là số";
+      return false;
+    }
+
+    if (parsedValue < 5) {
+      isNumberOfQuizError.value = true;
+      numberOfQuizError.value = "Số lượng câu hỏi phải lớn hơn 5";
+      return false;
+    } else if (parsedValue > quizPackage[int.tryParse(selectedPackage.value) ?? 0]["totalQuizzes"]) {
+      isNumberOfQuizError.value = true;
+      numberOfQuizError.value =
+          "Số lượng câu hỏi phải nhỏ hơn tổng số câu hỏi trong bộ (${quizPackage[int.tryParse(selectedPackage.value) ?? 0]["totalQuizzes"].toString()})";
+      return false;
+    } else {
+      isNumberOfQuizError.value = false;
+      return true;
+    }
+  }
+
+  createQuiz() async {
     if (!validateQuiz()) return;
+    if (assignmentType.value == "quiz" && !validateQuizNumber(numberOfQuiz.text.trim())) return;
     var uri = Uri.parse("${Api.server}assignment/create");
-    var response = MultipartRequest('POST', uri);
-    response.headers['Authorization'] = 'Bearer $token';
-    response.headers['Content-Type'] = 'application/json';
-    response.headers['Accept'] = 'application/json';
-    response.fields['create_homework'] = createAssignmentThenPushToClass.value.toString();
+    var request = MultipartRequest('POST', uri);
+    request.headers['Authorization'] = 'Bearer $token';
+    request.headers['Content-Type'] = 'application/json';
+    request.headers['Accept'] = 'application/json';
 
-    if (assignmentType.value == 'quiz') {
-      double totalScore = 0.0;
-      List<Map<String, dynamic>> formattedQuestions = questions.map((question) {
-        var answers = question['answers'] as RxList<Map<String, dynamic>>;
-        totalScore += double.parse(question['score'].text.trim());
-        return {
-          'question': question['question'].text.trim(),
-          'score': double.parse(question['score'].text.trim()),
-          'choices': answers.map((answer) {
-            return {
-              'choice': answer['controller'].text.trim(),
-              'is_correct': (answer['isCorrect'] as RxBool).value,
-            };
-          }).toList(),
-        };
-      }).toList();
+    request.fields['class_id'] = classId.value.toString();
+    request.fields['title'] = assignmentName.text.trim();
+    request.fields['start_datetime'] = assignmentStartDate.text.trim();
+    request.fields['due_datetime'] = assignmentDueDate.text.trim();
+    request.fields['duration'] = assignmentDuration.text.trim();
+    request.fields['status'] = assignmentStatus.value == 'true' ? "published" : "closed";
+    request.fields['description'] = assignmentDescription.text.trim();
+    request.fields['type'] = assignmentType.value;
+    if (assignmentType.value == "quiz") request.fields['quiz_package_id'] = quizPackage[int.tryParse(selectedPackage.value) ?? 0]["id"].toString();
+    if (assignmentType.value == "quiz") request.fields['number_of_questions'] = numberOfQuiz.text.trim();
 
-      //assignment data
-      response.fields['title'] = assignmentName.text.trim();
-      response.fields['description'] = assignmentDescription.text.trim();
-      response.fields['status'] = assignmentStatus.value.toString();
-      response.fields['level'] = assignmentLevel.value;
-      response.fields['totalScore'] = totalScore.toString();
-      response.fields['specialized'] = assignmentSpecialized.value;
-      response.fields['subject'] = assignmentSubject.text.trim();
-      response.fields['topic'] = assignmentTopic.value;
-      String questionsJson = jsonEncode(formattedQuestions);
-      response.fields['questions'] = questionsJson;
-    }
-
-    //homework data
-    response.fields['type'] = assignmentType.value == 'link' ? 'link' : 'quiz';
-    if (createAssignmentThenPushToClass.value || assignmentType.value == 'link') {
-      if (selectedAssignment.value.isNotEmpty) response.fields['assignment_id'] = selectedAssignment.value;
-      response.fields['class_id'] = classId.value.toString();
-      if (assignmentType.value == 'link') response.fields['title'] = assignmentName.text.trim();
-      if (assignmentType.value == 'link') response.fields['score'] = homeworkScore.text.trim();
-      if (assignmentType.value == 'link') response.fields['description'] = assignmentDescription.text.trim();
-      response.fields['start_datetime'] = assignmentStartDate.text.trim();
-      response.fields['due_datetime'] = assignmentDueDate.text.trim();
-      response.fields['duration'] = assignmentDuration.text.trim();
-      if (assignmentType.value == 'quiz' || assignmentType.value == 'quiz_bank') response.fields['auto_grade'] = assignmentAutoGrade.value;
-      response.fields['homework_status'] = 1.toString();
-    }
-
-    var streamedResponse = await response.send();
+    var streamedResponse = await request.send();
     if (streamedResponse.statusCode == 201) {
       clear();
       Get.back();
       fetchClassAssignment(classId.value);
-      fetchAllClassAssignment(classId.value);
-      fetchAssignmentForTeacher();
       Get.snackbar("Thành công", "Tạo bài tập thành công", maxWidth: Get.width * 0.2);
     } else {
       RxString errors = ''.obs;
-      var responseString = await streamedResponse.stream.bytesToString();
-      var data = jsonDecode(responseString);
-      for (var error in data['error']) {
-        errors.value += '${error.value}\n';
-      }
-
       Get.snackbar("Lỗi", errors.value, maxWidth: Get.width * 0.2);
     }
   }
@@ -559,27 +509,24 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
   Future loadDataToEdit(String id, String type) async {
     clear();
     try {
-      String url = "${Api.server}assignment/get/$id";
+      String url = "${Api.server}assignment/getById/$id/1";
       var response = await get(Uri.parse(url), headers: {
         'Authorization': 'Bearer $token',
       }).timeout(const Duration(seconds: 10));
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
-        var assignmentData = data['homework'];
-        if (type == 'quiz') {
-          assignmentDuration.text = assignmentData['duration'].toString();
-          assignmentAutoGrade.value = assignmentData['autoGrade'] == 1 ? 'true' : 'false';
-          assignmentStartDate.text = assignmentData['startDate'];
-          assignmentDueDate.text = assignmentData['dueDate'];
-          assignmentStatus.value = assignmentData['status'] == 1 ? 'true' : 'false';
-          selectedAssignment.value = assignmentData['assignmentId'].toString();
-        } else {
-          assignmentName.text = assignmentData['title'];
-          assignmentDuration.text = assignmentData['duration'].toString();
-          homeworkScore.text = assignmentData['score'].toString();
-          assignmentStartDate.text = assignmentData['startDate'];
-          assignmentDueDate.text = assignmentData['dueDate'];
-          assignmentDescription.text = assignmentData['description'];
+        var assignmentData = data['assignment'];
+
+        selectedAssignment = id.obs;
+        assignmentName.text = assignmentData['title'];
+        assignmentStartDate.text = assignmentData['startDate'];
+        assignmentDueDate.text = assignmentData['dueDate'];
+        if (type == 'quiz') assignmentDuration.text = assignmentData['duration'].toString();
+        assignmentStatus.value = assignmentData['status'] == "published" ? 'true' : 'false';
+        assignmentDescription.text = assignmentData['description'];
+
+        for (var question in assignmentData['questions']) {
+          quizzes.add(question);
         }
       }
     } catch (e) {
@@ -588,6 +535,7 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
   }
 
   void updateQuiz(String id, String type) async {
+    assignmentType.value = type;
     if (!validateQuiz()) return;
     var uri = Uri.parse("${Api.server}assignment/update");
     var response = MultipartRequest('POST', uri);
@@ -596,62 +544,74 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
     response.headers['Accept'] = 'application/json';
 
     response.fields['id'] = id;
+    response.fields['title'] = assignmentName.text.trim();
     response.fields['start_datetime'] = assignmentStartDate.text.trim();
     response.fields['due_datetime'] = assignmentDueDate.text.trim();
-    response.fields['duration'] = assignmentDuration.text.trim();
-    response.fields['status'] = assignmentStatus.value == 'true' ? 1.toString() : 0.toString();
-    if (type == 'quiz') {
-      response.fields['assignment_id'] = selectedAssignment.value;
-      response.fields['auto_grade'] = assignmentAutoGrade.value == 'true' ? 1.toString() : 0.toString();
-    } else {
-      response.fields['title'] = assignmentName.text.trim();
-      response.fields['score'] = homeworkScore.text.trim();
-      response.fields['description'] = assignmentDescription.text.trim();
-    }
+    if (type == 'quiz') response.fields['duration'] = assignmentDuration.text.trim();
+    response.fields['status'] = assignmentStatus.value == 'true' ? "published" : "closed";
+    response.fields['description'] = assignmentDescription.text.trim();
 
     var streamedResponse = await response.send();
+
     if (streamedResponse.statusCode == 200) {
       clear();
       Get.back();
       fetchClassAssignment(classId.value);
-      fetchAllClassAssignment(classId.value);
-      fetchAssignmentForTeacher();
       Get.snackbar("Thành công", "Cập nhật bài tập thành công", maxWidth: Get.width * 0.2);
     } else {
       Get.snackbar("Lỗi", "Cập nhật bài tập thất bại", maxWidth: Get.width * 0.2);
     }
   }
 
+  updateQuizzes() async {
+    isUpdateQuizLoading.value = true;
+    try {
+      var uri = Uri.parse("${Api.server}assignment/update-assignment-quiz");
+      var request = MultipartRequest('POST', uri);
+      request.headers['Authorization'] = 'Bearer $token';
+      request.headers['Content-Type'] = 'application/json';
+      request.headers['Accept'] = 'application/json';
+
+      request.fields['class_assignment_id'] = selectedAssignment.value;
+      request.fields['quiz_package_id'] = quizPackage[int.tryParse(selectedPackage.value) ?? 0]["id"].toString();
+      request.fields['number_of_questions'] = numberOfQuiz.text.trim();
+
+      var streamedResponse = await request.send();
+
+      if (streamedResponse.statusCode == 200) {
+        isSubmitButtonLoading.value = false;
+        Get.back();
+        Get.snackbar("Thành công", "Cập nhật bài tập thành công", maxWidth: Get.width * 0.2);
+      } else {
+        Get.snackbar("Lỗi", "Đã có lỗi xảy ra", maxWidth: Get.width * 0.2);
+      }
+    } finally {
+      isUpdateQuizLoading.value = false;
+    }
+  }
+
   void clear() {
     assignmentName.clear();
     isAssignmentNameError.value = false;
-    assignmentSubject.clear();
-    isAssignmentSubjectError.value = false;
     assignmentStatus.value = 'true';
     isAssignmentStatusError.value = false;
-    assignmentLevel.value = '';
-    isAssignmentLevelError.value = false;
     assignmentStartDate.clear();
     isAssignmentStartDateError.value = false;
     assignmentDueDate.clear();
     isAssignmentDueDateError.value = false;
-    assignmentSpecialized.value = '';
-    isAssignmentSpecializedError.value = false;
-    assignmentTopic.value = '';
-    isAssignmentTopicError.value = false;
     assignmentDescription.clear();
     isAssignmentDescriptionError.value = false;
     assignmentDuration.clear();
     isAssignmentDurationError.value = false;
-    assignmentAutoGrade.value = 'true';
-    isAssignmentAutoGrade.value = false;
-    homeworkScore.clear();
-    isHomeworkScoreError.value = false;
-    linkSubmit.clear();
-    isLinkSubmitError.value = false;
-    assignmentType.value = '';
-    createAssignmentThenPushToClass.value = false;
-    selectedAssignment.value = '';
+
+    numberOfQuiz.clear();
+    isNumberOfQuizError.value = false;
+
+    quizzes.clear();
+    quizPackage.clear();
+
+    step.value = '1';
+    selectedPackage.value = '';
     questions.clear();
     addNewQuestion();
   }

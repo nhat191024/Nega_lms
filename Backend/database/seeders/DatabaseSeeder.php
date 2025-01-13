@@ -89,7 +89,7 @@ class DatabaseSeeder extends Seeder
             }
 
             foreach ($row['assignments'] as $assignment) {
-                ClassAssignment::create([
+                $classAssignment = ClassAssignment::create([
                     'class_id' => $class->id,
                     'type' => $assignment['type'],
                     'title' => $assignment['title'],
@@ -102,7 +102,7 @@ class DatabaseSeeder extends Seeder
                 if ($assignment['type'] === 'quiz') {
                     foreach ($assignment['quiz'] as $quiz) {
                         AssignmentQuiz::create([
-                            'assignment_id' => $class->id,
+                            'assignment_id' => $classAssignment->id,
                             'quiz_id' => $quiz['quiz_id'],
                         ]);
                     }

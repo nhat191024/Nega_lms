@@ -8,6 +8,8 @@ use App\Http\Controllers\AdminAuthController;
 use App\Http\Controllers\AssignmentController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\QuizBankController;
+use App\Http\Controllers\CategoryController;
+use App\Models\Category;
 
 Route::get('/', [AdminAuthController::class, 'showLoginForm'])->name('admin.login');
 Route::post('/login', [AdminAuthController::class, 'login'])->name('admin.login.submit');
@@ -59,3 +61,12 @@ Route::prefix('/quiz-bank')->name('quiz-bank.')->group(function() {
     Route::get('/hiddenQuizBank/{id}', [QuizBankController::class, 'hiddenQuizBank'])->name('hiddenQuizBank');
     Route::get('/showQuizBank/{id}', [QuizBankController::class, 'showQuizBank'])->name('showQuizBank');
 });
+
+Route::resource('categories', CategoryController::class)->except(['destroy']);
+Route::get('categories/{id}/toggle-status', [CategoryController::class, 'toggleStatus'])->name('category.toggleStatus');
+Route::get('categories/create', [CategoryController::class, 'create'])->name('category.create');
+Route::post('categories', [CategoryController::class, 'store'])->name('category.store');
+Route::get('categories/{id}/edit', [CategoryController::class, 'edit'])->name('category.edit');
+Route::put('categories/{id}', [CategoryController::class, 'update'])->name('category.update');
+Route::delete('categories/{id}', [CategoryController::class, 'destroy'])->name('category.destroy');
+Route::get('categories/{id}/status', [CategoryController::class, 'status'])->name('category.status');
