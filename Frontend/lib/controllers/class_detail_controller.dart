@@ -19,6 +19,8 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
   RxString assignmentTitle = 'test'.obs;
   RxInt currentQuestion = 0.obs;
 
+  RxString step = '1'.obs;
+
   RxList<HomeworkModel> assignmentList = <HomeworkModel>[].obs;
   RxList<HomeworkModel> assignmentsList = <HomeworkModel>[].obs;
   RxList<AssignmentModel> assignmentListForTeacher = <AssignmentModel>[].obs;
@@ -37,12 +39,13 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
   TextEditingController assignmentDuration = TextEditingController();
   RxString assignmentStatus = ''.obs;
   TextEditingController assignmentDescription = TextEditingController();
-  
+
   RxList<Map<String, dynamic>> questions = <Map<String, dynamic>>[].obs;
 
   TextEditingController linkSubmit = TextEditingController();
 
   List quizzes = [];
+  List quizPackage = [];
 
   RxBool isAssignmentNameError = false.obs;
   RxBool isAssignmentStartDateError = false.obs;
@@ -159,6 +162,26 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
         classPointList.value = data;
+      }
+    } catch (e) {
+      Get.snackbar("Error", "Failed to fetch class info");
+    }
+  }
+
+  step2() async {
+    try {
+      String url = "${Api.server}quizPackage/teacher-quiz-package";
+      var response = await get(Uri.parse(url), headers: {
+        'Authorization': 'Bearer $token',
+      }).timeout(const Duration(seconds: 10));
+
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body);
+        for (var item in data) {
+          quizPackage.add(item);
+        }
+        
+        step.value = '2';
       }
     } catch (e) {
       Get.snackbar("Error", "Failed to fetch class info");
@@ -324,7 +347,6 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
       }
     }
 
-
     // Validate common fields for quiz and quiz_bank
     if (assignmentType.value == 'quiz' || assignmentType.value == 'quiz_bank') {
       if (assignmentStatus.value.isEmpty) {
@@ -350,7 +372,6 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
         setError(isAssignmentDescriptionError, assignmentDescriptionError, "Mô tả chỉ chứa ký tự chữ và số");
       }
     }
-
 
     if (error.value) return false;
 
