@@ -229,14 +229,8 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
   }
 
   void addNewQuestion() {
-    double scorePerQuestion = 10.0 / (questions.length + 1);
-    for (var question in questions) {
-      question['score'].text = scorePerQuestion.toStringAsFixed(2);
-    }
-
     questions.add({
       'question': TextEditingController(),
-      'score': TextEditingController(text: scorePerQuestion.toStringAsFixed(2)),
       'answers': <Map<String, dynamic>>[].obs,
     });
   }
@@ -260,10 +254,6 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
   void removeQuestion(int index) {
     if (questions.length > 1) {
       questions.removeAt(index);
-      double scorePerQuestion = 10.0 / questions.length;
-      for (var question in questions) {
-        question['score'].text = scorePerQuestion.toStringAsFixed(2);
-      }
     } else {
       Get.dialog(
         const NotificationDialogWithoutButton(
@@ -384,58 +374,6 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
 
     if (error.value) return false;
 
-    //   for (int i = 0; i < questions.length; i++) {
-    //     if (questions[i]['question'].text.trim().isEmpty) {
-    //       Get.dialog(
-    //         NotificationDialogWithoutButton(
-    //           title: "Lỗi",
-    //           message: "Câu hỏi ${i + 1} không được để trống",
-    //         ),
-    //       );
-    //       return false;
-    //     }
-
-    //     var answers = questions[i]['answers'] as RxList<Map<String, dynamic>>;
-
-    //     if (answers.length < 2) {
-    //       Get.dialog(
-    //         NotificationDialogWithoutButton(
-    //           title: "Lỗi",
-    //           message: "Câu hỏi ${i + 1} phải có ít nhất 2 câu trả lời",
-    //         ),
-    //       );
-    //       return false;
-    //     }
-
-    //     bool hasCorrectAnswer = false;
-    //     for (int j = 0; j < answers.length; j++) {
-    //       if (answers[j]['controller'].text.trim().isEmpty) {
-    //         Get.dialog(
-    //           NotificationDialogWithoutButton(
-    //             title: "Lỗi",
-    //             message: "Câu trả lời ${j + 1} của câu hỏi ${i + 1} không được để trống",
-    //           ),
-    //         );
-    //         return false;
-    //       }
-
-    //       if ((answers[j]['isCorrect'] as RxBool).value) {
-    //         hasCorrectAnswer = true;
-    //       }
-    //     }
-
-    //     if (!hasCorrectAnswer) {
-    //       Get.dialog(
-    //         NotificationDialogWithoutButton(
-    //           title: "Lỗi",
-    //           message: "Câu hỏi ${i + 1} phải có ít nhất 1 câu trả lời đúng",
-    //         ),
-    //       );
-    //       return false;
-    //     }
-    //   }
-    // }
-
     return true;
   }
 
@@ -474,6 +412,61 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
     }
   }
 
+  bool validateQuizPackage() {
+    for (int i = 0; i < questions.length; i++) {
+      if (questions[i]['question'].text.trim().isEmpty) {
+        Get.dialog(
+          NotificationDialogWithoutButton(
+            title: "Lỗi",
+            message: "Câu hỏi ${i + 1} không được để trống",
+          ),
+        );
+        return false;
+      }
+
+      var answers = questions[i]['answers'] as RxList<Map<String, dynamic>>;
+
+      if (answers.length < 2) {
+        Get.dialog(
+          NotificationDialogWithoutButton(
+            title: "Lỗi",
+            message: "Câu hỏi ${i + 1} phải có ít nhất 2 câu trả lời",
+          ),
+        );
+        return false;
+      }
+
+      bool hasCorrectAnswer = false;
+      for (int j = 0; j < answers.length; j++) {
+        if (answers[j]['controller'].text.trim().isEmpty) {
+          Get.dialog(
+            NotificationDialogWithoutButton(
+              title: "Lỗi",
+              message: "Câu trả lời ${j + 1} của câu hỏi ${i + 1} không được để trống",
+            ),
+          );
+          return false;
+        }
+
+        if ((answers[j]['isCorrect'] as RxBool).value) {
+          hasCorrectAnswer = true;
+        }
+      }
+
+      if (!hasCorrectAnswer) {
+        Get.dialog(
+          NotificationDialogWithoutButton(
+            title: "Lỗi",
+            message: "Câu hỏi ${i + 1} phải có ít nhất 1 câu trả lời đúng",
+          ),
+        );
+        return false;
+      }
+    }
+
+    return true;
+  }
+
   createQuiz() async {
     if (!validateQuiz()) return;
     if (assignmentType.value == "quiz" && !validateQuizNumber(numberOfQuiz.text.trim())) return;
@@ -503,6 +496,46 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
     } else {
       RxString errors = ''.obs;
       Get.snackbar("Lỗi", errors.value, maxWidth: Get.width * 0.2);
+    }
+  }
+
+  createQuizPackage() async {
+    if (!validateQuizPackage()) return;
+
+    var uri = Uri.parse("${Api.server}quizPackage/create");
+    var request = MultipartRequest('POST', uri);
+    request.headers['Authorization'] = 'Bearer $token';
+    request.headers['Content-Type'] = 'application/json';
+    request.headers['Accept'] = 'application/json';
+
+    request.fields['title'] = assignmentName.text.trim();
+    request.fields['description'] = assignmentDescription.text.trim();
+    request.fields['type'] = assignmentStatus.value == 'true' ? "public" : "private";
+
+    List<Map<String, dynamic>> formattedQuestions = questions.map((question) {
+      var answers = question['answers'] as RxList<Map<String, dynamic>>;
+      return {
+        'question': question['question'].text.trim(),
+        'choices': answers.map((answer) {
+          return {
+            'choice': answer['controller'].text.trim(),
+            'is_correct': (answer['isCorrect'] as RxBool).value,
+          };
+        }).toList(),
+      };
+    }).toList();
+    String questionsJson = jsonEncode(formattedQuestions);
+    request.fields['questions'] = questionsJson;
+
+    var streamedResponse = await request.send();
+    if (streamedResponse.statusCode == 201) {
+      clear();
+      Get.back();
+      Get.snackbar("Thành công", "Tạo bài tập thành công", maxWidth: Get.width * 0.2);
+    } else {
+      var data = await streamedResponse.stream.bytesToString();
+      print(data);
+      Get.snackbar("Lỗi", "Tạo bài tập thất bại", maxWidth: Get.width * 0.2);
     }
   }
 
