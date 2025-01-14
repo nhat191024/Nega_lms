@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\V1\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\V1\LoginController;
 use App\Http\Controllers\Api\V1\ClassController;
+use App\Http\Controllers\Api\V1\CourseController;
 
 // Public routes
 Route::post('/login', [LoginController::class, 'login']);
