@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Models\User;
@@ -17,23 +16,23 @@ class AdminAuthController extends Controller
     {
         $request->validate(
             [
-                'login' => 'required|string',
+                'login' => 'required|string|email',
                 'password' => 'required|string|min:6',
             ],
             [
-                'login.required' => 'Vui lòng nhập tên đăng nhập hoặc email.',
+                'login.required' => 'Vui lòng nhập email.',
+                'login.email' => 'Email không hợp lệ.',
                 'password.required' => 'Vui lòng nhập mật khẩu.',
                 'password.min' => 'Mật khẩu phải có ít nhất 6 ký tự.',
             ]
         );
 
-        $loginType = 'email';
+        $credentials = ['email' => $request->login, 'password' => $request->password];
 
-        if (!Auth::attempt([$loginType => $request->login, 'password' => $request->password])) {
+        if (!Auth::attempt($credentials)) {
             return back()
                 ->withErrors([
-                    'login' => 'Tên đăng nhập hoặc mật khẩu không đúng.',
-                    'password' => 'Tên đăng nhập hoặc mật khẩu không đúng.',
+                    'login' => 'Email hoặc mật khẩu không đúng.',
                 ])
                 ->withInput();
         }
@@ -47,7 +46,7 @@ class AdminAuthController extends Controller
                 ->withInput();
         }
 
-        if ($user->role_id != 1 && $user->role_id != 4) {
+        if (!in_array($user->role_id, [1, 4])) {
             Auth::logout();
             return back()
                 ->withErrors(['login' => 'Bạn không có quyền truy cập quản trị viên.'])

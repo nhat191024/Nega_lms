@@ -31,7 +31,7 @@ class LoginController extends Controller
             $user->tokens()->delete();
         }
 
-        if ($user->role_id == 1) {
+        if ($user->role_id == 1 || $user->role_id == 4) {
             $token = $user->createToken('authToken', ["*"])->plainTextToken;
         } else {
             $token = $user->createToken('authToken', [$user->role->name])->plainTextToken;
