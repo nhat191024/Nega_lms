@@ -40,6 +40,7 @@ Route::group(['middleware' => ['auth:sanctum', 'ability:teacher']], function () 
 
     Route::prefix('quizPackage')->group(function () {
         Route::get('/teacher-quiz-package', [QuizPackageController::class, 'getQuizPackageForTeacher']);
+        Route::post('/create', [QuizPackageController::class, 'create']);
     });
 });
 
