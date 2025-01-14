@@ -101,22 +101,6 @@
                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="fas fa-search fa-fw"></i>
                         </a>
-                        <!-- Dropdown - Messages -->
-                        <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in"
-                            aria-labelledby="searchDropdown">
-                            <form class="form-inline mr-auto w-100 navbar-search">
-                                <div class="input-group">
-                                    <input type="text" class="form-control bg-light border-0 small"
-                                        placeholder="Tìm kiếm..." aria-label="Search"
-                                        aria-describedby="basic-addon2">
-                                    <div class="input-group-append">
-                                        <button class="btn btn-primary" type="button">
-                                            <i class="fas fa-search fa-sm"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
                     </li>
 
                     <div class="topbar-divider d-none d-sm-block"></div>
@@ -129,18 +113,15 @@
                         </a>
 
                         <div class="dropdown-menu dropdown-menu-end shadow animated--grow-in" aria-labelledby="userDropdown">
-                            <a onclick="if(confirm('Bạn có chắc chắn đăng xuất khỏi tài khoản không?')) { window.location.href='{{ route('admin.logout') }}'; }" href="#" class="dropdown-item text-gray-600 hover:bg-gray-100">
-
-                        <div class="dropdown-menu dropdown-menu-end shadow animated--grow-in"
-                            aria-labelledby="userDropdown">
                             <a onclick="if(confirm('Bạn có chắc chắn đăng xuất khỏi tài khoản không?')) { window.location.href='{{ route('admin.logout') }}'; }"
-                                href="#" class="dropdown-item text-gray-600 hover:bg-gray-100">
-
+                               href="#"
+                               class="dropdown-item text-gray-600 hover:bg-gray-100">
                                 <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                                 Đăng xuất
                             </a>
                         </div>
                     </li>
+
                 </ul>
 
             </nav>
@@ -228,7 +209,10 @@
         document.getElementById(tabName).style.display = "block";
         evt.currentTarget.className += " active";
     }
+<<<<<<< HEAD
+=======
     document.getElementById('Info').style.display = 'block';
+>>>>>>> 01ff16c14bad5892500751dd40afd7ccf0f2c92e
 </script>
 
 </html>
