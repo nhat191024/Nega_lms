@@ -187,7 +187,7 @@ class AssignmentController extends Controller
 
     public function getAssignmentById($id, $isTeacher)
     {
-        $assignment = ClassAssignment::where('id', $id)->with('quizzes.quiz.choices')->first();
+        $assignment = ClassAssignment::where('id', $id)->with('quizzes.choices')->first();
 
         if (!$assignment) {
             return response()->json(
@@ -209,9 +209,9 @@ class AssignmentController extends Controller
             'status' => $assignment->status,
             'questions' => $assignment->quizzes->map(function ($quiz) use ($isTeacher) {
                 return [
-                    'id' => $quiz->quiz->id,
-                    'question' => $quiz->quiz->question,
-                    "choices" => $quiz->quiz->choices->map(function ($choice) use ($isTeacher) {
+                    'id' => $quiz->id,
+                    'question' => $quiz->question,
+                    "choices" => $quiz->choices->map(function ($choice) use ($isTeacher) {
                         return [
                             'id' => $choice->id,
                             'choice' => $choice->choice,
