@@ -32,7 +32,7 @@ class CourseListScreen extends GetView<CourseController> {
           GestureDetector(
             onTap: () {
               layoutController.sidebarController.selectIndex(99);
-              Get.find<LayoutController>().goToClassDetail(id);
+              Get.find<LayoutController>().goToCourseDetail(id);
             },
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,

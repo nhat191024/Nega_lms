@@ -104,7 +104,7 @@ class ClassDetailController extends GetxController with GetSingleTickerProviderS
   fetchClassInfo(id) async {
     isLoading(true);
     try {
-      String url = "${Api.server}classes/info/$id";
+      String url = "${Api.server}courses/getById/$id";
       var response = await get(Uri.parse(url), headers: {
         'Authorization': 'Bearer $token',
       }).timeout(const Duration(seconds: 10));

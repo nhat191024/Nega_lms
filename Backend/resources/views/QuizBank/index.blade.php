@@ -593,14 +593,32 @@
                                                                                         class="form-label">Mô tả</label>
                                                                                     <textarea name="quiz_description" class="form-control" id="description" rows="3" placeholder="Nhập mô tả">{{ $quiz->description }}</textarea>
                                                                                 </div>
+                                                                                {{-- <div class="mb-3">
+                                                                                    <label for="category"
+                                                                                        class="form-label">Danh mục</label>
+                                                                                    <select id=""
+                                                                                        name="categories[]"
+                                                                                        class="form-select"
+                                                                                        data-live-search="true"
+                                                                                        title="Chọn danh mục">
+                                                                                        @foreach ($categories as $category)
+                                                                                            <option
+                                                                                                @foreach ($quiz->categories as $category_quiz)
+                                                                                                        {{ $category_quiz->id === $category->id ? 'selected' : '' }} @endforeach
+                                                                                                value="{{ $category->id }}">
+                                                                                                {{ $category->name }}
+                                                                                            </option>
+                                                                                        @endforeach
+                                                                                    </select>
+                                                                                </div> --}}
+
                                                                                 <div class="mb-3">
                                                                                     <label for="category"
                                                                                         class="form-label">Danh mục</label>
-                                                                                    <select id="categories"
+                                                                                    <select id=""
                                                                                         name="categories[]"
-                                                                                        class="selectpicker form-select"
-                                                                                        multiple size="5"
-                                                                                        data-live-search="true"
+                                                                                        class=" form-select" multiple
+                                                                                        size="3"
                                                                                         title="Chọn danh mục">
                                                                                         @foreach ($categories as $category)
                                                                                             <option
@@ -613,11 +631,11 @@
                                                                                     </select>
                                                                                 </div>
 
-                                                                                <script>
+                                                                                {{-- <script>
                                                                                     $(document).ready(function() {
                                                                                         $('#categories').selectpicker();
                                                                                     });
-                                                                                </script>
+                                                                                </script> --}}
 
                                                                                 <div class="mb-3">
                                                                                     <label for="quiz_id_range"

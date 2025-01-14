@@ -180,7 +180,7 @@ class LayoutScreen extends GetView<LayoutController> {
                     icon: Icons.person,
                     label: 'Khoá học',
                     onTap: () {
-                      controller.pageController.jumpToPage(2);
+                      controller.pageController.jumpToPage(3);
                       controller.sidebarController.selectIndex(1);
                     },
                   ),
@@ -193,6 +193,7 @@ class LayoutScreen extends GetView<LayoutController> {
                 ClassListScreen(),
                 const ClassDetailTab(),
                 if (controller.role.value == 'student') CourseListScreen(),
+                if (controller.role.value == 'student') CourseDetailScreen(),
               ],
             ),
           ),

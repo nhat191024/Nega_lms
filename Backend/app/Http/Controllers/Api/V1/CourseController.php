@@ -33,4 +33,20 @@ class CourseController extends Controller
             'courses' => $courses,
         ], Response::HTTP_OK);
     }
+
+    public function getCourseById($id)
+    {
+        $course = Course::with('categories')->find($id);
+
+        return response()->json([
+            'id' => $course->id,
+            'code' => $course->code,
+            'name' => $course->name,
+            'description' => $course->description,
+            'categories' => $course->categories->map(function ($category) {
+                return $category->name;
+            }),
+            'createdAt' => $course->created_at,
+        ], Response::HTTP_OK);
+    }
 }
